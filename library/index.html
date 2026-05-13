@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Stratum — The Library · All Artifacts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ────────────────────────────────────────────────────────────
+   Mobile-first. Base styles target a 375px viewport.
+   @media (min-width: 720px)  → tablet adjustments
+   @media (min-width: 1024px) → desktop layout
+   ──────────────────────────────────────────────────────────── */
+
+:root{
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-mute:#6c7180;
+  --ochre:#b8651f; --ochre-deep:#8a4711; --ochre-soft:#e6c79b;
+  --moss:#4a5d3a; --plum:#6b3a4a;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  /* Mobile-first container — generous side padding, full width */
+  --pad: 1.1rem;
+  --col-w: calc(100vw - calc(var(--pad) * 2));
+
+  /* Type ramp tuned for mobile reading on a 5"–6" screen */
+  --t-body: 16px;
+  --t-mono: 11.5px;
+}
+
+*{ box-sizing: border-box; }
+html, body{
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Light paper texture; faded on mobile to reduce noise */
+body::before{
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184,101,31,.04), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14,22,38,.03), transparent 45%);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a{ color: var(--ochre); text-decoration: none; }
+em{ font-style: italic; }
+strong{ font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────── STICKY MOBILE HEADER ─────────────── */
+.bar{
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(244,236,218,.94);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .7rem var(--pad);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.bar-mark{
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-transform: none;
+}
+.bar-mark i{ color: var(--ochre); font-style: italic; }
+.bar-back{ color: var(--ink-3); }
+.bar-back:hover{ color: var(--ochre); }
+
+/* ─────────────────────────── MASTHEAD ──────────────────────── */
+header.mast{
+  padding: 1.6rem var(--pad) .8rem;
+}
+.dateline{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: .8rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.eyebrow{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 1.5rem 0 .9rem;
+}
+.word{
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.6rem, 11vw, 3.5rem);
+  line-height: .95;
+  letter-spacing: -.035em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+.word-slash{
+  font-style: italic;
+  color: var(--ochre);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  letter-spacing: -.01em;
+  margin: 0 .25rem;
+}
+.sub{
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--ink-2);
+  margin: 0 0 1.3rem;
+  font-variation-settings: "opsz" 18;
+}
+
+/* Stats: 1-col on small phones, 2-col when there's room */
+.stats{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.stat{
+  padding: .85rem .9rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex; flex-direction: column; gap: .25rem;
+}
+.stat:nth-child(even){ border-right: 0; }
+.stat:last-child{ border-bottom: 0; grid-column: 1 / -1; border-right: 0; }
+.stat-l{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.stat-v{
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--ink);
+  font-feature-settings: "tnum";
+}
+.stat-v .u{
+  font-size: .7rem;
+  color: var(--ochre);
+  margin-left: .25rem;
+}
+
+/* ─────────────────────────── FILTERS ──────────────────────── */
+.filters{
+  display: flex;
+  gap: .4rem;
+  padding: 1.2rem var(--pad) 1.4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.filters::-webkit-scrollbar{ display: none; }
+.chip{
+  padding: .5rem .85rem;
+  border: 1px solid var(--paper-rule);
+  border-radius: 999px;
+  color: var(--ink-3);
+  background: var(--paper-warm);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.chip-on{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip-live{ color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.chip-public{ color: var(--moss); border-color: var(--moss); }
+.chip-internal{ color: var(--ochre); border-color: var(--ochre); }
+.chip-confidential{ color: var(--plum); border-color: var(--plum); }
+
+/* ─────────────────────────── GROUPS ───────────────────────── */
+main{ padding: 0 var(--pad) 2rem; }
+.group{ margin: 2rem 0 0; }
+.group-head{
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: .65rem;
+  gap: .8rem;
+}
+.group-h{
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  letter-spacing: -.015em;
+  margin: 0;
+  line-height: 1.1;
+}
+.group-meta{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────── ROWS (cards on mobile) ───────── */
+.row{
+  display: flex; flex-direction: column;
+  gap: .55rem;
+  padding: 1.1rem .1rem 1.15rem;
+  border-bottom: 1px solid var(--paper-rule);
+  text-decoration: none;
+  color: inherit;
+  min-height: 44px; /* tap target */
+}
+.row:active{ background: var(--paper-warm); }
+.r-tag{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  text-transform: uppercase;
+}
+.r-title{
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0;
+}
+.r-blurb{
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0;
+  font-variation-settings: "opsz" 16;
+}
+.r-meta{
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem;
+  margin-top: .15rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  color: var(--ink-3);
+}
+.r-arrow{ color: var(--ochre); font-weight: 700; letter-spacing: .06em; }
+
+/* ─────────────────────────── COLOPHON ──────────────────────── */
+footer{
+  margin: 2.5rem var(--pad) 2.5rem;
+}
+.colo-rule{
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+  margin-bottom: 1.2rem;
+}
+.colo{
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: var(--ink-3);
+  display: flex; flex-direction: column;
+  gap: 1.3rem;
+}
+.colo-links{ display: flex; flex-direction: column; gap: .6rem; }
+.colo a{ color: var(--ink); border-bottom: 1px solid transparent; }
+.colo a:hover{ color: var(--ochre); border-bottom-color: var(--ochre); }
+.tag{
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* Safe area for iOS notches */
+@supports (padding: max(0px)) {
+  .bar{ padding-left: max(var(--pad), env(safe-area-inset-left)); padding-right: max(var(--pad), env(safe-area-inset-right)); }
+  header.mast, main, footer, .filters{
+    padding-left: max(var(--pad), env(safe-area-inset-left));
+    padding-right: max(var(--pad), env(safe-area-inset-right));
+  }
+}
+
+/* ────────────────────── TABLET (≥ 720px) ──────────────────── */
+@media (min-width: 720px){
+  :root{ --pad: 1.6rem; --t-body: 16.5px; }
+  .word{ font-size: 4rem; }
+  .sub{ font-size: 1.1rem; max-width: 60ch; }
+  .stats{ grid-template-columns: repeat(3, 1fr); }
+  .stat{ border-right: 1px solid var(--paper-rule); }
+  .stat:last-child{ grid-column: auto; border-right: 1px solid var(--paper-rule); }
+  .stat:nth-child(even){ border-right: 1px solid var(--paper-rule); }
+  .stat:nth-child(3n){ border-right: 0; }
+  .group-h{ font-size: 1.9rem; }
+  .group-meta{ font-size: 10.5px; }
+  .r-title{ font-size: 1.3rem; }
+  .r-blurb{ font-size: 15.5px; }
+}
+
+/* ────────────────────── DESKTOP (≥ 1024px) ────────────────── */
+@media (min-width: 1024px){
+  :root{ --pad: 0; }
+  body{ font-size: 17px; }
+  .bar{ padding: .9rem clamp(1rem, 4vw, 3rem); }
+  header.mast, main, footer, .filters{
+    width: min(1180px, 92vw);
+    margin-left: auto; margin-right: auto;
+    padding-left: 0; padding-right: 0;
+  }
+  header.mast{ padding-top: 2.5rem; padding-bottom: 1.4rem; text-align: left; }
+  .word{ font-size: clamp(4rem, 8vw, 6rem); }
+  .stats{ grid-template-columns: repeat(5, 1fr); }
+  .stat{ padding: 1.1rem 1.2rem; }
+  .stat:last-child{ grid-column: auto; border-right: 0; }
+  .stat:nth-child(3n){ border-right: 1px solid var(--paper-rule); }
+  .stat:nth-child(5n){ border-right: 0; }
+  .stat-v{ font-size: 1.7rem; }
+  .group-h{ font-size: 2.3rem; }
+
+  /* Rows become horizontal grids on desktop */
+  .row{
+    display: grid;
+    grid-template-columns: 110px 1fr max-content;
+    align-items: baseline;
+    gap: 1.4rem;
+    padding: 1.25rem 0;
+  }
+  .row:hover{ background: var(--paper-warm); }
+  .row:hover .r-title{ color: var(--ochre-deep); }
+  .r-tag{ padding-top: .35rem; }
+  .r-meta{
+    flex-direction: column; align-items: flex-end;
+    margin-top: 0; padding-top: .35rem;
+    text-align: right;
+  }
+  .r-title{ font-size: 1.35rem; }
+  .r-blurb{ font-size: 15.5px; max-width: 72ch; }
+
+  /* Colophon side-by-side */
+  .colo{ flex-direction: row; justify-content: space-between; }
+  .colo-links{ text-align: right; align-items: flex-end; }
+}
+
+@keyframes fade-up{ from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)} }
+header.mast, main, footer { animation: fade-up .5s ease-out both; }
+main{ animation-delay: .08s; }
+footer{ animation-delay: .16s; }
+@media (prefers-reduced-motion: reduce){ *{ animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <a class="bar-back" href="../">← Briefing</a>
+  <div class="bar-mark">The<i>/</i>Library</div>
+  <a class="bar-back" href="../ops/">Ops →</a>
+</div>
+
+<header class="mast">
+  <div class="dateline">
+    <span>Updated 05 Jul 2026 · Palo Alto</span>
+    <span>16 artifacts</span>
+  </div>
+  <div class="eyebrow">Stratum, Inc.</div>
+  <h1 class="word">The<span class="word-slash">/</span>Library</h1>
+  <p class="sub">Every document the founders have produced, organised by what it is and who it is for. Each row links to the artifact in this same window. The list will grow.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Briefings</div><div class="stat-v">5</div></div>
+    <div class="stat"><div class="stat-l">Board docs</div><div class="stat-v">2</div></div>
+    <div class="stat"><div class="stat-l">Public</div><div class="stat-v">6</div></div>
+    <div class="stat"><div class="stat-l">Operating</div><div class="stat-v">3</div></div>
+    <div class="stat"><div class="stat-l">Day</div><div class="stat-v">60<span class="u">/ 365</span></div></div>
+  </div>
+</header>
+
+<div class="filters" aria-label="Artifact categories">
+  <span class="chip chip-on">All</span>
+  <span class="chip chip-live">Live</span>
+  <span class="chip chip-internal">Internal · Fortnightly</span>
+  <span class="chip chip-confidential">Confidential · Board</span>
+  <span class="chip chip-public">Public</span>
+  <span class="chip">Investors</span>
+</div>
+
+<main>
+
+  <!-- ── BRIEFINGS ────────────────────────────────────── -->
+  <section class="group">
+    <div class="group-head">
+      <h2 class="group-h">Chairman's Briefings</h2>
+      <div class="group-meta">5 issues · fortnightly</div>
+    </div>
+
+    <a class="row" href="../briefings/005.html">
+      <div class="r-tag">Briefing · 005</div>
+      <h3 class="r-title">After the board, before the storm</h3>
+      <p class="r-blurb">Board Meeting #1 clean; Workday Illuminate Copilot GA on 01 Jul (R1 materialized); three connector alphas live; Mercator pricing pilot in counter-negotiation; confidence pulse 8.7.</p>
+      <div class="r-meta"><span>05 Jul 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../briefings/004.html">
+      <div class="r-tag">Briefing · 004</div>
+      <h3 class="r-title">Five of five, and a downgrade</h3>
+      <p class="r-blurb">Cordova signed (5/5 design partners); Halcyon downgraded to 60-day evaluation; Workday in beta, Greenhouse in alpha; Tomás Iglesias accepted; the agent surface renamed "Console."</p>
+      <div class="r-meta"><span>21 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../briefings/003.html">
+      <div class="r-tag">Briefing · 003</div>
+      <h3 class="r-title">The first connector, the first wobble</h3>
+      <p class="r-blurb">Workday HR Core in alpha; Northwind Studios signed; Tomás accepted; Halcyon's CHRO promoted (sponsor change); the Bhusri dinner happened.</p>
+      <div class="r-meta"><span>07 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../briefings/002.html">
+      <div class="r-tag">Briefing · 002</div>
+      <h3 class="r-title">The first twelve days</h3>
+      <p class="r-blurb">First hire accepted (Asha Pillai); first design partner ingesting data; nine days behind on the connector schedule; the gap between plan and reality begins.</p>
+      <div class="r-meta"><span>24 May 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../">
+      <div class="r-tag">Briefing · 001</div>
+      <h3 class="r-title">The founding edition</h3>
+      <p class="r-blurb">The Compact of Three. The founding conversation, edited. Decisions 001–012. Eighteen-month roadmap, capital structure, first fourteen hires, risk register. The first letter to the Chairman.</p>
+      <div class="r-meta"><span>12 May 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+  </section>
+
+  <!-- ── BOARD ────────────────────────────────────────── -->
+  <section class="group">
+    <div class="group-head">
+      <h2 class="group-h">Board of Directors</h2>
+      <div class="group-meta">2 documents</div>
+    </div>
+
+    <a class="row" href="../board/minutes-001.html">
+      <div class="r-tag">Minutes · MIN-001</div>
+      <h3 class="r-title">Minutes of Board Meeting No. 1</h3>
+      <p class="r-blurb">Formal minutes of record. Three resolutions adopted (2026-001 pricing pilot · 2026-002 $200K pen-test · 2026-003 founding-designer equity top-up). Three discussion items. Executive session.</p>
+      <div class="r-meta"><span>Adopted 24 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../board/memo-001.html">
+      <div class="r-tag">Memo · M-001</div>
+      <h3 class="r-title">First board memorandum</h3>
+      <p class="r-blurb">Six-week operating update distributed in advance of the first board meeting. Review of decisions 001–045; financial state; risk register update; three resolutions for board consideration.</p>
+      <div class="r-meta"><span>Filed 21 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+  </section>
+
+  <!-- ── OPERATING ────────────────────────────────────── -->
+  <section class="group">
+    <div class="group-head">
+      <h2 class="group-h">Operating &amp; intelligence</h2>
+      <div class="group-meta">3 documents</div>
+    </div>
+
+    <a class="row" href="../ops/">
+      <div class="r-tag">Live · Daily</div>
+      <h3 class="r-title">The operating dashboard</h3>
+      <p class="r-blurb">Dark "war-room" mode. KPI strip with sparklines, connector roadmap, design-partner funnel, eval set progress, compliance posture, decisions feed, hiring tracker, founders' weather.</p>
+      <div class="r-meta"><span>Day 60 · ongoing</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../financials/">
+      <div class="r-tag">Financials · v1</div>
+      <h3 class="r-title">The operating model</h3>
+      <p class="r-blurb">Three-year quarterly P&amp;L, headcount build M0→M18, three runway scenarios, ARR build with unit economics, donut of seed allocation, 2×2 sensitivity matrix. Confidential.</p>
+      <div class="r-meta"><span>Compiled 24 May 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../intel/">
+      <div class="r-tag">Intelligence · 001</div>
+      <h3 class="r-title">Competitive intelligence dossier</h3>
+      <p class="r-blurb">Five subjects torn down — Workday, SAP SuccessFactors, Oracle HCM, Rippling, Lattice. Scoring matrix, customer pain quotes, recent movements log, threat-and-opportunity map, playbook.</p>
+      <div class="r-meta"><span>Compiled 12 May 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+  </section>
+
+  <!-- ── PUBLIC ───────────────────────────────────────── -->
+  <section class="group">
+    <div class="group-head">
+      <h2 class="group-h">Public-facing</h2>
+      <div class="group-meta">6 documents · stratum.ai</div>
+    </div>
+
+    <a class="row" href="../product/">
+      <div class="r-tag">Product · v0</div>
+      <h3 class="r-title">The product, public-facing</h3>
+      <p class="r-blurb">What a Chief People Officer sees on stratum.ai. Hero, the problem in three numbers, three product-pillar mockups, a customer quote, pricing philosophy, the team.</p>
+      <div class="r-meta"><span>First published 09 May 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../customers/mercator.html">
+      <div class="r-tag">Customer note · 001</div>
+      <h3 class="r-title">Mercator — the first ingestion</h3>
+      <p class="r-blurb">Long-form profile of design partner #1 by P. Rao. Elena Vasquez's seventh Tuesday, the architecture argument with Devon Larsen, the first ingestion (3,412 records / 47 minutes), the 11-minute board answer.</p>
+      <div class="r-meta"><span>28 Jun 2026 · 12-min</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../careers/">
+      <div class="r-tag">Careers</div>
+      <h3 class="r-title">Careers — fourteen open roles</h3>
+      <p class="r-blurb">Why work here. The operating model (eight principles). All fourteen open roles with status (2 accepted, 12 open). How we hire. What we offer. Three things we deliberately do not optimize for.</p>
+      <div class="r-meta"><span>Current</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../engineering/">
+      <div class="r-tag">Engineering · Blog</div>
+      <h3 class="r-title">Engineering notes</h3>
+      <p class="r-blurb">Three posts — Entity resolution on the people graph (DO), what we mean when we say "born compliant" (DO), and designing the agent surface (TI). Two forthcoming.</p>
+      <div class="r-meta"><span>First post 09 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../changelog/">
+      <div class="r-tag">Changelog</div>
+      <h3 class="r-title">The product changelog</h3>
+      <p class="r-blurb">Eleven internal releases in eight weeks. v0.1.0 "Foundation" (06 May) through v0.4.2 "Marble" (28 Jun). Added / Changed / Fixed / Known per release. Codename glossary.</p>
+      <div class="r-meta"><span>Current build v0.4.2</span><span class="r-arrow">Open →</span></div>
+    </a>
+
+    <a class="row" href="../trust/">
+      <div class="r-tag">Trust · v1.4</div>
+      <h3 class="r-title">The trust center</h3>
+      <p class="r-blurb">Security architecture (SEC 1.0–6.0), privacy (PRI 1.0–5.0), AI governance (AI 1.0–6.0). SOC2 controls 41/87 implemented. Subprocessor list. EU AI Act classification. Compliance roadmap.</p>
+      <div class="r-meta"><span>Updated 24 Jun 2026</span><span class="r-arrow">Open →</span></div>
+    </a>
+  </section>
+
+  <!-- ── INVESTORS ────────────────────────────────────── -->
+  <section class="group">
+    <div class="group-head">
+      <h2 class="group-h">For investors</h2>
+      <div class="group-meta">1 document</div>
+    </div>
+
+    <a class="row" href="../deck/">
+      <div class="r-tag">Deck · Pre-Series A</div>
+      <h3 class="r-title">The pre-Series A deck</h3>
+      <p class="r-blurb">Fourteen slides, vertical scroll-snap. Premise, problem, market, product, why-now, wedge, traction, business model, competition, team, the ask. Use arrow keys to advance on desktop.</p>
+      <div class="r-meta"><span>Spring 2026 · confidential</span><span class="r-arrow">Open →</span></div>
+    </a>
+  </section>
+
+</main>
+
+<footer>
+  <div class="colo-rule"></div>
+  <div class="colo">
+    <div>The Library · Stratum, Inc.<br/>Updated continuously · Pushed to GitHub Pages on every commit.</div>
+    <div class="colo-links">
+      <a href="../">← Chairman's Briefing</a>
+      <a href="../briefings/005.html">Latest briefing (005) →</a>
+      <a href="../ops/">Operating dashboard →</a>
+    </div>
+  </div>
+  <div class="tag">— End of index —</div>
+</footer>
+
+</body>
+</html>
