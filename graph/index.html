@@ -1,0 +1,2139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — The people graph, visible.</title>
+<meta name="description" content="An interactive visualization of Stratum's people-graph data model. Employees, contractors, AI agents, teams, and the edges between them — explorable in your browser." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · /graph/ — the interactive people-graph page
+   Editorial · cream paper, deep ink, ochre, moss, plum
+   The visualization is the page. The writing supports it.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-soft:    #b48a98;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(720px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18.5px;
+  line-height: 1.65;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.15em; }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{
+    position:sticky; top:0; z-index:200;
+    background:rgba(244,236,218,.96);
+    -webkit-backdrop-filter:saturate(140%) blur(10px);
+    backdrop-filter:saturate(140%) blur(10px);
+    border-bottom:1px solid var(--paper-rule);
+    padding:.6rem 1.1rem;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:.6rem;
+    font-family:var(--mono);
+    font-size:10.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--ink-3);
+  }
+  .mob-bar a{ color:var(--ink-3); text-decoration:none; min-height:36px; display:flex; align-items:center; padding:0 .25rem; border-bottom:0; }
+  .mob-bar a:active{ color:var(--ochre); }
+  .mob-bar-mark{
+    font-family:var(--display); font-weight:600; font-size:1.05rem;
+    letter-spacing:-.02em; color:var(--ink); text-transform:none;
+    flex:1; text-align:center; line-height:1;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .mob-bar .slash { color:var(--ochre); margin:0 .15em; font-style:italic; }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after,
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 900px){
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 2.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.hero h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.034em;
+  color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+.hero h1 em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+}
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "WONK" 1;
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  line-height: 1.4;
+  color: var(--ink-3);
+  max-width: 62ch;
+  margin: 0 0 2.2rem;
+  font-weight: 300;
+}
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.hero-meta strong { color: var(--ink); font-weight: 600; }
+.hero-meta .dot { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── VIZ ── */
+
+.viz-wrap {
+  width: var(--col-wide);
+  margin: 2.2rem auto 2.6rem;
+}
+
+.viz-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-bottom: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.viz-toolbar .group {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+.viz-toolbar .label {
+  color: var(--ink-mute);
+  margin-right: .3rem;
+}
+
+.legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: .35rem .7rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper);
+  color: var(--ink-2);
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  transition: background .15s, border-color .15s, color .15s, opacity .15s;
+  user-select: none;
+}
+.legend-pill:hover { border-color: var(--ink-3); color: var(--ink); }
+.legend-pill.is-off { opacity: .35; }
+.legend-pill.is-only { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.legend-pill .swatch {
+  display: inline-block; width: 14px; height: 14px; flex: 0 0 14px;
+}
+.legend-pill .swatch.node-employee { background: var(--ink); border-radius: 50%; }
+.legend-pill .swatch.node-contractor {
+  background: var(--ochre);
+  transform: rotate(45deg);
+  width: 11px; height: 11px;
+}
+.legend-pill .swatch.node-agent { background: var(--moss); }
+.legend-pill .swatch.node-team {
+  background: rgba(107, 58, 74, 0.18);
+  border-radius: 50%;
+  border: 1px dashed var(--plum);
+  box-sizing: border-box;
+}
+.legend-pill .swatch.edge {
+  width: 22px; height: 2px;
+  background: var(--ink);
+  flex: 0 0 22px;
+}
+.legend-pill .swatch.edge.reports_to { background: var(--ink); }
+.legend-pill .swatch.edge.manages {
+  background: linear-gradient(to right, var(--ochre) 0 6px, transparent 6px 10px, var(--ochre) 10px 16px, transparent 16px 22px);
+  background-size: 22px 2px;
+}
+.legend-pill .swatch.edge.member_of_team {
+  background: radial-gradient(circle, var(--moss) 1px, transparent 1.5px);
+  background-size: 5px 2px;
+  background-repeat: repeat-x;
+  background-position: 0 50%;
+}
+.legend-pill .swatch.edge.compensated_at_band {
+  background: var(--plum);
+  height: 1px;
+}
+
+.viz-toolbar .sep {
+  width: 1px; height: 20px;
+  background: var(--paper-rule);
+  margin: 0 .3rem;
+}
+
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: .45rem .85rem;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+.btn-ghost.is-primary { background: var(--ink); color: var(--paper); }
+.btn-ghost.is-primary:hover { background: var(--ochre); border-color: var(--ochre); color: var(--ink); }
+
+.viz-stage {
+  position: relative;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  overflow: hidden;
+  /* fixed aspect ratio that scales */
+  aspect-ratio: 900 / 600;
+  user-select: none;
+}
+
+.viz-stage svg {
+  display: block;
+  width: 100%; height: 100%;
+  cursor: grab;
+  touch-action: none;
+}
+.viz-stage svg.is-panning { cursor: grabbing; }
+
+.viz-grid line { stroke: rgba(14,22,38,0.04); stroke-width: 1; }
+
+.tt {
+  position: absolute;
+  pointer-events: none;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  padding: .55rem .7rem;
+  max-width: 280px;
+  line-height: 1.5;
+  opacity: 0;
+  transition: opacity .12s;
+  z-index: 10;
+  border-left: 2px solid var(--ochre);
+}
+.tt.is-on { opacity: .98; }
+.tt .ttname {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  font-size: 14px;
+  color: var(--paper);
+  letter-spacing: 0;
+  text-transform: none;
+  display: block;
+  margin-bottom: .3rem;
+}
+.tt .tt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--ochre-soft);
+  text-transform: uppercase;
+  font-size: 10px;
+}
+.tt .tt-row strong { color: var(--paper); font-weight: 500; }
+.tt .tt-tag {
+  display: inline-block;
+  padding: .1rem .35rem;
+  background: var(--ochre);
+  color: var(--ink);
+  margin-top: .35rem;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.tt .tt-tag.node-employee  { background: var(--ochre-soft); color: var(--ink); }
+.tt .tt-tag.node-contractor { background: var(--ochre); color: var(--ink); }
+.tt .tt-tag.node-agent     { background: var(--moss-soft); color: var(--ink); }
+
+.viz-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  flex-wrap: wrap;
+}
+.viz-status .focused {
+  color: var(--ink);
+}
+.viz-status .focused em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 14, "WONK" 1;
+}
+
+/* SVG element styles */
+.node { cursor: pointer; transition: opacity .2s; }
+.node.is-dim { opacity: 0.18; }
+.node.is-focus .node-shape {
+  stroke: var(--ochre);
+  stroke-width: 3;
+}
+.node-shape {
+  stroke: var(--paper);
+  stroke-width: 1.5;
+  transition: stroke .2s, filter .2s;
+}
+.node.employee .node-shape { fill: var(--ink); }
+.node.contractor .node-shape { fill: var(--ochre); }
+.node.agent .node-shape { fill: var(--moss); }
+.node.team .node-shape {
+  fill: rgba(107, 58, 74, 0.08);
+  stroke: var(--plum);
+  stroke-dasharray: 4 4;
+  stroke-width: 1.2;
+  cursor: pointer;
+}
+.node.team:hover .node-shape { fill: rgba(107, 58, 74, 0.14); }
+.node.is-focus.team .node-shape {
+  fill: rgba(107, 58, 74, 0.18);
+  stroke-width: 2.2;
+  stroke-dasharray: 6 4;
+}
+.node:hover .node-shape { filter: brightness(1.15); }
+.node-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .04em;
+  fill: var(--ink);
+  pointer-events: none;
+  text-anchor: middle;
+}
+.node.employee .node-label { fill: var(--ink-2); }
+.node.team .node-label {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  font-size: 14px;
+  fill: var(--plum);
+  letter-spacing: 0;
+  opacity: .9;
+}
+.node.is-dim .node-label { opacity: 0.18; }
+
+.edge {
+  fill: none;
+  pointer-events: none;
+  transition: opacity .2s, stroke-width .2s;
+}
+.edge.is-dim { opacity: 0.08; }
+.edge.is-focus { opacity: 1; stroke-width: 2.2; }
+.edge.reports_to {
+  stroke: var(--ink);
+  stroke-width: 1.4;
+  opacity: .65;
+}
+.edge.manages {
+  stroke: var(--ochre);
+  stroke-width: 1.4;
+  stroke-dasharray: 6 4;
+  opacity: .75;
+}
+.edge.member_of_team {
+  stroke: var(--moss);
+  stroke-width: 1.2;
+  stroke-dasharray: 1 4;
+  stroke-linecap: round;
+  opacity: .55;
+}
+.edge.compensated_at_band {
+  stroke: var(--plum);
+  stroke-width: 0.8;
+  opacity: .5;
+}
+.edge.is-hidden { display: none; }
+.node.is-hidden { display: none; }
+
+/* ─────────────────────────────────────────── SECTIONS ── */
+
+.section {
+  width: var(--col-wide);
+  margin: 4rem auto;
+  padding-bottom: 4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.4rem;
+}
+.section-eyebrow .num {
+  background: var(--ochre);
+  color: var(--paper);
+  padding: .14rem .5rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.section h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -.024em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.section h2 em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "WONK" 1;
+}
+.section .lede {
+  font-size: 1.18rem;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  max-width: 62ch;
+  margin: 0 0 2.4rem;
+  border-left: 2px solid var(--ochre);
+  padding-left: 1.1em;
+}
+
+/* ── Schema plain-language two-column grid ── */
+
+.schema-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4rem 3rem;
+}
+.schema-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: .55rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.schema-row .sname {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.18rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.schema-row .sname em {
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "WONK" 1;
+  color: var(--ochre);
+}
+.schema-row .skind {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: .12rem .45rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  display: inline-block;
+}
+.schema-row .sname .swatch {
+  display: inline-block;
+  width: 12px; height: 12px;
+  flex: 0 0 12px;
+}
+.schema-row .sname .swatch.node-employee { background: var(--ink); border-radius: 50%; }
+.schema-row .sname .swatch.node-contractor {
+  background: var(--ochre); transform: rotate(45deg);
+  width: 9px; height: 9px;
+}
+.schema-row .sname .swatch.node-agent { background: var(--moss); }
+.schema-row .sname .swatch.node-team { background: rgba(107, 58, 74, 0.2); border: 1px dashed var(--plum); border-radius: 50%; box-sizing: border-box; }
+.schema-row .sname .swatch.edge { width: 18px; height: 2px; }
+.schema-row .sname .swatch.edge.reports_to { background: var(--ink); }
+.schema-row .sname .swatch.edge.manages {
+  background: linear-gradient(to right, var(--ochre) 0 5px, transparent 5px 8px, var(--ochre) 8px 13px, transparent 13px 18px);
+}
+.schema-row .sname .swatch.edge.member_of_team {
+  background: radial-gradient(circle, var(--moss) 1px, transparent 1.5px);
+  background-size: 4px 2px;
+  background-repeat: repeat-x;
+}
+.schema-row .sname .swatch.edge.compensated_at_band {
+  background: var(--plum); height: 1px;
+}
+.schema-row p {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+/* ── Code block for formal schema ── */
+
+.codeblock {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  letter-spacing: 0;
+  padding: 2rem 2.2rem;
+  overflow-x: auto;
+  border-left: 4px solid var(--ochre);
+}
+.codeblock .cm { color: var(--ink-mute); }
+.codeblock .kw { color: var(--ochre-soft); }
+.codeblock .id { color: #d8e3f0; }
+.codeblock .ty { color: var(--moss-soft); }
+.codeblock .nl { color: var(--plum-soft); }
+.codeblock .nv { color: var(--paper); }
+
+/* ── Editorial "why graph" prose ── */
+
+.prose {
+  max-width: var(--col-read);
+  margin: 0 auto;
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+.prose p { margin: 0 0 1.35em; }
+.prose p.lede {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  margin-bottom: 1.6em;
+  border-left: 2px solid var(--ochre);
+  padding-left: 1.1em;
+  max-width: none;
+}
+.prose strong { font-weight: 600; color: var(--ink); }
+.prose em { color: var(--ochre); font-style: italic; }
+
+/* ── CTA "Try it" ── */
+
+.try {
+  width: var(--col-wide);
+  margin: 4rem auto 0;
+  padding: 3rem 0 5rem;
+  border-bottom: 1px solid var(--paper-rule);
+  text-align: center;
+}
+.try h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4.4vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -.024em;
+  margin: 0 auto 1.2rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.try h2 em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "WONK" 1;
+}
+.try p {
+  max-width: 56ch;
+  margin: 0 auto 2rem;
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  color: var(--ink-3);
+  font-size: 1.18rem;
+}
+.try .stats {
+  display: flex;
+  justify-content: center;
+  gap: 2.6rem;
+  flex-wrap: wrap;
+  margin: 0 auto 2rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.try .stats strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-style: italic;
+}
+.try .cta {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .95rem 1.6rem;
+  border: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.try .cta:hover { background: var(--ochre); border-color: var(--ochre); color: var(--ink); }
+.try .cta .arr { color: var(--ochre); margin-left: .5rem; }
+.try .cta:hover .arr { color: var(--ink); }
+
+/* ── Closing ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 4rem auto;
+  text-align: center;
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "WONK" 1;
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  line-height: 1.32;
+  color: var(--ink);
+  font-weight: 300;
+}
+.closing em { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 2rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.8rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-size: .98rem;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  line-height: 1.5;
+  max-width: 38ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  font-size: .98rem;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-foot .briefing-link { color: var(--ink-3); border-bottom: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 900px) {
+  .schema-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 640px) {
+  html, body { font-size: 17px; }
+  .hero { padding: 2.4rem 0 1.6rem; }
+  .section { margin: 2.6rem auto; padding-bottom: 2.6rem; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; }
+  .codeblock { font-size: 12px; padding: 1.2rem 1rem; }
+  .viz-toolbar { padding: .8rem .8rem; gap: .6rem; font-size: 10.5px; }
+  .legend-pill { padding: .3rem .55rem; font-size: 10px; }
+  .btn-ghost { padding: .4rem .65rem; font-size: 10px; }
+  .try .stats { gap: 1.6rem; }
+  .try .stats strong { font-size: 1.8rem; }
+}
+
+/* ── Entrance animations ── */
+.hero, .viz-wrap, .section, .try, .closing, .footer {
+  opacity: 0; transform: translateY(8px);
+  animation: rise .9s ease-out forwards;
+}
+.hero { animation-delay: .04s; }
+.viz-wrap { animation-delay: .14s; }
+.section { animation-delay: .22s; }
+.try { animation-delay: .26s; }
+.closing { animation-delay: .3s; }
+.footer { animation-delay: .34s; }
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero, .viz-wrap, .section, .try, .closing, .footer {
+    opacity: 1; transform: none; animation: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T11:32:27-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+13:06:41.000</strong> · <span style="opacity:.6">2026-05-13T15:32:27.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- ─────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum<span class="slash">/</span>Graph</span>
+  <a href="../briefings/" aria-label="Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────── STICKY NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../console/">Console</a>
+      <a href="./" class="is-current">Graph</a>
+      <a href="../engineering/">Engineering</a>
+      <a href="../library/">Library</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    Stratum / The people graph · interactive
+  </div>
+  <h1>The people graph, <em>visible.</em></h1>
+  <p class="hero-sub">
+    Stratum's data model is a graph of people, contractors, agents, and the
+    relationships among them. This page lets you see it. Hover a node. Click an
+    edge. Filter by type. The org is not a tree — it never was.
+  </p>
+  <div class="hero-meta">
+    <span><strong>40</strong> nodes <span class="dot">·</span> synthetic</span>
+    <span><strong>80+</strong> edges <span class="dot">·</span> four types</span>
+    <span>Pure SVG <span class="dot">·</span> no library</span>
+    <span>Try the <a href="../console/">real Console</a> when you're done</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────── THE VISUALIZATION ── -->
+<section class="viz-wrap" aria-label="Interactive people graph">
+
+  <div class="viz-toolbar" role="toolbar" aria-label="Graph controls">
+    <div class="group" aria-label="Node types">
+      <span class="label">Nodes</span>
+      <button class="legend-pill" data-node-type="employee" type="button" aria-pressed="true">
+        <span class="swatch node-employee" aria-hidden="true"></span>Employee
+      </button>
+      <button class="legend-pill" data-node-type="contractor" type="button" aria-pressed="true">
+        <span class="swatch node-contractor" aria-hidden="true"></span>Contractor
+      </button>
+      <button class="legend-pill" data-node-type="agent" type="button" aria-pressed="true">
+        <span class="swatch node-agent" aria-hidden="true"></span>Agent
+      </button>
+      <button class="legend-pill" data-node-type="team" type="button" aria-pressed="true">
+        <span class="swatch node-team" aria-hidden="true"></span>Team
+      </button>
+    </div>
+    <div class="sep" aria-hidden="true"></div>
+    <div class="group" aria-label="Edge types">
+      <span class="label">Edges</span>
+      <button class="legend-pill" data-edge-type="reports_to" type="button" aria-pressed="true">
+        <span class="swatch edge reports_to" aria-hidden="true"></span>reports_to
+      </button>
+      <button class="legend-pill" data-edge-type="manages" type="button" aria-pressed="true">
+        <span class="swatch edge manages" aria-hidden="true"></span>manages
+      </button>
+      <button class="legend-pill" data-edge-type="member_of_team" type="button" aria-pressed="true">
+        <span class="swatch edge member_of_team" aria-hidden="true"></span>member_of_team
+      </button>
+      <button class="legend-pill" data-edge-type="compensated_at_band" type="button" aria-pressed="true">
+        <span class="swatch edge compensated_at_band" aria-hidden="true"></span>compensated_at_band
+      </button>
+    </div>
+    <div class="sep" aria-hidden="true"></div>
+    <div class="group" style="margin-left:auto;">
+      <button class="btn-ghost" id="btn-zoom-in" type="button" aria-label="Zoom in">+</button>
+      <button class="btn-ghost" id="btn-zoom-out" type="button" aria-label="Zoom out">−</button>
+      <button class="btn-ghost is-primary" id="btn-reset" type="button">Reset view</button>
+    </div>
+  </div>
+
+  <div class="viz-stage" id="viz-stage">
+    <svg
+      id="viz-svg"
+      viewBox="0 0 900 600"
+      preserveAspectRatio="xMidYMid meet"
+      role="img"
+      aria-label="People-graph visualization with 40 nodes and 80-plus edges"
+    >
+      <defs>
+        <pattern id="grid-pat" width="30" height="30" patternUnits="userSpaceOnUse">
+          <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(14,22,38,0.035)" stroke-width="1"/>
+        </pattern>
+      </defs>
+      <g id="viz-root">
+        <rect width="900" height="600" fill="url(#grid-pat)"/>
+        <!-- background teams layer -->
+        <g id="layer-teams"></g>
+        <!-- edges layer -->
+        <g id="layer-edges"></g>
+        <!-- nodes layer -->
+        <g id="layer-nodes"></g>
+      </g>
+    </svg>
+
+    <div class="tt" id="tt" role="tooltip" aria-hidden="true"></div>
+  </div>
+
+  <div class="viz-status">
+    <span id="status-focus" class="focused">Hover a node to inspect <em>· click to focus its 1-hop neighborhood.</em></span>
+    <span id="status-count">
+      <span id="status-visible-nodes">40</span> nodes visible <span class="dot">·</span>
+      <span id="status-visible-edges">80</span> edges visible
+    </span>
+  </div>
+
+</section>
+
+<!-- ─────────────────────────────── SCHEMA · PLAIN LANGUAGE ── -->
+<section class="section">
+  <div class="section-eyebrow"><span class="num">§ 01</span><span>The schema, in plain language</span></div>
+  <h2>What each <em>node</em> and <em>edge</em> means.</h2>
+  <p class="lede">
+    The graph is small, and so is the vocabulary. Four node types. Four edge
+    types. The combinatorics live in the data, not the schema.
+  </p>
+
+  <div class="schema-grid">
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch node-employee" aria-hidden="true"></span>
+        <em>Employee</em> node
+        <span class="skind">node · person</span>
+      </div>
+      <p>
+        A person on the payroll. Has a <strong>manager</strong>, a
+        <strong>level</strong>, a <strong>comp band</strong>, and a tenure.
+        Required to be connected to exactly one manager (except the CEO/CHRO).
+        May be a member of one or more teams.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch node-contractor" aria-hidden="true"></span>
+        <em>Contractor</em> node
+        <span class="skind">node · person</span>
+      </div>
+      <p>
+        A person with limited tenure, <strong>no comp band</strong>, and a
+        reference to a payroll vendor. Has an engagement window
+        (<code>valid_from</code>, <code>valid_until</code>). Reports to an
+        employee — never to another contractor. Cannot manage anyone.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch node-agent" aria-hidden="true"></span>
+        <em>Agent</em> node
+        <span class="skind">node · system</span>
+      </div>
+      <p>
+        An AI agent: ours or a customer's. Has a <strong>creator</strong> (the
+        human who instantiated it), an <strong>oversight policy</strong> (who
+        can halt it, when), and an <strong>access scope</strong> (which slices
+        of the graph it can read or modify). First-class. Audited like a
+        person.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch node-team" aria-hidden="true"></span>
+        <em>Team</em> node
+        <span class="skind">node · grouping</span>
+      </div>
+      <p>
+        A logical grouping — engineering, sales, customer success, ops. Many-to-many
+        with employees, which is the whole point: matrix organizations are
+        supported because a person can be a member of multiple teams without
+        any of them being a lie.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch edge reports_to" aria-hidden="true"></span>
+        <em>reports_to</em> edge
+        <span class="skind">edge · 1 → 1</span>
+      </div>
+      <p>
+        Directed: an employee &rarr; their manager. <strong>Required</strong>
+        for every employee on the payroll. Versioned — when someone changes
+        managers, the old edge is closed (<code>valid_until</code>) and a new
+        one opens. The historical chain is preserved.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch edge manages" aria-hidden="true"></span>
+        <em>manages</em> edge
+        <span class="skind">edge · 1 → N</span>
+      </div>
+      <p>
+        The inverse of <code>reports_to</code>, materialized for query
+        convenience. Never written directly — derived. Surfacing it as a
+        first-class edge means "span of control" is one hop, not a self-join.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch edge member_of_team" aria-hidden="true"></span>
+        <em>member_of_team</em> edge
+        <span class="skind">edge · N → N</span>
+      </div>
+      <p>
+        An employee &rarr; a team. Many such edges per employee. Carries
+        attributes: <strong>role</strong> (lead, member, advisor),
+        <strong>allocation</strong> (1.0, 0.5, 0.2), <strong>since</strong>.
+        The matrix lives here.
+      </p>
+    </div>
+
+    <div class="schema-row">
+      <div class="sname">
+        <span class="swatch edge compensated_at_band" aria-hidden="true"></span>
+        <em>compensated_at_band</em> edge
+        <span class="skind">edge · 1 → 1 (current)</span>
+      </div>
+      <p>
+        An employee &rarr; their <strong>comp band</strong>, with effective
+        dates. Closed and re-opened on promotion or market adjustment. Pay
+        equity queries traverse this edge — they never read a column.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────── SCHEMA · FORMAL ── -->
+<section class="section">
+  <div class="section-eyebrow"><span class="num">§ 02</span><span>The schema, in formal notation</span></div>
+  <h2>For the <em>engineers</em>.</h2>
+  <p class="lede">
+    The same idea, with types. JSON-Schema-ish, abbreviated. The full
+    schema is published at <code>/api/schema.v3.json</code> and ratified
+    fortnightly in the Compact.
+  </p>
+
+  <pre class="codeblock" aria-label="Formal schema in JSON-Schema-like notation"><span class="cm">// ── Node types ────────────────────────────────────────────────────────</span>
+
+<span class="kw">Employee</span> {
+  <span class="nv">id</span>:               <span class="ty">string</span>,                <span class="cm">// stable, opaque, never reused</span>
+  <span class="nv">display_name</span>:     <span class="ty">string</span>,
+  <span class="nv">level</span>:            <span class="ty">"IC1" | "IC2" | ... | "IC7" | "M1" | ... | "M5"</span>,
+  <span class="nv">manager_id</span>:       <span class="ty">Employee.id | <span class="nl">null</span></span>,   <span class="cm">// null only at the top of the tree</span>
+  <span class="nv">team_ids</span>:         [<span class="ty">Team.id</span>],            <span class="cm">// 1..N · matrix supported</span>
+  <span class="nv">comp_band_id</span>:     <span class="ty">CompBand.id</span>,
+  <span class="nv">hire_date</span>:        <span class="ty">date</span>,
+  <span class="nv">terminated_at</span>:    <span class="ty">date | <span class="nl">null</span></span>,            <span class="cm">// null = active</span>
+  <span class="nv">comp_total</span>:       <span class="ty">number</span>,                <span class="cm">// in band currency · annualized</span>
+  <span class="nv">region</span>:           <span class="ty">"NA" | "EMEA" | "APAC" | "LATAM"</span>,
+  <span class="nv">flight_risk</span>:      <span class="ty">"low" | "moderate" | "high"</span>,
+}
+
+<span class="kw">Contractor</span> {
+  <span class="nv">id</span>:               <span class="ty">string</span>,
+  <span class="nv">display_name</span>:     <span class="ty">string</span>,
+  <span class="nv">vendor_ref</span>:       <span class="ty">string</span>,                <span class="cm">// e.g. "magnit:CC-4471"</span>
+  <span class="nv">engagement_start</span>: <span class="ty">date</span>,
+  <span class="nv">engagement_end</span>:   <span class="ty">date | <span class="nl">null</span></span>,            <span class="cm">// auto-expires</span>
+  <span class="nv">sponsor_id</span>:       <span class="ty">Employee.id</span>,           <span class="cm">// who owns the engagement</span>
+  <span class="nv">rate</span>:             <span class="ty">number</span>,                <span class="cm">// hourly, in vendor currency</span>
+  <span class="nv">comp_band_id</span>:     <span class="ty"><span class="nl">null</span></span>,                  <span class="cm">// contractors are NOT banded</span>
+}
+
+<span class="kw">Agent</span> {
+  <span class="nv">id</span>:               <span class="ty">string</span>,
+  <span class="nv">display_name</span>:     <span class="ty">string</span>,
+  <span class="nv">kind</span>:             <span class="ty">"stratum-builtin" | "customer-defined"</span>,
+  <span class="nv">creator_id</span>:       <span class="ty">Employee.id</span>,           <span class="cm">// always a human</span>
+  <span class="nv">oversight_policy</span>: <span class="ty">OversightPolicy.id</span>,    <span class="cm">// halt-conditions live here</span>
+  <span class="nv">access_scope</span>:     <span class="ty">[Scope]</span>,               <span class="cm">// e.g. "read:people.region=EMEA"</span>
+  <span class="nv">last_review</span>:      <span class="ty">date</span>,                  <span class="cm">// 90-day cadence enforced</span>
+}
+
+<span class="kw">Team</span> {
+  <span class="nv">id</span>:               <span class="ty">string</span>,
+  <span class="nv">display_name</span>:     <span class="ty">string</span>,
+  <span class="nv">parent_team_id</span>:   <span class="ty">Team.id | <span class="nl">null</span></span>,        <span class="cm">// teams nest</span>
+  <span class="nv">cost_center</span>:      <span class="ty">string</span>,
+}
+
+<span class="cm">// ── Edge type (one shape, four kinds) ────────────────────────────────</span>
+
+<span class="kw">Edge</span> {
+  <span class="nv">type</span>: <span class="ty">"reports_to" | "manages" | "member_of_team"
+       | "compensated_at_band" | "sponsored_by" | "audits"</span>,
+  <span class="nv">source</span>:           <span class="ty">NodeId</span>,
+  <span class="nv">target</span>:           <span class="ty">NodeId</span>,
+  <span class="nv">valid_from</span>:       <span class="ty">date</span>,
+  <span class="nv">valid_until</span>:      <span class="ty">date | <span class="nl">null</span></span>,            <span class="cm">// null = currently active</span>
+  <span class="nv">attributes</span>:       <span class="ty">object</span>,                <span class="cm">// edge-kind specific</span>
+}
+
+<span class="cm">// All writes are append-only. Edges are never deleted —
+// they are closed by setting valid_until. That is what makes
+// "who reported to whom in Q2 of last year" a one-line query.</span>
+</pre>
+
+</section>
+
+<!-- ─────────────────────────────── WHY GRAPH ── -->
+<section class="section">
+  <div class="section-eyebrow"><span class="num">§ 03</span><span>Why a graph, not a table</span></div>
+  <h2>The org has not been a <em>tree</em> for a long time.</h2>
+
+  <div class="prose">
+    <p class="lede">
+      A traditional HRIS represents the org as a tree. One employee, one
+      manager, one location, one cost center. The tree was correct in 2008.
+      By 2026 the org is a graph: matrix relationships, dotted lines,
+      contractor pools, vendor liaisons, AI agents that own workflows, and
+      reorgs every six months whether you wanted one or not.
+    </p>
+
+    <p>
+      We chose a graph because the questions our customers ask demand it.
+      <strong>"Who is exposed to this risk?"</strong> is a graph traversal,
+      not a table join. <strong>"What is our manager span of control by
+      band?"</strong> aggregates over an edge type. <strong>"Who has access
+      to this candidate's file, today, transitively?"</strong> is a
+      many-hop walk with <em>valid_from</em> and <em>valid_until</em>
+      constraints. Pretending those questions fit in a star schema is how
+      every legacy HRIS slowly accreted a thousand custom reports — each of
+      them a denormalized graph traversal hand-rolled by a Workday admin
+      on a Tuesday afternoon.
+    </p>
+
+    <p>
+      The graph is also <em>forward-compatible</em>. As new entity types
+      appear — more sophisticated AI agents that own goals, contractor-of-
+      contractor relationships when a vendor sublets, project-based team
+      memberships that last six weeks and then dissolve — we add node and
+      edge types without breaking the existing schema. The same query that
+      counted employees yesterday counts agents tomorrow, because both are
+      nodes and the question was always "what kind of thing reports to
+      what."
+    </p>
+
+    <p>
+      And because every edge carries <strong>valid_from</strong> and
+      <strong>valid_until</strong>, the graph is bitemporal. We can answer
+      <em>who reported to whom on March 14th</em> with the same machinery
+      that answers <em>who reports to whom today</em>. The org is a graph;
+      the graph is versioned; the version is a first-class citizen. That
+      is the substrate the Console queries, the agents write to, and the
+      Compact reads from when it ratifies a decision.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────── TRY IT ── -->
+<section class="try">
+  <div class="section-eyebrow" style="justify-content:center;"><span class="num">§ 04</span><span>Try it on your own data</span></div>
+  <h2>The synthetic graph is <em>small.</em> The real one is not.</h2>
+  <p>
+    The interactive graph above uses 40 synthetic employees and a handful of
+    plausible contractors and agents. The Stratum people graph for our
+    largest customer is larger.
+  </p>
+
+  <div class="stats">
+    <div><strong>5,200</strong>employees</div>
+    <div><strong>87</strong>contractors</div>
+    <div><strong>11</strong>agents</div>
+    <div><strong>~38K</strong>edges</div>
+  </div>
+
+  <a href="../console/" class="cta">Open the Console <span class="arr">→</span></a>
+</section>
+
+<!-- ─────────────────────────────── CLOSING ── -->
+<div class="closing">
+  <em>The org is a graph. The product knows it.</em>
+</div>
+
+<!-- ─────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="./">People graph</a></li>
+        <li><a href="../console/">Console</a></li>
+        <li><a href="../product/">Decisions</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../about/">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../press/">Press</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../engineering/">Engineering posts</a></li>
+        <li><a href="../handbook/">The Compact</a></li>
+        <li><a href="../briefings/">Briefings</a></li>
+        <li><a href="../essays/">Essays</a></li>
+        <li><a href="../library/">The Library</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../security/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../security/">GDPR · DPA</a></li>
+        <li><a href="../security/">EU AI Act stance</a></li>
+        <li><a href="../security/">Sub-processors</a></li>
+        <li><a href="../security/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to the Chairman's Briefing · <strong>Briefing No. 008</strong></a>
+  </div>
+</footer>
+
+<!-- ─────────────────────────────── SCRIPTS ── -->
+<script>
+/* ============================================================
+   Stratum · /graph/ — graph data + interactivity
+   Pure vanilla JS. No deps. Pre-laid hierarchical positions.
+   ============================================================ */
+(function(){
+  'use strict';
+
+  // ── Sticky nav scroll state ───────────────────────────────
+  var nav = document.getElementById('nav');
+  function onScroll(){
+    if (!nav) return;
+    if (window.scrollY > 12) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ── GRAPH DATA ────────────────────────────────────────────
+  // 40 person/agent nodes + 4 team nodes (44 total) · ~80 edges.
+  // Positions are hierarchical: y-row by level.
+  // Layout columns roughly correspond to departments.
+
+  var GRAPH = {
+    nodes: [
+      // ─── Teams (background, drawn first) ───
+      // Engineering: x ≈ 140-330
+      { id:"T_ENG",   type:"team", display_name:"Engineering",       x: 245, y: 365, r: 165, cost_center:"CC-ENG-100", parent:null },
+      // Sales: x ≈ 330-520
+      { id:"T_SAL",   type:"team", display_name:"Sales",             x: 435, y: 365, r: 150, cost_center:"CC-SAL-200", parent:null },
+      // Customer Success: x ≈ 520-705
+      { id:"T_CS",    type:"team", display_name:"Customer Success",  x: 615, y: 365, r: 150, cost_center:"CC-CS-300",  parent:null },
+      // Ops: x ≈ 705-880
+      { id:"T_OPS",   type:"team", display_name:"Ops & People",      x: 795, y: 365, r: 130, cost_center:"CC-OPS-400", parent:null },
+
+      // ─── L0 · CHRO/CEO (top) ───
+      { id:"E_001", type:"employee", display_name:"Elena Vasquez",   title:"CHRO", level:"M5", x: 450, y: 70,
+        manager_id:null, comp_band:"E5", tenure_y:6.4, region:"NA", flight_risk:"low" },
+
+      // ─── L1 · VPs (4) ───
+      { id:"E_010", type:"employee", display_name:"Marcus Chen",     title:"VP Engineering",       level:"M4", x: 200, y: 165, manager_id:"E_001", comp_band:"E4", tenure_y:4.8, region:"NA",   flight_risk:"low" },
+      { id:"E_011", type:"employee", display_name:"Sofia Reyes",     title:"VP Sales",             level:"M4", x: 380, y: 165, manager_id:"E_001", comp_band:"E4", tenure_y:3.2, region:"NA",   flight_risk:"moderate" },
+      { id:"E_012", type:"employee", display_name:"Hiro Tanaka",     title:"VP Customer Success",  level:"M4", x: 580, y: 165, manager_id:"E_001", comp_band:"E4", tenure_y:5.1, region:"APAC", flight_risk:"low" },
+      { id:"E_013", type:"employee", display_name:"Amara Okafor",    title:"VP Operations",        level:"M4", x: 760, y: 165, manager_id:"E_001", comp_band:"E4", tenure_y:2.7, region:"EMEA", flight_risk:"low" },
+
+      // ─── L2 · Senior IC / Managers (12) ───
+      // Engineering branch (under E_010)
+      { id:"E_020", type:"employee", display_name:"Priya Iyer",      title:"Eng Manager · Platform", level:"M3", x: 120, y: 270, manager_id:"E_010", comp_band:"E3", tenure_y:3.9, region:"NA",   flight_risk:"low" },
+      { id:"E_021", type:"employee", display_name:"David Park",      title:"Eng Manager · Connectors", level:"M3", x: 210, y: 270, manager_id:"E_010", comp_band:"E3", tenure_y:2.2, region:"NA",   flight_risk:"moderate" },
+      { id:"E_022", type:"employee", display_name:"Lena Schroder",   title:"Sr Staff Engineer",        level:"IC7", x: 295, y: 270, manager_id:"E_010", comp_band:"E4", tenure_y:7.3, region:"EMEA", flight_risk:"low" },
+
+      // Sales branch (under E_011)
+      { id:"E_030", type:"employee", display_name:"Jordan Blake",    title:"Sales Manager · Enterprise NA", level:"M3", x: 360, y: 270, manager_id:"E_011", comp_band:"E3", tenure_y:1.9, region:"NA",   flight_risk:"high" },
+      { id:"E_031", type:"employee", display_name:"Renata Costa",    title:"Sales Manager · LATAM",         level:"M3", x: 440, y: 270, manager_id:"E_011", comp_band:"E3", tenure_y:2.6, region:"LATAM",flight_risk:"low" },
+
+      // CS branch (under E_012)
+      { id:"E_040", type:"employee", display_name:"Aisha Khan",      title:"CS Manager · Strategic",   level:"M3", x: 540, y: 270, manager_id:"E_012", comp_band:"E3", tenure_y:4.1, region:"NA",   flight_risk:"low" },
+      { id:"E_041", type:"employee", display_name:"Tomás Albano",    title:"CS Manager · Growth",      level:"M3", x: 615, y: 270, manager_id:"E_012", comp_band:"E3", tenure_y:1.4, region:"EMEA", flight_risk:"moderate" },
+      { id:"E_042", type:"employee", display_name:"Yuki Sato",       title:"Principal Solutions Eng",  level:"IC7", x: 690, y: 270, manager_id:"E_012", comp_band:"E4", tenure_y:5.7, region:"APAC", flight_risk:"low" },
+
+      // Ops branch (under E_013)
+      { id:"E_050", type:"employee", display_name:"Noor Hassan",     title:"Ops Manager · Finance Sys", level:"M3", x: 745, y: 270, manager_id:"E_013", comp_band:"E3", tenure_y:3.1, region:"EMEA", flight_risk:"low" },
+      { id:"E_051", type:"employee", display_name:"Carter Wells",    title:"People Ops Lead",          level:"M2", x: 815, y: 270, manager_id:"E_013", comp_band:"E2", tenure_y:1.8, region:"NA",   flight_risk:"low" },
+
+      // ─── L3 · IC engineers under E_020 (Platform) ───
+      { id:"E_100", type:"employee", display_name:"Riya Krishnan",   title:"Senior Engineer · Graph", level:"IC5", x: 85,  y: 405, manager_id:"E_020", comp_band:"E3", tenure_y:2.8, region:"NA",   flight_risk:"low" },
+      { id:"E_101", type:"employee", display_name:"Ben Acheson",     title:"Engineer · Ingest",       level:"IC4", x: 135, y: 405, manager_id:"E_020", comp_band:"E2", tenure_y:1.2, region:"NA",   flight_risk:"moderate" },
+      { id:"E_102", type:"employee", display_name:"Mei Wang",        title:"Engineer · Query",        level:"IC4", x: 185, y: 405, manager_id:"E_020", comp_band:"E2", tenure_y:0.9, region:"APAC", flight_risk:"low" },
+
+      // ─── L3 · IC engineers under E_021 (Connectors) ───
+      { id:"E_110", type:"employee", display_name:"Felix Brun",      title:"Senior Engineer · WD",    level:"IC5", x: 235, y: 405, manager_id:"E_021", comp_band:"E3", tenure_y:3.5, region:"EMEA", flight_risk:"low" },
+      { id:"E_111", type:"employee", display_name:"Anika Devi",      title:"Engineer · ADP",          level:"IC4", x: 285, y: 405, manager_id:"E_021", comp_band:"E2", tenure_y:1.6, region:"APAC", flight_risk:"high" },
+      { id:"E_112", type:"employee", display_name:"Oren Galili",     title:"Engineer · GH/Lever",     level:"IC3", x: 335, y: 405, manager_id:"E_021", comp_band:"E1", tenure_y:0.6, region:"EMEA", flight_risk:"moderate" },
+
+      // ─── L3 · Sales ICs under E_030 (Enterprise NA) ───
+      { id:"E_200", type:"employee", display_name:"Kara Reilly",     title:"AE · Strategic NA",       level:"IC6", x: 380, y: 405, manager_id:"E_030", comp_band:"E4", tenure_y:2.4, region:"NA",   flight_risk:"moderate" },
+      { id:"E_201", type:"employee", display_name:"Devin Holt",      title:"AE · Mid-Market NA",      level:"IC5", x: 430, y: 405, manager_id:"E_030", comp_band:"E3", tenure_y:1.3, region:"NA",   flight_risk:"high" },
+
+      // ─── L3 · Sales ICs under E_031 (LATAM) ───
+      { id:"E_210", type:"employee", display_name:"Lucía Mendez",    title:"AE · LATAM",              level:"IC5", x: 480, y: 405, manager_id:"E_031", comp_band:"E3", tenure_y:2.0, region:"LATAM",flight_risk:"low" },
+
+      // ─── L3 · CS ICs under E_040 (Strategic) ───
+      { id:"E_300", type:"employee", display_name:"Imani Pierce",    title:"CSM · Strategic",         level:"IC5", x: 525, y: 405, manager_id:"E_040", comp_band:"E3", tenure_y:3.4, region:"NA",   flight_risk:"low" },
+      { id:"E_301", type:"employee", display_name:"Rafael Cruz",     title:"CSM · Strategic",         level:"IC5", x: 575, y: 405, manager_id:"E_040", comp_band:"E3", tenure_y:1.9, region:"NA",   flight_risk:"moderate" },
+
+      // ─── L3 · CS ICs under E_041 (Growth) ───
+      { id:"E_310", type:"employee", display_name:"Hana Ito",        title:"CSM · Growth",            level:"IC4", x: 625, y: 405, manager_id:"E_041", comp_band:"E2", tenure_y:1.2, region:"APAC", flight_risk:"low" },
+      { id:"E_311", type:"employee", display_name:"Marek Polański",  title:"CSM · Growth",            level:"IC4", x: 675, y: 405, manager_id:"E_041", comp_band:"E2", tenure_y:0.8, region:"EMEA", flight_risk:"moderate" },
+
+      // ─── L3 · Ops ICs under E_050 ───
+      { id:"E_400", type:"employee", display_name:"Quinn Ferraro",   title:"Sr Finance Sys Analyst",  level:"IC5", x: 730, y: 405, manager_id:"E_050", comp_band:"E3", tenure_y:2.7, region:"EMEA", flight_risk:"low" },
+      { id:"E_401", type:"employee", display_name:"Sana Iqbal",      title:"Procurement Lead",        level:"IC4", x: 780, y: 405, manager_id:"E_050", comp_band:"E2", tenure_y:1.1, region:"NA",   flight_risk:"low" },
+
+      // ─── L3 · People Ops ICs under E_051 ───
+      { id:"E_410", type:"employee", display_name:"Eli Brennan",     title:"People Ops Specialist",   level:"IC3", x: 830, y: 405, manager_id:"E_051", comp_band:"E1", tenure_y:0.7, region:"NA",   flight_risk:"low" },
+
+      // ─── Contractors (3) ── below the IC row ───
+      { id:"C_001", type:"contractor", display_name:"Asha Pillai",   title:"Contractor · Frontend",   x: 105, y: 525, manager_id:"E_020", vendor:"magnit:CC-4471", engagement_start:"2025-09-01", engagement_end:"2026-08-31", rate:135, region:"NA" },
+      { id:"C_002", type:"contractor", display_name:"Theo Klein",    title:"Contractor · Data",       x: 305, y: 525, manager_id:"E_021", vendor:"magnit:CC-4502", engagement_start:"2026-01-15", engagement_end:"2026-07-15", rate:160, region:"EMEA" },
+      { id:"C_003", type:"contractor", display_name:"Bea Soto",      title:"Contractor · Recruiting", x: 800, y: 525, manager_id:"E_051", vendor:"randstad:R-9921", engagement_start:"2025-11-20", engagement_end:"2026-05-31", rate:95,  region:"NA" },
+
+      // ─── Agents (2) ── lower-right corner ───
+      { id:"A_001", type:"agent", display_name:"Lookup agent",       title:"Compass-routed · stratum-builtin", x: 540, y: 525, kind:"stratum-builtin",   creator_id:"E_022", oversight_policy:"halt-on-export", access_scope:"read:people.*",        last_review:"2026-04-22" },
+      { id:"A_002", type:"agent", display_name:"Comp-review agent",  title:"customer-defined · ext",            x: 670, y: 525, kind:"customer-defined", creator_id:"E_001", oversight_policy:"halt-on-write-comp", access_scope:"read:people.region=NA · write:comp_band", last_review:"2026-03-04" }
+    ],
+
+    edges: [
+      // ── reports_to (built from manager_id) is appended programmatically below.
+      //    We list explicit edges of OTHER types here, plus a few cross-cutting
+      //    reports_to/manages pairs already covered by manager_id.
+      //    Code will: (a) auto-generate reports_to + manages from manager_id,
+      //               (b) auto-generate compensated_at_band for every employee,
+      //               (c) read this list for member_of_team + extras.
+
+      // ─── member_of_team (matrix relationships) ─────────────────
+      // VPs are members of their teams
+      { type:"member_of_team", source:"E_010", target:"T_ENG", role:"lead",    allocation:1.0, since:"2022-08-01" },
+      { type:"member_of_team", source:"E_011", target:"T_SAL", role:"lead",    allocation:1.0, since:"2023-05-15" },
+      { type:"member_of_team", source:"E_012", target:"T_CS",  role:"lead",    allocation:1.0, since:"2021-04-12" },
+      { type:"member_of_team", source:"E_013", target:"T_OPS", role:"lead",    allocation:1.0, since:"2024-01-08" },
+
+      // L2 managers / senior ICs
+      { type:"member_of_team", source:"E_020", target:"T_ENG", role:"manager", allocation:1.0, since:"2022-09-01" },
+      { type:"member_of_team", source:"E_021", target:"T_ENG", role:"manager", allocation:1.0, since:"2024-02-14" },
+      { type:"member_of_team", source:"E_022", target:"T_ENG", role:"member",  allocation:0.8, since:"2019-03-04" },
+      // Lena (E_022) is also on Ops for tools — matrix
+      { type:"member_of_team", source:"E_022", target:"T_OPS", role:"advisor", allocation:0.2, since:"2025-06-01" },
+
+      { type:"member_of_team", source:"E_030", target:"T_SAL", role:"manager", allocation:1.0, since:"2024-06-01" },
+      { type:"member_of_team", source:"E_031", target:"T_SAL", role:"manager", allocation:1.0, since:"2023-11-01" },
+      { type:"member_of_team", source:"E_040", target:"T_CS",  role:"manager", allocation:1.0, since:"2022-04-01" },
+      { type:"member_of_team", source:"E_041", target:"T_CS",  role:"manager", allocation:1.0, since:"2024-12-20" },
+      { type:"member_of_team", source:"E_042", target:"T_CS",  role:"member",  allocation:0.7, since:"2020-09-01" },
+      // Yuki (E_042) cross-listed on Engineering — solutions engineering bridge
+      { type:"member_of_team", source:"E_042", target:"T_ENG", role:"advisor", allocation:0.3, since:"2024-07-01" },
+
+      { type:"member_of_team", source:"E_050", target:"T_OPS", role:"manager", allocation:1.0, since:"2023-03-01" },
+      { type:"member_of_team", source:"E_051", target:"T_OPS", role:"manager", allocation:1.0, since:"2024-08-15" },
+
+      // L3 ICs
+      { type:"member_of_team", source:"E_100", target:"T_ENG", role:"member",  allocation:1.0, since:"2023-07-10" },
+      { type:"member_of_team", source:"E_101", target:"T_ENG", role:"member",  allocation:1.0, since:"2025-02-04" },
+      { type:"member_of_team", source:"E_102", target:"T_ENG", role:"member",  allocation:1.0, since:"2025-06-12" },
+      { type:"member_of_team", source:"E_110", target:"T_ENG", role:"member",  allocation:1.0, since:"2022-11-21" },
+      { type:"member_of_team", source:"E_111", target:"T_ENG", role:"member",  allocation:1.0, since:"2024-10-04" },
+      { type:"member_of_team", source:"E_112", target:"T_ENG", role:"member",  allocation:1.0, since:"2025-10-22" },
+      { type:"member_of_team", source:"E_200", target:"T_SAL", role:"member",  allocation:1.0, since:"2024-01-08" },
+      { type:"member_of_team", source:"E_201", target:"T_SAL", role:"member",  allocation:1.0, since:"2025-01-30" },
+      { type:"member_of_team", source:"E_210", target:"T_SAL", role:"member",  allocation:1.0, since:"2024-05-15" },
+      { type:"member_of_team", source:"E_300", target:"T_CS",  role:"member",  allocation:1.0, since:"2023-01-12" },
+      { type:"member_of_team", source:"E_301", target:"T_CS",  role:"member",  allocation:1.0, since:"2024-07-18" },
+      { type:"member_of_team", source:"E_310", target:"T_CS",  role:"member",  allocation:1.0, since:"2025-03-04" },
+      { type:"member_of_team", source:"E_311", target:"T_CS",  role:"member",  allocation:1.0, since:"2025-09-20" },
+      { type:"member_of_team", source:"E_400", target:"T_OPS", role:"member",  allocation:1.0, since:"2023-09-01" },
+      { type:"member_of_team", source:"E_401", target:"T_OPS", role:"member",  allocation:1.0, since:"2025-04-15" },
+      { type:"member_of_team", source:"E_410", target:"T_OPS", role:"member",  allocation:1.0, since:"2025-09-01" },
+
+      // Bonus cross-cut: Riya (E_100, Graph) is also an advisor to CS
+      { type:"member_of_team", source:"E_100", target:"T_CS",  role:"advisor", allocation:0.15, since:"2025-08-01" },
+      // Sana (E_401, procurement) supports Sales ops
+      { type:"member_of_team", source:"E_401", target:"T_SAL", role:"advisor", allocation:0.2, since:"2025-08-22" },
+    ]
+  };
+
+  // ─── Auto-generate reports_to + manages from manager_id ────
+  GRAPH.nodes.forEach(function(n){
+    if (n.manager_id) {
+      GRAPH.edges.push({
+        type:"reports_to", source:n.id, target:n.manager_id,
+        valid_from: n.hire_date || "2024-01-01"
+      });
+      GRAPH.edges.push({
+        type:"manages", source:n.manager_id, target:n.id,
+        valid_from: n.hire_date || "2024-01-01"
+      });
+    }
+  });
+
+  // ─── Auto-generate compensated_at_band for every employee ─
+  GRAPH.nodes.forEach(function(n){
+    if (n.type === "employee" && n.comp_band) {
+      // The band itself is a "virtual" node — we draw the edge to a small
+      // floating point a bit to the side of the node so it shows as a
+      // halo of plum edges. For visualization purposes we'll just route
+      // it to the nearest team or skip it as a self-loop indicator.
+      // Instead: link each employee to a synthetic "band cluster" by
+      // pointing comp_band edges to a small offset. We'll handle this
+      // by drawing them as short stubs from each node (target = same node
+      // but offset). To keep edges first-class, we'll connect to the team
+      // node as a *proxy* for the band — visually clean, and matches the
+      // intuition that bands cluster by department in real data.
+      // (Schema-faithfully: in production, target = CompBand.id.)
+      var teamProxy = null;
+      // Choose a team based on rough x-band
+      if (n.x < 330)       teamProxy = "T_ENG";
+      else if (n.x < 520)  teamProxy = "T_SAL";
+      else if (n.x < 705)  teamProxy = "T_CS";
+      else                 teamProxy = "T_OPS";
+      GRAPH.edges.push({
+        type:"compensated_at_band",
+        source:n.id, target:teamProxy,
+        comp_band: n.comp_band,
+        valid_from: "2025-01-01",
+        // synthetic — exists for visualization fidelity
+        _synthetic: true
+      });
+    }
+  });
+
+  // ── DOM refs ─────────────────────────────────────────────
+  var svg = document.getElementById('viz-svg');
+  var stage = document.getElementById('viz-stage');
+  var root = document.getElementById('viz-root');
+  var layerTeams = document.getElementById('layer-teams');
+  var layerEdges = document.getElementById('layer-edges');
+  var layerNodes = document.getElementById('layer-nodes');
+  var tt = document.getElementById('tt');
+  var statusFocus = document.getElementById('status-focus');
+  var statusVN = document.getElementById('status-visible-nodes');
+  var statusVE = document.getElementById('status-visible-edges');
+
+  var SVGNS = "http://www.w3.org/2000/svg";
+
+  // ── State ────────────────────────────────────────────────
+  var state = {
+    nodeTypeOn: { employee:true, contractor:true, agent:true, team:true },
+    edgeTypeOn: { reports_to:true, manages:true, member_of_team:true, compensated_at_band:true },
+    focusNodeId: null,        // currently focused person/agent node
+    focusTeamId: null,        // currently focused team
+    edgeOnly: null,           // "reports_to" etc. when only-mode active
+    nodeOnly: null,           // node type only-mode
+    zoom: 1,
+    panX: 0, panY: 0
+  };
+
+  // ── Index helpers ────────────────────────────────────────
+  var nodeById = {};
+  GRAPH.nodes.forEach(function(n){ nodeById[n.id] = n; });
+
+  function neighborsOf(nodeId){
+    var set = { nodes:{}, edges:[] };
+    set.nodes[nodeId] = true;
+    GRAPH.edges.forEach(function(e){
+      if (e.source === nodeId || e.target === nodeId) {
+        set.edges.push(e);
+        set.nodes[e.source] = true;
+        set.nodes[e.target] = true;
+      }
+    });
+    return set;
+  }
+
+  function teamMembers(teamId){
+    var set = { nodes:{}, edges:[] };
+    set.nodes[teamId] = true;
+    GRAPH.edges.forEach(function(e){
+      if (e.type === "member_of_team" && e.target === teamId) {
+        set.nodes[e.source] = true;
+        set.edges.push(e);
+      }
+    });
+    return set;
+  }
+
+  // ── RENDER · teams (background) ──────────────────────────
+  GRAPH.nodes.filter(function(n){return n.type==="team";}).forEach(function(t){
+    var g = document.createElementNS(SVGNS, "g");
+    g.setAttribute("class", "node team");
+    g.setAttribute("data-id", t.id);
+    g.setAttribute("data-type", "team");
+
+    var c = document.createElementNS(SVGNS, "circle");
+    c.setAttribute("class", "node-shape");
+    c.setAttribute("cx", t.x);
+    c.setAttribute("cy", t.y);
+    c.setAttribute("r", t.r);
+    g.appendChild(c);
+
+    var lbl = document.createElementNS(SVGNS, "text");
+    lbl.setAttribute("class", "node-label");
+    lbl.setAttribute("x", t.x);
+    lbl.setAttribute("y", t.y + t.r - 14);
+    lbl.textContent = t.display_name;
+    g.appendChild(lbl);
+
+    layerTeams.appendChild(g);
+  });
+
+  // ── RENDER · edges ───────────────────────────────────────
+  GRAPH.edges.forEach(function(e, i){
+    var s = nodeById[e.source], t = nodeById[e.target];
+    if (!s || !t) return;
+
+    var el;
+    if (e.type === "member_of_team" || e.type === "compensated_at_band") {
+      // straight line
+      el = document.createElementNS(SVGNS, "line");
+      el.setAttribute("x1", s.x); el.setAttribute("y1", s.y);
+      el.setAttribute("x2", t.x); el.setAttribute("y2", t.y);
+    } else {
+      // gentle curve for reports_to / manages so multiple edges between
+      // overlapping endpoints don't fully overlay
+      el = document.createElementNS(SVGNS, "path");
+      var dx = (t.x - s.x), dy = (t.y - s.y);
+      var mx = (s.x + t.x) / 2, my = (s.y + t.y) / 2;
+      // perpendicular offset
+      var offset = e.type === "manages" ? 12 : -12;
+      var len = Math.sqrt(dx*dx + dy*dy) || 1;
+      var px = -dy / len * offset;
+      var py =  dx / len * offset;
+      var cx = mx + px, cy = my + py;
+      el.setAttribute("d", "M "+s.x+" "+s.y+" Q "+cx+" "+cy+" "+t.x+" "+t.y);
+    }
+    el.setAttribute("class", "edge " + e.type);
+    el.setAttribute("data-edge-idx", i);
+    el.setAttribute("data-edge-type", e.type);
+    el.setAttribute("data-source", e.source);
+    el.setAttribute("data-target", e.target);
+    layerEdges.appendChild(el);
+  });
+
+  // ── RENDER · nodes (people, contractors, agents) ─────────
+  GRAPH.nodes.filter(function(n){return n.type!=="team";}).forEach(function(n){
+    var g = document.createElementNS(SVGNS, "g");
+    g.setAttribute("class", "node " + n.type);
+    g.setAttribute("data-id", n.id);
+    g.setAttribute("data-type", n.type);
+    g.setAttribute("transform", "translate("+n.x+","+n.y+")");
+
+    var shape;
+    if (n.type === "employee") {
+      shape = document.createElementNS(SVGNS, "circle");
+      // CHRO/CEO bigger; VPs medium; rest small
+      var r = (n.id === "E_001") ? 13 : (n.level && n.level.indexOf("M") === 0 ? 10 : 7);
+      shape.setAttribute("r", r);
+      shape.setAttribute("cx", 0); shape.setAttribute("cy", 0);
+    } else if (n.type === "contractor") {
+      // diamond (rect rotated 45)
+      shape = document.createElementNS(SVGNS, "rect");
+      shape.setAttribute("x", -7); shape.setAttribute("y", -7);
+      shape.setAttribute("width", 14); shape.setAttribute("height", 14);
+      shape.setAttribute("transform", "rotate(45)");
+    } else if (n.type === "agent") {
+      shape = document.createElementNS(SVGNS, "rect");
+      shape.setAttribute("x", -8); shape.setAttribute("y", -8);
+      shape.setAttribute("width", 16); shape.setAttribute("height", 16);
+    }
+    shape.setAttribute("class", "node-shape");
+    g.appendChild(shape);
+
+    var lbl = document.createElementNS(SVGNS, "text");
+    lbl.setAttribute("class", "node-label");
+    var labelDy = (n.type === "employee" && n.id === "E_001") ? -19 : -14;
+    lbl.setAttribute("y", labelDy);
+    // Last name only (kept short) for IC nodes; full for L0–L2
+    var label = n.display_name;
+    if (n.level && n.level.indexOf("IC") === 0 && n.id !== "E_001") {
+      var parts = n.display_name.split(" ");
+      label = parts[parts.length - 1];
+    }
+    lbl.textContent = label;
+    g.appendChild(lbl);
+
+    layerNodes.appendChild(g);
+  });
+
+  // ── INTERACTIONS · hover tooltip ─────────────────────────
+  function fmtComp(b){
+    var map = { E1:"$95–125K", E2:"$130–170K", E3:"$175–230K", E4:"$240–340K", E5:"$370–520K" };
+    return map[b] || b;
+  }
+
+  function tooltipFor(n){
+    var typeLabel = n.type.charAt(0).toUpperCase() + n.type.slice(1);
+    var rows = "";
+    if (n.type === "employee") {
+      rows += "<div class='tt-row'><span>Level</span><strong>"+ (n.level||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Title</span><strong>"+ (n.title||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Comp band</span><strong>"+ (n.comp_band||"—") +" · "+ fmtComp(n.comp_band) +"</strong></div>";
+      rows += "<div class='tt-row'><span>Tenure</span><strong>"+ (n.tenure_y||"—") +" yrs</strong></div>";
+      rows += "<div class='tt-row'><span>Region</span><strong>"+ (n.region||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Flight risk</span><strong>"+ (n.flight_risk||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Manager</span><strong>"+ (n.manager_id ? (nodeById[n.manager_id]||{}).display_name||n.manager_id : "—") +"</strong></div>";
+    } else if (n.type === "contractor") {
+      rows += "<div class='tt-row'><span>Role</span><strong>"+ (n.title||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Vendor</span><strong>"+ (n.vendor||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Engagement</span><strong>"+ (n.engagement_start||"?") +" → "+ (n.engagement_end||"open") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Rate</span><strong>$"+ (n.rate||"—") +"/hr</strong></div>";
+      rows += "<div class='tt-row'><span>Sponsor</span><strong>"+ (n.manager_id ? (nodeById[n.manager_id]||{}).display_name||n.manager_id : "—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Comp band</span><strong>n/a · contractors are not banded</strong></div>";
+    } else if (n.type === "agent") {
+      rows += "<div class='tt-row'><span>Kind</span><strong>"+ (n.kind||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Creator</span><strong>"+ (n.creator_id ? (nodeById[n.creator_id]||{}).display_name||n.creator_id : "—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Oversight</span><strong>"+ (n.oversight_policy||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Scope</span><strong>"+ (n.access_scope||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Last review</span><strong>"+ (n.last_review||"—") +"</strong></div>";
+    } else if (n.type === "team") {
+      var members = teamMembers(n.id);
+      var count = Object.keys(members.nodes).length - 1; // minus team itself
+      rows += "<div class='tt-row'><span>Members</span><strong>"+ count +"</strong></div>";
+      rows += "<div class='tt-row'><span>Cost center</span><strong>"+ (n.cost_center||"—") +"</strong></div>";
+      rows += "<div class='tt-row'><span>Parent</span><strong>"+ (n.parent||"—") +"</strong></div>";
+    }
+    return (
+      "<span class='ttname'>"+ n.display_name +"</span>" +
+      "<span class='tt-tag node-"+ n.type +"'>"+ typeLabel +"</span>" +
+      "<div style='margin-top:.45rem;display:flex;flex-direction:column;gap:.2rem;'>"+ rows +"</div>"
+    );
+  }
+
+  function showTip(n, clientX, clientY){
+    tt.innerHTML = tooltipFor(n);
+    var stageRect = stage.getBoundingClientRect();
+    var x = clientX - stageRect.left + 14;
+    var y = clientY - stageRect.top + 14;
+    // clamp
+    var maxX = stageRect.width - 290;
+    var maxY = stageRect.height - 180;
+    if (x > maxX) x = clientX - stageRect.left - 290;
+    if (y > maxY) y = maxY;
+    tt.style.left = x + "px";
+    tt.style.top  = y + "px";
+    tt.classList.add("is-on");
+    tt.setAttribute("aria-hidden","false");
+  }
+  function hideTip(){
+    tt.classList.remove("is-on");
+    tt.setAttribute("aria-hidden","true");
+  }
+
+  // ── INTERACTIONS · node click ────────────────────────────
+  function focusNode(id){
+    if (!id) {
+      state.focusNodeId = null;
+      state.focusTeamId = null;
+    } else {
+      var n = nodeById[id];
+      if (n && n.type === "team") {
+        state.focusTeamId = id;
+        state.focusNodeId = null;
+      } else {
+        state.focusNodeId = id;
+        state.focusTeamId = null;
+      }
+    }
+    applyVisibility();
+  }
+
+  // ── INTERACTIONS · type filters ──────────────────────────
+  function setEdgeOnly(type){
+    // tri-state click: on → solo → off → on
+    if (state.edgeOnly === type) {
+      // currently soloed → turn off (hide)
+      state.edgeOnly = null;
+      state.edgeTypeOn[type] = false;
+    } else if (state.edgeTypeOn[type] === false) {
+      // currently off → turn on
+      state.edgeTypeOn[type] = true;
+    } else {
+      // currently on → solo
+      state.edgeOnly = type;
+    }
+    applyVisibility();
+  }
+  function setNodeOnly(type){
+    if (state.nodeOnly === type) {
+      state.nodeOnly = null;
+      state.nodeTypeOn[type] = false;
+    } else if (state.nodeTypeOn[type] === false) {
+      state.nodeTypeOn[type] = true;
+    } else {
+      state.nodeOnly = type;
+    }
+    applyVisibility();
+  }
+
+  // ── Apply visibility & focus to DOM ──────────────────────
+  function applyVisibility(){
+    // Compute focus set
+    var focusSet = null;
+    if (state.focusNodeId) {
+      focusSet = neighborsOf(state.focusNodeId);
+    } else if (state.focusTeamId) {
+      focusSet = teamMembers(state.focusTeamId);
+    }
+
+    // ── Nodes
+    var visibleNodes = 0;
+    var allNodes = layerNodes.querySelectorAll(".node");
+    var allTeams = layerTeams.querySelectorAll(".node");
+
+    function visitNode(el){
+      var id = el.getAttribute("data-id");
+      var type = el.getAttribute("data-type");
+      var typeOnSimple = state.nodeTypeOn[type];
+      var typeOnSolo = state.nodeOnly ? (state.nodeOnly === type) : true;
+      var typeOn = typeOnSimple && typeOnSolo;
+      if (!typeOn) {
+        el.classList.add("is-hidden");
+        el.classList.remove("is-dim", "is-focus");
+        return;
+      }
+      el.classList.remove("is-hidden");
+      visibleNodes++;
+      if (focusSet) {
+        if (focusSet.nodes[id]) {
+          el.classList.remove("is-dim");
+          el.classList.toggle("is-focus", id === state.focusNodeId || id === state.focusTeamId);
+        } else {
+          el.classList.add("is-dim");
+          el.classList.remove("is-focus");
+        }
+      } else {
+        el.classList.remove("is-dim", "is-focus");
+      }
+    }
+    allTeams.forEach(visitNode);
+    allNodes.forEach(visitNode);
+
+    // ── Edges
+    var visibleEdges = 0;
+    var allEdges = layerEdges.querySelectorAll(".edge");
+    allEdges.forEach(function(el){
+      var type = el.getAttribute("data-edge-type");
+      var src = el.getAttribute("data-source");
+      var tgt = el.getAttribute("data-target");
+      var sNode = nodeById[src], tNode = nodeById[tgt];
+
+      // edge type filter
+      var typeOnSimple = state.edgeTypeOn[type];
+      var typeOnSolo = state.edgeOnly ? (state.edgeOnly === type) : true;
+      var typeOn = typeOnSimple && typeOnSolo;
+      // endpoints visible by node-type filter
+      var sTypeOn = state.nodeTypeOn[sNode.type] && (state.nodeOnly ? state.nodeOnly === sNode.type : true);
+      var tTypeOn = state.nodeTypeOn[tNode.type] && (state.nodeOnly ? state.nodeOnly === tNode.type : true);
+
+      if (!typeOn || !sTypeOn || !tTypeOn) {
+        el.classList.add("is-hidden");
+        el.classList.remove("is-dim", "is-focus");
+        return;
+      }
+      el.classList.remove("is-hidden");
+      visibleEdges++;
+      if (focusSet) {
+        var sInFocus = focusSet.nodes[src];
+        var tInFocus = focusSet.nodes[tgt];
+        if (sInFocus && tInFocus) {
+          el.classList.add("is-focus");
+          el.classList.remove("is-dim");
+        } else {
+          el.classList.add("is-dim");
+          el.classList.remove("is-focus");
+        }
+      } else {
+        el.classList.remove("is-dim", "is-focus");
+      }
+    });
+
+    statusVN.textContent = visibleNodes;
+    statusVE.textContent = visibleEdges;
+
+    // ── Pill state
+    document.querySelectorAll('.legend-pill[data-node-type]').forEach(function(p){
+      var t = p.getAttribute('data-node-type');
+      p.classList.toggle('is-off', !state.nodeTypeOn[t]);
+      p.classList.toggle('is-only', state.nodeOnly === t);
+      p.setAttribute('aria-pressed', state.nodeTypeOn[t] ? 'true' : 'false');
+    });
+    document.querySelectorAll('.legend-pill[data-edge-type]').forEach(function(p){
+      var t = p.getAttribute('data-edge-type');
+      p.classList.toggle('is-off', !state.edgeTypeOn[t]);
+      p.classList.toggle('is-only', state.edgeOnly === t);
+      p.setAttribute('aria-pressed', state.edgeTypeOn[t] ? 'true' : 'false');
+    });
+
+    // ── Status line
+    if (state.focusNodeId) {
+      var fn = nodeById[state.focusNodeId];
+      statusFocus.innerHTML = "Focused on <em>" + fn.display_name + "</em> · " + (fn.title||fn.type) + " — neighbors highlighted, others dimmed.";
+    } else if (state.focusTeamId) {
+      var ft = nodeById[state.focusTeamId];
+      statusFocus.innerHTML = "Focused on team <em>" + ft.display_name + "</em> · click the canvas to reset.";
+    } else if (state.edgeOnly) {
+      statusFocus.innerHTML = "Filtering to <em>" + state.edgeOnly + "</em> edges only · click <em>Reset view</em> to clear.";
+    } else if (state.nodeOnly) {
+      statusFocus.innerHTML = "Filtering to <em>" + state.nodeOnly + "</em> nodes only · click <em>Reset view</em> to clear.";
+    } else {
+      statusFocus.innerHTML = "Hover a node to inspect <em>· click to focus its 1-hop neighborhood.</em>";
+    }
+  }
+
+  // ── Event wiring · nodes ─────────────────────────────────
+  function bindNodeEvents(g){
+    var id = g.getAttribute("data-id");
+    var n = nodeById[id];
+
+    g.addEventListener("mouseenter", function(e){ showTip(n, e.clientX, e.clientY); });
+    g.addEventListener("mousemove",  function(e){ showTip(n, e.clientX, e.clientY); });
+    g.addEventListener("mouseleave", hideTip);
+    g.addEventListener("click", function(ev){
+      ev.stopPropagation();
+      // Toggle focus if same
+      if (state.focusNodeId === id || state.focusTeamId === id) {
+        focusNode(null);
+      } else {
+        focusNode(id);
+      }
+    });
+    // Touch: tap = focus + brief tooltip
+    g.addEventListener("touchstart", function(ev){
+      var t = ev.changedTouches[0];
+      showTip(n, t.clientX, t.clientY);
+    }, { passive: true });
+  }
+  layerNodes.querySelectorAll(".node").forEach(bindNodeEvents);
+  layerTeams.querySelectorAll(".node").forEach(bindNodeEvents);
+
+  // Click on empty stage = clear focus
+  svg.addEventListener("click", function(){
+    if (state.focusNodeId || state.focusTeamId) focusNode(null);
+  });
+
+  // ── Event wiring · legend pills ──────────────────────────
+  document.querySelectorAll('.legend-pill[data-edge-type]').forEach(function(p){
+    p.addEventListener('click', function(){
+      setEdgeOnly(p.getAttribute('data-edge-type'));
+    });
+  });
+  document.querySelectorAll('.legend-pill[data-node-type]').forEach(function(p){
+    p.addEventListener('click', function(){
+      setNodeOnly(p.getAttribute('data-node-type'));
+    });
+  });
+
+  // ── Reset button ─────────────────────────────────────────
+  document.getElementById('btn-reset').addEventListener('click', function(){
+    state.nodeTypeOn = { employee:true, contractor:true, agent:true, team:true };
+    state.edgeTypeOn = { reports_to:true, manages:true, member_of_team:true, compensated_at_band:true };
+    state.focusNodeId = null;
+    state.focusTeamId = null;
+    state.edgeOnly = null;
+    state.nodeOnly = null;
+    state.zoom = 1; state.panX = 0; state.panY = 0;
+    applyTransform();
+    applyVisibility();
+  });
+
+  // ── Zoom + pan ───────────────────────────────────────────
+  function applyTransform(){
+    root.setAttribute("transform", "translate("+state.panX+","+state.panY+") scale("+state.zoom+")");
+  }
+  document.getElementById('btn-zoom-in').addEventListener('click', function(){
+    state.zoom = Math.min(2.4, state.zoom * 1.25);
+    applyTransform();
+  });
+  document.getElementById('btn-zoom-out').addEventListener('click', function(){
+    state.zoom = Math.max(0.6, state.zoom / 1.25);
+    applyTransform();
+  });
+
+  // Wheel zoom (centered on cursor position in viewBox space)
+  svg.addEventListener('wheel', function(e){
+    if (Math.abs(e.deltaY) < 1) return;
+    e.preventDefault();
+    var factor = e.deltaY < 0 ? 1.12 : 1 / 1.12;
+    var newZoom = Math.min(2.4, Math.max(0.6, state.zoom * factor));
+    // Adjust pan to zoom toward cursor
+    var rect = svg.getBoundingClientRect();
+    var px = (e.clientX - rect.left) / rect.width  * 900;
+    var py = (e.clientY - rect.top)  / rect.height * 600;
+    var dx = (px - state.panX) * (newZoom / state.zoom - 1);
+    var dy = (py - state.panY) * (newZoom / state.zoom - 1);
+    state.panX -= dx;
+    state.panY -= dy;
+    state.zoom = newZoom;
+    applyTransform();
+  }, { passive: false });
+
+  // Drag-pan
+  var dragging = false, dragStart = null, panStart = null;
+  svg.addEventListener('mousedown', function(e){
+    // Only drag from background, not from a node
+    var t = e.target;
+    if (t.closest && t.closest('.node')) return;
+    dragging = true;
+    dragStart = { x: e.clientX, y: e.clientY };
+    panStart  = { x: state.panX, y: state.panY };
+    svg.classList.add('is-panning');
+  });
+  window.addEventListener('mousemove', function(e){
+    if (!dragging) return;
+    var rect = svg.getBoundingClientRect();
+    var scaleX = 900 / rect.width;
+    var scaleY = 600 / rect.height;
+    state.panX = panStart.x + (e.clientX - dragStart.x) * scaleX;
+    state.panY = panStart.y + (e.clientY - dragStart.y) * scaleY;
+    applyTransform();
+  });
+  window.addEventListener('mouseup', function(){
+    if (dragging) {
+      dragging = false;
+      svg.classList.remove('is-panning');
+    }
+  });
+
+  // Touch drag
+  var tDrag = null;
+  svg.addEventListener('touchstart', function(e){
+    var tg = e.target;
+    if (tg.closest && tg.closest('.node')) return;
+    if (e.touches.length !== 1) return;
+    tDrag = {
+      sx: e.touches[0].clientX,
+      sy: e.touches[0].clientY,
+      px: state.panX, py: state.panY
+    };
+  }, { passive: true });
+  svg.addEventListener('touchmove', function(e){
+    if (!tDrag || e.touches.length !== 1) return;
+    var rect = svg.getBoundingClientRect();
+    var scaleX = 900 / rect.width;
+    var scaleY = 600 / rect.height;
+    state.panX = tDrag.px + (e.touches[0].clientX - tDrag.sx) * scaleX;
+    state.panY = tDrag.py + (e.touches[0].clientY - tDrag.sy) * scaleY;
+    applyTransform();
+  }, { passive: true });
+  svg.addEventListener('touchend', function(){ tDrag = null; });
+
+  // ── Initial pass ─────────────────────────────────────────
+  applyVisibility();
+  applyTransform();
+
+  // ── Total edge count: for status bar accuracy ────────────
+  // (We rebuilt edges programmatically; expose final count.)
+  // Console hint for inspectors:
+  try {
+    console.info(
+      "%cStratum people graph%c — " +
+      GRAPH.nodes.length + " nodes (" +
+      GRAPH.nodes.filter(function(n){return n.type==="employee";}).length + " emp · " +
+      GRAPH.nodes.filter(function(n){return n.type==="contractor";}).length + " cnt · " +
+      GRAPH.nodes.filter(function(n){return n.type==="agent";}).length + " agt · " +
+      GRAPH.nodes.filter(function(n){return n.type==="team";}).length + " team) · " +
+      GRAPH.edges.length + " edges",
+      "color:#b8651f;font-weight:700;letter-spacing:.08em;",
+      "color:#0e1626;"
+    );
+  } catch(_){}
+
+})();
+</script>
+</body>
+</html>

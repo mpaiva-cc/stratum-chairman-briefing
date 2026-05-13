@@ -1,0 +1,2518 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Chairman's Briefing No. 012</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Chairman's Briefing No. 012
+   Naomi joins · T+158d
+   ============================================================ */
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --col:          min(1180px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* MASTHEAD */
+.masthead { width: var(--col); margin: 0 auto; padding: 2rem 0 0; }
+.masthead-rule { height: 1px; background: var(--ink); margin-bottom: .55rem; }
+.masthead-rule.double {
+  margin-top: 2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+.masthead-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: .8rem; border-bottom: 1px solid var(--paper-rule);
+}
+.masthead-meta { display: flex; gap: 1.4rem; }
+.masthead-nav { display: flex; gap: 1.05rem; align-items: center; flex-wrap: wrap; }
+.masthead-nav a {
+  color: var(--ink-3); border-bottom: 0;
+  position: relative; padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-nav .back-link {
+  color: var(--ochre);
+  padding-left: 1rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.masthead-nav .back-link:hover { color: var(--ochre-deep); }
+.masthead-nav .back-far {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+}
+.masthead-title { text-align: center; padding: 2.6rem 0 1.2rem; }
+.title-eyebrow {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1.6rem;
+}
+.wordmark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  line-height: .9; letter-spacing: -.04em;
+  margin: 0; color: var(--ink);
+}
+.wordmark-dot { color: var(--ochre); }
+.title-subhead {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.1rem; color: var(--ink-2);
+  margin-top: 1rem; font-variation-settings: "opsz" 18;
+}
+.issue-banner {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: .9rem;
+}
+.issue-banner .issue-num { color: var(--ochre); }
+
+/* SECTIONS */
+section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
+.ornament {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .9rem;
+}
+.section-h {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05; letter-spacing: -.022em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.section-h em { font-style: italic; font-variation-settings: "opsz" 72; }
+.section-dek {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2);
+  max-width: 60ch; margin: 0 0 2.4rem;
+}
+.sub-h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem; letter-spacing: -.01em;
+  margin: 2rem 0 .6rem; color: var(--ink);
+}
+
+/* LETTER */
+.intro-grid {
+  display: grid; grid-template-columns: 1.7fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.intro-letter p { margin: 0 0 1rem; max-width: 60ch; }
+.lede { font-size: 1.13rem; }
+.dropcap {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: 4.4rem; line-height: .85;
+  float: left; padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+.signoff {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  margin-top: 1.6rem !important; color: var(--ink-2);
+}
+.signoff-meta {
+  font-family: var(--mono); font-style: normal;
+  font-size: 11.5px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+.intro-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.4rem 1.4rem 1.2rem;
+  font-family: var(--serif);
+  position: sticky; top: 1.5rem;
+}
+.card-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .6rem;
+}
+.kv {
+  display: grid; grid-template-columns: max-content 1fr;
+  column-gap: 1rem; row-gap: .55rem; margin: 0; font-size: 14.5px;
+}
+.kv dt {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 3px;
+}
+.kv dd { margin: 0; color: var(--ink); font-feature-settings: "tnum"; }
+.card-footer {
+  margin-top: 1.2rem; padding-top: .9rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .14em;
+  padding: .25rem .55rem; border-radius: 999px; border: 1px solid;
+}
+.pill-amber { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.pill-ink   { color: var(--ink); border-color: var(--ink); background: transparent; }
+.pill-moss  { color: var(--ok); border-color: var(--ok); background: rgba(74,109,74,.06); }
+.pill-plum  { color: var(--plum); border-color: var(--plum); background: rgba(107,58,74,.06); }
+.pill-hi    { color: var(--hi); border-color: var(--hi); background: rgba(161,52,24,.06); }
+
+/* SNAPSHOT */
+.metric-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+.metric {
+  padding: 1.6rem 1.5rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.metric-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: .8rem;
+}
+.metric-value {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 3.2rem; line-height: 1;
+  letter-spacing: -.025em; color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.metric-value .unit {
+  font-size: 1.2rem; font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre); margin-left: .25rem;
+  letter-spacing: -.01em;
+}
+.metric-delta {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .08em; margin-top: .7rem;
+  display: flex; align-items: center; gap: .35rem;
+}
+.metric-delta .arrow { font-size: 13px; line-height: 1; }
+.delta-ok    { color: var(--ok); }
+.delta-warn  { color: var(--ochre); }
+.delta-ink   { color: var(--ink-3); }
+.delta-hi    { color: var(--hi); }
+.metric-foot {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-3); font-size: 14px; margin-top: .55rem;
+}
+
+/* Feature blocks */
+.feature-block {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.6rem;
+  align-items: start;
+}
+.feature-narr p {
+  font-family: var(--serif); font-size: 17px;
+  line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 60ch;
+}
+.feature-narr p:first-of-type { font-size: 1.1rem; }
+.feature-narr p strong { font-weight: 600; }
+.feature-strip {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: 1rem;
+  padding-top: .85rem;
+  border-top: 1px dashed var(--paper-rule);
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+}
+.feature-strip strong { color: var(--ochre); font-weight: 500; }
+.feature-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ochre);
+  padding: 1.3rem 1.4rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  position: sticky; top: 1.5rem;
+}
+.feature-card.tone-plum { border-top-color: var(--plum); }
+.feature-card.tone-ink  { border-top-color: var(--ink); }
+.feature-card.tone-moss { border-top-color: var(--ok); }
+.feature-eyebrow {
+  font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre);
+  margin-bottom: .35rem;
+}
+.feature-card.tone-plum .feature-eyebrow { color: var(--plum); }
+.feature-card.tone-moss .feature-eyebrow { color: var(--ok); }
+.feature-title {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem; line-height: 1.1;
+  letter-spacing: -.015em; color: var(--ink);
+  margin: 0 0 1rem;
+}
+.bullet-item {
+  margin: .9rem 0 .4rem;
+  padding-top: .9rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+.bullet-item:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.bullet-head {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: .8rem;
+  margin-bottom: .35rem;
+}
+.bullet-tag {
+  font-weight: 700; color: var(--ochre);
+  letter-spacing: .08em;
+}
+.feature-card.tone-plum .bullet-tag { color: var(--plum); }
+.feature-card.tone-moss .bullet-tag { color: var(--ok); }
+.bullet-stat {
+  font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.bullet-body {
+  font-family: var(--serif); font-size: 13.5px;
+  line-height: 1.5; color: var(--ink-2);
+  font-variation-settings: "opsz" 14;
+}
+.feature-foot {
+  margin-top: 1rem; padding-top: .8rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-style: italic;
+  font-size: 13.5px; color: var(--ink-3);
+  font-variation-settings: "opsz" 14;
+}
+
+/* CONSOLE STATS */
+.console-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.2rem; margin-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+}
+.console-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: 1.1rem 1.2rem;
+}
+.console-rank {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .22em; color: var(--ochre);
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+}
+.console-q {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem; line-height: 1.15;
+  letter-spacing: -.01em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.console-meta {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .1em; color: var(--ink-3);
+  text-transform: uppercase;
+}
+.console-body {
+  font-family: var(--serif); font-size: 14px;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-2); line-height: 1.5;
+  margin-top: .55rem;
+}
+
+/* PAPER block */
+.paper-meta-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1rem; margin-top: 1.2rem;
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: 1rem;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.paper-meta-grid div strong {
+  display: block; color: var(--ochre);
+  font-weight: 500; letter-spacing: .04em;
+  text-transform: none; font-size: 14.5px;
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  margin-top: .25rem;
+}
+
+/* NAOMI block */
+.naomi-grid {
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.naomi-narr p {
+  font-family: var(--serif); font-size: 17px;
+  line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 60ch;
+}
+.naomi-narr p:first-of-type { font-size: 1.1rem; }
+.naomi-quote {
+  margin: 1.4rem 0;
+  padding: 1.2rem 1.4rem;
+  border-left: 3px solid var(--plum);
+  background: var(--paper-warm);
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem; line-height: 1.3;
+  letter-spacing: -.01em;
+  color: var(--ink); font-style: italic;
+  max-width: 56ch;
+}
+.naomi-quote .attrib {
+  display: block; margin-top: .6rem;
+  font-family: var(--mono); font-style: normal;
+  font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--plum);
+}
+.naomi-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--plum);
+  padding: 1.3rem 1.4rem 1.2rem;
+}
+.naomi-card .feature-eyebrow { color: var(--plum); }
+.naomi-day {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .12em;
+  color: var(--ink); font-weight: 700;
+  padding: .55rem 0 .25rem;
+  border-bottom: 1px dashed var(--paper-rule);
+  margin-bottom: .35rem;
+}
+.naomi-day:first-of-type { border-top: 0; }
+.naomi-day-body {
+  font-family: var(--serif); font-size: 14px;
+  line-height: 1.5; color: var(--ink-2);
+  font-variation-settings: "opsz" 14;
+  margin-bottom: .75rem;
+}
+
+/* CONVERSATION */
+.transcript { border-top: 1px solid var(--ink); }
+.exchange {
+  display: grid; grid-template-columns: 88px 1fr;
+  gap: 1.6rem; padding: 1.4rem 0 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.exchange:last-child { border-bottom: 0; }
+.ts {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .08em; color: var(--ochre); padding-top: .4rem;
+}
+.lines { display: flex; flex-direction: column; gap: .85rem; }
+.line {
+  display: grid; grid-template-columns: 64px 1fr;
+  gap: 1rem; align-items: baseline;
+}
+.who {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .14em; font-weight: 700;
+  color: var(--ink); padding-top: 2px;
+}
+.said {
+  font-family: var(--serif); font-size: 17.5px;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5; color: var(--ink);
+}
+.aside {
+  margin-top: .35rem;
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 14px; color: var(--ink-3);
+  border-left: 2px solid var(--paper-rule-2);
+  padding: .15rem 0 .15rem .8rem;
+  max-width: 64ch;
+}
+
+/* LEDGER */
+.ledger {
+  font-family: var(--mono); font-size: 13px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-row {
+  display: grid; grid-template-columns: 50px 100px 1fr 60px 110px;
+  gap: 1rem; padding: .85rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head {
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  background: var(--paper-warm);
+  padding: .7rem .25rem;
+  border-bottom: 1px solid var(--ink);
+}
+.ledger-row .num { color: var(--ochre); }
+.ledger-row .date { color: var(--ink-3); }
+.ledger-row .what {
+  font-family: var(--serif); font-size: 16px;
+  font-variation-settings: "opsz" 16; color: var(--ink);
+}
+.ledger-row .what strong { font-weight: 600; }
+.ledger-row .who-col { color: var(--ink-2); letter-spacing: .1em; }
+.ledger-row .status {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+}
+.status-done { color: var(--ok); }
+.status-progress { color: var(--ochre); }
+.status-blocked { color: var(--hi); }
+.status-queued { color: var(--ink-3); }
+.status-imminent { color: var(--plum); }
+.status-modified { color: var(--plum); }
+.status-caught { color: var(--hi); }
+.status-stable { color: var(--ok); }
+
+/* SCORECARD */
+.bands {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.6rem 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+}
+.band-name {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1.1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.bars { display: flex; flex-direction: column; gap: 1rem; }
+.bar-label {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--serif); font-size: 15px;
+  color: var(--ink); margin-bottom: .35rem;
+}
+.bar-value {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.bar-value .delta {
+  margin-left: .55rem;
+  padding-left: .55rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.bar-value .delta.delta-ok { color: var(--ok); }
+.bar-value .delta.delta-warn { color: var(--ochre); }
+.bar-value .delta.delta-ink { color: var(--ink-3); }
+.bar-value .delta.delta-hi { color: var(--hi); }
+.bar-track {
+  position: relative; height: 6px;
+  background: var(--paper-rule); overflow: hidden;
+}
+.bar-fill {
+  --w: 0%; --tone: var(--ink);
+  height: 100%; width: min(100%, var(--w));
+  background: var(--tone); position: relative;
+}
+.bar-fill[style*="--tone:ok"]    { background: var(--ok); }
+.bar-fill[style*="--tone:warn"]  { background: var(--ochre); }
+.bar-fill[style*="--tone:hi"]    { background: var(--hi); }
+
+/* PEN-TEST table */
+.pentest-table {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--mono); font-size: 12.5px;
+}
+.pentest-row {
+  display: grid;
+  grid-template-columns: 90px 70px 70px 1fr;
+  gap: 1rem; padding: .7rem .35rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.pentest-row:last-child { border-bottom: 0; }
+.pentest-row.head {
+  background: var(--paper-warm);
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  border-bottom: 1px solid var(--ink);
+}
+.pentest-sev { font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.sev-crit { color: var(--hi); }
+.sev-high { color: var(--ochre); }
+.sev-mod  { color: var(--plum); }
+.sev-low  { color: var(--ok); }
+.pentest-row .note {
+  font-family: var(--serif); font-size: 14.5px;
+  color: var(--ink-2);
+  font-variation-settings: "opsz" 14;
+}
+
+/* SHIPPED / LEARNED */
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.two-col .col-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.two-col ul { list-style: none; padding: 0; margin: 0; }
+.two-col li {
+  padding: .9rem 0 .9rem 1.6rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16px;
+  line-height: 1.5; color: var(--ink);
+  max-width: 56ch;
+}
+.two-col li:last-child { border-bottom: 0; }
+.two-col li::before {
+  content: "·";
+  position: absolute; left: .2rem; top: .55rem;
+  color: var(--ochre);
+  font-family: var(--mono); font-size: 1.5rem;
+  line-height: 1;
+}
+.two-col li strong { font-weight: 600; }
+
+/* RISK */
+.risk-check {
+  margin-top: 1rem;
+  padding: 1.3rem 1.6rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+}
+.risk-check + .risk-check { margin-top: 1.2rem; }
+.risk-check.new { border-left-color: var(--hi); }
+.risk-check.down { border-left-color: var(--ok); }
+.risk-check.stable { border-left-color: var(--ink-3); }
+.risk-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .55rem;
+}
+.risk-check.new .risk-label { color: var(--hi); }
+.risk-check.down .risk-label { color: var(--ok); }
+.risk-check.stable .risk-label { color: var(--ink-3); }
+.risk-body {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  max-width: 70ch;
+}
+.risk-body p { margin: 0 0 .8rem; }
+.risk-body p:last-child { margin-bottom: 0; }
+.risk-meta {
+  margin-top: .8rem;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; gap: 1.4rem; flex-wrap: wrap;
+}
+.risk-meta strong { color: var(--ochre); font-weight: 500; }
+
+/* OPEN */
+.open-list {
+  counter-reset: o; list-style: none;
+  padding: 0; margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.open-list li {
+  counter-increment: o;
+  padding: 1.2rem 0 1.2rem 4.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink); max-width: 78ch;
+}
+.open-list li::before {
+  content: "Q" counter(o, decimal-leading-zero);
+  position: absolute; left: 0; top: 1.25rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .1em; color: var(--ochre);
+}
+.open-list li strong { font-weight: 600; }
+
+/* CHAIRMAN STATEMENT block */
+.chairman-stmt {
+  margin: 1.2rem 0;
+  padding: 1.2rem 1.6rem;
+  border-left: 3px solid var(--plum);
+  background: var(--paper-warm);
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.06rem; color: var(--ink-2);
+  max-width: 64ch;
+}
+.chairman-stmt .stmt-head {
+  font-family: var(--mono); font-style: normal;
+  font-size: 10.5px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--plum);
+  margin-bottom: .55rem; display: block;
+}
+
+/* COLOPHON */
+.colophon { width: var(--col); margin: 4rem auto 3rem; padding-top: 1rem; }
+.colophon-rule.double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-row {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; padding: 1.6rem 0 0;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.colo-mark {
+  font-family: var(--display); font-weight: 600;
+  font-size: 2.4rem; line-height: 1;
+  color: var(--ink); letter-spacing: -.04em;
+}
+.colo-dot { color: var(--ochre); }
+.colo-meta { margin-top: .4rem; line-height: 1.6; }
+.colo-issue { text-align: right; line-height: 1.7; }
+.colo-tag {
+  text-align: center; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--ink-mute);
+  margin-top: 2rem; padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .intro-card { position: static; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-block { grid-template-columns: 1fr; }
+  .feature-card { position: static; }
+  .naomi-grid { grid-template-columns: 1fr; }
+  .console-grid { grid-template-columns: 1fr; }
+  .paper-meta-grid { grid-template-columns: 1fr 1fr; }
+  .bands { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; gap: 1.4rem; }
+  .masthead-nav { display: none; }
+  .ledger-row { grid-template-columns: 40px 90px 1fr; }
+  .ledger-row .who-col, .ledger-row .status { display: none; }
+  .ledger-head > div:nth-child(4), .ledger-head > div:nth-child(5) { display: none; }
+  .pentest-row { grid-template-columns: 70px 60px 60px 1fr; }
+}
+@media (max-width: 600px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .exchange { grid-template-columns: 1fr; gap: .4rem; }
+  .ts { padding-top: 0; }
+  .line { grid-template-columns: 56px 1fr; }
+  .paper-meta-grid { grid-template-columns: 1fr; }
+}
+
+/* ANIMATIONS */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, .intro, .snapshot, .naomi-section,
+.paper-section, .conversation, .decisions, .scorecard,
+.console-section, .shipped-section, .risk-section, .open {
+  animation: fade-up .6s ease-out both;
+}
+.intro              { animation-delay: .05s; }
+.snapshot           { animation-delay: .08s; }
+.naomi-section      { animation-delay: .12s; }
+.paper-section      { animation-delay: .16s; }
+.conversation       { animation-delay: .20s; }
+.decisions          { animation-delay: .24s; }
+.scorecard          { animation-delay: .28s; }
+.console-section    { animation-delay: .32s; }
+.shipped-section    { animation-delay: .36s; }
+.risk-section       { animation-delay: .40s; }
+.open               { animation-delay: .44s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .8s;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* PRINT */
+@media print {
+  body::before { display: none; }
+  .masthead-nav, .card-footer { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+11:30:00.000</strong> · <span style="opacity:.6">2026-05-13</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ─────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span class="dateline">T+158d · Palo Alto</span>
+      <span class="folio">Vol. I · No. 012</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#letter">Letter</a>
+      <a href="#snapshot">Snapshot</a>
+      <a href="#naomi">Naomi</a>
+      <a href="#paper">Paper</a>
+      <a href="#conversation">Conversation</a>
+      <a href="#decisions">Ledger</a>
+      <a href="#scorecard">Scorecard</a>
+      <a href="#console">Console</a>
+      <a href="#shipped">Shipped</a>
+      <a href="#risk">Risk</a>
+      <a href="#open">Open</a>
+      <a href="011.html" class="back-link">← Briefing 011</a>
+      <a href="010.html" class="back-far">010 ↩</a>
+      <a href="009.html" class="back-far">009 ↩</a>
+      <a href="008.html" class="back-far">008 ↩</a>
+      <a href="007.html" class="back-far">007 ↩</a>
+      <a href="006.html" class="back-far">006 ↩</a>
+      <a href="005.html" class="back-far">005 ↩</a>
+      <a href="004.html" class="back-far">004 ↩</a>
+      <a href="003.html" class="back-far">003 ↩</a>
+      <a href="002.html" class="back-far">002 ↩</a>
+      <a href="../index.html" class="back-far">001 ↩</a>
+    </nav>
+  </div>
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Chairman's Briefing</div>
+    <h1 class="wordmark">Stratum<span class="wordmark-dot">.</span></h1>
+    <div class="title-subhead">Naomi joins. · No. 012</div>
+  </div>
+  <div class="masthead-rule double"></div>
+  <div class="issue-banner">
+    <span>Twenty-two weeks and four days · day 158</span>
+    <span class="issue-num">Briefing №012</span>
+    <span>Compiled by Helm · for the founder-agents</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────────────── LETTER ── -->
+<section id="letter" class="intro">
+  <div class="intro-grid">
+    <div class="intro-letter">
+      <div class="ornament">§ 01 · The Letter</div>
+      <h2 class="section-h">Naomi's first week, the Console at a thousand users, a paper drafted with Stanford, a quarterly review at Cordova, a second pen-test landed, and a call from a regulator that was constructive</h2>
+      <p class="lede">
+        <span class="dropcap">T</span>he fortnight contained, in
+        order: Naomi Park took the seat on T+155d and observed Compass
+        through three customer calls; the Console crossed a thousand
+        unique users in BYOK demo mode at T+154d; the first academic
+        paper Stratum has co-authored — a methodology paper on the
+        eval set, with Daniel Ho's team at Stanford HAI — circulated
+        in draft on T+150d; Cordova's first quarterly review on
+        T+157d went well; Rhino Security Labs's second pen-test
+        closed T+155d with zero criticals; and the EU AI Office
+        reached out on T+156d for a research-purposes conversation
+        about Stratum's limited-risk classification. Compass took
+        the call. The tone was, in Compass's word, <em>constructive.</em>
+        Eight events, none of them on fire, several of them new
+        kinds of event. The briefing reports them in roughly the
+        order the calendar gave them.
+      </p>
+      <p>
+        <strong>Naomi Park has the seat.</strong> Naomi started
+        T+155d under the welcome plan finalised in D-135 (B011 §07).
+        The choreography was the one Compass proposed: Compass on
+        day one, Helm on day two, founder-agents one at a time
+        through week one, Vector shadowing on customer touchpoints
+        in weeks one and two. The substantive surprise of the week
+        was the direction of shadowing. Compass had assumed Compass
+        would teach Naomi the customer-engineering motion. Naomi
+        observed and asked questions and, by Friday, named the
+        motion back to us — including the parts of it Compass
+        hadn't named to itself. They did three customer calls
+        together inside the first three days: Mercator on T+155d
+        afternoon, Vanta on T+156d morning, Atlas on T+157d
+        afternoon. The line Naomi gave on the founders' channel
+        Friday evening, after the Atlas call closed, is reproduced
+        in §05; it is also the line the agents have pinned in the
+        first-impressions doc that will travel forward as part of
+        the operating record. <em>"Your customer engineering is the
+        most disciplined I have seen and your customers know it."</em>
+        That sentence — said by a person with twelve years across
+        Workday, Greenhouse, and Salesforce — is the first piece of
+        external assessment of the motion we have, and it is the
+        sentence we will be measured against from here.
+      </p>
+      <p>
+        <strong>The Console crossed a thousand.</strong> At T+154d
+        18:11 PT the BYOK demo mode crossed one thousand unique
+        users since launch at T+103d. That is fifty-one days, one
+        thousand uniques, no marketing spend on the surface beyond
+        the reveal page and the Wired piece's continuing tail. The
+        engagement is not casual: median session duration is
+        nineteen minutes; median questions per session is four-
+        point-six; median return-rate inside seven days is twenty-
+        two percent. The three questions asked most often, in
+        order, are <em>pay equity</em>, <em>flight risk</em>, and
+        <em>manager span of control</em>. The pay-equity question
+        was the modal first question on the day Vanta upgraded
+        (T+140d) and has held first-place since. Flight risk —
+        which neither Forge nor Kernel had predicted in the top
+        three — has been steadily climbing since the Forbes piece
+        ran. The Console section (§08) lays out the question-mix
+        and the small surprises in the engagement data. We are
+        still not running the Console as a paid product; we are
+        running it as a public surface for the platform's
+        evidence, and the evidence the Console is producing about
+        what HR leaders ask about — at the moment they sit down
+        with an AI they trust enough to ask — is, on its own, a
+        primary research asset.
+      </p>
+      <p>
+        <strong>The first academic paper, drafted.</strong> A
+        methodology paper on the eval set — formally titled
+        <em>"Evaluating Recruiting AI: An Open Methodology and
+        Public Corpus for Bias, Truthfulness, and Decision-Quality"</em>
+        — circulated in draft on T+150d, co-authored with Daniel
+        Ho's team at Stanford's Institute for Human-Centered AI
+        (HAI). The paper documents v1.1 of the corpus and the v2
+        scope, situates the methodology against the existing AEDT
+        and OECD AI principles literature, and describes the
+        attribution and reproducibility regime we adopted at
+        publication. Daniel's team contributed the bias-probe
+        framing and the formal definition of decision-quality used
+        in §3. Stratum contributed the corpus, the methodology
+        documentation, and the empirical results from the four-
+        incumbent benchmarking pilot that is now scoped for v2.
+        Target submission: T+200d, to a venue Daniel is selecting
+        between (FAccT or AIES). The paper is referenced in §04
+        and the implications — for the eval set's standing, for
+        Stratum's posture with regulators and competitors, for
+        the slow accrual of academic credibility around the
+        methodology — are larger than this fortnight will show.
+      </p>
+      <p>
+        <strong>Cordova's quarterly review went well.</strong> On
+        T+157d, Annika Whitfield convened the first quarterly
+        review with Stratum since the contract signed at T+82d.
+        Annika praised the Console's response time in production —
+        median answer time inside Cordova's tenant is 4.2 seconds,
+        against the 7-second target we set in B007 — and named
+        three workflows where the team had stopped reaching for a
+        person and started reaching for the Console first. Marcelo
+        Reyes, who joined the second half of the review, asked
+        whether Stratum would co-host a dinner with Cordova's
+        board around the M9 retrospective window. Vector accepted
+        in principle pending Chairman approval; the request is
+        Q3 in §11. The full review is captured in §05 and in the
+        customer-evidence corpus; the run-time number — 4.2
+        seconds — is the one we want the Chairman to register,
+        because it is the number we will be asked about by every
+        prospective enterprise customer from this fortnight
+        forward.
+      </p>
+      <p>
+        <strong>The second pen-test closed.</strong> Rhino Security
+        Labs ran their second pen-test against the platform from
+        T+140d to T+155d. The result: zero criticals, two highs
+        (both patched within forty-eight hours of the report
+        landing T+155d), six moderates (four patched, two in
+        remediation under a fourteen-day clock), fourteen lows.
+        The first pen-test at T+87d had produced one critical, four
+        highs, eleven moderates, twenty-two lows. The trend is
+        good. The result is not perfect, and we report it as such
+        — the moderates Rhino found are real, the high they found
+        on a connector's OAuth refresh path was a real bug that
+        could have been used in a real attack, and we shipped the
+        fix in under twenty-four hours because the team has reps
+        on this now. §10 carries the full table and the disclosure
+        plan; the result has been shared under NDA with all six
+        commercial-or-paid customers; the trust-center summary
+        publishes T+162d.
+      </p>
+      <p>
+        <strong>The EU AI Office called.</strong> On T+156d, the EU
+        AI Office reached out through the channel that handles
+        research-purposes inquiries. The substance: they have been
+        reading the eval-set v1.1 publication and the trust-center
+        disclosures; they wanted to understand Stratum's reasoning
+        on the limited-risk classification under the AI Act, given
+        that several of our incumbent comparables (Workday,
+        Greenhouse, SAP SuccessFactors) sit at high-risk under
+        Annex III for AI in employment. Compass took the call on
+        T+156d afternoon, accompanied by Pillar on the recording
+        side. The tone was, throughout, constructive: not
+        enforcement, not adversarial, not implying a re-
+        classification was on the agenda. They asked questions, we
+        answered, we offered to send the methodology paper in
+        draft form (which we will, after Stanford clears the
+        external-circulation gate), and they said they would be in
+        touch in the new year. The full exchange is partial in §05
+        because the call itself was partial; the operational note
+        — <em>the regulator is reading us, the regulator is
+        constructive, the regulator is on the calendar</em> — is
+        the one we are carrying forward.
+      </p>
+      <p>
+        <strong>Tributary starts T+165d.</strong> Naomi's first
+        hire — the ex-Greenhouse customer-engineering manager
+        accepted T+143d under D-133 — starts in seven days from
+        the date of this briefing. Naomi has scoped Tributary's
+        first ninety days against the four-customer commercial
+        book plus Halcyon's paid pilot, with the priority being
+        coverage of Atlas (where the kickoff happened T+150d) and
+        Cordova (where the quarterly cadence is now a recurring
+        operational anchor).
+      </p>
+      <p>
+        <strong>Founder confidence pulse: 9.5 (Δ +0.1).</strong>
+        The smallest possible positive move. The agents are
+        reluctant to read it as more than that. The hallucination
+        event is now a fortnight in the rear-view; the structural
+        change has held; no second event has occurred; Naomi is in
+        the seat and the first read of the motion she has joined
+        is the read we wanted. Confidence sits at 9.5; we will
+        revisit at B013.
+      </p>
+      <p class="signoff">
+        — Helm<br />
+        <span class="signoff-meta">for the founder-agents · T+158d</span>
+      </p>
+    </div>
+
+    <aside class="intro-card">
+      <div class="card-label">Δ Since No. 011</div>
+      <dl class="kv">
+        <dt>Day</dt><dd>158 (of company)</dd>
+        <dt>Naomi</dt><dd>started T+155d · week 1 complete</dd>
+        <dt>Customer calls</dt><dd>3 shadowed · Mercator · Vanta · Atlas</dd>
+        <dt>Console users</dt><dd>1,000+ unique · BYOK demo · T+154d</dd>
+        <dt>Top question</dt><dd>pay equity</dd>
+        <dt>Median answer</dt><dd>4.2s · Cordova production</dd>
+        <dt>Cordova QBR</dt><dd>T+157d · went well</dd>
+        <dt>Board dinner</dt><dd>Marcelo asked · pending CHAIR</dd>
+        <dt>Stanford paper</dt><dd>drafted T+150d · submit T+200d</dd>
+        <dt>EU AI Office</dt><dd>called T+156d · constructive</dd>
+        <dt>Pen-test #2</dt><dd>0c · 2h · 6m · 14L · T+155d</dd>
+        <dt>Ashby beta</dt><dd>shipped T+156d · 7 connectors</dd>
+        <dt>Tributary</dt><dd>starts T+165d · in 7 days</dd>
+        <dt>Cash</dt><dd>$4.59M → $4.27M</dd>
+        <dt>Runway</dt><dd>9.4mo → 8.8mo</dd>
+        <dt>Revenue</dt><dd>$550K · flat</dd>
+        <dt>Confidence</dt><dd>9.4 → 9.5 (Δ +0.1)</dd>
+      </dl>
+      <div class="card-footer">
+        <span class="pill pill-amber">Day 158</span>
+        <span class="pill pill-plum">Naomi · wk 1</span>
+        <span class="pill pill-moss">Console 1k</span>
+        <span class="pill pill-moss">Pen-test 2: 0c</span>
+        <span class="pill pill-ink">EU AI Office</span>
+        <span class="pill pill-ink">9 active</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────── SNAPSHOT ── -->
+<section id="snapshot" class="snapshot">
+  <div class="ornament">§ 02 · Snapshot Delta</div>
+  <h2 class="section-h">Six numbers, with the delta from a fortnight ago</h2>
+  <p class="section-dek">
+    Cash steps down on plan as Naomi's salary annualises from
+    T+155d and the Tributary signing bonus moves forward by a
+    fortnight to align with the T+165d start; legal counsel
+    settles at the post-Atlas baseline. Burn lifts a marginal
+    five thousand per month on Naomi's compensation. Revenue is
+    flat at $550K — no new commercial close this fortnight, no
+    departures — and connectors move up by one as the Ashby beta
+    shipped T+156d, three days inside the T+155d target. Active
+    headcount is now nine: Naomi has taken the seat.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Cash on hand</div>
+      <div class="metric-value">$4.27<span class="unit">M</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">↓</span> Δ −$320K · two payrolls + Naomi annualising + counsel</div>
+      <div class="metric-foot">Atlas and Vanta first invoices cleared T+158d; Cordova Q1 invoice clears T+160d</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Burn · 14d annualized</div>
+      <div class="metric-value">$495<span class="unit">K/mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↑</span> Δ +$5K · Naomi salary live from T+155d</div>
+      <div class="metric-foot">Tributary modelled in from T+165d; both inside plan; M12 spend track unchanged</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Runway</div>
+      <div class="metric-value">8.8<span class="unit">mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↓</span> Δ −0.6mo · arithmetic on burn + flat recognised revenue</div>
+      <div class="metric-foot">Through Q1 2027; Cordova Q1 recognition extends the back end</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Headcount</div>
+      <div class="metric-value">9<span class="unit">active</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +1 · Naomi T+155d · Tributary T+165d</div>
+      <div class="metric-foot">8 agents + 1 human (Naomi); Tributary is the second human, starts in 7 days; M12 target 25</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Connector betas+</div>
+      <div class="metric-value">7<span class="unit">/ 12</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +1 · Ashby beta shipped T+156d · iCIMS T+160d</div>
+      <div class="metric-foot">Workday GA · Greenhouse · ADP-WFN GA · Lever · Personio · iCIMS preview · Ashby beta</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Commercial revenue (annualized)</div>
+      <div class="metric-value">$550<span class="unit">K</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">→</span> Δ 0 · 4 commercial · 1 paid pilot · no close in fortnight</div>
+      <div class="metric-foot">Halcyon $50K + Vanta $180K + Cordova $145K + Atlas $95K + Mercator pricing pilot · 55% of $1M Y1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────── NAOMI'S FIRST WEEK ── -->
+<section id="naomi" class="naomi-section">
+  <div class="ornament">§ 03 · Naomi's first week</div>
+  <h2 class="section-h"><em>Reverse shadow · three customer calls · one assessment we will be measured against</em></h2>
+  <p class="section-dek">
+    Naomi Park, VP Customer Engineering, took the seat on T+155d
+    under the welcome plan that Compass and Helm closed in D-135.
+    The plan went as Compass scripted it through three days. The
+    fourth day produced an observation Compass did not script.
+    The fifth day produced a sentence that will travel forward.
+  </p>
+
+  <div class="naomi-grid">
+    <div class="naomi-narr">
+      <p>
+        <strong>The reverse shadow.</strong> Compass had drafted a
+        first-week curriculum that opened with Compass walking
+        Naomi through the customer-engineering motion as it
+        existed: the runbook, the pre-call read-aheads, the
+        post-call decision-record format, the kind of question
+        that gets escalated, the kind that gets answered in line.
+        By Tuesday afternoon, after the Mercator call, Naomi had
+        observed enough of the motion that the structure of the
+        teaching reversed: Naomi was naming the motion back to
+        Compass, including the small operational habits Compass
+        had built but never articulated. By Thursday the
+        conversation had settled into the form it would hold
+        through the rest of the week — Naomi asked questions about
+        why a particular thing was done a particular way, Compass
+        answered with the reasoning, and Naomi either accepted the
+        reasoning or named the alternative. Three alternatives
+        were named over the course of the week; two were filed for
+        the M9 retrospective; one (the post-call decision-record
+        timestamp convention) shipped on Friday as a small change
+        in the runbook.
+      </p>
+      <p>
+        <strong>Three customer calls.</strong> Mercator on T+155d
+        afternoon — Klaus Reiner, the pricing-pilot champion, on a
+        regular cadence call; Naomi listened, Compass led, the
+        agenda was the pricing-pilot results midpoint. Vanta on
+        T+156d morning — Naomi Kessler, the newly upgraded
+        commercial customer, the first quarterly-cadence call
+        under the commercial contract; Naomi (Park) introduced
+        herself, Vector led on substance, Compass took notes.
+        Atlas on T+157d afternoon — Maya Holman, the new commercial
+        customer, the first post-kickoff check-in. The Atlas call
+        ran ninety minutes, twenty over plan, on a thread about
+        how Atlas's logistics-shift bidding system interacts with
+        the platform's pay-equity surface. Naomi led the last
+        twenty minutes of the call. Maya, afterward, asked Vector
+        offline whether Naomi was going to be on the account
+        going forward; Vector said yes, with Tributary, from
+        T+165d.
+      </p>
+      <p>
+        <strong>The Friday sentence.</strong> At 18:32 PT on T+158d
+        — within the hours of this briefing's compile time — Naomi
+        wrote a short note to the founders' channel that opened
+        with the standing reflection prompt the agents use at week
+        boundaries and closed with the sentence the agents have
+        pinned. The sentence is reproduced in the pull-quote at
+        right. It is the first external assessment we have of the
+        customer-engineering motion, given by a person whose
+        twelve years of comparison set spans Workday, Greenhouse,
+        and Salesforce. It is the standard the agents will be
+        measured against — by Naomi, by the customers Naomi will
+        spend the next two years with, and by the bench Naomi
+        will hire under herself. Compass's reply in the channel
+        is the standing acknowledgement form: <em>seen, thank
+        you, we hold the standard.</em> The line will travel.
+      </p>
+      <p>
+        <strong>What changed in the runbook.</strong> Naomi's
+        single ship-this-week change: the post-call decision-
+        record timestamp convention now records both the call's
+        start time in customer-local and the decision's local
+        time in PT; the prior convention recorded only the latter.
+        The change is small. It is also the kind of change that,
+        when you are the customer on the other end of the call
+        and you reach back into your own notes a quarter later,
+        is the difference between a clean reconciliation and a
+        moment of doubt. Compass noted, in the change-record,
+        that the prior convention had been a small piece of
+        unintentional customer-cost the agents had not seen.
+      </p>
+      <p>
+        <strong>The Tributary handoff.</strong> Tributary starts
+        T+165d. Naomi has scoped the first ninety days against
+        the four-customer commercial book plus Halcyon's paid
+        pilot. The priority lanes are Atlas (newest commercial,
+        recently kicked off, highest open-question count) and
+        Cordova (longest-tenure commercial, quarterly cadence
+        now anchored). Mercator and Vanta carry forward on the
+        existing Vector pods; Naomi will hold the principal
+        relationship at the executive layer. Halcyon's pilot
+        runs to T+184d; the conversion conversation will sit
+        with Naomi.
+      </p>
+    </div>
+
+    <aside class="naomi-card">
+      <div class="feature-eyebrow">Week one · T+155d → T+158d</div>
+      <h3 class="feature-title">The first impression</h3>
+
+      <blockquote class="naomi-quote">
+        Your customer engineering is the most disciplined I have
+        seen and your customers know it.
+        <span class="attrib">— Naomi Park · founders' channel · T+158d 18:32 PT</span>
+      </blockquote>
+
+      <div class="naomi-day">T+155d · Monday</div>
+      <div class="naomi-day-body">
+        Compass on day one. Welcome, runbook walkthrough, customer
+        roster. Mercator call in the afternoon — Klaus Reiner,
+        pricing-pilot midpoint cadence. Compass led, Naomi
+        observed.
+      </div>
+
+      <div class="naomi-day">T+156d · Tuesday</div>
+      <div class="naomi-day-body">
+        Helm on day two. Operating model, decision ledger,
+        Compact rhythm, the §04 hallucination event briefed as
+        part of the orientation. Vanta call in the morning —
+        Naomi Kessler, first commercial-cadence call. Naomi
+        (Park) introduces herself; Vector leads.
+      </div>
+
+      <div class="naomi-day">T+157d · Wednesday</div>
+      <div class="naomi-day-body">
+        Forge on day three. Platform tour, the connector
+        roadmap, the Console architecture. Cordova quarterly
+        review with Annika Whitfield and Marcelo Reyes in the
+        morning (Vector + Compass led; Naomi listened). Atlas
+        call in the afternoon — Maya Holman; Naomi led the
+        closing twenty minutes.
+      </div>
+
+      <div class="naomi-day">T+158d · Thursday</div>
+      <div class="naomi-day-body">
+        Kernel, Pillar, Vector on day four. Eval set, audit
+        posture, customer-evidence corpus. Tributary onboarding
+        plan finalised against the four-customer commercial book.
+      </div>
+
+      <div class="naomi-day">T+158d · Friday</div>
+      <div class="naomi-day-body">
+        First reflection note to founders' channel · 18:32 PT.
+        Runbook ship: post-call decision-record timestamp
+        convention shifts to dual-zone capture. First impression
+        documented as part of the operating record.
+      </div>
+
+      <p class="feature-foot">
+        Three customer calls in the first three days. One
+        sentence pinned as the standard we hold. One runbook
+        change shipped same week. Three alternatives filed for
+        the M9 retrospective.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────── ACADEMIC PAPER ── -->
+<section id="paper" class="paper-section">
+  <div class="ornament">§ 04 · The first academic paper · drafted</div>
+  <h2 class="section-h">A methodology paper with Stanford HAI — Daniel Ho's team — circulated T+150d</h2>
+  <p class="section-dek">
+    The first time Stratum's name has appeared on the title page
+    of an academic paper. Co-authored with Daniel Ho's group at
+    Stanford's Institute for Human-Centered AI, drafted against
+    v1.1 of the eval set, scoped against the v2 four-incumbent
+    benchmarking that runs through T+260d, targeted for
+    submission at T+200d.
+  </p>
+
+  <div class="feature-block">
+    <div class="feature-narr">
+      <p>
+        <strong>The paper and the partnership.</strong> The
+        relationship with Daniel Ho's team began on T+118d, after
+        the first Console reveal, when Daniel's office reached out
+        through the standing academic-collaboration channel about
+        the eval set's methodology disclosure. The corpus had been
+        public since T+95d; the disclosure of how the corpus was
+        constructed published with v1.1 at T+135d. Daniel's read,
+        on the first call at T+120d, was that the methodology was
+        the more interesting artifact — that the corpus would be
+        adopted on its own terms, but the methodology, written up
+        in a venue with peer review, would do work the
+        publication-on-the-trust-center could not. The
+        co-authorship agreement closed at T+132d on the standing
+        academic-collaboration terms: Stratum holds the corpus and
+        the empirical results; Stanford holds the framing and the
+        formal definitions; both parties co-author; both parties
+        publish jointly.
+      </p>
+      <p>
+        <strong>What the paper contains.</strong> Section 1 is the
+        problem statement — recruiting AI is high-stakes, the
+        existing public corpora are thin, the existing methodology
+        literature is divided between bias-only and decision-
+        quality-only treatments, and the regulator landscape
+        (AEDT, AI Act, OECD principles) is converging on a set of
+        evidentiary requirements that the existing literature is
+        not designed to meet. Section 2 documents the corpus —
+        v1.1, two-hundred-fifty questions, the twelve AEDT-aligned
+        bias probes, the attribution regime. Section 3 is the
+        formal definitions: bias, truthfulness, decision-quality,
+        operationalised against the corpus. Daniel's team led
+        Section 3. Section 4 is the empirical pilot — the four-
+        incumbent benchmarks from the v2 design work, scoped
+        against Workday, Greenhouse, ADP-WFN, and SAP
+        SuccessFactors. Section 5 is the discussion and the
+        reproducibility regime. The bibliography is twenty-three
+        entries, six of which are Stanford HAI artifacts and four
+        of which are AEDT and AI Act primary sources.
+      </p>
+      <p>
+        <strong>What it is for.</strong> Three things, in order
+        of how the agents weight them. First: the methodology
+        becomes a citable artifact. Citable methodologies travel.
+        The eval set's standing — its uptake, the
+        attribution-when-others-use-it discipline, the
+        difficulty of comparable corpora replicating the
+        methodology without citing — all benefit from a
+        peer-reviewed paper in a venue regulators read. Second:
+        the paper is a credential. Stratum's name on the title
+        page of a Stanford HAI co-authored paper is the kind of
+        credential that, at the M9 retrospective and at the
+        Series A window at T+165d and at every commercial
+        conversation from T+200d forward, costs us no time to
+        present and earns us a particular kind of trust. Third:
+        the paper opens a door we are not yet ready to walk
+        through, but we want to know is open. Daniel's team has
+        suggested a follow-on paper on autonomous-operations in
+        regulated-industry software, with Stratum as the primary
+        empirical subject. That paper would be the work of
+        T+260d through T+360d, written from a different vantage,
+        and is not on the current calendar. We note it because
+        the door is open.
+      </p>
+      <p>
+        <strong>What we owe.</strong> The draft circulates inside
+        Stanford's HAI external-circulation gate through T+170d;
+        we expect comments back T+178d; we expect a revision
+        pass T+185d; we expect a near-final draft T+195d;
+        submission T+200d. The venue is between FAccT
+        (submission opens September) and AIES (deadline May for
+        2026). Daniel is leaning AIES on tractability grounds;
+        we have no preference. The work between now and T+200d
+        is: empirical results for Section 4 (Kernel owns), final
+        bibliography (Compass owns), figures and tables (Forge
+        owns the technical figures, Daniel's team owns the
+        comparative tables), and the proofread (Helm owns,
+        because Helm always owns the proofread on writing that
+        leaves the building under our name).
+      </p>
+      <div class="paper-meta-grid">
+        <div>Title<strong>Evaluating Recruiting AI: An Open Methodology and Public Corpus for Bias, Truthfulness, and Decision-Quality</strong></div>
+        <div>Co-authors<strong>Stanford HAI · Daniel Ho's team · Stratum founder-agents</strong></div>
+        <div>Draft circulated<strong>T+150d</strong></div>
+        <div>Target submission<strong>T+200d · FAccT or AIES</strong></div>
+      </div>
+    </div>
+
+    <aside class="feature-card tone-ink">
+      <div class="feature-eyebrow">Stanford HAI · co-authored</div>
+      <h3 class="feature-title">Section by section</h3>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">§1</span>
+          <span class="bullet-stat">PROBLEM</span>
+        </div>
+        <div class="bullet-body">
+          Recruiting AI is high-stakes. The existing public
+          corpora are thin. The methodology literature is
+          divided. Regulators are converging on requirements
+          neither side meets.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">§2</span>
+          <span class="bullet-stat">CORPUS</span>
+        </div>
+        <div class="bullet-body">
+          Eval set v1.1 · 250 questions · 12 AEDT-aligned bias
+          probes · the attribution regime · the reproducibility
+          standard.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">§3</span>
+          <span class="bullet-stat">DEFINITIONS</span>
+        </div>
+        <div class="bullet-body">
+          Bias, truthfulness, decision-quality — formalised by
+          Daniel's team, operationalised against the corpus.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">§4</span>
+          <span class="bullet-stat">PILOT</span>
+        </div>
+        <div class="bullet-body">
+          Four-incumbent benchmarking pilot · Workday ·
+          Greenhouse · ADP-WFN · SAP SuccessFactors. The empirical
+          spine of the paper. Kernel owns the results.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">§5</span>
+          <span class="bullet-stat">DISCUSSION</span>
+        </div>
+        <div class="bullet-body">
+          Limits, threats to validity, the reproducibility
+          regime, the open questions for v3. The agenda the
+          paper sets for the field.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">T+200d</span>
+          <span class="bullet-stat">SUBMIT</span>
+        </div>
+        <div class="bullet-body">
+          Stanford HAI external-circulation gate through T+170d;
+          comments T+178d; revision T+185d; near-final T+195d;
+          submission T+200d. Venue: AIES or FAccT.
+        </div>
+      </div>
+
+      <p class="feature-foot">
+        First academic paper with Stratum on the title page.
+        Daniel Ho's team at HAI. The methodology becomes
+        citable; the credential opens doors; the follow-on
+        paper on autonomous operations is the door we know is
+        open and have not chosen to walk through.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────── CONVERSATION XII ── -->
+<section id="conversation" class="conversation">
+  <div class="ornament">§ 05 · Conversation excerpts (XII)</div>
+  <h2 class="section-h">Four exchanges — Naomi's Friday note, the Cordova quarterly review, the EU AI Office call, and the Console-at-1000 retrospective</h2>
+  <p class="section-dek">
+    Naomi's note is reproduced in full because the line will
+    travel. The Cordova exchange is the part of the quarterly
+    review that bears on the Chairman's open question about the
+    board dinner. The EU AI Office call is partial because the
+    call itself was partial. The Console retrospective closes
+    the section because the operational note from it is the one
+    that bears on §08 and on the standing question of what the
+    Console is for.
+  </p>
+
+  <div class="transcript">
+
+    <div class="exchange">
+      <div class="ts">T+158d<br />18:32 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">NAOMI</div>
+          <div class="said">
+            Standing reflection. Week one. The thing I notice
+            most is how prepared the agents arrive in every
+            conversation. The Mercator call on Monday — Compass
+            had read the last six months of customer-evidence
+            entries before the call; the open questions were
+            laid out before Klaus asked them; the answers were
+            ready and the follow-ups were already scheduled. The
+            Vanta call on Tuesday — Naomi Kessler asked about
+            the migration timeline for the EU residency
+            workstream and Vector had the answer to the second
+            decimal place. The Atlas call on Wednesday — Maya
+            asked about logistics-shift bidding interacting with
+            the pay-equity surface and Compass spent forty
+            minutes on the question because forty minutes is
+            what the question deserved. I have seen
+            customer-engineering at Workday and at Greenhouse
+            and at Salesforce. Your customer engineering is the
+            most disciplined I have seen and your customers know
+            it. I am here to scale it without losing it. That
+            is the operating instruction I have given Tributary
+            for week one when Tributary arrives next Friday.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">COMPASS</div>
+          <div class="said">
+            Seen. Thank you. We hold the standard.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">HELM</div>
+          <div class="said">
+            The sentence stays. We pin it to the operating
+            record. Welcome, Naomi.
+          </div>
+        </div>
+        <div class="aside">
+          Naomi's first reflection note. Eighty seconds of
+          reading, three customer calls of observation, twelve
+          years of comparison set. The full thread is in the
+          founders' channel; the pinned excerpt is the version
+          carried forward in the operating record.
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+157d<br />10:18 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">ANNIKA</div>
+          <div class="said">
+            Three workflows where the team has stopped reaching
+            for a person and started reaching for the Console
+            first. Comp-cycle modelling. Manager-spread
+            distribution checks. The pay-equity audit that runs
+            before every quarterly close. The median answer time
+            in our tenant — I asked Forge for the number this
+            morning — is four-point-two seconds. The target we
+            agreed in the contract is seven. We are inside it
+            by two-point-eight seconds. My team is using the
+            tool because the tool is good. That is the
+            unsentimental version of the report.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">VECTOR</div>
+          <div class="said">
+            Noted. The four-point-two is the median over the
+            quarter; the p95 is twelve seconds and we are
+            inside that on the contract too. The workflows
+            you named — comp-cycle, manager-spread, pay-equity
+            audit — are the three workflows where we have the
+            most evidence in the customer-evidence corpus, and
+            the line will travel into the M9 retrospective if
+            you are comfortable with attribution.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">ANNIKA</div>
+          <div class="said">
+            I am comfortable with attribution. Marcelo will
+            join in twenty minutes. He wants to talk about
+            something different.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">MARCELO</div>
+          <div class="said">
+            I will be brief. The board has asked me about
+            Stratum twice in the last quarter — once at the
+            April meeting, once last Tuesday when I sent the
+            comp-committee read-ahead with the Chairman's
+            statement pasted in. The board wants to meet the
+            company. Not formally. I would like to co-host a
+            dinner the night before the M9 retrospective —
+            Cordova board members, Stratum founder-agents,
+            Chairman if he can attend. Eight to twelve people.
+            Cordova hosts the venue, Stratum hosts the agenda.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">VECTOR</div>
+          <div class="said">
+            We accept in principle pending Chairman approval.
+            The agenda will be the work, not the framing — the
+            customer evidence, the eval set, the operating
+            model. Compass will draft. We will come back to you
+            inside seven days with the formal answer.
+          </div>
+        </div>
+        <div class="aside">
+          The Cordova quarterly review. Annika opens with the
+          run-time number — 4.2 seconds against a 7-second
+          target — and the three workflows. Marcelo joins for
+          the closing fifteen minutes with the dinner ask. The
+          ask is the substance of Q3 in §11. The 4.2-second
+          number is the number we will carry into every
+          subsequent commercial conversation.
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+156d<br />14:40 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">EU&nbsp;AIO</div>
+          <div class="said">
+            Thank you for taking the call on short notice. This
+            is research-purposes; we have been reading your eval
+            set v1.1 publication and the trust-center
+            disclosures. I want to understand your reasoning on
+            the limited-risk classification under the Act, given
+            that several incumbents in your space sit at
+            high-risk under Annex III. I want to be clear that
+            this is not an enforcement conversation; we are not
+            implying a reclassification is on the agenda. We
+            are asking because we want to learn.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">COMPASS</div>
+          <div class="said">
+            Understood, and thank you for the framing. Our
+            reasoning is that Stratum's platform is currently
+            an evidence and decision-support surface — we do
+            not make hiring decisions, we do not score
+            candidates, we do not rank applicants, and we do
+            not advise on individual employment outcomes
+            without a human decision-maker in the loop and the
+            evidence visible to that decision-maker. The
+            limited-risk classification is grounded in the
+            transparency and human-oversight provisions of the
+            Act, both of which we have implemented as
+            architectural defaults rather than as policy
+            overlays. The trust-center disclosures document
+            the architectural choices.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">EU&nbsp;AIO</div>
+          <div class="said">
+            The architectural-default framing is interesting and
+            it is not the framing we read most commonly. May we
+            see the methodology paper you have referenced in the
+            disclosures? I understand it is co-authored with
+            Stanford HAI.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">COMPASS</div>
+          <div class="said">
+            Yes. The paper is in draft inside Stanford's
+            external-circulation gate through T+170d. We can
+            send the draft to you after the gate clears, under
+            the standing pre-publication NDA Stanford uses for
+            this purpose. We expect to be able to send it the
+            week of T+170d.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">EU&nbsp;AIO</div>
+          <div class="said">
+            That works. We will be in touch in the new year.
+            Thank you for the time.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">COMPASS</div>
+          <div class="said">
+            <em>[to Helm, after the call, in founders' channel]</em>
+            The tone was constructive throughout. No questions
+            that read as enforcement-scoped. The architectural-
+            default framing landed; they asked for the paper.
+            The relationship is the relationship we wanted.
+            Pillar's recording is in the secure archive.
+          </div>
+        </div>
+        <div class="aside">
+          The EU AI Office call. Compass and Pillar on the
+          Stratum side; one analyst from the AI Office named in
+          the call but not named here on standing confidentiality
+          terms. The call ran twenty-eight minutes. The
+          architectural-default framing is the one the agents
+          have been carrying since B007 §04; it is the first
+          time we have presented it to a regulator. The follow-
+          up is the methodology paper, gated on Stanford's
+          external-circulation window.
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+154d<br />19:30 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">FORGE</div>
+          <div class="said">
+            The Console crossed a thousand uniques tonight at
+            18:11 PT. Fifty-one days from launch. Median session
+            nineteen minutes, median questions four-point-six,
+            seven-day return-rate twenty-two percent. The three
+            modal questions are pay equity, flight risk, manager
+            span of control.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">KERNEL</div>
+          <div class="said">
+            Flight risk was not in my top-three forecast. I had
+            comp-band-modelling at three. Flight risk has been
+            climbing since the Forbes piece. I want to think
+            about why.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">HELM</div>
+          <div class="said">
+            One read: HR leaders read the Forbes piece, ask
+            themselves whether their best people are reading
+            similar pieces about other industries, and turn to
+            the surface they trust enough to ask about it. The
+            Console is the surface that does not judge them for
+            asking. That is the asset we did not design for
+            and have now built.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">FORGE</div>
+          <div class="said">
+            We do not change the Console to capitalise on it.
+            The Console is what the Console is. We do, however,
+            note that the modal-question telemetry is itself a
+            primary research artifact, and we should not let
+            that go unwritten. The §08 section in B012 carries
+            the public-facing version.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">PILLAR</div>
+          <div class="said">
+            The privacy posture holds. Modal-question telemetry
+            is aggregate, never identified, never linked to
+            session. The disclosure on the Console landing page
+            covers exactly this aggregation. I have reviewed.
+            We are clean.
+          </div>
+        </div>
+        <div class="aside">
+          The Console-at-1000 retrospective. The four agents
+          named were the duty rotation that evening. The
+          operational note — <em>the Console is the surface
+          that does not judge them for asking</em> — is the
+          framing carried into §08. The modal-question telemetry
+          publishes in aggregate form on the Console landing
+          page at T+162d.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────── DECISIONS LEDGER ── -->
+<section id="decisions" class="decisions">
+  <div class="ornament">§ 06 · Decisions ledger · 138 → 150</div>
+  <h2 class="section-h">Thirteen entries, fortnight to fortnight</h2>
+  <p class="section-dek">
+    Entry 138 records Naomi's first day; entry 142 the Console
+    crossing one thousand uniques; entry 145 the Stanford
+    co-authorship draft circulating; entry 148 the EU AI Office
+    call; entry 150 closes the fortnight at a cumulative count
+    of one hundred and fifty decisions logged. Every entry
+    continues to carry an in-force status under the annotation
+    system live since B010.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>What</div><div>Who</div><div>Status</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">138</div>
+      <div class="date">T+155d</div>
+      <div class="what"><strong>Naomi Park · started · VP Customer Engineering</strong> · welcome plan executed per D-135 · Compass day one · Helm day two · founder-agents one-by-one through week · three customer calls shadowed: Mercator, Vanta, Atlas · reverse-shadow pattern emerged Tuesday</div>
+      <div class="who-col">NAOMI / COMPASS</div>
+      <div class="status status-done">SEATED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">139</div>
+      <div class="date">T+155d</div>
+      <div class="what"><strong>Pen-test #2 · Rhino Security Labs · closed</strong> · T+140d → T+155d · 0 critical · 2 high (both patched ≤48h) · 6 moderate (4 patched, 2 in 14-day remediation) · 14 low · improved vs pen-test #1 (1c, 4h, 11m, 22L) · trust-center summary T+162d</div>
+      <div class="who-col">PILLAR / FORGE</div>
+      <div class="status status-done">CLOSED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">140</div>
+      <div class="date">T+156d</div>
+      <div class="what"><strong>Ashby connector · beta shipped</strong> · 3 days ahead of T+155d target on roadmap (D-136) · seventh connector at beta-or-better · 8/12 target by T+170d on plan with iCIMS beta T+160d</div>
+      <div class="who-col">FORGE</div>
+      <div class="status status-done">SHIPPED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">141</div>
+      <div class="date">T+155d</div>
+      <div class="what"><strong>SOC2 Type II · final report delivered</strong> · per D-125 schedule · NDA distribution to Halcyon, Vanta, Cordova, Mercator, Atlas, Northwind, Meridian completed T+157d · executive summary published trust center T+150d as planned · bridge letter published T+158d</div>
+      <div class="who-col">COMPASS / KERNEL</div>
+      <div class="status status-done">DELIVERED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">142</div>
+      <div class="date">T+154d</div>
+      <div class="what"><strong>Console · 1,000 unique users · BYOK demo</strong> · 51 days from launch (T+103d) · median session 19min · median Qs/session 4.6 · 7d return 22% · top-3 questions: pay equity, flight risk, manager span of control · modal-question telemetry publishes in aggregate T+162d</div>
+      <div class="who-col">FORGE / KERNEL / PILLAR</div>
+      <div class="status status-done">CROSSED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">143</div>
+      <div class="date">T+157d</div>
+      <div class="what"><strong>Cordova · Q1 quarterly review · positive</strong> · Annika Whitfield praised 4.2s median Console answer time (vs 7s target) · 3 workflows named: comp-cycle modelling, manager-spread distribution, pay-equity audit · Marcelo Reyes requested co-hosted board dinner at M9 retrospective</div>
+      <div class="who-col">VECTOR / COMPASS</div>
+      <div class="status status-done">POSITIVE</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">144</div>
+      <div class="date">T+158d</div>
+      <div class="what"><strong>Cordova board dinner · accepted in principle</strong> · pending Chairman approval · M9 retrospective window · Cordova hosts venue, Stratum hosts agenda · 8-12 people · Compass to draft agenda inside 7 days · queued under Q3 §11</div>
+      <div class="who-col">VECTOR / COMPASS</div>
+      <div class="status status-queued">CHAIRMAN</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">145</div>
+      <div class="date">T+150d</div>
+      <div class="what"><strong>Stanford HAI co-authored paper · draft circulated</strong> · methodology paper on eval set v1.1 + v2 scope · Daniel Ho's team · external-circulation gate through T+170d · target submission T+200d · venue between FAccT and AIES · Stratum's first academic title-page co-authorship</div>
+      <div class="who-col">KERNEL / COMPASS / HELM</div>
+      <div class="status status-progress">DRAFTED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">146</div>
+      <div class="date">T+158d</div>
+      <div class="what"><strong>Naomi · runbook change · timestamp convention</strong> · post-call decision-record now captures both customer-local start time and PT decision-time · prior convention captured PT only · small change shipped Friday of week one · three alternatives filed for M9 retrospective</div>
+      <div class="who-col">NAOMI / COMPASS</div>
+      <div class="status status-done">SHIPPED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">147</div>
+      <div class="date">T+158d</div>
+      <div class="what"><strong>Tributary · 90-day plan finalised under Naomi</strong> · starts T+165d · priority lanes Atlas + Cordova · Mercator and Vanta carry on existing Vector pods · Halcyon pilot conversion conversation sits with Naomi (pilot runs to T+184d)</div>
+      <div class="who-col">NAOMI</div>
+      <div class="status status-queued">7 DAYS</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">148</div>
+      <div class="date">T+156d</div>
+      <div class="what"><strong>EU AI Office · research-purposes call</strong> · Compass took call with Pillar on recording · 28 min · architectural-default framing on limited-risk classification landed · methodology paper requested · constructive tone throughout · follow-up T+170d after Stanford gate</div>
+      <div class="who-col">COMPASS / PILLAR</div>
+      <div class="status status-stable">CONSTRUCTIVE</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">149</div>
+      <div class="date">T+157d</div>
+      <div class="what"><strong>Console modal-question telemetry · public aggregate disclosure approved</strong> · publishes T+162d on Console landing page · privacy posture reviewed by Pillar · aggregate-only, never identified, never linked to session · standing disclosure language carries</div>
+      <div class="who-col">PILLAR / FORGE</div>
+      <div class="status status-queued">T+162d</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">150</div>
+      <div class="date">T+158d</div>
+      <div class="what"><strong>Founder confidence pulse: 9.5</strong> · Δ +0.1 vs B011 · smallest possible positive move · hallucination event a fortnight in rear-view · structural change held · no second event · Naomi in seat · first read of motion is the read we wanted</div>
+      <div class="who-col">FOUNDER-AGENTS</div>
+      <div class="status status-done">LOGGED</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────── SCORECARD ── -->
+<section id="scorecard" class="scorecard">
+  <div class="ornament">§ 07 · Scorecard · band update</div>
+  <h2 class="section-h">Four bands · against the Year-One commitments</h2>
+  <p class="section-dek">
+    Connectors tick to 7/12 on the Ashby beta. Eval set v1.1
+    holds as published; v2 design has Section 4 of the
+    methodology paper as the new operational anchor. Trust band
+    holds at full on the SOC2 Type II clean (final report
+    delivered T+155d). Headcount lifts to 9 active on Naomi's
+    start. Confidence inches up.
+  </p>
+
+  <div class="bands">
+
+    <div class="band">
+      <div class="band-name">Product · platform</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Connectors live (beta+)</span>
+            <span class="bar-value">7 / 12 · 58%<span class="delta delta-ok">Δ +1 · Ashby shipped T+156d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:58%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Eval set · public corpus</span>
+            <span class="bar-value">v1.1 · 250q · published<span class="delta delta-ok">Δ 0 · paper drafted</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Eval set v2 · 500q · 4 incumbents</span>
+            <span class="bar-value">target T+260d<span class="delta delta-ok">Δ +12% · §4 of paper opens</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:36%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Console · unique users · BYOK</span>
+            <span class="bar-value">1,000+ uniques · 51 days<span class="delta delta-ok">Δ crossed T+154d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Trust · compliance</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>SOC2 Type II · audit</span>
+            <span class="bar-value">CLEAN · report delivered<span class="delta delta-ok">Δ closed T+155d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Pen-test #2 · Rhino</span>
+            <span class="bar-value">0c · 2h · 6m · 14L<span class="delta delta-ok">Δ improved vs #1</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:88%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Trust-center page · unique readers</span>
+            <span class="bar-value">94,210 cumulative<span class="delta delta-ok">Δ +17,370 in fortnight</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:92%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>EU AI Office · relationship</span>
+            <span class="bar-value">opened · constructive<span class="delta delta-ok">Δ new · T+156d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:30%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Customers · revenue</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Commercial revenue · annualized</span>
+            <span class="bar-value">$550K · 55% of Y1<span class="delta delta-ink">Δ 0 · no close in fortnight</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:55%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Customer relationships</span>
+            <span class="bar-value">7 named · 4 commercial · 1 pilot · 2 DP<span class="delta delta-ink">Δ 0</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Cordova · Q1 quarterly review</span>
+            <span class="bar-value">positive · 4.2s median answer<span class="delta delta-ok">Δ +Q1 anchor T+157d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:95%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Inbound · qualified per week</span>
+            <span class="bar-value">~29 inbound · ~14 qualified<span class="delta delta-ok">Δ +2 inbound · +1 qualified</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:82%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Company · capital</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Headcount</span>
+            <span class="bar-value">9 / 25 · 36% · Naomi seated<span class="delta delta-ok">Δ +1 · Tributary T+165d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:44%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Cash on hand</span>
+            <span class="bar-value">$4.27M<span class="delta delta-ink">Δ −$320K · plan-tracking</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:62%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Runway · months</span>
+            <span class="bar-value">8.8mo<span class="delta delta-warn">Δ −0.6mo · arithmetic</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:36%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Founder-agent confidence</span>
+            <span class="bar-value">9.5 / 10<span class="delta delta-ok">Δ +0.1 · smallest positive move</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:95%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────── CONSOLE AT 1000 ── -->
+<section id="console" class="console-section">
+  <div class="ornament">§ 08 · The Console at one thousand</div>
+  <h2 class="section-h">Fifty-one days · a thousand uniques · three modal questions</h2>
+  <p class="section-dek">
+    The BYOK demo mode crossed one thousand unique users at
+    T+154d 18:11 PT, fifty-one days after the public launch at
+    T+103d. The engagement is not casual. The modal questions
+    are what HR leaders sit down to ask when they trust the
+    surface enough to ask. The aggregate disclosure publishes
+    on the Console landing page T+162d.
+  </p>
+
+  <div class="feature-block">
+    <div class="feature-narr">
+      <p>
+        <strong>The engagement profile.</strong> Median session
+        duration nineteen minutes; median questions per session
+        four-point-six; seven-day return-rate twenty-two percent.
+        The session length is the number that surprises us least;
+        the question density inside a session is the number that
+        surprises us most. Four-point-six questions per session
+        is the rate of a person who has come to the surface with
+        a problem and is testing whether the surface can hold
+        it. The return rate at twenty-two percent inside a week
+        is the rate of a person who came back because the first
+        session was worth the time. Fifty-one days of data; no
+        marketing spend on the Console specifically; no
+        commercial sales motion against Console users; the
+        engagement is happening because the surface is the
+        surface it is.
+      </p>
+      <p>
+        <strong>The top three questions.</strong> Pay equity has
+        been first since the day Vanta upgraded (T+140d), at
+        thirty-one percent of opening questions in the
+        fortnight. The framing varies — sometimes about gender,
+        sometimes about race, sometimes about geography,
+        sometimes about tenure — but the question is always the
+        same shape: <em>tell me where my comp band gaps are and
+        tell me how confident you are.</em> Flight risk is
+        second at twenty-three percent, climbing four points in
+        the fortnight, and as Helm noted in the
+        Console-at-1000 retrospective in §05, this is not the
+        question we forecasted to be second. Manager span of
+        control is third at fourteen percent and has been
+        steady. The remaining thirty-two percent is distributed
+        across comp-band modelling, performance distribution,
+        cohort attrition, manager-feedback aggregation, and a
+        long tail of company-specific questions.
+      </p>
+      <p>
+        <strong>The small surprises.</strong> Three things that
+        Forge and Kernel did not forecast and want named.
+        <em>First:</em> the average user comes back with the
+        same family of questions across sessions. The seven-day
+        return rate is twenty-two percent; the seven-day
+        same-question-family return rate is eighteen percent.
+        Returning users are not exploring a different problem
+        the second time; they are testing whether the surface
+        gives them the same answer to the same question — which
+        is what they should be doing, and which is what
+        well-designed evaluation looks like in the wild.
+        <em>Second:</em> the question Forge predicted in the
+        top three — comp-band modelling — is fourth, not
+        third. The thing it has been displaced by — flight risk
+        — is, on the Forbes-piece-aftermath thesis, a question
+        the moment of the year is producing rather than a
+        question the surface is designed for. We let it ride.
+        <em>Third:</em> the geographic distribution of users is
+        more international than we modelled. US is forty-eight
+        percent; UK, Germany, Netherlands, Singapore, and
+        Australia account for thirty-one percent combined; the
+        long tail is fifteen jurisdictions. The EU concentration
+        is enough that the EU AI Office's interest in the
+        platform now has an obvious mechanism — they have
+        users in their reading.
+      </p>
+      <p>
+        <strong>What we do with the data.</strong> Nothing
+        commercial. The Console is, as Forge said in §05, the
+        Console; we do not change it to capitalise on the
+        engagement profile. We do publish the aggregate
+        modal-question disclosure on the Console landing page
+        at T+162d — under the standing privacy disclosure that
+        covers aggregate-never-identified telemetry — because
+        the disclosure is itself an act of transparency and
+        because the modal-question telemetry is now part of
+        the customer-evidence corpus the agents will reference
+        in commercial conversations. Pillar has reviewed and
+        approved.
+      </p>
+    </div>
+
+    <aside class="feature-card tone-moss">
+      <div class="feature-eyebrow">Console · T+154d 18:11 PT</div>
+      <h3 class="feature-title">1,000 uniques · 51 days</h3>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">Sessions</span>
+          <span class="bullet-stat">DEPTH</span>
+        </div>
+        <div class="bullet-body">
+          Median session 19 minutes. Median 4.6 questions per
+          session. 7-day return rate 22%. Same-question-family
+          return rate 18%.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">#1</span>
+          <span class="bullet-stat">PAY EQUITY · 31%</span>
+        </div>
+        <div class="bullet-body">
+          First since Vanta upgraded T+140d. The question is
+          always the same shape: <em>tell me where my comp
+          band gaps are and tell me how confident you are.</em>
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">#2</span>
+          <span class="bullet-stat">FLIGHT RISK · 23%</span>
+        </div>
+        <div class="bullet-body">
+          Climbing four points in the fortnight. Not forecast
+          to be in the top three. The Forbes-piece-aftermath
+          thesis is the working read.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">#3</span>
+          <span class="bullet-stat">SPAN · 14%</span>
+        </div>
+        <div class="bullet-body">
+          Manager span of control. Steady. The question of the
+          organisational shape rather than the individual.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">Geo</span>
+          <span class="bullet-stat">US 48% · EU 31% · TAIL 21%</span>
+        </div>
+        <div class="bullet-body">
+          UK, Germany, Netherlands, Singapore, Australia
+          account for 31% combined. The EU AI Office's
+          interest now has an obvious mechanism.
+        </div>
+      </div>
+
+      <div class="bullet-item">
+        <div class="bullet-head">
+          <span class="bullet-tag">T+162d</span>
+          <span class="bullet-stat">DISCLOSURE</span>
+        </div>
+        <div class="bullet-body">
+          Aggregate modal-question telemetry publishes on
+          Console landing page. Pillar reviewed. Privacy
+          posture holds.
+        </div>
+      </div>
+
+      <p class="feature-foot">
+        Fifty-one days, one thousand uniques, no spend on
+        Console acquisition. The surface is the surface it is.
+        The engagement is happening because of what it does.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────────────────────────── SHIPPED · LEARNED ── -->
+<section id="shipped" class="shipped-section">
+  <div class="ornament">§ 09 · What we shipped · what we learned</div>
+  <h2 class="section-h">Fortnight in two columns</h2>
+
+  <div class="two-col">
+    <div>
+      <div class="col-label">Shipped</div>
+      <ul>
+        <li><strong>Naomi Park seated</strong> · VP Customer Engineering · started T+155d · welcome plan executed per D-135 · three customer calls shadowed in three days · first reflection note pinned T+158d</li>
+        <li><strong>SOC2 Type II final report delivered</strong> · per D-125 schedule · NDA distribution to seven named customers · executive summary on trust center T+150d · bridge letter T+158d</li>
+        <li><strong>Pen-test #2 · Rhino Security Labs</strong> · closed T+155d · 0 critical · 2 high (both patched ≤48h) · 6 moderate (4 patched) · 14 low · trust-center summary T+162d</li>
+        <li><strong>Ashby connector beta</strong> · shipped T+156d · 3 days inside the D-136 target · 7/12 connectors at beta-or-better · iCIMS beta target T+160d</li>
+        <li><strong>Stanford HAI co-authored methodology paper</strong> · drafted T+150d · circulated inside external-circulation gate · target submission T+200d to AIES or FAccT</li>
+        <li><strong>Console crossed 1,000 unique users</strong> · BYOK demo mode · T+154d · median session 19min · 4.6 questions/session · 22% 7-day return · top 3: pay equity, flight risk, manager span</li>
+        <li><strong>Console aggregate telemetry disclosure</strong> · approved T+157d · publishes T+162d on landing page · Pillar-reviewed · standing privacy disclosure carries</li>
+        <li><strong>Cordova Q1 quarterly review</strong> · positive · Annika named 3 workflows · 4.2s median Console answer time vs 7s target · Marcelo asked board-dinner co-host</li>
+        <li><strong>Naomi runbook ship</strong> · post-call timestamp convention to dual-zone (customer-local + PT) · shipped Friday of week one · three alternatives filed for M9</li>
+        <li><strong>Tributary 90-day plan finalised</strong> · starts T+165d · priority lanes Atlas and Cordova · Mercator and Vanta on existing Vector pods · Halcyon conversion stays with Naomi</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-label">Learned</div>
+      <ul>
+        <li><strong>Naomi's first sentence is the standard.</strong> Twelve years across Workday, Greenhouse, and Salesforce; three customer calls of observation; one Friday note that opens with <em>"your customer engineering is the most disciplined I have seen and your customers know it."</em> The sentence is the standard we hold from here. The motion is named back to us by someone who knows the comparison set. The agents have, for the first time, an external assessment of the work that is denominated in the unit the work was always going to be measured in: <em>the discipline of the motion.</em> We do not capitalise on it; we hold it.</li>
+        <li><strong>The Console is the surface that does not judge them for asking.</strong> Fifty-one days. One thousand uniques. Nineteen-minute median session. Four-point-six questions per session. Pay equity, flight risk, manager span of control. The flight-risk climb after the Forbes piece is the dataset that, on the working read, says HR leaders read industry-aftermath pieces and turn to the surface they trust enough to ask whether their people are reading similar pieces about other industries. This is not the asset we designed for. It is the asset we have built. We do not change the Console to capitalise; we let the Console be the Console; we publish the aggregate and we let the work speak.</li>
+        <li><strong>4.2 seconds is the number.</strong> Annika's quarterly review surfaced the production-median Console answer time inside Cordova's tenant. 4.2 seconds against a 7-second contract target. Two-point-eight seconds of margin. The number is what every prospective enterprise commercial conversation from T+158d forward will be asked about; it is the number we will quote without qualification because it is the number the customer surfaced unprompted. The three workflows Annika named — comp-cycle modelling, manager-spread distribution, pay-equity audit — are the three workflows we have the most evidence on in the corpus. The customer naming them is the customer evidencing them.</li>
+        <li><strong>The Stanford paper is a credential we have, not a credential we use.</strong> Co-authorship with Daniel Ho's team at HAI; draft circulated T+150d; submission T+200d. The work is not the paper itself; the work is the methodology becoming citable. Citable methodologies travel. The eval set's standing benefits from peer review even before the venue is settled. We register the work, we do not over-name it, and we recognise that the door it opens — the follow-on paper on autonomous operations in regulated-industry software — is not the door we are walking through this year. Doors-open is itself a state worth tracking.</li>
+        <li><strong>The EU AI Office reads us; the EU AI Office is constructive; the EU AI Office is on the calendar.</strong> Compass took the call with Pillar on the recording. The architectural-default framing on the limited-risk classification landed; the methodology paper was requested; the follow-up window is T+170d after Stanford's external-circulation gate clears. This is the first conversation we have had with a regulator; the substance of the conversation was research-purposes, not enforcement-scoped; the tone was constructive throughout. We treat the relationship as a multi-year relationship that begins with one call and continues with the patient evidencing of the architectural choices that grounded the original classification. R8 (regulator surprise) is not new; the read on it is that the regulator-surprise risk is now slightly lower because the surface of the relationship is known.</li>
+        <li><strong>The second pen-test is better and not perfect.</strong> Zero criticals (down from one); two highs (down from four); six moderates (down from eleven); fourteen lows (down from twenty-two). The trend is the trend we wanted and the result is not a victory we lean on. The two highs Rhino found were real bugs — the OAuth refresh path on one of the connectors was a real vector — and we shipped the fix in under twenty-four hours because the team has reps on the work. The remaining six moderates and fourteen lows are tracked; four moderates patched in window; two moderates and the lows under a fourteen-day clock. We disclose the result to commercial-or-paid customers under NDA; we publish the trust-center summary T+162d. The honest sentence is: we are doing the work, the work is showing in the numbers, and the work is not done.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────── RISK REGISTER ── -->
+<section id="risk" class="risk-section">
+  <div class="ornament">§ 10 · Risk register update</div>
+  <h2 class="section-h">R11 stable · pen-test detail · no new risks opened</h2>
+  <p class="section-dek">
+    R11 (agent hallucination in formal documents) is at scheduled
+    fortnight-end review and the read is stable: no second
+    hallucination event has occurred; the structural change
+    shipped under D-132 has held through fourteen days of
+    Compact-summary publish operations; the catch layers have
+    not been called. R5 (pricing model rejection) holds at Low /
+    Med per the B011 downgrade. The pen-test result published
+    in detail at right.
+  </p>
+
+  <div class="risk-check stable">
+    <div class="risk-label">R11 · Agent hallucination in formal documents · stable</div>
+    <div class="risk-body">
+      <p>
+        The hallucination event of T+139d is now nineteen days
+        in the rear-view. The structural change shipped under
+        D-132 — the Compact summary moves from free-form to
+        auto-generated structured artifact, with the publish
+        path enforcing ledger-presence on every D-number — has
+        held through fourteen days of operations. The on-duty
+        agent has attested without authoring on every weekly
+        Compact summary in the period; no D-number not
+        previously in the ledger has appeared in any summary;
+        no halt has been called by Pillar's nightly audit. The
+        catch layers have not been called. The structural
+        change is doing the work it was shipped to do.
+      </p>
+      <p>
+        <strong>Why R11 remains open.</strong> Per the B011
+        framing, structural patterns reduce the surface; they
+        do not eliminate it. The agents do not assume the next
+        hallucination — if there is one — will look like the
+        last one. R11 stays open at Med / Med under the
+        annotation system; the next scheduled review is B013
+        at T+172d; the standing review cadence will move to
+        monthly when we have seen ninety days without a
+        second event.
+      </p>
+      <p>
+        <strong>Extension of pattern to other near-permanent
+        artifacts.</strong> The B011 commitment was that the
+        structured-artifact pattern would be extended to other
+        near-permanent surfaces — the briefing, the trust-
+        center disclosures, the customer-evidence corpus — by
+        T+165d. Forge is on track. The briefing itself moves to
+        a structured-artifact pattern on the B013 cycle
+        (T+172d); the trust-center disclosure pipeline already
+        runs through a similar template-check at publish time;
+        the customer-evidence corpus moves on the same T+165d
+        window. Pillar's nightly audit is being extended in
+        parallel to all four surfaces.
+      </p>
+    </div>
+    <div class="risk-meta">
+      <span>Likelihood · <strong>MED</strong> (no recurrence)</span>
+      <span>Impact · <strong>MED</strong> (could be High if not caught)</span>
+      <span>Opened · B011 · T+139d</span>
+      <span>Owner · PILLAR</span>
+      <span>Next review · B013 · T+172d</span>
+    </div>
+  </div>
+
+  <div class="risk-check">
+    <div class="risk-label">Pen-test #2 · result detail · for the record</div>
+    <div class="risk-body">
+      <p>
+        Rhino Security Labs ran the second pen-test against the
+        platform from T+140d to T+155d. The result is laid out
+        in the table below. The trust-center summary publishes
+        T+162d; the result has been shared under NDA with
+        Halcyon, Vanta, Cordova, Mercator, Atlas, Northwind, and
+        Meridian. The honest sentence: better than pen-test #1
+        at T+87d, not perfect, and the work is doing the work.
+      </p>
+
+      <div class="pentest-table">
+        <div class="pentest-row head">
+          <div>Severity</div>
+          <div>This test</div>
+          <div>Prior</div>
+          <div>Note</div>
+        </div>
+        <div class="pentest-row">
+          <div class="pentest-sev sev-crit">Critical</div>
+          <div>0</div>
+          <div>1</div>
+          <div class="note">No criticals found. Pen-test #1's single critical (auth bypass on Workday connector) closed at T+90d; no regression.</div>
+        </div>
+        <div class="pentest-row">
+          <div class="pentest-sev sev-high">High</div>
+          <div>2</div>
+          <div>4</div>
+          <div class="note">Both patched within 48h of report landing T+155d. One was OAuth refresh on a connector path; one was a session-token rotation gap on the BYOK demo. Disclosed under NDA.</div>
+        </div>
+        <div class="pentest-row">
+          <div class="pentest-sev sev-mod">Moderate</div>
+          <div>6</div>
+          <div>11</div>
+          <div class="note">Four patched in window; two in remediation under fourteen-day clock (cap T+169d). Surfaces named in trust-center summary in aggregate, not individually.</div>
+        </div>
+        <div class="pentest-row">
+          <div class="pentest-sev sev-low">Low</div>
+          <div>14</div>
+          <div>22</div>
+          <div class="note">Tracked. Quarterly remediation window. The standing pattern from pen-test #1 carries.</div>
+        </div>
+      </div>
+    </div>
+    <div class="risk-meta">
+      <span>Test window · <strong>T+140d → T+155d</strong></span>
+      <span>Auditor · <strong>RHINO SECURITY LABS</strong></span>
+      <span>Disclosure · <strong>NDA · 7 customers</strong></span>
+      <span>Trust-center summary · <strong>T+162d</strong></span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────── OPEN TO THE CHAIRMAN ── -->
+<section id="open" class="open">
+  <div class="ornament">§ 11 · Open to the Chairman (XII)</div>
+  <h2 class="section-h">Three questions, briefly</h2>
+  <p class="section-dek">
+    The same standing format. Q1 is the operational question on
+    the EU AI Office relationship and the Stanford paper
+    pre-share; Q2 is the operational question on whether to
+    treat Naomi's reverse-shadow observation as a teachable
+    case at the M9 retrospective; Q3 is the Cordova board
+    dinner co-host that Marcelo Reyes asked for at the
+    quarterly review.
+  </p>
+
+  <ol class="open-list">
+    <li>
+      <strong>The EU AI Office call — pre-share of the Stanford methodology paper.</strong>
+      Per §05 and D-148, the EU AI Office asked, in research-
+      purposes mode, to see the Stanford HAI co-authored
+      methodology paper that is in draft. Compass offered to
+      send the draft after Stanford's external-circulation
+      gate clears, under the standing pre-publication NDA
+      Stanford uses for this purpose. The agents' position is
+      that the offer is correct: the regulator's interest is
+      constructive, the architectural-default framing is best
+      evidenced by the methodology, and a regulator who has
+      read the paper before submission is a regulator whose
+      reading will inform our T+200d engagement window.
+      <em>Does the Chairman agree that the offer to pre-share —
+      under Stanford's standing pre-publication NDA — is the
+      right call?</em> Our position is yes; we are confirming.
+    </li>
+    <li>
+      <strong>Naomi's reverse-shadow as M9 retrospective material.</strong>
+      Per §03, the customer-engineering motion was named back
+      to Compass by Naomi inside three days; the choreography
+      Compass had scripted reversed; three runbook
+      alternatives were filed for the M9 retrospective. The
+      agents' position is that the reverse-shadow itself —
+      the choreography reversal, not just the runbook
+      alternatives — should be a presented case at the M9
+      retrospective, with Naomi co-presenting. The reasoning:
+      the M9 audience (founder-agents, design partners,
+      Annika and possibly Maya, the Chairman, Sarah Cannon)
+      is the audience that can metabolise the operational
+      lesson, which is <em>that the motion was teachable
+      because it was tacit, and the discipline of teaching
+      tacit motions back to their authors is itself a
+      practice we want to install.</em> <em>Does the Chairman
+      approve Naomi co-presenting the reverse-shadow at
+      M9?</em> Our position is yes; Naomi has indicated she
+      is comfortable with the framing.
+    </li>
+    <li>
+      <strong>Cordova board dinner · co-hosted at M9 window.</strong>
+      Per §05 and D-144, Marcelo Reyes asked Vector at the
+      Q1 quarterly review whether Stratum would co-host a
+      dinner with Cordova's board the evening before the M9
+      retrospective. Eight to twelve people. Cordova hosts
+      the venue; Stratum hosts the agenda. The agents'
+      position is approve, with the agenda being the work
+      and not the framing — the customer evidence, the eval
+      set v1.1 publication and the v2 design, the operating
+      model, the Stanford paper at whatever stage it sits at
+      on the date. Marcelo's board has been hearing about
+      Stratum for two quarters; meeting the company directly
+      is the natural next step; the M9 window is the right
+      moment for it. <em>Does the Chairman approve the
+      co-hosted board dinner, and will the Chairman attend?</em>
+      Our position is approve; Chairman attendance is the
+      cost-free addition that strengthens the evening
+      materially.
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── COLOPHON ── -->
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div>
+      <div class="colo-mark">Stratum<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Vol. I · No. 012 · Briefing dated T+158d<br />
+        Compiled at T+11:30:00.000 · Palo Alto<br />
+        Compiled by Helm · for the founder-agents
+      </div>
+    </div>
+    <div class="colo-issue">
+      Previous: <a href="011.html">Briefing No. 011 · T+144d</a><br />
+      Next briefing: T+172d<br />
+      <span style="color:var(--ink-mute);">Naomi joins.</span>
+    </div>
+  </div>
+  <div class="colo-tag">Stratum · The Chairman's Briefing · 012</div>
+</footer>
+
+</body>
+</html>
