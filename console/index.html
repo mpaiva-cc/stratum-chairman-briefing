@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Console · interactive prototype</title>
+<meta name="description" content="An interactive prototype of the Stratum Console — the people-graph copilot for the CHRO. Ask, inspect, cite, confirm." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- Loading bar -->
+<div class="loadbar" id="loadbar" aria-hidden="true"></div>
+
+<!-- ────────────────────────────────────────── TOP BAR -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">Stratum<span class="sl">/</span>Console</span>
+      <span class="brand-meta" aria-label="Demo metadata">
+        Demo · Tessera Bank · 2,000 EE · prototype build
+      </span>
+    </div>
+    <div class="topbar-right">
+      <span class="kbd-hint" aria-hidden="true">
+        <kbd>⌘K</kbd> to ask
+      </span>
+      <div class="user-pill" aria-label="Current user">
+        <span class="user-avatar">EV</span>
+        <span class="user-name">Elena Vasquez<span class="role">· CHRO</span></span>
+      </div>
+      <span class="cost-meter" id="cost-meter" title="Estimated spend this session">$0.0000 this session</span>
+      <button class="gear-btn" id="topbar-gear" type="button" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+        </svg>
+      </button>
+      <a href="../library/" class="back-link">← Library</a>
+    </div>
+  </div>
+</header>
+
+<!-- Demo-mode banner (only when no API key) -->
+<div class="demo-banner" id="demo-banner" role="status" aria-live="polite" style="display:none;"></div>
+
+<!-- ────────────────────────────────────────── TAB STRIP -->
+<nav class="tabs" role="tablist" aria-label="Console views">
+  <div class="tabs-inner">
+    <button class="tab" role="tab" data-view="ask" aria-selected="true" aria-controls="view-ask" id="tab-ask">
+      <span class="sec">§ 01</span>Ask
+    </button>
+    <button class="tab" role="tab" data-view="people" aria-selected="false" aria-controls="view-people" id="tab-people">
+      <span class="sec">§ 02</span>People
+    </button>
+    <button class="tab" role="tab" data-view="insights" aria-selected="false" aria-controls="view-insights" id="tab-insights">
+      <span class="sec">§ 03</span>Insights
+    </button>
+  </div>
+</nav>
+
+<!-- ────────────────────────────────────────── STAGE -->
+<main class="stage" id="main">
+
+  <!-- ─── VIEW · ASK ──────────────────────────────────── -->
+  <section class="view is-active" id="view-ask" role="tabpanel" aria-labelledby="tab-ask">
+    <div class="ask-hero">
+      <div class="ask-eyebrow">§ The CHRO's copilot · grounded in the people graph</div>
+      <h1>What would you like to <em>ask?</em></h1>
+      <form class="ask-input-wrap" id="ask-form" autocomplete="off">
+        <input
+          type="text"
+          class="ask-input"
+          id="ask-input"
+          aria-label="Ask a question"
+          placeholder="Show me our pay equity gap in EMEA at senior IC and M3 levels…"
+        />
+        <button type="submit" class="ask-submit" aria-label="Ask">
+          Ask <span class="arr">→</span>
+        </button>
+      </form>
+      <div class="ask-chips" id="ask-chips" aria-label="Example questions">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- Answer card will be injected here -->
+    <div id="answer-mount" aria-live="polite"></div>
+
+    <!-- Recent saved -->
+    <div class="saved-rail" id="saved-rail" hidden>
+      <div class="saved-rail-title">§ Saved to my workspace</div>
+      <div class="saved-list" id="saved-list"></div>
+    </div>
+  </section>
+
+  <!-- ─── VIEW · PEOPLE ────────────────────────────────── -->
+  <section class="view" id="view-people" role="tabpanel" aria-labelledby="tab-people">
+    <div class="people-head">
+      <h2 class="view-title">The <em>people graph.</em></h2>
+      <span class="count-pill" id="people-count">
+        Showing <span class="n" id="people-count-n">2,000</span> of <span id="people-count-total">2,000</span>
+      </span>
+    </div>
+
+    <div class="filter-strip" role="search" aria-label="Filter people">
+      <div class="filter">
+        <label for="f-region">Region</label>
+        <select id="f-region"><option value="">All</option></select>
+      </div>
+      <div class="filter">
+        <label for="f-dept">Department</label>
+        <select id="f-dept"><option value="">All</option></select>
+      </div>
+      <div class="filter">
+        <label for="f-level">Level</label>
+        <select id="f-level"><option value="">All</option></select>
+      </div>
+      <div class="filter">
+        <label for="f-risk">Flight risk</label>
+        <select id="f-risk">
+          <option value="">All</option>
+          <option value="high">High</option>
+          <option value="moderate">Moderate</option>
+          <option value="low">Low</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="f-review">Last review</label>
+        <select id="f-review">
+          <option value="">All</option>
+          <option value="exceeds">Exceeds</option>
+          <option value="meets">Meets</option>
+          <option value="partially_meets">Partially meets</option>
+          <option value="does_not_meet">Does not meet</option>
+        </select>
+      </div>
+      <div class="filter">
+        <label for="f-sort">Sort</label>
+        <select id="f-sort">
+          <option value="name">Name (A→Z)</option>
+          <option value="tenure-desc">Tenure (longest)</option>
+          <option value="tenure-asc">Tenure (newest)</option>
+          <option value="comp-desc">Comp (highest)</option>
+          <option value="comp-asc">Comp (lowest)</option>
+          <option value="risk-desc">Flight risk (highest)</option>
+        </select>
+      </div>
+      <div class="filter" style="margin-left:auto;">
+        <input type="text" id="f-search" placeholder="Search name, title, team…" aria-label="Search" />
+      </div>
+      <button class="filter-clear" id="f-clear" type="button">Reset</button>
+    </div>
+
+    <div class="people-list" id="people-list" role="list"></div>
+    <div class="load-more-wrap" id="load-more-wrap"></div>
+  </section>
+
+  <!-- ─── VIEW · INSIGHTS ──────────────────────────────── -->
+  <section class="view" id="view-insights" role="tabpanel" aria-labelledby="tab-insights">
+    <div class="insights-head">
+      <h2 class="view-title">Auto-computed <em>insights.</em></h2>
+      <p style="color:var(--ink-3); font-size:15px; margin:.4rem 0 0; max-width:680px;">
+        Four standing charts derived from the live graph. Click <em>Ask about this</em>
+        on any card to send the relevant question to the copilot.
+      </p>
+    </div>
+
+    <div class="insights-grid">
+      <article class="insight-card">
+        <h3 class="insight-title"><em>Headcount</em> by department</h3>
+        <div class="insight-sub">N = 2,000 · sorted by headcount</div>
+        <div class="insight-body" id="chart-hc"></div>
+        <div class="insight-foot">
+          <span>Source · People Graph</span>
+          <button class="insight-ask" data-q="show me headcount by department" type="button">
+            Ask about this →
+          </button>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <h3 class="insight-title"><em>Compensation</em> by level</h3>
+        <div class="insight-sub">USD · IQR within level · band P50 marked</div>
+        <div class="insight-body" id="chart-comp"></div>
+        <div class="insight-foot">
+          <span>Source · People Graph · comp_total</span>
+          <button class="insight-ask" data-q="show me underpaid high performers" type="button">
+            Ask about this →
+          </button>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <h3 class="insight-title"><em>Tenure</em> distribution</h3>
+        <div class="insight-sub">Years since hire · 6 buckets</div>
+        <div class="insight-body" id="chart-tenure"></div>
+        <div class="insight-foot">
+          <span>Source · People Graph · hire_date</span>
+          <button class="insight-ask" data-q="what's the median tenure for senior engineers globally?" type="button">
+            Ask about this →
+          </button>
+        </div>
+      </article>
+
+      <article class="insight-card">
+        <h3 class="insight-title"><em>Flight risk</em> · department × region</h3>
+        <div class="insight-sub">% of cohort in high band · heatmap</div>
+        <div class="insight-body" id="chart-risk"></div>
+        <div class="insight-foot">
+          <span>Source · People Graph · attrition signal v1</span>
+          <button class="insight-ask" data-q="who's at flight risk in engineering with comp below band?" type="button">
+            Ask about this →
+          </button>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<!-- ────────────────────────────────────────── DRAWER -->
+<div class="drawer-backdrop" id="drawer-backdrop" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-name" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="row-id" id="drawer-id">EMP-00000</div>
+    <h3 id="drawer-name">Loading…</h3>
+    <div class="role-line" id="drawer-role">—</div>
+    <button class="drawer-close" id="drawer-close" type="button" aria-label="Close detail">×</button>
+  </div>
+  <div class="drawer-body" id="drawer-body">
+    <!-- populated by JS -->
+  </div>
+</aside>
+
+<!-- ────────────────────────────────────────── COMMAND PALETTE -->
+<div class="palette-backdrop" id="palette-backdrop" aria-hidden="true">
+  <div class="palette" role="dialog" aria-modal="true" aria-labelledby="palette-label">
+    <div class="palette-label" id="palette-label">§ Ask anything · the copilot is grounded in the graph</div>
+    <input type="text" id="palette-input" autocomplete="off" placeholder="What would you like to ask?" aria-label="Ask a question" />
+    <div class="palette-hints" id="palette-hints"></div>
+    <div class="palette-foot">
+      <span><kbd>↵</kbd> ask · <kbd>esc</kbd> close</span>
+      <span>Stratum / Console</span>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────────────────────── MOBILE TABS -->
+<nav class="mobile-tabs" role="tablist" aria-label="Console views, mobile">
+  <button class="mobile-tab" data-view="ask"      aria-selected="true"><span class="sec">§</span>Ask</button>
+  <button class="mobile-tab" data-view="people"   aria-selected="false"><span class="sec">§</span>People</button>
+  <button class="mobile-tab" data-view="insights" aria-selected="false"><span class="sec">§</span>Insights</button>
+</nav>
+
+
+<!-- ──────────────────────────────────────────  ONBOARDING -->
+<div class="modal-backdrop" id="onboard-modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title" aria-hidden="true">
+  <div class="modal">
+    <button class="modal-close" id="onboard-close" type="button" aria-label="Close">×</button>
+    <div class="modal-eyebrow">§ First-run setup</div>
+    <h2 class="modal-title" id="onboard-title">Connect Stratum Console to <em>Claude</em>.</h2>
+    <p class="modal-body">
+      The Console runs entirely in your browser. Your API key is stored only in this browser's
+      <strong>localStorage</strong>; calls go directly from this page to <code>api.anthropic.com</code>.
+      Nothing is sent to any other server, and no traffic is proxied.
+    </p>
+    <p class="modal-body">
+      Bring your own Anthropic API key. You can revoke it at any time from your console.
+    </p>
+    <form id="onboard-form" autocomplete="off">
+      <label class="modal-label" for="onboard-key">Your Anthropic API key</label>
+      <input type="password" id="onboard-key" class="modal-input" placeholder="sk-ant-…" autocomplete="off" required />
+      <div class="modal-row">
+        <a class="modal-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Get a key →</a>
+        <span style="flex:1"></span>
+        <button type="button" class="btn btn-ghost" onclick="sessionStorage.setItem('stratum_skipped_onboarding','1'); closeOnboarding();">Skip · stay in demo</button>
+        <button type="submit" class="btn btn-ochre" id="onboard-submit">Connect</button>
+      </div>
+      <div class="modal-status" id="onboard-status"></div>
+      <div class="modal-reason err" id="onboard-reason" style="display:none;"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────  SETTINGS -->
+<div class="modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title" aria-hidden="true">
+  <div class="modal modal-wide" id="settings-backdrop-target">
+    <button class="modal-close" id="settings-close" type="button" aria-label="Close">×</button>
+    <div class="modal-eyebrow">§ Console settings</div>
+    <h2 class="modal-title" id="settings-title">Tune the <em>copilot.</em></h2>
+
+    <div class="settings-grid">
+      <div class="settings-row">
+        <label class="modal-label">Claude model</label>
+        <select id="set-model" class="modal-input">
+          <option value="claude-sonnet-4-6">Sonnet 4.6 · balanced default</option>
+          <option value="claude-opus-4-7">Opus 4.7 · deepest reasoning</option>
+          <option value="claude-haiku-4-5-20251001">Haiku 4.5 · fastest, cheapest</option>
+        </select>
+      </div>
+
+      <div class="settings-row">
+        <label class="modal-label">Reasoning effort</label>
+        <select id="set-effort" class="modal-input">
+          <option value="quick">Quick · no extended thinking</option>
+          <option value="standard">Standard · 2K thinking budget</option>
+          <option value="deep">Deep · 8K thinking budget</option>
+        </select>
+      </div>
+
+      <div class="settings-row">
+        <label class="modal-label">Data source</label>
+        <select id="set-datasource" class="modal-input">
+          <option value="demo">Demo · 2,000 employees (Tessera Bank)</option>
+          <option value="csv">Upload CSV…</option>
+        </select>
+      </div>
+
+      <div class="settings-row">
+        <label class="modal-label">API key</label>
+        <div class="settings-key-row">
+          <span class="modal-status" id="set-key-status">Not connected</span>
+          <button type="button" class="btn btn-ghost" id="set-forget">Forget key</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-row" style="margin-top:1.4rem;">
+      <button type="button" class="btn btn-ghost" id="set-reset">Reset session</button>
+      <span style="flex:1"></span>
+      <button type="button" class="btn btn-ochre" onclick="closeSettings()">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- ──────────────────────────────────────────  CSV UPLOAD -->
+<div class="modal-backdrop" id="csv-modal" role="dialog" aria-modal="true" aria-labelledby="csv-title" aria-hidden="true">
+  <div class="modal modal-wide" id="csv-backdrop">
+    <button class="modal-close" id="csv-close" type="button" aria-label="Close">×</button>
+    <div class="modal-eyebrow">§ Bring your own data</div>
+    <h2 class="modal-title" id="csv-title">Upload a <em>CSV</em>.</h2>
+    <p class="modal-body">
+      Parsed entirely in your browser with PapaParse. The file never leaves this page —
+      only the rows Claude requests as tool inputs are sent to Anthropic.
+    </p>
+    <label class="modal-label">Choose file</label>
+    <input type="file" id="csv-file" accept=".csv,text/csv" class="modal-input" />
+    <div id="csv-mapping" style="margin-top:1rem;"></div>
+    <div class="modal-row" style="margin-top:1.2rem;">
+      <span style="flex:1"></span>
+      <button type="button" class="btn btn-ghost" onclick="closeCsvUpload()">Cancel</button>
+      <button type="button" class="btn btn-ochre" id="csv-apply" disabled>Replace demo data</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
