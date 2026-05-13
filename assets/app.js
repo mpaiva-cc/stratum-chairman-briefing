@@ -15,11 +15,22 @@
     });
   });
 
-  // Stamp the live dateline
+  // Live T+ stamp on the masthead dateline (anchored at T+0 = first commit)
+  const T0 = new Date('2026-05-12T22:25:46-04:00');
   const dateline = document.querySelector('.dateline');
+  function fmtT(deltaMs) {
+    const ms = Math.max(0, deltaMs);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000) / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    const milli = ms % 1000;
+    const time = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(milli).padStart(3,'0')}`;
+    return d > 0 ? `T+${d}d ${time}` : `T+${time}`;
+  }
   if (dateline) {
-    const now = new Date();
-    const opts = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-    dateline.textContent = `${now.toLocaleDateString('en-US', opts)} · Palo Alto`;
+    const tick = () => { dateline.textContent = `Live · ${fmtT(Date.now() - T0.getTime())} · Palo Alto`; };
+    tick();
+    setInterval(tick, 87); // ~11Hz updates feel alive without thrashing layout
   }
 })();
