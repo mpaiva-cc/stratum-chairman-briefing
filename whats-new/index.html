@@ -1,0 +1,1850 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — What's new this week · A weekly digest of what shipped.</title>
+<meta name="description" content="Stratum's weekly digest. A living document of what shipped, who joined, who signed, and what we learned. Updated weekly; 10 entries, newest first." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/whats-new
+   Weekly digest · the editorial cousin of the changelog
+   Cream paper, deep ink, ochre accent, monospaced rails
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-deep:    #4f2935;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(880px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.1em; }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, .96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav { display: none; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -.036em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+}
+.hero-title .dot { color: var(--ochre); }
+
+.hero-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.32rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 1.7rem;
+}
+.hero-sub a {
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre-soft);
+}
+.hero-sub a:hover { border-bottom-color: var(--ochre); }
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 2.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.hero-meta .meta-lbl {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .35rem;
+}
+.hero-meta .meta-val {
+  color: var(--ink);
+  font-weight: 500;
+}
+.hero-meta .meta-val .ochre { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── STATS ── */
+
+.stats {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 2.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+}
+.stat {
+  padding: .35rem 1.4rem;
+  border-left: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+}
+.stat:first-child { border-left: 0; padding-left: 0; }
+.stat:last-child { padding-right: 0; }
+.stat-label {
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.stat-value {
+  font-size: 1.15rem;
+  letter-spacing: .02em;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.stat-value .ochre { color: var(--ochre); }
+.stat-value .mute { color: var(--ink-mute); font-weight: 400; }
+
+@media (max-width: 980px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 0;
+  }
+  .stat { padding: .35rem 1.1rem; }
+  .stat:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(even) { padding-right: 0; }
+}
+
+/* ─────────────────────────────────────────── FEED ── */
+
+.feed {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.5rem 0 2rem;
+}
+
+.feed-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 2.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.feed-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+
+.weeks {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.week {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 2.6rem;
+  padding: 3rem 0 3.3rem;
+  border-top: 1px solid var(--paper-rule);
+  position: relative;
+}
+.week:first-child {
+  border-top: 1px solid var(--ink);
+  padding-top: 3.2rem;
+}
+.week:last-child {
+  border-bottom: 1px solid var(--paper-rule);
+}
+.week.is-current::before {
+  content: "THIS WEEK";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .25rem .55rem;
+}
+.week.is-founding::before {
+  content: "FOUNDING WEEK";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  background: var(--ochre);
+  color: var(--paper);
+  padding: .25rem .55rem;
+}
+
+.week-rail {
+  position: sticky;
+  top: 96px;
+  align-self: start;
+}
+
+.week-of {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .35rem;
+}
+
+.week-date {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.95rem;
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .4rem;
+}
+.week-date .month {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  color: var(--ink-2);
+}
+
+.week-day {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.15rem;
+  padding: .25rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.week-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+}
+.week-meta .lbl {
+  display: block;
+  color: var(--ink-mute);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-size: 10px;
+  margin-bottom: .25rem;
+}
+.week-meta .val {
+  color: var(--ink-2);
+}
+.week-meta .row + .row { margin-top: .8rem; }
+
+.week-body {
+  min-width: 0;
+}
+
+.week-headline {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: 2.4rem;
+  line-height: 1.1;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+}
+.week-headline em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  color: var(--ochre);
+}
+
+.week-summary {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  margin: 0 0 1.8rem;
+  font-variation-settings: "opsz" 18;
+  max-width: 64ch;
+}
+.week-summary em {
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-3);
+}
+
+.items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 124px 1fr 100px;
+  gap: 1.2rem;
+  padding: .85rem 0 .85rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  transition: background .15s;
+}
+.item:hover {
+  background: rgba(184, 101, 31, 0.035);
+}
+
+.item-cat {
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.item-cat.cat-product   { color: var(--ochre); }
+.item-cat.cat-customer  { color: var(--moss); }
+.item-cat.cat-people    { color: var(--plum); }
+.item-cat.cat-governance{ color: var(--ink); }
+.item-cat.cat-capital   { color: var(--ink); }
+.item-cat.cat-compliance{ color: var(--ochre); }
+.item-cat.cat-security  { color: var(--ochre); }
+.item-cat.cat-design    { color: var(--ink); }
+.item-cat.cat-industry  { color: var(--plum); }
+.item-cat.cat-content   { color: var(--ink); }
+.item-cat.cat-operations{ color: var(--ink-mute); }
+
+.item-cat::before {
+  content: "";
+  display: inline-block;
+  width: 6px; height: 6px;
+  background: currentColor;
+  margin-right: .55rem;
+  vertical-align: middle;
+  transform: translateY(-1px);
+}
+
+.item-text {
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+.item-text strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.item-text .mono {
+  font-family: var(--mono);
+  font-size: .86em;
+  color: var(--ink);
+  background: var(--paper-deep);
+  padding: .08em .35em;
+  letter-spacing: -.005em;
+}
+
+.item-date {
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  .week {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    padding: 2.2rem 0 2.4rem;
+  }
+  .week-rail {
+    position: relative;
+    top: 0;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: .9rem;
+    align-items: baseline;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid var(--paper-rule);
+  }
+  .week-of {
+    margin: 0;
+    grid-column: 1;
+  }
+  .week-date {
+    font-size: 1.4rem;
+    margin: 0;
+    grid-column: 2;
+  }
+  .week-day {
+    grid-column: 3;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    text-align: right;
+  }
+  .week-meta { display: none; }
+  .week-headline { font-size: 1.8rem; }
+  .week-summary { font-size: 1.05rem; }
+  .item {
+    grid-template-columns: 1fr;
+    gap: .3rem;
+    padding: .9rem 0;
+  }
+  .item-date {
+    text-align: left;
+    font-size: 10.5px;
+  }
+}
+
+/* ─────────────────────────────────────────── ARCHIVE NOTE ── */
+
+.archive-note {
+  width: var(--col-read);
+  margin: 1rem auto 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  padding: 1.1rem 1.2rem;
+  border-left: 2px solid var(--ochre);
+  background: rgba(184, 101, 31, 0.04);
+}
+.archive-note strong {
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-size: 11px;
+}
+
+/* ─────────────────────────────────────────── SUBSCRIBE ── */
+
+.subscribe {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 4.5rem;
+  text-align: center;
+  border-top: 1px solid var(--paper-rule);
+  margin-top: 3rem;
+}
+.subscribe-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+}
+.subscribe-h {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: -.022em;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.subscribe-h em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+}
+.subscribe p {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-3);
+  max-width: 56ch;
+  margin: 0 auto 1.8rem;
+  line-height: 1.6;
+}
+.subscribe-form {
+  display: flex;
+  gap: .5rem;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.subscribe-form input {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule-2);
+  padding: .8rem 1rem;
+  outline: none;
+}
+.subscribe-form input:focus { border-color: var(--ink); }
+.subscribe-form button {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 0 1.2rem;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.subscribe-form button:hover { background: var(--ochre); border-color: var(--ochre); }
+.subscribe-rss {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1.4rem;
+}
+.subscribe-rss .ochre { color: var(--ochre); }
+.subscribe-rss a {
+  color: var(--ink-mute);
+  border-bottom: 0;
+}
+.subscribe-rss a:hover { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── LEGEND ── */
+
+.legend {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.2rem 0 2rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.legend-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.legend-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: .6rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.legend-item {
+  display: flex;
+  align-items: baseline;
+  gap: .65rem;
+  padding: .35rem 0;
+}
+.legend-item .swatch {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--ink-mute);
+  flex-shrink: 0;
+}
+.legend-item .lbl {
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+}
+.legend-item .note {
+  font-family: var(--serif);
+  font-size: .95rem;
+  color: var(--ink-mute);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+}
+.legend-item.l-product .swatch, .legend-item.l-product .lbl { background: var(--ochre); color: var(--ochre); }
+.legend-item.l-product .swatch { background: var(--ochre); }
+.legend-item.l-customer .swatch { background: var(--moss); }
+.legend-item.l-customer .lbl { color: var(--moss); }
+.legend-item.l-people .swatch { background: var(--plum); }
+.legend-item.l-people .lbl { color: var(--plum); }
+.legend-item.l-governance .swatch { background: var(--ink); }
+.legend-item.l-governance .lbl { color: var(--ink); }
+.legend-item.l-capital .swatch { background: var(--ink); }
+.legend-item.l-capital .lbl { color: var(--ink); }
+.legend-item.l-compliance .swatch { background: var(--ochre); }
+.legend-item.l-compliance .lbl { color: var(--ochre); }
+.legend-item.l-security .swatch { background: var(--ochre); }
+.legend-item.l-security .lbl { color: var(--ochre); }
+.legend-item.l-design .swatch { background: var(--ink); }
+.legend-item.l-design .lbl { color: var(--ink); }
+.legend-item.l-industry .swatch { background: var(--plum); }
+.legend-item.l-industry .lbl { color: var(--plum); }
+.legend-item.l-content .swatch { background: var(--ink); }
+.legend-item.l-content .lbl { color: var(--ink); }
+.legend-item.l-operations .swatch { background: var(--ink-mute); }
+.legend-item.l-operations .lbl { color: var(--ink-mute); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0 1.6rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .14);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  letter-spacing: -.034em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .68);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  max-width: 32ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.footer-col li {
+  margin-bottom: .55rem;
+}
+.footer-col a {
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: rgba(244, 236, 218, .85);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+}
+.footer-foot a {
+  color: rgba(244, 236, 218, .55);
+  border-bottom: 0;
+  font-family: var(--mono);
+}
+.footer-foot a:hover { color: var(--ochre); }
+.footer-foot .briefing-link strong { color: rgba(244, 236, 218, .85); font-weight: 500; }
+
+@media (max-width: 1100px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ─────────────────────────────────────────── UTIL ── */
+
+.ochre { color: var(--ochre); }
+.moss { color: var(--moss); }
+.plum { color: var(--plum); }
+.mono { font-family: var(--mono); }
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / What's new</span>
+  <a href="../changelog/" aria-label="Changelog">Changelog →</a>
+</div>
+
+<!-- ─────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="#" class="is-current">What's new</a>
+      <a href="../library/">Library</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>stratum.ai/whats-new · the weekly digest · 10 editions</span>
+  </div>
+
+  <h1 class="hero-title">What's new at Stratum<span class="dot">.</span></h1>
+
+  <p class="hero-sub">
+    A weekly digest of what shipped, who joined, who signed, and what we
+    learned. Subscribe by <a href="mailto:digest-subscribe@stratum.ai">email</a>
+    or read the long version in <a href="../library/">The Library</a>.
+  </p>
+
+  <div class="hero-meta">
+    <div>
+      <span class="meta-lbl">Latest edition</span>
+      <span class="meta-val">Week of <span class="ochre">19 July 2026</span></span>
+    </div>
+    <div>
+      <span class="meta-lbl">Cadence</span>
+      <span class="meta-val">Weekly · Sundays · ~300 words</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Editions to date</span>
+      <span class="meta-val">10 <span class="ochre">/ consecutive</span></span>
+    </div>
+    <div>
+      <span class="meta-lbl">Audience</span>
+      <span class="meta-val">Customers · candidates · partners</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Format</span>
+      <span class="meta-val">Email · RSS · web</span>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────── STATS ── -->
+<section class="stats">
+  <div class="stat">
+    <div class="stat-label">Day count</div>
+    <div class="stat-value">Day 75 <span class="mute">since 06 May</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Current build</div>
+    <div class="stat-value">v0.4.6 <span class="ochre">· Marble</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Headcount</div>
+    <div class="stat-value">6 <span class="mute">+ 1 accepted</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Design partners</div>
+    <div class="stat-value">5 <span class="mute">+ 1 evaluation</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Briefings published</div>
+    <div class="stat-value">6 <span class="mute">fortnightly</span></div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── FEED ── -->
+<section class="feed">
+  <div class="feed-h">The digest · reverse chronological · 10 editions · newest first</div>
+
+  <div class="weeks">
+
+    <!-- ═══════════════════════════ WEEK 10 ═══════════════════════════ -->
+    <article class="week is-current">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">19 <span class="month">July</span> 2026</h2>
+        <div class="week-day">Day 75 · Edition 10</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">In flow.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">6 · +1 starting Mon</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.4.6 · Marble</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The eval set, <em>in public.</em></h3>
+        <p class="week-summary">
+          We published our 250-question eval set on Tuesday. The first
+          AI-native HCM company to do so, as far as we can tell. Three
+          journalists asked about it inside forty-eight hours, and our
+          inbound pipeline doubled overnight. Marble keeps getting smarter.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text">Stratum <strong>Eval Set v1.0</strong> (250 questions across compensation, headcount, performance, retention, compliance) published to <span class="mono">/eval/</span> — the methodology, the questions, the grading rubric, all of it.</span>
+            <span class="item-date">21 Jul · Tue</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>v0.4.6 "Marble"</strong> shipped. Kenji's prompt-structure rewrite landed — eval accuracy <span class="mono">92.1% → 96.4%</span> on the closed set; latency p50 unchanged at <span class="mono">1.2s</span>.</span>
+            <span class="item-date">16 Jul · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Cordova Manufacturing</strong> tentatively committed to be our first commercial customer. Target ACV $145K; conversion date 01 Sep; pending CFO sign-off.</span>
+            <span class="item-date">17 Jul · Fri</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text"><strong>Kenji Watanabe</strong> joined as founding AI / agents engineer. Eight years at Anthropic and DeepMind before this. The prompt-structure refactor is his.</span>
+            <span class="item-date">14 Jul · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text"><strong>Yusra El-Sayed</strong> accepted the Lever-connector specialist role; starts 28 Jul. Brings us to 7 by the end of the month.</span>
+            <span class="item-date">18 Jul · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-security">Security</span>
+            <span class="item-text">Rhino Security Labs penetration test in progress. One critical (auth-token replay window) patched and re-tested inside <span class="mono">24h</span>; full report due 30 Jul.</span>
+            <span class="item-date">14–21 Jul</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 006</strong> — "The eval set, in public" — distributed to the Chairman 19 Jul.</span>
+            <span class="item-date">19 Jul · Sun</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 9 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">12 <span class="month">July</span> 2026</h2>
+        <div class="week-day">Day 68 · Edition 9</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Ahead of plan.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">5</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.4.5 · Marble</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The Lever connector, <em>ahead of plan.</em></h3>
+        <p class="week-summary">
+          Lever ATS alpha shipped five days early on Wednesday. Two new
+          design-partner conversations opened in the pipeline. Mercator's
+          pricing pilot came back countersigned on Saturday — our first
+          fully-papered usage agreement.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Lever ATS connector alpha</strong> shipped. Target was 17 Jul; live on the 12th. Schema mapping covers stages, sources, and offer-status with <span class="mono">98.4%</span> field coverage.</span>
+            <span class="item-date">12 Jul · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>v0.4.5 "Marble"</strong> — schema v2.1 patches for the rare temp-to-perm edge case (multi-country contractors with mid-cycle status flips). Surfaced by Halcyon.</span>
+            <span class="item-date">10 Jul · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Mercator pricing pilot</strong> countersigned. $0.85 per decision, $280K annual ceiling, 60-day mutual exit. Our first papered usage agreement.</span>
+            <span class="item-date">11 Jul · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text">Two new design-partner conversations opened. One $1.4B logistics firm, one PE-backed healthcare staffing platform. First calls scheduled for next week.</span>
+            <span class="item-date">08–10 Jul</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text">Founder confidence pulse: <strong class="mono">8.7 / 10</strong> (Δ <span class="ochre">+0.5</span> vs prior fortnight). Highest reading since incorporation.</span>
+            <span class="item-date">12 Jul · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-operations">Operations</span>
+            <span class="item-text">Hanover Street office officially desked for six. New espresso machine arrived 09 Jul. Productivity is empirically up.</span>
+            <span class="item-date">09 Jul · Thu</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 8 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">05 <span class="month">July</span> 2026</h2>
+        <div class="week-day">Day 61 · Edition 8</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Heads down, eyes up.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">4 · +1 accepted</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.4.2 · Marble</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">After the board, <em>before the storm.</em></h3>
+        <p class="week-summary">
+          First board meeting closed clean on 24 June; three resolutions
+          adopted. Workday announced Illuminate Copilot GA earlier than
+          expected — risk R1 from the founding deck materialized — and we
+          accelerated the public eval-set publication by two months in
+          response. Sofia Vargas joined on Monday. Briefing 005 went out.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-governance">Governance</span>
+            <span class="item-text"><strong>Board Meeting No. 1</strong> held. Three resolutions adopted (MIN-001): board composition ratified, equity plan adopted, audit committee chartered.</span>
+            <span class="item-date">24 Jun · Tue</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>ADP-Workforce Now connector alpha</strong> shipped on time. Third connector live; covers payroll, time, and benefit-enrollment events.</span>
+            <span class="item-date">28 Jun · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>v0.4.2 "Marble"</strong> — schema v2 shipped. Contractor temp-to-perm refactor closed a class of identity-resolution bugs that had been pestering Mercator.</span>
+            <span class="item-date">28 Jun · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-design">Design</span>
+            <span class="item-text"><strong>Stratum / Console</strong> renamed internally during Tomás's design week. New layout tokens, new typographic scale, same Fraunces wordmark.</span>
+            <span class="item-date">16–20 Jun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-industry">Industry</span>
+            <span class="item-text"><strong>Workday Illuminate Copilot GA</strong> announced. Risk R1 from the founding deck materialized; the eval-set publication date pulled forward from 21 Sep to 21 Jul.</span>
+            <span class="item-date">01 Jul · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text"><strong>Sofia Vargas</strong> joined as founding customer engineer. Came from a four-year run at Gusto; pre-onboarded three weeks early.</span>
+            <span class="item-date">30 Jun · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 005</strong> — "After the board, before the storm" — distributed to the Chairman.</span>
+            <span class="item-date">05 Jul · Sun</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 7 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">28 <span class="month">June</span> 2026</h2>
+        <div class="week-day">Day 54 · Edition 7</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Mixed but mostly green.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">3 · +1 starting Mon</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.4.1 · Marble</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">Five of five<em>.</em></h3>
+        <p class="week-summary">
+          We hit our design-partner target with Cordova Manufacturing
+          signing on Friday. The Halcyon partnership softened — sponsor
+          changed mid-stream — and we converted it to a 60-day evaluation
+          with a 31 Aug decision date. Tomás Iglesias starts Monday.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Cordova Manufacturing</strong> signed as design partner #5. Industrial, 4,800 EE, US + Mexico. Five of five against the founding plan.</span>
+            <span class="item-date">20 Jun · Fri</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Halcyon</strong> downgraded to 60-day evaluation after their CHRO transitioned. Decision date 31 Aug; we keep the data-room access, lose the partnership label.</span>
+            <span class="item-date">12 Jun · Fri</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Greenhouse ATS connector alpha</strong> shipped. Second connector live. Schema covers stages, rejections, and scorecards.</span>
+            <span class="item-date">17 Jun · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text"><strong>Tomás Iglesias</strong> founding designer accepted; started 23 Jun. Eight years on the Linear and Notion design teams between them.</span>
+            <span class="item-date">23 Jun · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text">Kenji Watanabe accepted the founding AI / agents engineer role 14 Jun; starts 14 Jul. Brings us to five before Q3.</span>
+            <span class="item-date">14 Jun · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 004</strong> — "Five of five" — published to the Chairman.</span>
+            <span class="item-date">21 Jun · Sun</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 6 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">21 <span class="month">June</span> 2026</h2>
+        <div class="week-day">Day 47 · Edition 6</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Quietly satisfied.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">4</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.4.0 · Marble</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The architecture argument, <em>won.</em></h3>
+        <p class="week-summary">
+          Mercator's CIO pushed back on our event-sourced data model
+          mid-quarter. Three weeks of memos, two long calls, and a
+          working session in Palo Alto closed the argument in our favour
+          on Monday. Northwind Studios signed Thursday. Asha shipped a
+          meaningful fix in thirty-six hours.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Northwind Studios</strong> signed as design partner #4. Entertainment / production-services, 1,900 EE, LA + London.</span>
+            <span class="item-date">19 Jun · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Workday HR Core connector beta</strong> milestone hit. p50 query latency <span class="mono">940ms</span> against the live Mercator dataset; field coverage <span class="mono">94.2%</span>.</span>
+            <span class="item-date">16 Jun · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text">Asha Pillai's first meaningful fix shipped 03 Jun — a 36-hour turnaround on the identity-resolution conflict surfaced during Mercator's first ingestion.</span>
+            <span class="item-date">03 Jun · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-governance">Governance</span>
+            <span class="item-text"><strong>Memo M-001</strong> — "Why we still bet on the event-sourced people graph" — distributed to the board ahead of Board Meeting No. 1.</span>
+            <span class="item-date">21 Jun · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-design">Design</span>
+            <span class="item-text">Stratum v0.2 brand refresh quietly landed: tighter Fraunces, deeper ochre, the ink-on-paper aesthetic that holds today.</span>
+            <span class="item-date">18 Jun · Wed</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 5 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">14 <span class="month">June</span> 2026</h2>
+        <div class="week-day">Day 40 · Edition 5</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Heads down.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">4</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.3.7 · Loam</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The first connector, <em>alpha.</em></h3>
+        <p class="week-summary">
+          The Workday HR Core connector hit alpha on 04 June. The first
+          live ingestion at Mercator the same week went smoother than we
+          had any right to expect. The week was quiet, which is unusual
+          and probably temporary.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Workday HR Core connector alpha</strong> shipped. First connector of twelve. <span class="mono">v0.3.4 → 0.3.7</span> across the week.</span>
+            <span class="item-date">04 Jun · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Mercator first ingestion</strong> — 3,412 employee records ingested in 47 minutes; 22 identity conflicts surfaced and resolved with the customer in real time.</span>
+            <span class="item-date">22 May · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-industry">Industry</span>
+            <span class="item-text"><strong>Bhusri CHRO dinner</strong>. Six CHROs at the table; two new partner conversations opened from a single Tuesday-night menu.</span>
+            <span class="item-date">04 Jun · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 003</strong> — "The first connector, alpha" — published to the Chairman.</span>
+            <span class="item-date">07 Jun · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-compliance">Compliance</span>
+            <span class="item-text">Vanta Stage 1 readiness assessment completed; 41 of 64 controls already attestable, 23 actionable gaps queued.</span>
+            <span class="item-date">11 Jun · Thu</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 4 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">07 <span class="month">June</span> 2026</h2>
+        <div class="week-day">Day 33 · Edition 4</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Real now.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">4</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.3.4 · Loam</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The first hire, <em>on the ground.</em></h3>
+        <p class="week-summary">
+          Asha Pillai started 02 June. We signed a sublease at 2475
+          Hanover Street the same week — eight months, six desks. We
+          signed our third design partner. The company stopped feeling
+          like a deck and started feeling like a building.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text"><strong>Asha Pillai</strong> joined as founding data-infra engineer. $235K + 1.2% equity; relocated from Boston the week prior.</span>
+            <span class="item-date">02 Jun · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text"><strong>Northshore</strong> (fintech, 3,200 EE, NYC + Dublin) signed as design partner #3. Strongest fit yet on the data-quality front.</span>
+            <span class="item-date">18 May · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-operations">Operations</span>
+            <span class="item-text">Office signed at <strong>2475 Hanover Street, Palo Alto</strong>. 8-month sublease from a winding-down robotics company; espresso machine inherited.</span>
+            <span class="item-date">04 Jun · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>v0.3.4 "Loam"</strong> — Workday HR Core connector alpha staged, schema v1.3 patches, identity-resolution τ raised to <span class="mono">0.93</span>.</span>
+            <span class="item-date">04 Jun · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-compliance">Compliance</span>
+            <span class="item-text"><strong>Vanta engaged</strong> for SOC2 Type I readiness; kickoff 06 Jun, target attestation Q4 2026.</span>
+            <span class="item-date">06 Jun · Sat</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 3 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">31 <span class="month">May</span> 2026</h2>
+        <div class="week-day">Day 26 · Edition 3</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Plan vs reality.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">3</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.3.0 · Loam</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">Twelve days in<em>.</em></h3>
+        <p class="week-summary">
+          The plan and reality started to diverge in interesting ways.
+          We slipped nine days on the connector schedule and won't make
+          them up. We signed our first commercial design partner on the
+          schedule we promised the board.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-customer">Customer</span>
+            <span class="item-text">Design partner #1 — <strong>Mercator</strong> (insurance, 5,400 EE) — signed. First commercial paper on a Stratum letterhead.</span>
+            <span class="item-date">11 May · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>People-graph schema v1</strong> ratified after a 9-day red-team. 47 entities, 138 relationships, three known gaps documented.</span>
+            <span class="item-date">28 May · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Entity-resolution v0.3</strong> shipped. Probabilistic match with graph confirmation at τ=<span class="mono">0.93</span>; precision <span class="mono">99.1%</span> on synthetic test set.</span>
+            <span class="item-date">30 May · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 002</strong> — "Twelve days in" — distributed to the Chairman.</span>
+            <span class="item-date">24 May · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-governance">Governance</span>
+            <span class="item-text">Board observer seat formally extended to Index Ventures (per the SPA). First observer call scheduled 18 Jun.</span>
+            <span class="item-date">29 May · Fri</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 2 ═══════════════════════════ -->
+    <article class="week">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">24 <span class="month">May</span> 2026</h2>
+        <div class="week-day">Day 19 · Edition 2</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Decisions, not options.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">3</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.2.0 · Foundation</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">Founding hires <em>and decisions.</em></h3>
+        <p class="week-summary">
+          We extended our first hire offer to Asha Pillai. We finalized
+          the pricing model after eleven design-partner conversations.
+          We started SOC2. The Founder Compact — the formal three-way
+          agreement between us — was signed in the same room where we
+          had drawn it up two weeks earlier.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-people">People</span>
+            <span class="item-text">Hire #1 — <strong>Asha Pillai</strong>, founding data-infra — offer extended Tuesday, accepted Wednesday. Starts 02 Jun.</span>
+            <span class="item-date">19–20 May</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>Pricing model</strong> finalized: hybrid platform fee + per-decision usage tier. Two variants A/B tested with three design partners; the simpler won.</span>
+            <span class="item-date">22 May · Thu</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-compliance">Compliance</span>
+            <span class="item-text"><strong>SOC2 controls scaffolded</strong> — 64 controls mapped to existing infra; assessment kickoff queued for 06 Jun with Vanta.</span>
+            <span class="item-date">25 May · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-operations">Operations</span>
+            <span class="item-text"><strong>Founder Compact</strong> signed — the formal three-founder agreement covering equity vesting, decision rights, and the dissolution clause we hope to never invoke.</span>
+            <span class="item-date">24 May · Sun</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text">Identity-resolution v0.2 shipped — first probabilistic-only pass, no graph confirmation yet. <span class="mono">96.3%</span> precision on the synthetic set.</span>
+            <span class="item-date">23 May · Sat</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- ═══════════════════════════ WEEK 1 — FOUNDING ═══════════════════════════ -->
+    <article class="week is-founding">
+      <aside class="week-rail">
+        <div class="week-of">Week of</div>
+        <h2 class="week-date">17 <span class="month">May</span> 2026</h2>
+        <div class="week-day">Day 12 · Edition 1</div>
+        <div class="week-meta">
+          <div class="row">
+            <span class="lbl">Mood</span>
+            <span class="val">Stunned, then to work.</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Headcount</span>
+            <span class="val">3 founders</span>
+          </div>
+          <div class="row">
+            <span class="lbl">Build</span>
+            <span class="val">v0.1.0 · Foundation</span>
+          </div>
+        </div>
+      </aside>
+      <div class="week-body">
+        <h3 class="week-headline">The first <em>week.</em></h3>
+        <p class="week-summary">
+          We incorporated. We closed the seed. We started writing. The
+          founding week of Stratum, Inc. ran from 06 May through 12 May
+          2026 — seven days that moved faster than any of the three of
+          us had planned for. The seed round closed on Monday. The first
+          Briefing went out to the Chairman on Tuesday.
+        </p>
+        <ul class="items">
+          <li class="item">
+            <span class="item-cat cat-governance">Governance</span>
+            <span class="item-text"><strong>Stratum, Inc.</strong> incorporated as a Delaware C-Corp. Three founders on the cap table at signing; 9,000,000 common shares authorized.</span>
+            <span class="item-date">06 May · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-capital">Capital</span>
+            <span class="item-text"><strong>$8.0M Seed</strong> round closed on a <strong>$34M pre-money</strong>. Index Ventures lead; six angels on the bus. Wire cleared end of day.</span>
+            <span class="item-date">11 May · Mon</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-product">Product</span>
+            <span class="item-text"><strong>v0.1.0 "Foundation"</strong> shipped. Initial commit, CI/CD scaffolded, secrets management in Vault. Three lines of production code; six hundred lines of infra.</span>
+            <span class="item-date">06 May · Wed</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-design">Design</span>
+            <span class="item-text"><strong>Stratum brand v0</strong> published — Fraunces wordmark, deep ink + ochre + cream palette, the typographic system that holds across every artifact today.</span>
+            <span class="item-date">09 May · Sat</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-content">Content</span>
+            <span class="item-text"><strong>Briefing No. 001</strong> — "Founding Edition" — written, edited, and distributed to the Chairman.</span>
+            <span class="item-date">12 May · Tue</span>
+          </li>
+          <li class="item">
+            <span class="item-cat cat-operations">Operations</span>
+            <span class="item-text">Stratum / Compact drafted — the founder agreement, in long-hand, on the whiteboard in the rented room above the bookshop on Hamilton Avenue.</span>
+            <span class="item-date">08 May · Fri</span>
+          </li>
+        </ul>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- Archive note -->
+  <div class="archive-note">
+    <strong>Archive</strong>&nbsp;·&nbsp; Editions 1 through 10 above represent
+    the company's first 75 days. Future editions are written each Sunday and
+    distributed by email Monday at 06:00 PT. The
+    <a href="../briefings/">Chairman's Briefings</a> remain the long-form
+    counterpart, published fortnightly. Both share the same source of truth —
+    the <a href="../ops/">internal Ops board</a> — and converge on the same
+    facts at different cadences.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── LEGEND ── -->
+<section class="legend">
+  <div class="legend-h">The category legend</div>
+  <div class="legend-grid">
+    <div class="legend-item l-product">
+      <span class="swatch"></span>
+      <span class="lbl">Product</span>
+      <span class="note">— what shipped, what changed.</span>
+    </div>
+    <div class="legend-item l-customer">
+      <span class="swatch"></span>
+      <span class="lbl">Customer</span>
+      <span class="note">— design partners, pilots, paper.</span>
+    </div>
+    <div class="legend-item l-people">
+      <span class="swatch"></span>
+      <span class="lbl">People</span>
+      <span class="note">— who joined, who accepted.</span>
+    </div>
+    <div class="legend-item l-governance">
+      <span class="swatch"></span>
+      <span class="lbl">Governance</span>
+      <span class="note">— the board, the books, the bylaws.</span>
+    </div>
+    <div class="legend-item l-capital">
+      <span class="swatch"></span>
+      <span class="lbl">Capital</span>
+      <span class="note">— rounds, runway, terms.</span>
+    </div>
+    <div class="legend-item l-compliance">
+      <span class="swatch"></span>
+      <span class="lbl">Compliance</span>
+      <span class="note">— SOC2, GDPR, DPAs.</span>
+    </div>
+    <div class="legend-item l-security">
+      <span class="swatch"></span>
+      <span class="lbl">Security</span>
+      <span class="note">— pen-tests, patches, posture.</span>
+    </div>
+    <div class="legend-item l-design">
+      <span class="swatch"></span>
+      <span class="lbl">Design</span>
+      <span class="note">— brand, system, surfaces.</span>
+    </div>
+    <div class="legend-item l-industry">
+      <span class="swatch"></span>
+      <span class="lbl">Industry</span>
+      <span class="note">— what the incumbents did.</span>
+    </div>
+    <div class="legend-item l-content">
+      <span class="swatch"></span>
+      <span class="lbl">Content</span>
+      <span class="note">— briefings, memos, essays.</span>
+    </div>
+    <div class="legend-item l-operations">
+      <span class="swatch"></span>
+      <span class="lbl">Operations</span>
+      <span class="note">— the building, the espresso machine.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── SUBSCRIBE ── -->
+<section class="subscribe">
+  <div class="subscribe-eyebrow">— Subscribe —</div>
+  <h2 class="subscribe-h">Get the digest <em>by email.</em></h2>
+  <p>
+    Subscribe to the weekly digest. Email-only; ~300 words per week;
+    no marketing, no nurture sequences, no upsells. Unsubscribe takes
+    one click. Delivered every Monday at 06:00 PT.
+  </p>
+  <form class="subscribe-form" action="mailto:digest-subscribe@stratum.ai" method="post" enctype="text/plain">
+    <input type="email" name="email" placeholder="you@company.com" required />
+    <button type="submit">Subscribe →</button>
+  </form>
+  <div class="subscribe-rss">
+    RSS · <a href="feed.xml"><span class="ochre">stratum.ai/whats-new/feed.xml</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Console</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+        <li><a href="#" aria-current="page">What's new</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../engineering/index.html">Engineering</a></li>
+        <li><a href="../briefings/">Briefings</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../library/">The Library</a></li>
+        <li><a href="../eval/">Eval set</a></li>
+        <li><a href="../engineering/">Engineering blog</a></li>
+        <li><a href="../essays/">Essays</a></li>
+        <li><a href="feed.xml">RSS feed</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">Trust center</a></li>
+        <li><a href="#">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../briefings/006.html">← Latest briefing · <strong>Briefing No. 006</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function(){
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll(){
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
+
+</body>
+</html>

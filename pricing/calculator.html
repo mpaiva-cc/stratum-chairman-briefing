@@ -1,0 +1,2025 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Pricing Calculator. An honest first-pass estimate.</title>
+<meta name="description" content="Estimate your Stratum annual cost. Slide your employee count, your question volume, your geographies. Honest math, no salesperson required." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/pricing/calculator — Pricing Calculator
+   Cream paper · deep ink · ochre · moss accent
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a.is-current {
+  color: var(--ink);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid #d8cdb6;
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #4b5365;
+  }
+  .mob-bar a {
+    color: #4b5365;
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+  }
+  .mob-bar a:active { color: #b8651f; }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: #0e1626;
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4.5rem 0 2.6rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.hero-eyebrow .crumb {
+  color: var(--ink-3);
+}
+.hero-eyebrow .crumb a {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.hero-eyebrow .crumb a:hover { color: var(--ochre); }
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: .98;
+  letter-spacing: -.034em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 100;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 0;
+}
+
+/* ─────────────────────────────────────────── CALCULATOR ── */
+
+.calc {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 4rem;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+
+.calc-panel {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 4px solid var(--ink);
+  padding: 2rem 1.9rem 1.9rem;
+  position: relative;
+}
+.calc-panel.right {
+  border-top: 4px solid var(--ochre);
+  background: var(--paper);
+  box-shadow: 0 0 0 1px var(--ochre);
+}
+
+.panel-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+}
+
+.panel-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+}
+
+/* Inputs */
+
+.field {
+  margin-bottom: 1.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px dotted var(--paper-rule);
+}
+.field:last-child {
+  border-bottom: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-bottom: .6rem;
+}
+.field-label .hint {
+  color: var(--ink-mute);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: none;
+  font-style: italic;
+  font-family: var(--serif);
+}
+
+.field-value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 1fr 110px;
+  gap: 1rem;
+  align-items: center;
+  margin-top: .4rem;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--ochre);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--ochre-deep);
+  transform: scale(1.08);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--ochre);
+  border: 2px solid var(--ink);
+  cursor: pointer;
+}
+
+.tick-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: .55rem;
+  padding: 0 2px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+}
+.tick-row span {
+  position: relative;
+  padding-top: .35rem;
+}
+.tick-row span::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 4px;
+  background: var(--paper-rule-2);
+}
+
+input[type="number"], input[type="text"] {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--paper-rule-2);
+  padding: .55rem .7rem;
+  width: 100%;
+  outline: none;
+  font-feature-settings: "tnum";
+  transition: border-color .15s, background .15s;
+}
+input[type="number"]:focus, input[type="text"]:focus {
+  border-color: var(--ochre);
+  background: var(--paper-warm);
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.geo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .4rem;
+  margin-top: .4rem;
+}
+.geo-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem .3rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper);
+  color: var(--ink-3);
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.geo-chip input { display: none; }
+.geo-chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+.geo-chip.is-on {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.geo-chip.is-on.is-eu {
+  background: var(--ochre);
+  border-color: var(--ochre);
+}
+
+.toggle-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: .4rem;
+  border: 1px solid var(--ink);
+}
+.toggle-row label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: .65rem .4rem;
+  cursor: pointer;
+  color: var(--ink-3);
+  background: var(--paper);
+  transition: background .15s, color .15s;
+  user-select: none;
+}
+.toggle-row label.is-on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.toggle-row label.is-on.is-ochre {
+  background: var(--ochre);
+}
+.toggle-row label + label {
+  border-left: 1px solid var(--ink);
+}
+.toggle-row input { display: none; }
+
+.reset-row {
+  display: flex;
+  gap: .6rem;
+  margin-top: 1.6rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.btn-mini {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem .85rem;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-mini:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-mini.is-ochre {
+  border-color: var(--ochre);
+  color: var(--ochre);
+}
+.btn-mini.is-ochre:hover {
+  background: var(--ochre);
+  color: var(--paper);
+}
+.copy-flash {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--moss-deep);
+  align-self: center;
+  opacity: 0;
+  transition: opacity .25s;
+}
+.copy-flash.is-visible { opacity: 1; }
+
+/* Output */
+
+.total-card {
+  margin-bottom: 1.8rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.total-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .5rem;
+}
+.total-amount {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.6rem, 5.4vw, 4.2rem);
+  line-height: 1;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+  display: block;
+  margin-bottom: .4rem;
+  transition: color .3s ease;
+}
+.total-amount .accent {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+}
+.total-amount.is-pulsing {
+  color: var(--ochre-deep);
+}
+.total-sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.total-sub strong { color: var(--ink); }
+
+.breakdown {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  margin-bottom: 1.8rem;
+}
+.breakdown-h {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.bd-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: .55rem 0;
+  border-bottom: 1px dotted var(--paper-rule);
+  color: var(--ink-2);
+  align-items: baseline;
+  gap: 1rem;
+}
+.bd-row:last-child { border-bottom: 0; }
+.bd-row .v {
+  font-feature-settings: "tnum";
+  color: var(--ink);
+}
+.bd-row.discount .v { color: var(--moss-deep); }
+.bd-row.total {
+  border-top: 1px solid var(--ink);
+  border-bottom: 0;
+  margin-top: .5rem;
+  padding-top: .85rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.bd-row.total .v {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-variation-settings: "opsz" 36;
+  letter-spacing: -.02em;
+}
+.bd-row.total.annual .v {
+  color: var(--ochre);
+  font-size: 1.4rem;
+}
+
+.list-block {
+  margin-bottom: 1.4rem;
+}
+.list-block:last-child { margin-bottom: 0; }
+.list-h {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.list-h.muted {
+  color: var(--ink-3);
+}
+.kv-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.kv-list li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: .45rem 0;
+  border-bottom: 1px dotted var(--paper-rule);
+  gap: 1rem;
+  color: var(--ink-2);
+  align-items: baseline;
+}
+.kv-list li:last-child { border-bottom: 0; }
+.kv-list li .k { color: var(--ink-2); }
+.kv-list li .v { color: var(--ink); font-feature-settings: "tnum"; text-align: right; }
+.kv-list li .v.dim { color: var(--ink-mute); }
+
+.exc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.exc-list li {
+  position: relative;
+  padding: .45rem 0 .45rem 1.3rem;
+  border-bottom: 1px dotted var(--paper-rule);
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+.exc-list li:last-child { border-bottom: 0; }
+.exc-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: .45rem;
+  color: var(--ochre);
+}
+
+/* ─────────────────────────────────────────── COMPARISON STRIP ── */
+
+.compare {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 3.4rem 0;
+}
+.compare-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+}
+.compare-h {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.compare-h .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.compare-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 20;
+  font-size: 1.1rem;
+  color: var(--ink-3);
+  margin: 0 0 2rem;
+  max-width: 64ch;
+  line-height: 1.5;
+}
+
+.compare-table {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.compare-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 2.4fr;
+  gap: 1.4rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.compare-row:last-child { border-bottom: 0; }
+.compare-row.is-stratum {
+  background: linear-gradient(90deg, rgba(184,101,31,.10), transparent 70%);
+}
+.compare-name {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.compare-name small {
+  display: block;
+  font-weight: 400;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-3);
+  letter-spacing: 0;
+  margin-top: .15rem;
+}
+.compare-cost {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 36;
+  font-size: 1.25rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.compare-row.is-stratum .compare-cost {
+  color: var(--ochre);
+}
+.compare-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+.compare-foot {
+  margin-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.compare-foot a { color: var(--ochre); border-bottom: 0; }
+.compare-foot a:hover { border-bottom: 1px solid var(--ochre); }
+
+/* ─────────────────────────────────────────── FINE PRINT ── */
+
+.fine-print {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+}
+.fine-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.fine-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.fine-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -.025em;
+  margin: 0 0 1.8rem;
+  max-width: 26ch;
+}
+.fine-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+.fine-print p {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 20;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  max-width: 68ch;
+}
+.fine-print p:first-of-type {
+  font-style: italic;
+  border-left: 2px solid var(--ochre);
+  padding-left: 1.1rem;
+  color: var(--ink);
+}
+.fine-print p strong { color: var(--ink); }
+.fine-print p code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--paper-deep);
+  padding: .08rem .35rem;
+  color: var(--ink);
+}
+
+/* ─────────────────────────────────────────── NEXT STEPS ── */
+
+.next {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 1rem 0 4.5rem;
+}
+.next-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.next-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.next-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -.025em;
+  margin: 0 0 2.2rem;
+}
+.next-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.next-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+.next-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.6rem 1.4rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  border-bottom: 1px solid var(--paper-rule);
+  transition: background .2s, border-top-color .2s, transform .2s;
+}
+.next-card:hover {
+  background: var(--paper);
+  border-top-color: var(--ochre);
+  transform: translateY(-2px);
+}
+.next-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.next-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .6rem;
+}
+.next-body {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin: 0 0 1.2rem;
+  flex: 1;
+}
+.next-go {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: auto;
+}
+.next-go .arr { color: var(--ochre); margin-left: .35rem; }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 4rem 0 5rem;
+  text-align: center;
+}
+.closing p {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .04em;
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+.closing p strong { color: var(--ochre); font-style: normal; }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 4rem 0 2.4rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.8rem;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: 32ch;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1.1rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-size: 15px;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1080px) {
+  .calc-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+  .compare-row { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .compare-note { grid-column: 1 / -1; padding-top: .2rem; }
+  .next-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 700px) {
+  .nav-inner { padding: .8rem 0; }
+  .hero { padding: 2.4rem 0 1.6rem; }
+  .calc { padding: 1.4rem 0 3rem; }
+  .calc-panel { padding: 1.4rem 1.2rem 1.3rem; }
+  .compare { padding: 2.4rem 0; }
+  .fine-print { padding: 3rem 0 2rem; }
+  .next { padding: .8rem 0 3rem; }
+  .closing { padding: 2.4rem 0 3rem; }
+  .geo-grid { grid-template-columns: repeat(3, 1fr); }
+  .slider-row { grid-template-columns: 1fr 90px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-foot { flex-direction: column; gap: .7rem; align-items: flex-start; }
+  .total-amount { font-size: clamp(2.2rem, 12vw, 3.6rem); }
+}
+
+@media print {
+  body::before { display: none; }
+  .nav, .reset-row, .next, .mob-bar { display: none; }
+  .calc-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Pricing Calculator</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="./" class="is-current">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:procurement@stratum.ai?subject=Stratum%20%E2%80%94%20procurement%20conversation">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span class="crumb"><a href="./">Pricing</a> · The calculator · Live, in-browser</span>
+  </div>
+  <h1 class="hero-h1">
+    Estimate your <em>Stratum</em> cost.
+  </h1>
+  <p class="hero-sub">
+    An honest first-pass calculator. Final pricing comes after a discovery call,
+    but this tells you what to budget.
+  </p>
+</header>
+
+<!-- ─────────────────────────────────────────── CALCULATOR ── -->
+<section class="calc">
+
+  <div class="calc-grid">
+
+    <!-- INPUTS -->
+    <div class="calc-panel">
+      <div class="panel-label">§ Inputs · Move things around</div>
+      <h2 class="panel-h">Tell us about your company.</h2>
+
+      <!-- Employee count -->
+      <div class="field">
+        <div class="field-label">
+          <span>Employee count</span>
+          <span class="field-value" id="ee-display">2,500</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="ee-slider" min="200" max="25000" step="100" value="2500" aria-label="Employee count slider">
+          <input type="number" id="ee-input" min="200" max="25000" step="100" value="2500" aria-label="Employee count number input">
+        </div>
+        <div class="tick-row" aria-hidden="true">
+          <span>500</span>
+          <span>1k</span>
+          <span>2k</span>
+          <span>5k</span>
+          <span>10k</span>
+          <span>25k</span>
+        </div>
+      </div>
+
+      <!-- HR systems -->
+      <div class="field">
+        <div class="field-label">
+          <span>HR systems you run today</span>
+          <span class="hint">Workday, Greenhouse, Lattice, ADP…</span>
+        </div>
+        <input type="number" id="systems" min="1" max="10" step="1" value="4" aria-label="Number of HR systems">
+      </div>
+
+      <!-- Questions per month -->
+      <div class="field">
+        <div class="field-label">
+          <span>Questions per month</span>
+          <span class="hint">Across your CHRO &amp; her team</span>
+        </div>
+        <input type="number" id="questions" min="50" max="5000" step="10" value="400" aria-label="Questions per month">
+      </div>
+
+      <!-- Geographies -->
+      <div class="field">
+        <div class="field-label">
+          <span>Geographies</span>
+          <span class="hint">For data residency &amp; compliance</span>
+        </div>
+        <div class="geo-grid">
+          <label class="geo-chip is-on" data-geo="US">
+            <input type="checkbox" value="US" checked> US
+          </label>
+          <label class="geo-chip" data-geo="EU">
+            <input type="checkbox" value="EU"> EU
+          </label>
+          <label class="geo-chip is-on" data-geo="UK">
+            <input type="checkbox" value="UK" checked> UK
+          </label>
+          <label class="geo-chip" data-geo="APAC">
+            <input type="checkbox" value="APAC"> APAC
+          </label>
+          <label class="geo-chip" data-geo="LATAM">
+            <input type="checkbox" value="LATAM"> LATAM
+          </label>
+        </div>
+      </div>
+
+      <!-- Plan toggle -->
+      <div class="field">
+        <div class="field-label">
+          <span>Plan</span>
+          <span class="hint">Read more on the <a href="./">pricing page</a></span>
+        </div>
+        <div class="toggle-row" id="plan-toggle">
+          <label class="is-on" data-plan="platform">
+            <input type="radio" name="plan" value="platform" checked> Platform · $12K
+          </label>
+          <label data-plan="decisions">
+            <input type="radio" name="plan" value="decisions"> + Decisions · $32K
+          </label>
+        </div>
+      </div>
+
+      <!-- Billing -->
+      <div class="field">
+        <div class="field-label">
+          <span>Billing</span>
+          <span class="hint">Annual prepay gets 20% off</span>
+        </div>
+        <div class="toggle-row" id="billing-toggle">
+          <label class="is-on is-ochre" data-billing="annual">
+            <input type="radio" name="billing" value="annual" checked> Annual · prepaid
+          </label>
+          <label data-billing="monthly">
+            <input type="radio" name="billing" value="monthly"> Monthly · standard
+          </label>
+        </div>
+      </div>
+
+      <div class="reset-row">
+        <button class="btn-mini" id="reset-btn" type="button">Reset</button>
+        <button class="btn-mini is-ochre" id="copy-btn" type="button">Copy estimate</button>
+        <span class="copy-flash" id="copy-flash">Copied to clipboard</span>
+      </div>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="calc-panel right">
+      <div class="panel-label">§ Output · Your estimate</div>
+
+      <div class="total-card">
+        <div class="total-label">Total annual estimate</div>
+        <span class="total-amount" id="total-annual">$122,880</span>
+        <div class="total-sub">
+          <strong id="total-monthly">$10,240</strong> per month equivalent ·
+          <span id="billing-mode-label">Annual prepaid · 20% off</span>
+        </div>
+      </div>
+
+      <div class="breakdown" aria-label="Monthly cost breakdown">
+        <div class="breakdown-h">Monthly breakdown</div>
+        <div class="bd-row"><span class="k">Base platform fee</span><span class="v" id="bd-base">$12,000/mo</span></div>
+        <div class="bd-row"><span class="k" id="bd-usage-k">Estimated usage tier (120 decisions/mo)</span><span class="v" id="bd-usage">$800/mo</span></div>
+        <div class="bd-row" id="bd-eu-row" style="display:none;"><span class="k">EU data residency (Frankfurt)</span><span class="v" id="bd-eu">$2,000/mo</span></div>
+        <div class="bd-row discount" id="bd-disc-row"><span class="k">Annual prepay discount (−20%)</span><span class="v" id="bd-disc">−$2,560/mo</span></div>
+        <div class="bd-row total"><span class="k">Effective monthly</span><span class="v" id="bd-total-monthly">$10,240/mo</span></div>
+        <div class="bd-row total annual"><span class="k">Annual total</span><span class="v" id="bd-total-annual">$122,880/yr</span></div>
+      </div>
+
+      <div class="list-block">
+        <div class="list-h">What you'd get</div>
+        <ul class="kv-list" id="incl-list">
+          <li><span class="k">Connectors live</span><span class="v" id="incl-conn">8</span></li>
+          <li><span class="k">Named Console users</span><span class="v" id="incl-named">25</span></li>
+          <li><span class="k">Standard users (read-only)</span><span class="v" id="incl-std">—</span></li>
+          <li><span class="k">SLA tier</span><span class="v" id="incl-sla">99.9% / 4-hour P1</span></li>
+          <li><span class="k">Onboarding</span><span class="v" id="incl-onb">60-day standard</span></li>
+          <li><span class="k">Decisions write-back</span><span class="v dim" id="incl-wb">Not included</span></li>
+        </ul>
+      </div>
+
+      <div class="list-block">
+        <div class="list-h muted">What is NOT included</div>
+        <ul class="exc-list">
+          <li>Implementation services beyond standard onboarding (custom data migrations, historical backfill beyond 24 months, etc.)</li>
+          <li>Custom connector development for systems not on the supported list — quoted separately by our Customer Engineering team</li>
+          <li>Training beyond standard onboarding (additional CHRO direct-team sessions, recorded train-the-trainer modules)</li>
+          <li>APAC data residency (planned H2 2027 from Singapore / Tokyo; a surcharge will apply when the region goes live)</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── COMPARISON STRIP ── -->
+<section class="compare" aria-labelledby="compare-h">
+  <div class="compare-inner">
+    <div class="compare-h" id="compare-h">
+      <span class="bar"></span>
+      <span>§ For reference · What the rest of the CHRO stack costs</span>
+    </div>
+    <p class="compare-dek">
+      These are not replacement comparisons — Stratum sits <em>on top of</em> the systems
+      of record, not in place of them. We list them so the line item has context when
+      it lands on your CFO's desk.
+    </p>
+
+    <div class="compare-table">
+      <div class="compare-row is-stratum">
+        <span class="compare-name">Stratum <small>your estimate, this calculator</small></span>
+        <span class="compare-cost" id="compare-stratum">$123K/yr</span>
+        <span class="compare-note">Platform fee + decisions in arrears. No per-seat math. 12-month minimum.</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-name">Workday <small>HCM, typical mid-market</small></span>
+        <span class="compare-cost">$260K – $420K/yr</span>
+        <span class="compare-note">At ~2,500 EE. List $14–$22/EE/mo plus implementation in the low-six-figures. System of record.</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-name">Lattice <small>talent suite, full bundle</small></span>
+        <span class="compare-cost">$80K – $150K/yr</span>
+        <span class="compare-note">Per-seat performance + engagement + grow modules. Strong UX, narrow scope.</span>
+      </div>
+      <div class="compare-row">
+        <span class="compare-name">Rippling <small>HRIS + IT + Finance</small></span>
+        <span class="compare-cost">$180K – $280K/yr</span>
+        <span class="compare-note">Workforce platform bundle. Replaces several systems but adds operational surface area.</span>
+      </div>
+    </div>
+
+    <div class="compare-foot">
+      For reference only · not a replacement comparison · <a href="../compare/">See the full compare page →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FINE PRINT ── -->
+<section class="fine-print">
+  <div class="fine-eyebrow">
+    <span class="bar"></span>
+    <span>§ The fine print · Read this before you forward the number</span>
+  </div>
+  <h2 class="fine-h">A first-pass estimate is not <em>a quote.</em></h2>
+
+  <p>
+    This calculator is a first-pass estimate. Your real cost depends on your specific
+    systems, your peak usage, your geographic footprint, the shape of your write-back
+    requirements, and any custom work your team asks us to scope. The number above
+    is what to budget — not what to sign.
+  </p>
+
+  <p>
+    All quotes are <strong>12-month minimum.</strong> The platform fee bills annual
+    prepaid; the usage tier bills <strong>quarterly in arrears</strong> against the
+    decisions the Console actually supported and your users actually accepted. Annual
+    prepay gets a <strong>20% effective discount</strong> — we can do a <strong>2-year
+    commit</strong> for a slightly larger discount, and we are willing to talk about a
+    revenue-share structure on the write-back module if your CFO prefers that shape.
+  </p>
+
+  <p>
+    <strong>Procurement timeline:</strong> most customers complete MSA + DPA in
+    <code>21–31 days</code> from first quote. The fastest we have signed is
+    <strong>8 days</strong> (a buyer who had seen an AI rider before, and a General
+    Counsel who reads contracts on Saturdays). Talk to
+    <a href="mailto:procurement@stratum.ai">procurement@stratum.ai</a> if you need a faster path
+    or a non-standard shape.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── NEXT STEPS ── -->
+<section class="next">
+  <div class="next-eyebrow">
+    <span class="bar"></span>
+    <span>§ Next steps · Three doors</span>
+  </div>
+  <h2 class="next-h">When the <em>number</em> is close enough, here's what to do next.</h2>
+
+  <div class="next-grid">
+
+    <a class="next-card" id="email-procurement" href="mailto:procurement@stratum.ai?subject=Stratum%20%E2%80%94%20Calculator%20estimate%20for%20discussion">
+      <div class="next-num">No. 01 · The CFO path</div>
+      <h3 class="next-title">Email procurement with your estimate.</h3>
+      <p class="next-body">
+        We'll reply within one business day with a real quote, the MSA / DPA / SLA
+        exhibit, and a 30-minute call with our Head of Revenue to validate
+        assumptions.
+      </p>
+      <span class="next-go">procurement@stratum.ai <span class="arr">→</span></span>
+    </a>
+
+    <a class="next-card" href="mailto:partners@stratum.ai?subject=Stratum%20%E2%80%94%20Book%20a%2030-minute%20sizing%20call">
+      <div class="next-num">No. 02 · The VP People Ops path</div>
+      <h3 class="next-title">Book a 30-minute sizing call.</h3>
+      <p class="next-body">
+        Bring your stack diagram and your top ten questions. We'll tell you which
+        plan fits, how long implementation will take, and whether you're a candidate
+        for a design partner slot.
+      </p>
+      <span class="next-go">partners@stratum.ai <span class="arr">→</span></span>
+    </a>
+
+    <a class="next-card" href="../console/">
+      <div class="next-num">No. 03 · The CHRO path</div>
+      <h3 class="next-title">Try the live Console first.</h3>
+      <p class="next-body">
+        Before the procurement conversation, see whether the answer the Console
+        gives your CHRO is the answer she actually needs. Twenty minutes in the
+        live workspace, no salesperson required.
+      </p>
+      <span class="next-go">Open the Console <span class="arr">→</span></span>
+    </a>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <p>
+    Pricing is meant to be honest. If yours doesn't feel right after a discovery call,
+    <strong>tell us</strong> — we'd rather fix the model than sign the wrong contract.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back to your CHRO.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="./">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="./">Pricing overview</a></li>
+        <li><a href="./#usage">Usage tier</a></li>
+        <li><a href="./#timeline">Implementation</a></li>
+        <li><a href="../library/">The Library</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   Stratum Pricing Calculator — vanilla JS
+   Math committed:
+     baseMonthly:
+       platform:  12000 + max(0, EE - 5000) * 0.40
+       decisions: 32000 + max(0, EE - 5000) * 0.80
+     decisionsPerMonth = round(questions * 0.30)
+     usageMonthly = bracketed pricing over decisionsPerMonth:
+        0..100        : $0
+        101..500      : (d - 100)    * $40       capped at 400 * $40
+        501..2000     : (d - 500)    * $32       capped at 1500 * $32
+        2001+         : (d - 2000)   * $24
+     EU surcharge: +$2000/mo if EU geography is checked
+     Annual prepay discount: multiply effective monthly by 0.80
+     Annual total = effectiveMonthly * 12
+   ============================================================ */
+
+(function () {
+
+  // ─── Sticky nav scroll state ───
+  var nav = document.getElementById('nav');
+  if (nav) {
+    var navApply = function () {
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    };
+    navApply();
+    window.addEventListener('scroll', navApply, { passive: true });
+  }
+
+  // ─── Element refs ───
+  var $ = function (id) { return document.getElementById(id); };
+
+  var eeSlider     = $('ee-slider');
+  var eeInput      = $('ee-input');
+  var eeDisplay    = $('ee-display');
+  var systems      = $('systems');
+  var questions    = $('questions');
+  var geoChips     = document.querySelectorAll('.geo-chip');
+  var planToggle   = $('plan-toggle');
+  var billingToggle= $('billing-toggle');
+  var resetBtn     = $('reset-btn');
+  var copyBtn      = $('copy-btn');
+  var copyFlash    = $('copy-flash');
+
+  // ─── Defaults ───
+  var DEFAULTS = {
+    ee: 2500,
+    systems: 4,
+    questions: 400,
+    geos: ['US', 'UK'],
+    plan: 'platform',
+    billing: 'annual'
+  };
+
+  // ─── State ───
+  var state = JSON.parse(JSON.stringify(DEFAULTS));
+
+  // ─── Formatters ───
+  var fmtMoney = function (n, opts) {
+    opts = opts || {};
+    var rounded = opts.exact ? n : Math.round(n);
+    var sign = rounded < 0 ? '-' : '';
+    var v = Math.abs(rounded);
+    return sign + '$' + v.toLocaleString('en-US');
+  };
+  var fmtMoneyK = function (n) {
+    // For compare strip
+    var rounded = Math.round(n / 1000);
+    return '$' + rounded.toLocaleString('en-US') + 'K/yr';
+  };
+  var fmtInt = function (n) {
+    return Math.round(n).toLocaleString('en-US');
+  };
+
+  // ─── Math ───
+  function computeBaseMonthly(plan, ee) {
+    var over5k = Math.max(0, ee - 5000);
+    if (plan === 'decisions') {
+      return 32000 + over5k * 0.80;
+    }
+    return 12000 + over5k * 0.40;
+  }
+
+  function computeDecisions(qs) {
+    return Math.round(qs * 0.30);
+  }
+
+  function computeUsageMonthly(decisions) {
+    var d = decisions;
+    var cost = 0;
+
+    // 101 – 500 : (d - 100) * 40, capped at 400 * 40
+    if (d > 100) {
+      var t1 = Math.min(d - 100, 400);
+      cost += t1 * 40;
+    }
+    // 501 – 2000 : (d - 500) * 32, capped at 1500 * 32
+    if (d > 500) {
+      var t2 = Math.min(d - 500, 1500);
+      cost += t2 * 32;
+    }
+    // 2001+ : (d - 2000) * 24
+    if (d > 2000) {
+      var t3 = d - 2000;
+      cost += t3 * 24;
+    }
+    return cost;
+  }
+
+  function computeAll() {
+    var ee   = state.ee;
+    var qs   = state.questions;
+    var plan = state.plan;
+    var bill = state.billing;
+    var euOn = state.geos.indexOf('EU') !== -1;
+
+    var base       = computeBaseMonthly(plan, ee);
+    var decisions  = computeDecisions(qs);
+    var usage      = computeUsageMonthly(decisions);
+    var eu         = euOn ? 2000 : 0;
+
+    var grossMonthly = base + usage + eu;
+    var discount     = bill === 'annual' ? grossMonthly * 0.20 : 0;
+    var effMonthly   = grossMonthly - discount;
+    var annual       = effMonthly * 12;
+
+    return {
+      ee: ee,
+      questions: qs,
+      decisions: decisions,
+      plan: plan,
+      billing: bill,
+      euOn: euOn,
+      base: base,
+      usage: usage,
+      eu: eu,
+      grossMonthly: grossMonthly,
+      discount: discount,
+      effMonthly: effMonthly,
+      annual: annual
+    };
+  }
+
+  // ─── Render ───
+  var totalAmount = $('total-annual');
+  var totalMonthly = $('total-monthly');
+  var billingModeLabel = $('billing-mode-label');
+
+  var bdBase    = $('bd-base');
+  var bdUsage   = $('bd-usage');
+  var bdUsageK  = $('bd-usage-k');
+  var bdEuRow   = $('bd-eu-row');
+  var bdEu      = $('bd-eu');
+  var bdDiscRow = $('bd-disc-row');
+  var bdDisc    = $('bd-disc');
+  var bdTotalM  = $('bd-total-monthly');
+  var bdTotalA  = $('bd-total-annual');
+
+  var inclConn  = $('incl-conn');
+  var inclNamed = $('incl-named');
+  var inclStd   = $('incl-std');
+  var inclSla   = $('incl-sla');
+  var inclOnb   = $('incl-onb');
+  var inclWb    = $('incl-wb');
+
+  var compareStratum = $('compare-stratum');
+
+  var pulseTimer = null;
+
+  function render() {
+    var r = computeAll();
+
+    // Update displayed inputs
+    eeDisplay.textContent = fmtInt(r.ee);
+
+    // Hero total
+    totalAmount.textContent = fmtMoney(r.annual);
+    totalAmount.classList.add('is-pulsing');
+    clearTimeout(pulseTimer);
+    pulseTimer = setTimeout(function () {
+      totalAmount.classList.remove('is-pulsing');
+    }, 300);
+
+    totalMonthly.textContent = fmtMoney(r.effMonthly);
+    billingModeLabel.textContent = r.billing === 'annual'
+      ? 'Annual prepaid · 20% off'
+      : 'Monthly · standard rate';
+
+    // Breakdown
+    bdBase.textContent  = fmtMoney(r.base) + '/mo';
+    bdUsageK.textContent = 'Estimated usage tier (' + fmtInt(r.decisions) + ' decisions/mo)';
+    bdUsage.textContent = fmtMoney(r.usage) + '/mo';
+
+    if (r.euOn) {
+      bdEuRow.style.display = 'grid';
+      bdEu.textContent = fmtMoney(r.eu) + '/mo';
+    } else {
+      bdEuRow.style.display = 'none';
+    }
+
+    if (r.billing === 'annual') {
+      bdDiscRow.style.display = 'grid';
+      bdDisc.textContent = '−' + fmtMoney(r.discount) + '/mo';
+    } else {
+      bdDiscRow.style.display = 'none';
+    }
+
+    bdTotalM.textContent = fmtMoney(r.effMonthly) + '/mo';
+    bdTotalA.textContent = fmtMoney(r.annual) + '/yr';
+
+    // Plan-dependent inclusions
+    if (r.plan === 'decisions') {
+      inclConn.textContent  = '14';
+      inclNamed.textContent = '75';
+      inclStd.textContent   = '250';
+      inclSla.textContent   = '99.95% / 1-hour P1';
+      inclOnb.textContent   = '90-day deep, CE on-prem';
+      inclWb.textContent    = 'Included';
+      inclWb.classList.remove('dim');
+    } else {
+      inclConn.textContent  = '8';
+      inclNamed.textContent = '25';
+      inclStd.textContent   = '—';
+      inclSla.textContent   = '99.9% / 4-hour P1';
+      inclOnb.textContent   = '60-day standard';
+      inclWb.textContent    = 'Not included';
+      inclWb.classList.add('dim');
+    }
+
+    // Compare strip — Stratum row
+    compareStratum.textContent = fmtMoneyK(r.annual);
+
+    // URL hash
+    updateHash();
+  }
+
+  // ─── URL hash sync ───
+  function updateHash() {
+    var parts = [
+      'ee=' + state.ee,
+      'systems=' + state.systems,
+      'questions=' + state.questions,
+      'geos=' + state.geos.join(','),
+      'plan=' + state.plan,
+      'billing=' + state.billing
+    ];
+    var newHash = '#' + parts.join('&');
+    if (window.location.hash !== newHash) {
+      // Replace without scrolling
+      history.replaceState(null, '', newHash);
+    }
+  }
+
+  function readHash() {
+    var h = window.location.hash.replace(/^#/, '');
+    if (!h) return false;
+    var pairs = h.split('&');
+    var found = {};
+    for (var i = 0; i < pairs.length; i++) {
+      var kv = pairs[i].split('=');
+      if (kv.length === 2) found[kv[0]] = decodeURIComponent(kv[1]);
+    }
+    var changed = false;
+    if (found.ee && !isNaN(+found.ee))             { state.ee        = clamp(+found.ee, 200, 25000);     changed = true; }
+    if (found.systems && !isNaN(+found.systems))   { state.systems   = clamp(+found.systems, 1, 10);     changed = true; }
+    if (found.questions && !isNaN(+found.questions)){ state.questions = clamp(+found.questions, 50, 5000); changed = true; }
+    if (found.geos !== undefined) {
+      var allowed = ['US','EU','UK','APAC','LATAM'];
+      var picked  = found.geos.split(',').filter(function (g) { return allowed.indexOf(g) !== -1; });
+      state.geos = picked;
+      changed = true;
+    }
+    if (found.plan === 'platform' || found.plan === 'decisions') { state.plan = found.plan; changed = true; }
+    if (found.billing === 'annual' || found.billing === 'monthly') { state.billing = found.billing; changed = true; }
+    return changed;
+  }
+
+  function clamp(n, lo, hi) {
+    return Math.max(lo, Math.min(hi, n));
+  }
+
+  // ─── Apply state back to UI controls ───
+  function applyStateToUI() {
+    eeSlider.value = state.ee;
+    eeInput.value  = state.ee;
+    eeDisplay.textContent = fmtInt(state.ee);
+    systems.value   = state.systems;
+    questions.value = state.questions;
+
+    geoChips.forEach(function (chip) {
+      var key = chip.getAttribute('data-geo');
+      var checkbox = chip.querySelector('input');
+      var on = state.geos.indexOf(key) !== -1;
+      checkbox.checked = on;
+      chip.classList.toggle('is-on', on);
+      chip.classList.toggle('is-eu', key === 'EU');
+    });
+
+    Array.prototype.forEach.call(planToggle.querySelectorAll('label'), function (lbl) {
+      var v = lbl.getAttribute('data-plan');
+      var input = lbl.querySelector('input');
+      var on = v === state.plan;
+      input.checked = on;
+      lbl.classList.toggle('is-on', on);
+    });
+
+    Array.prototype.forEach.call(billingToggle.querySelectorAll('label'), function (lbl) {
+      var v = lbl.getAttribute('data-billing');
+      var input = lbl.querySelector('input');
+      var on = v === state.billing;
+      input.checked = on;
+      lbl.classList.toggle('is-on', on);
+      lbl.classList.toggle('is-ochre', on && v === 'annual');
+    });
+  }
+
+  // ─── Event wiring ───
+  eeSlider.addEventListener('input', function () {
+    state.ee = clamp(parseInt(eeSlider.value, 10) || 200, 200, 25000);
+    eeInput.value = state.ee;
+    eeDisplay.textContent = fmtInt(state.ee);
+    render();
+  });
+
+  eeInput.addEventListener('input', function () {
+    var v = parseInt(eeInput.value, 10);
+    if (isNaN(v)) return;
+    state.ee = clamp(v, 200, 25000);
+    eeSlider.value = state.ee;
+    eeDisplay.textContent = fmtInt(state.ee);
+    render();
+  });
+  eeInput.addEventListener('blur', function () {
+    eeInput.value = state.ee;
+  });
+
+  systems.addEventListener('input', function () {
+    var v = parseInt(systems.value, 10);
+    if (isNaN(v)) return;
+    state.systems = clamp(v, 1, 10);
+    render();
+  });
+  systems.addEventListener('blur', function () { systems.value = state.systems; });
+
+  questions.addEventListener('input', function () {
+    var v = parseInt(questions.value, 10);
+    if (isNaN(v)) return;
+    state.questions = clamp(v, 50, 5000);
+    render();
+  });
+  questions.addEventListener('blur', function () { questions.value = state.questions; });
+
+  geoChips.forEach(function (chip) {
+    chip.addEventListener('click', function (e) {
+      // The label native behaviour will toggle the checkbox; we sync state from it
+      // But we listen on click so we run after the toggle
+      setTimeout(function () {
+        var key = chip.getAttribute('data-geo');
+        var checkbox = chip.querySelector('input');
+        var on = checkbox.checked;
+        chip.classList.toggle('is-on', on);
+        chip.classList.toggle('is-eu', key === 'EU');
+        var idx = state.geos.indexOf(key);
+        if (on && idx === -1) state.geos.push(key);
+        if (!on && idx !== -1) state.geos.splice(idx, 1);
+        render();
+      }, 0);
+    });
+  });
+
+  Array.prototype.forEach.call(planToggle.querySelectorAll('label'), function (lbl) {
+    lbl.addEventListener('click', function () {
+      var v = lbl.getAttribute('data-plan');
+      state.plan = v;
+      Array.prototype.forEach.call(planToggle.querySelectorAll('label'), function (l) {
+        l.classList.toggle('is-on', l === lbl);
+        var inp = l.querySelector('input');
+        inp.checked = (l === lbl);
+      });
+      render();
+    });
+  });
+
+  Array.prototype.forEach.call(billingToggle.querySelectorAll('label'), function (lbl) {
+    lbl.addEventListener('click', function () {
+      var v = lbl.getAttribute('data-billing');
+      state.billing = v;
+      Array.prototype.forEach.call(billingToggle.querySelectorAll('label'), function (l) {
+        var lv = l.getAttribute('data-billing');
+        var on = l === lbl;
+        l.classList.toggle('is-on', on);
+        l.classList.toggle('is-ochre', on && lv === 'annual');
+        var inp = l.querySelector('input');
+        inp.checked = on;
+      });
+      render();
+    });
+  });
+
+  resetBtn.addEventListener('click', function () {
+    state = JSON.parse(JSON.stringify(DEFAULTS));
+    applyStateToUI();
+    render();
+  });
+
+  copyBtn.addEventListener('click', function () {
+    var r = computeAll();
+    var planName = r.plan === 'decisions' ? 'Platform + Decisions' : 'Platform';
+    var billName = r.billing === 'annual' ? 'annual prepaid (20% off)' : 'monthly billing';
+    var geoStr = state.geos.length ? state.geos.join(', ') : 'none specified';
+    var summary =
+      'Stratum first-pass estimate\n' +
+      '─────────────────────────────\n' +
+      'Company:   ' + fmtInt(r.ee) + ' employees, ' + state.systems + ' HR systems\n' +
+      'Volume:    ' + fmtInt(r.questions) + ' questions/mo → ~' + fmtInt(r.decisions) + ' decisions/mo\n' +
+      'Geos:      ' + geoStr + '\n' +
+      'Plan:      ' + planName + '\n' +
+      'Billing:   ' + billName + '\n' +
+      '\n' +
+      'Base monthly:   ' + fmtMoney(r.base) + '\n' +
+      'Usage monthly:  ' + fmtMoney(r.usage) + '\n' +
+      (r.euOn ? 'EU residency:   ' + fmtMoney(r.eu) + '\n' : '') +
+      (r.billing === 'annual' ? 'Discount:      −' + fmtMoney(r.discount) + '\n' : '') +
+      '─────────────────────────────\n' +
+      'Effective:      ' + fmtMoney(r.effMonthly) + '/mo\n' +
+      'ANNUAL TOTAL:   ' + fmtMoney(r.annual) + '\n' +
+      '\n' +
+      'Generated: ' + window.location.href + '\n' +
+      'This is a first-pass estimate. Email procurement@stratum.ai for a real quote.';
+
+    var doFlash = function () {
+      copyFlash.classList.add('is-visible');
+      setTimeout(function () { copyFlash.classList.remove('is-visible'); }, 1800);
+    };
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(summary).then(doFlash, function () {
+        fallbackCopy(summary); doFlash();
+      });
+    } else {
+      fallbackCopy(summary); doFlash();
+    }
+  });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  // Wire up "Email procurement" CTA to include current summary in the body
+  var emailLink = $('email-procurement');
+  if (emailLink) {
+    emailLink.addEventListener('click', function (e) {
+      var r = computeAll();
+      var planName = r.plan === 'decisions' ? 'Platform + Decisions' : 'Platform';
+      var body =
+        'Hello — based on the pricing calculator, here is our first-pass estimate:\n\n' +
+        '  Employees: ' + fmtInt(r.ee) + '\n' +
+        '  HR systems today: ' + state.systems + '\n' +
+        '  Questions / month: ' + fmtInt(r.questions) + '  (~' + fmtInt(r.decisions) + ' decisions)\n' +
+        '  Geographies: ' + (state.geos.length ? state.geos.join(', ') : '—') + '\n' +
+        '  Plan: ' + planName + '\n' +
+        '  Billing: ' + (r.billing === 'annual' ? 'Annual prepaid' : 'Monthly') + '\n\n' +
+        '  Estimated annual: ' + fmtMoney(r.annual) + '\n' +
+        '  Effective monthly: ' + fmtMoney(r.effMonthly) + '\n\n' +
+        'Would like to discuss next steps.\n\n' +
+        '— Generated: ' + window.location.href;
+      var href = 'mailto:procurement@stratum.ai' +
+        '?subject=' + encodeURIComponent('Stratum — Calculator estimate for discussion') +
+        '&body=' + encodeURIComponent(body);
+      emailLink.setAttribute('href', href);
+      // Allow default to proceed
+    });
+  }
+
+  // ─── Init ───
+  readHash();
+  applyStateToUI();
+  render();
+
+  // Respond to hash changes from other tabs/back-forward
+  window.addEventListener('hashchange', function () {
+    if (readHash()) {
+      applyStateToUI();
+      render();
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
