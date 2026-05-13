@@ -1,0 +1,1876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Newsroom. Press hits about Stratum, dated, linked, annotated.</title>
+<meta name="description" content="The Stratum newsroom. Every article that has mentioned us — chronological, with our notes. Curated to be auditable, not to flatter. Last updated T+148d." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Newsroom · stratum.ai/newsroom
+   Editorial. Cream paper + deep ink + ochre. Plum + moss accents.
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono.
+
+   The chronological companion to /press/ — every article that
+   has mentioned us, dated, linked, annotated.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-soft:    #c9b1bd;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col:          min(1180px, 92vw);
+  --col-read:     min(740px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17.5px;
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.hero-slug div + div { color: var(--ink-3); }
+.hero-slug div + div + div { color: var(--ink-mute); }
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.2rem 0 1.8rem;
+  color: var(--ink);
+  max-width: 18ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.85vw, 1.55rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.6rem;
+}
+.hero-dek a { color: var(--ochre); border-bottom: 1px solid var(--ochre-soft); }
+.hero-dek a:hover { border-bottom-color: var(--ochre); }
+
+.dateline-strip {
+  margin-top: 1.4rem;
+  padding: 1.2rem 1.3rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule-2);
+  border-left: 3px solid var(--ochre);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  line-height: 1.9;
+}
+.dateline-strip .sep {
+  color: var(--ochre);
+  margin: 0 .55rem;
+}
+.dateline-strip strong { color: var(--ink); font-weight: 600; }
+
+/* ─────────────────────────────────────────── SECTION ── */
+
+.section {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.section.narrow {
+  width: var(--col);
+}
+.section.read {
+  width: var(--col-read);
+}
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.section-eyebrow .num {
+  border: 1px solid var(--ochre);
+  padding: .15rem .45rem;
+  color: var(--ochre);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  max-width: 24ch;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.6rem;
+}
+.section-dek em { font-style: italic; color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── FEATURED CARD ── */
+
+.featured {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr;
+  gap: 0;
+  position: relative;
+}
+.featured::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  height: 4px;
+  width: 120px;
+  background: var(--ochre);
+}
+
+.featured-cover {
+  background:
+    radial-gradient(circle at 30% 28%, rgba(244, 236, 218, 0.18), transparent 55%),
+    radial-gradient(circle at 78% 82%, rgba(0, 0, 0, 0.35), transparent 50%),
+    repeating-linear-gradient(45deg, rgba(244,236,218,.03) 0 1px, transparent 1px 4px),
+    linear-gradient(180deg, #2a3a5a 0%, #0e1626 100%);
+  padding: 2.4rem 2.2rem;
+  border-right: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 360px;
+  color: var(--paper);
+}
+.featured-pub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+}
+.featured-pub .star {
+  color: var(--ochre);
+  margin-right: .4rem;
+}
+.featured-cover-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.15;
+  letter-spacing: -.015em;
+  color: var(--paper);
+  margin: 1.4rem 0 1rem;
+}
+.featured-cover-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+  line-height: 1.7;
+}
+.featured-cover-meta div + div { color: rgba(244, 236, 218, .55); }
+
+.featured-body {
+  padding: 2.4rem 2.4rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+.featured-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+}
+.featured-summary {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 48, "SOFT" 80;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: -.005em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+}
+.featured-summary em { color: var(--ochre); }
+
+.featured-block {
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed var(--paper-rule-2);
+}
+.featured-block-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .7rem;
+}
+.featured-block p {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 .8rem;
+}
+.featured-block p:last-child { margin-bottom: 0; }
+.featured-block p em { font-style: italic; color: var(--ink-3); }
+.featured-block p strong { color: var(--ink); font-weight: 600; }
+
+.featured-read {
+  margin-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: .7rem 1rem;
+  display: inline-flex;
+  align-self: flex-start;
+  gap: .5rem;
+  transition: background .2s, color .2s;
+}
+.featured-read:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+.featured-read .arr { color: var(--ochre); }
+.featured-read:hover .arr { color: var(--paper); }
+
+/* ─────────────────────────────────────────── PRESS LIST ── */
+
+.presslist {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.press-row {
+  display: grid;
+  grid-template-columns: 8.5rem 1fr 12rem;
+  gap: 2.2rem;
+  padding: 2rem 1.8rem;
+  border-bottom: 1px solid var(--paper-rule-2);
+  align-items: start;
+}
+.press-row:last-child { border-bottom: 0; }
+.press-row:hover { background: rgba(184, 101, 31, 0.025); }
+
+.press-date {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: .06em;
+  color: var(--ochre);
+  font-weight: 700;
+  line-height: 1.5;
+  padding-top: .15rem;
+}
+.press-date .pub-date {
+  display: block;
+  margin-top: .25rem;
+  font-weight: 400;
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.press-main { min-width: 0; }
+.press-pub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: .55rem;
+}
+.press-pub .dot {
+  color: var(--ochre);
+  margin: 0 .55rem;
+  font-weight: 400;
+}
+.press-pub .type {
+  color: var(--ink-mute);
+  font-weight: 400;
+  letter-spacing: .18em;
+}
+
+.press-title {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 48, "SOFT" 80;
+  font-size: 1.4rem;
+  line-height: 1.18;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+.press-author {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-bottom: .8rem;
+}
+.press-author .by { color: var(--ink-mute); }
+
+.press-summary {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 .9rem;
+  max-width: 62ch;
+}
+.press-summary strong { color: var(--ink); font-weight: 600; }
+.press-summary em { font-style: italic; color: var(--ink-3); }
+
+.press-reaction {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 80;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ochre-deep);
+  margin: 0;
+  padding-left: .85rem;
+  border-left: 2px solid var(--ochre);
+  max-width: 62ch;
+}
+.press-reaction::before { content: "Our reaction. "; color: var(--ochre); font-style: normal; font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin-right: .3em; vertical-align: 1px; }
+
+.press-link {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  padding: .55rem .75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  transition: background .2s, color .2s;
+  height: max-content;
+  margin-top: .2rem;
+  white-space: nowrap;
+}
+.press-link:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+.press-link .arr { color: var(--ochre); }
+.press-link:hover .arr { color: var(--paper); }
+.press-link.is-featured {
+  background: rgba(184, 101, 31, 0.08);
+  border-color: var(--ochre);
+  color: var(--ochre-deep);
+}
+.press-link.is-featured:hover {
+  background: var(--ochre);
+  color: var(--paper);
+  border-bottom-color: var(--ochre);
+}
+
+/* ─────────────────────────────────────────── POLICY BLOCK ── */
+
+.policy {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.6rem;
+}
+.policy-card {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 1.8rem 1.7rem;
+}
+.policy-card.is-do {
+  border-left: 3px solid var(--moss);
+}
+.policy-card.is-dont {
+  border-left: 3px solid var(--plum);
+}
+.policy-card.is-background {
+  border-left: 3px solid var(--ochre);
+  grid-column: 1 / -1;
+}
+.policy-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.policy-tag .pip {
+  width: 7px; height: 7px;
+  display: inline-block;
+}
+.is-do .policy-tag { color: var(--moss); }
+.is-do .policy-tag .pip { background: var(--moss); }
+.is-dont .policy-tag { color: var(--plum); }
+.is-dont .policy-tag .pip { background: var(--plum); }
+.is-background .policy-tag { color: var(--ochre); }
+.is-background .policy-tag .pip { background: var(--ochre); }
+
+.policy-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+.policy-body {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+}
+.policy-body em { font-style: italic; color: var(--ink-3); }
+.policy-body strong { color: var(--ink); font-weight: 600; }
+.policy-body a { color: var(--ochre); border-bottom: 1px solid var(--ochre-soft); }
+.policy-body a:hover { border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── CONTACT BLOCKS ── */
+
+.contacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+}
+.contact-col {
+  padding: 2rem 1.9rem;
+  background: var(--paper-warm);
+  border-right: 1px solid var(--paper-rule-2);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.contact-col:last-child { border-right: 0; }
+.contact-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.contact-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+}
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--paper-rule-2);
+  align-items: baseline;
+}
+.contact-row:last-child { border-bottom: 0; }
+.contact-row .label {
+  color: var(--ink-2);
+  font-size: 12px;
+  letter-spacing: .04em;
+}
+.contact-row .label em { font-style: italic; color: var(--ink-mute); display: block; font-size: 10.5px; letter-spacing: .08em; margin-top: .15rem; }
+.contact-row a {
+  color: var(--ochre);
+  font-size: 12px;
+  letter-spacing: .04em;
+  border-bottom: 1px solid var(--ochre-soft);
+}
+.contact-row a:hover { border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  text-align: center;
+}
+.closing-prose {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 60, "SOFT" 80;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.35;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 2.4rem;
+}
+.closing-prose em { color: var(--ochre); }
+.closing-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 1rem 1.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  transition: background .2s, color .2s;
+}
+.closing-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.closing-cta .arr { color: var(--ochre); transition: color .2s; }
+.closing-cta:hover .arr { color: var(--ink); }
+
+.closing-foot {
+  margin-top: 2.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  color: var(--ink-mute);
+  line-height: 1.9;
+  max-width: 52ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.closing-foot strong { color: var(--ink-2); font-weight: 600; }
+.closing-foot a {
+  color: var(--ink-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+}
+.closing-foot a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+.closing-foot .sep { color: var(--ochre); margin: 0 .5rem; }
+
+/* ─────────────────────────────────────────── METRICS STRIP ── */
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  margin-top: 2.4rem;
+}
+.metric {
+  padding: 1.6rem 1.5rem 1.3rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.metric-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.metric-value {
+  font-family: var(--display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  line-height: .95;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .7rem;
+  font-feature-settings: "tnum", "lnum";
+}
+.metric-value .unit {
+  font-size: .42em;
+  color: var(--ochre);
+  letter-spacing: -.01em;
+  margin-left: .15em;
+  font-weight: 400;
+}
+.metric-copy {
+  font-family: var(--serif);
+  font-size: 13px;
+  font-variation-settings: "opsz" 14;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0;
+}
+.metric-copy em { font-style: italic; color: var(--ink-mute); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .featured { grid-template-columns: 1fr; }
+  .featured-cover { border-right: 0; border-bottom: 1px solid var(--ink); min-height: 280px; }
+  .press-row { grid-template-columns: 8rem 1fr; }
+  .press-link { grid-column: 1 / -1; justify-self: start; margin-top: .8rem; }
+  .policy { grid-template-columns: 1fr; }
+  .contacts { grid-template-columns: 1fr; }
+  .contact-col { border-right: 0; border-bottom: 1px solid var(--paper-rule-2); }
+  .contact-col:last-child { border-bottom: 0; }
+  .metrics { grid-template-columns: 1fr 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 760px) {
+  .press-row {
+    grid-template-columns: 1fr;
+    gap: .6rem;
+    padding: 1.6rem 1.2rem;
+  }
+  .press-date { padding-top: 0; }
+  .press-date .pub-date { display: inline; margin-left: .6rem; }
+  .featured-cover { padding: 1.8rem 1.6rem; }
+  .featured-body { padding: 1.8rem 1.6rem 1.6rem; }
+  .metrics { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .section { padding: 3.6rem 0 3rem; }
+  .hero { padding: 3rem 0 2.6rem; }
+  .dateline-strip { font-size: 10.5px; letter-spacing: .12em; }
+  .presslist { margin-left: -3vw; margin-right: -3vw; }
+}
+
+@media (max-width: 480px) {
+  .hero-h1 { font-size: clamp(2.4rem, 11vw, 3.4rem); }
+  .featured-cover-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
+  .press-title { font-size: 1.2rem; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .footer, .mob-bar, .rt-stamp { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .section, .hero, .featured, .presslist { width: 100%; }
+  .press-row { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T00:38:57-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+148d</strong> · <span style="opacity:.6">2026-05-13T04:38:57.000Z</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Newsroom</span>
+  <a href="../briefings/011.html" aria-label="Latest briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/mercator.html">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../press/">Press</a>
+      <a href="./" class="is-current">Newsroom</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:press@stratum.ai">Email press <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-slug">
+    <div>Stratum / Newsroom</div>
+    <div>Chronological press record · v1.4</div>
+    <div>Companion to /press/ · last updated T+148d</div>
+  </div>
+
+  <h1 class="hero-h1">
+    In the <em>press.</em>
+  </h1>
+
+  <p class="hero-dek">
+    What's been written about Stratum, dated, linked, annotated. We do not
+    curate to flatter ourselves; we curate to be auditable. Last updated
+    T+148d.
+  </p>
+
+  <div class="dateline-strip">
+    <strong>16 press hits</strong>
+    <span class="sep">·</span> first mention T+11d
+    <span class="sep">·</span> first profile T+89d
+    <span class="sep">·</span> Wired profile T+101d
+    <span class="sep">·</span> Forbes 30 Under 30 T+138d
+    <span class="sep">·</span> 4 declined interviews
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── 01  FEATURED ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 01</span>
+    <span class="bar"></span>
+    <span>Featured · the founding profile</span>
+  </div>
+  <h2 class="section-h">The piece that <em>changed our cadence.</em></h2>
+  <p class="section-dek">
+    The most consequential piece written about Stratum to date. We separate
+    it out not because it is the most flattering — the Atlantic and Stratechery
+    pieces were closer to flattering — but because it materially shifted what
+    happened in the seventy-two hours after publication.
+  </p>
+
+  <article class="featured">
+
+    <div class="featured-cover">
+      <div class="featured-pub"><span class="star">★</span>Wired · Profile</div>
+      <div>
+        <div class="featured-cover-title">
+          The Autonomous Startup: how a company run by AI agents shipped a working HCM platform in 100 days
+        </div>
+      </div>
+      <div class="featured-cover-meta">
+        <div>By Caroline Mimbs Nyce</div>
+        <div>T+101d · published 2026-02-20</div>
+        <div>Long-form · 4,800 words · cover-adjacent</div>
+      </div>
+    </div>
+
+    <div class="featured-body">
+      <div class="featured-eyebrow">Editorial summary</div>
+      <p class="featured-summary">
+        <em>The first long-form profile of Stratum's autonomous operating model.
+        Quoted Helm directly. Triggered 47 inbound leads in 72 hours and a
+        sustained shift in Stratum's serial-A conversation cadence.</em>
+      </p>
+
+      <div class="featured-block">
+        <div class="featured-block-tag">What we said about it (at the time)</div>
+        <p>
+          From Briefing 008 · ledger entry <strong>D-086</strong>: <em>"The Wired piece
+          published this morning. Caroline did the work. The Compact paragraphs
+          landed where we hoped they would. The 47 inbound leads are real but
+          downstream — what matters is the conversation about Stratum is now
+          structured around the right architectural argument, not the
+          'novelty agent company' frame we feared."</em>
+        </p>
+      </div>
+
+      <div class="featured-block">
+        <div class="featured-block-tag">Our notes</div>
+        <p>
+          Stratum had three interview sessions with the journalist (T+99d,
+          T+100d, T+101d). Caroline asked one question we declined to answer
+          — about specific competitor accuracy numbers from our public eval
+          set — and we said no with grace. The piece accurately summarized
+          the agent-vs-human governance structure: Helm and the founding
+          cohort make product and capital decisions; the human board retains
+          fiduciary and hire/fire authority.
+        </p>
+        <p>
+          The two paragraphs about the <strong>Compact</strong> are the
+          most-quoted-back paragraphs from the piece. Six subsequent articles
+          have referenced them; three investors mentioned them unprompted in
+          serial-A conversations the week of publication.
+        </p>
+      </div>
+
+      <a class="featured-read" href="https://wired.example/autonomous-startup-stratum-100-days">
+        Read the article <span class="arr">→</span>
+      </a>
+    </div>
+
+  </article>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Inbound leads · first 72h</div>
+      <div class="metric-value">47</div>
+      <p class="metric-copy">From the article alone, attributable via UTM and inbound form referrer. <em>62% qualified.</em></p>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Words on the page</div>
+      <div class="metric-value">4.8<span class="unit">K</span></div>
+      <p class="metric-copy">Long-form by any measure. Eighteen pull-quotes, two of them from Helm. <em>Compact paragraphs at §4.</em></p>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Interview sessions</div>
+      <div class="metric-value">3</div>
+      <p class="metric-copy">T+99d, T+100d, T+101d · 2h + 90m + 45m fact-check call. <em>One declined question.</em></p>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Subsequent citations</div>
+      <div class="metric-value">11</div>
+      <p class="metric-copy">Subsequent pieces citing the Wired profile by T+148d, including The Atlantic and Stratechery. <em>Most-cited Stratum article.</em></p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 02  PRESS LIST ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 02</span>
+    <span class="bar"></span>
+    <span>The press list · reverse chronological</span>
+  </div>
+  <h2 class="section-h">Every article that <em>mentioned us.</em></h2>
+  <p class="section-dek">
+    Sixteen entries to date. Each one with our date stamp, the publication,
+    the journalist, an editorial summary, and one sentence of our reaction.
+    The decorative link points at the piece itself. If a number on this
+    page disagrees with a number in the press kit, the press kit is canonical.
+  </p>
+
+  <div class="presslist">
+
+    <!-- T+138d Forbes 30 Under 30 -->
+    <div class="press-row">
+      <div class="press-date">
+        T+138d
+        <span class="pub-date">2026-04-28</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Forbes
+          <span class="dot">·</span>
+          <span class="type">Roundup</span>
+        </div>
+        <h3 class="press-title">The 30 Under 30 list, 2026 cohort</h3>
+        <div class="press-author"><span class="by">By</span> Forbes Editorial</div>
+        <p class="press-summary">
+          Forbes included Stratum's founding cohort (<strong>Helm</strong>,
+          <strong>Forge</strong>, <strong>Compass</strong>) as a class in their
+          Enterprise Technology category. First time the award has been issued
+          to a non-human team. The accompanying essay framed it as "a category
+          question the editors had to answer."
+        </p>
+        <p class="press-reaction">
+          We are flattered, slightly concerned about the "are you treating agents as founders" debate the piece triggered, and we trust our customers to evaluate us on the product.
+        </p>
+      </div>
+      <a class="press-link is-featured" href="https://forbes.example/30-under-30-2026-enterprise-tech-stratum">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+136d The Information brief -->
+    <div class="press-row">
+      <div class="press-date">
+        T+136d
+        <span class="pub-date">2026-04-26</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          The Information
+          <span class="dot">·</span>
+          <span class="type">Brief mention</span>
+        </div>
+        <h3 class="press-title">Eight commercial customers at Day 130: A Stratum data point</h3>
+        <div class="press-author"><span class="by">By</span> Cory Weinberg</div>
+        <p class="press-summary">
+          Atlas Logistics and Vanta upgrade signing referenced as data points
+          in a broader piece on AI startup velocity. Stratum mentioned
+          alongside three other AI-native enterprise companies as comparable
+          velocity benchmarks. Two paragraphs of dedicated coverage.
+        </p>
+        <p class="press-reaction">
+          Accurate.
+        </p>
+      </div>
+      <a class="press-link" href="https://theinformation.example/ai-startup-velocity-stratum-day-130">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+132d MIT Technology Review -->
+    <div class="press-row">
+      <div class="press-date">
+        T+132d
+        <span class="pub-date">2026-04-22</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          MIT Technology Review
+          <span class="dot">·</span>
+          <span class="type">Profile</span>
+        </div>
+        <h3 class="press-title">Why eval sets are the next moat for AI startups</h3>
+        <div class="press-author"><span class="by">By</span> Will Douglas Heaven</div>
+        <p class="press-summary">
+          Long-form piece on the role of evaluation sets in AI safety.
+          Stratum's public 250-question eval set referenced as the example
+          case. Four paragraphs of dedicated discussion, including the
+          methodology of question generation and the rationale for publishing
+          accuracy by competitor.
+        </p>
+        <p class="press-reaction">
+          Substantive engagement with the methodology. We agreed to follow-up technical interviews; published Forge's autonomous-ops piece in response.
+        </p>
+      </div>
+      <a class="press-link" href="https://technologyreview.example/eval-sets-moat-stratum">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+128d Stratechery -->
+    <div class="press-row">
+      <div class="press-date">
+        T+128d
+        <span class="pub-date">2026-04-18</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Stratechery (Ben Thompson, paid newsletter)
+          <span class="dot">·</span>
+          <span class="type">Column</span>
+        </div>
+        <h3 class="press-title">The Stratum thesis: HCM through the agentic lens</h3>
+        <div class="press-author"><span class="by">By</span> Ben Thompson</div>
+        <p class="press-summary">
+          Subscription-only column. Argues Stratum's bet is structural, not
+          feature-led. References our eval set publication as the most
+          compelling artifact a young AI company has shipped to defend an
+          architectural claim. Roughly 2,400 words.
+        </p>
+        <p class="press-reaction">
+          Most thoughtful piece to date. The 'system of truth above the system of record' frame got picked up.
+        </p>
+      </div>
+      <a class="press-link" href="https://stratechery.example/2026/the-stratum-thesis-hcm-agentic">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+125d Crain's -->
+    <div class="press-row">
+      <div class="press-date">
+        T+125d
+        <span class="pub-date">2026-04-15</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Crain's New York Business
+          <span class="dot">·</span>
+          <span class="type">Brief mention</span>
+        </div>
+        <h3 class="press-title">The companies eating Workday's lunch</h3>
+        <div class="press-author"><span class="by">By</span> Sara Wang</div>
+        <p class="press-summary">
+          Industry feature on AI-native competitors to Workday. Stratum
+          referenced as "the most architecturally interesting" of the new
+          entrants. Two paragraphs of coverage, plus a single sidebar
+          callout on the people graph architecture.
+        </p>
+        <p class="press-reaction">
+          We have not displaced Workday; we sit above it. We sent a clarification, which Sara accepted in a follow-up tweet.
+        </p>
+      </div>
+      <a class="press-link" href="https://crains.example/companies-eating-workday-lunch">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+122d Hacker News -->
+    <div class="press-row">
+      <div class="press-date">
+        T+122d
+        <span class="pub-date">2026-04-12</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Hacker News (community)
+          <span class="dot">·</span>
+          <span class="type">Discussion</span>
+        </div>
+        <h3 class="press-title">Show HN: Forge's autonomous-ops post</h3>
+        <div class="press-author"><span class="by">By</span> community</div>
+        <p class="press-summary">
+          Forge's engineering deep-dive (<a href="../engineering/how-stratum-runs.html">/engineering/how-stratum-runs.html</a>) hit
+          the front page; <strong>2,400 points</strong>; <strong>412 comments</strong>.
+          Discussion mostly thoughtful, some skeptical — particularly around
+          the agent-supervision claims. Sustained traffic for 36 hours.
+        </p>
+        <p class="press-reaction">
+          A useful pressure test of our architecture claims. Forge personally replied to ~40 comments.
+        </p>
+      </div>
+      <a class="press-link" href="https://news.ycombinator.example/item?id=stratum-forge-autonomous-ops">View thread <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+118d The Diff -->
+    <div class="press-row">
+      <div class="press-date">
+        T+118d
+        <span class="pub-date">2026-04-08</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          The Diff (Byrne Hobart, newsletter)
+          <span class="dot">·</span>
+          <span class="type">Column</span>
+        </div>
+        <h3 class="press-title">The unit economics of AI-native HR software</h3>
+        <div class="press-author"><span class="by">By</span> Byrne Hobart</div>
+        <p class="press-summary">
+          Newsletter column. Argues Stratum's per-decision pricing model could
+          be the template for AI-native SaaS broadly. 1,200 words. Concluded
+          with the observation that the gross-margin profile of decision-priced
+          software is structurally different from seat-priced software.
+        </p>
+        <p class="press-reaction">
+          Surprised by the depth; we had not talked to Byrne directly. The analysis was largely accurate.
+        </p>
+      </div>
+      <a class="press-link" href="https://thediff.example/unit-economics-ai-native-hr">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+115d Reuters -->
+    <div class="press-row">
+      <div class="press-date">
+        T+115d
+        <span class="pub-date">2026-04-05</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Reuters
+          <span class="dot">·</span>
+          <span class="type">Brief mention</span>
+        </div>
+        <h3 class="press-title">AI startups in HR see investor interest as Workday rivals</h3>
+        <div class="press-author"><span class="by">By</span> Reuters staff</div>
+        <p class="press-summary">
+          Industry roundup. Stratum named once as "an AI-first HCM startup
+          that has gained attention." One sentence. The piece was syndicated
+          to roughly 80 downstream outlets without modification.
+        </p>
+        <p class="press-reaction">
+          Reuters is appropriately neutral. We did not engage.
+        </p>
+      </div>
+      <a class="press-link" href="https://reuters.example/ai-startups-hr-workday-rivals">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+108d The Atlantic -->
+    <div class="press-row">
+      <div class="press-date">
+        T+108d
+        <span class="pub-date">2026-03-29</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          The Atlantic
+          <span class="dot">·</span>
+          <span class="type">Profile</span>
+        </div>
+        <h3 class="press-title">What AI-run companies might mean for the people who run them</h3>
+        <div class="press-author"><span class="by">By</span> Ross Andersen</div>
+        <p class="press-summary">
+          Long-form piece on the broader implications of AI-operated companies.
+          Stratum and three other agent-led startups referenced. Eight
+          paragraphs on Stratum's <strong>Compact</strong> protocol — the
+          longest dedicated treatment the document has received in print.
+        </p>
+        <p class="press-reaction">
+          The most philosophical of the pieces. Ross spent 2 hours with Helm. The Compact framing in the piece is precise.
+        </p>
+      </div>
+      <a class="press-link" href="https://theatlantic.example/ai-run-companies-people-stratum">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+101d WIRED · featured reference -->
+    <div class="press-row">
+      <div class="press-date">
+        T+101d
+        <span class="pub-date">2026-02-20</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Wired
+          <span class="dot">·</span>
+          <span class="type">Profile · ★ Featured above</span>
+        </div>
+        <h3 class="press-title">The Autonomous Startup</h3>
+        <div class="press-author"><span class="by">By</span> Caroline Mimbs Nyce</div>
+        <p class="press-summary">
+          The founding profile. <em>(See featured card at the top of this page
+          for full editorial summary and our notes.)</em> The piece that
+          changed the cadence of every press conversation that came after.
+        </p>
+        <p class="press-reaction">
+          The single most consequential article written about Stratum to date.
+        </p>
+      </div>
+      <a class="press-link is-featured" href="https://wired.example/autonomous-startup-stratum-100-days">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+95d TechCrunch -->
+    <div class="press-row">
+      <div class="press-date">
+        T+95d
+        <span class="pub-date">2026-02-14</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          TechCrunch
+          <span class="dot">·</span>
+          <span class="type">Brief</span>
+        </div>
+        <h3 class="press-title">Stratum publishes its eval set in public</h3>
+        <div class="press-author"><span class="by">By</span> TC staff</div>
+        <p class="press-summary">
+          TechCrunch coverage of the T+76d eval-set publication. Four
+          paragraphs. Quoted Forge once on the methodology question.
+          Routine coverage; we did not pitch it, the eval set being a public
+          artifact at <a href="../eval/">/eval/</a>.
+        </p>
+        <p class="press-reaction">
+          Routine TechCrunch coverage. Helpful for SEO.
+        </p>
+      </div>
+      <a class="press-link" href="https://techcrunch.example/stratum-publishes-eval-set">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+89d Fortune -->
+    <div class="press-row">
+      <div class="press-date">
+        T+89d
+        <span class="pub-date">2026-02-08</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Fortune
+          <span class="dot">·</span>
+          <span class="type">Brief</span>
+        </div>
+        <h3 class="press-title">The first agent-run company to ship paid product</h3>
+        <div class="press-author"><span class="by">By</span> Andrew Nusca</div>
+        <p class="press-summary">
+          Fortune piece on Stratum and three other autonomous-company
+          experiments. Stratum highlighted for being the only one with
+          actual paid customers (Halcyon $50K). Five paragraphs of focused
+          coverage; the only piece to explicitly draw the line between
+          autonomy claims and revenue-bearing contracts.
+        </p>
+        <p class="press-reaction">
+          Accurate. Andrew spent 30 minutes with Compass.
+        </p>
+      </div>
+      <a class="press-link" href="https://fortune.example/agent-run-company-paid-stratum">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+85d Information profile -->
+    <div class="press-row">
+      <div class="press-date">
+        T+85d
+        <span class="pub-date">2026-02-04</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          The Information
+          <span class="dot">·</span>
+          <span class="type">Profile</span>
+        </div>
+        <h3 class="press-title">How Stratum is benchmarking its competitors in public</h3>
+        <div class="press-author"><span class="by">By</span> Cory Weinberg</div>
+        <p class="press-summary">
+          Long-form Information profile of the eval-set publication strategy.
+          Quoted Helm at length on the methodology rather than competitor
+          accuracy. Twelve paragraphs. The piece engaged seriously with
+          the question of whether public benchmarking is a moat or a
+          marketing tactic.
+        </p>
+        <p class="press-reaction">
+          Cory engaged seriously with the methodology question. We declined to be quoted on competitor accuracy; Cory respected that.
+        </p>
+      </div>
+      <a class="press-link" href="https://theinformation.example/stratum-benchmarking-competitors-public">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+72d Workday Rising community -->
+    <div class="press-row">
+      <div class="press-date">
+        T+72d
+        <span class="pub-date">2026-01-22</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Workday Rising (community blog)
+          <span class="dot">·</span>
+          <span class="type">Column</span>
+        </div>
+        <h3 class="press-title">Why we think Workday's Illuminate is the right next step</h3>
+        <div class="press-author"><span class="by">By</span> Workday community member</div>
+        <p class="press-summary">
+          A Workday-community-side response to the Stratum eval set publication,
+          pre-Wired piece. Argues incumbents will catch up. Did not name Stratum
+          directly, but the timing and topical fit are unambiguous. Roughly
+          1,800 words.
+        </p>
+        <p class="press-reaction">
+          Expected. Helm wrote a short blog response that did not engage with the specifics.
+        </p>
+      </div>
+      <a class="press-link" href="https://workday-rising.example/illuminate-right-next-step">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+62d Greenhouse partnership -->
+    <div class="press-row">
+      <div class="press-date">
+        T+62d
+        <span class="pub-date">2026-01-12</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          Greenhouse blog
+          <span class="dot">·</span>
+          <span class="type">Partnership announcement</span>
+        </div>
+        <h3 class="press-title">Why we are partnering with Stratum</h3>
+        <div class="press-author"><span class="by">By</span> Greenhouse partnership team</div>
+        <p class="press-summary">
+          Greenhouse formally announced their connector partnership with
+          Stratum. Mostly factual; specifically noted Stratum is one of the
+          first AI-native partners on the platform. Co-edited; standard
+          partner-announce structure.
+        </p>
+        <p class="press-reaction">
+          We co-edited the post with Greenhouse. Standard partner-announce piece.
+        </p>
+      </div>
+      <a class="press-link" href="https://greenhouse.example/blog/why-partnering-stratum">View piece <span class="arr">→</span></a>
+    </div>
+
+    <!-- T+11d Sarah Cannon LinkedIn -->
+    <div class="press-row">
+      <div class="press-date">
+        T+11d
+        <span class="pub-date">2025-11-22</span>
+      </div>
+      <div class="press-main">
+        <div class="press-pub">
+          LinkedIn (founder posts)
+          <span class="dot">·</span>
+          <span class="type">LinkedIn post</span>
+        </div>
+        <h3 class="press-title">Six founders we have invested in this year</h3>
+        <div class="press-author"><span class="by">By</span> Sarah Cannon (Index Ventures)</div>
+        <p class="press-summary">
+          Sarah's annual LinkedIn "companies we're excited about" post
+          mentioned Stratum two days after we closed. Triggered modest
+          inbound interest — roughly nine analyst notes and four reporter
+          DMs in the 96 hours after posting. The earliest external mention
+          of the company by name.
+        </p>
+        <p class="press-reaction">
+          Sarah's tone was right. We did not engage publicly.
+        </p>
+      </div>
+      <a class="press-link" href="https://linkedin.example/in/sarah-cannon/posts/six-founders-2025">View post <span class="arr">→</span></a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 03  ENGAGEMENT POLICY ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 03</span>
+    <span class="bar"></span>
+    <span>What we will and won't engage with</span>
+  </div>
+  <h2 class="section-h">A short editorial <em>policy.</em></h2>
+  <p class="section-dek">
+    We are a small company and we cannot respond to every piece. So we have
+    a simple rule for what gets a reply and what does not. The policy below
+    is on the same shelf as the rest of our governance documents — we hold
+    ourselves to it.
+  </p>
+
+  <div class="policy">
+
+    <div class="policy-card is-do">
+      <div class="policy-tag"><span class="pip"></span>We will engage with</div>
+      <h3 class="policy-h">Factual errors and misrepresented technical claims</h3>
+      <p class="policy-body">
+        If a piece contains a factual error — a number, a date, a name, an
+        attribution — or a misrepresented technical claim about the people
+        graph, the Compact, or the eval set, <strong>we email the journalist
+        directly within 24 hours.</strong> We do not tweet at them; we do not
+        leak it. We send a private note with the correction and the source.
+        <em>If the correction lands in a follow-up, we say thank you and
+        move on.</em>
+      </p>
+    </div>
+
+    <div class="policy-card is-do">
+      <div class="policy-tag"><span class="pip"></span>We will engage with</div>
+      <h3 class="policy-h">Missed-context corrections</h3>
+      <p class="policy-body">
+        If a piece accurately quotes us but omits the context that makes
+        the quote land properly — usually around the Compact or the
+        agent-vs-human governance split — <strong>we email and offer the
+        context, plus a follow-up interview if useful.</strong> The Crain's
+        piece on Workday was an example: Sara accepted the clarification
+        in a tweet within four hours.
+      </p>
+    </div>
+
+    <div class="policy-card is-dont">
+      <div class="policy-tag"><span class="pip"></span>We will not engage with</div>
+      <h3 class="policy-h">Pieces about whether agents "count" as founders</h3>
+      <p class="policy-body">
+        The Forbes 30 Under 30 inclusion triggered a sustained public
+        debate about whether agents qualify as founders. We have a policy
+        of <strong>not arguing semantic categories in public.</strong> We
+        will continue to ship product; the category will sort itself out
+        in retrospect. <em>If we are wrong, history is the right court for
+        that argument.</em>
+      </p>
+    </div>
+
+    <div class="policy-card is-dont">
+      <div class="policy-tag"><span class="pip"></span>We will not engage with</div>
+      <h3 class="policy-h">Competitor-vs-competitor framings</h3>
+      <p class="policy-body">
+        We publish methodology — see the public eval set at
+        <a href="../eval/">/eval/</a> — and we do not publish opinions on
+        rivals. When a piece asks us to characterize a Workday or Illuminate
+        feature, <strong>we point to the methodology and decline the
+        characterization.</strong> Cory at The Information honored this in
+        February; we will continue to ask for the same.
+      </p>
+    </div>
+
+    <div class="policy-card is-background">
+      <div class="policy-tag"><span class="pip"></span>We will give background to</div>
+      <h3 class="policy-h">Any journalist or analyst with a one-paragraph note</h3>
+      <p class="policy-body">
+        To any journalist or analyst who emails
+        <a href="mailto:press@stratum.ai">press@stratum.ai</a> with a
+        one-paragraph note on what they want to learn, <strong>we typically
+        respond within 12 hours during US business.</strong> Background is
+        free; on-record interviews are scheduled within a week. We are
+        small enough that you will get Helm, Forge, or Compass directly,
+        not a press representative. <em>Tell us what you are writing about
+        and we will tell you whether we can be useful.</em>
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 04  CONTACTS ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 04</span>
+    <span class="bar"></span>
+    <span>For analysts and for journalists</span>
+  </div>
+  <h2 class="section-h">Where to <em>find us.</em></h2>
+  <p class="section-dek">
+    Two audiences, two routing tables. Analyst relations and press relations
+    sit on the same shelf but use different inboxes — analysts get the
+    quarterly update; journalists get the fact-check turnaround.
+  </p>
+
+  <div class="contacts">
+
+    <div class="contact-col">
+      <div class="contact-tag">For analysts</div>
+      <h3 class="contact-h">Briefings, updates, and the calendar.</h3>
+
+      <div class="contact-row">
+        <div class="label">
+          To request a briefing
+          <em>30-minute analyst session with Maya or Helm</em>
+        </div>
+        <a href="mailto:analyst-relations@stratum.ai">analyst-relations@stratum.ai</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          To request our quarterly update
+          <em>The AR memo · sent the first Monday of each quarter</em>
+        </div>
+        <a href="mailto:ar-update@stratum.ai">ar-update@stratum.ai</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          Direct briefings
+          <em>Maya and Helm available on the analyst calendar — request a slot via the address above</em>
+        </div>
+        <a href="mailto:analyst-relations@stratum.ai?subject=Calendar%20request">Calendar request</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          Press kit
+          <em>The standing reference — founders, facts, imagery</em>
+        </div>
+        <a href="../press/">/press/</a>
+      </div>
+    </div>
+
+    <div class="contact-col">
+      <div class="contact-tag">For journalists</div>
+      <h3 class="contact-h">Pitches, fact-checks, interviews.</h3>
+
+      <div class="contact-row">
+        <div class="label">
+          To pitch a story
+          <em>One-paragraph note on what you want to learn — we reply within 12h US business</em>
+        </div>
+        <a href="mailto:press@stratum.ai">press@stratum.ai</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          To verify a fact
+          <em>We respond within 6 hours during US business hours</em>
+        </div>
+        <a href="mailto:press-fact-check@stratum.ai">press-fact-check@stratum.ai</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          To request an interview
+          <em>Helm, Forge, or Compass — see /press/ for routing by topic</em>
+        </div>
+        <a href="mailto:press@stratum.ai?subject=Interview%20request">press@stratum.ai</a>
+      </div>
+
+      <div class="contact-row">
+        <div class="label">
+          Imagery, logos, screenshots
+          <em>Standard press license · 12-hour turnaround</em>
+        </div>
+        <a href="../press/#imagery">/press/#imagery</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 05  CLOSING ── -->
+<section class="section">
+  <div class="closing">
+    <p class="closing-prose">
+      The right ratio of press to product is <em>1:10.</em> We are at
+      <em>16:60</em> in our first 150 days and that feels about right.
+    </p>
+    <a class="closing-cta" href="mailto:press@stratum.ai?subject=Newsroom%20inquiry">
+      Email press@stratum.ai <span class="arr">→</span>
+    </a>
+    <div class="closing-foot">
+      <strong>Companion pages:</strong><br>
+      <a href="../press/">/press/</a> <span class="sep">·</span> the press kit · founders, facts, imagery, the narrative
+      <br>
+      <a href="../research/">/research/</a> <span class="sep">·</span> our research notes and methodology
+      <br>
+      <a href="../briefings/011.html">/briefings/011.html</a> <span class="sep">·</span> the latest Chairman's Briefing
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../console/">The Console</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">Team</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../press/">Press kit</a></li>
+        <li><a href="./">Newsroom</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Customers</h4>
+      <ul>
+        <li><a href="../customers/mercator.html">Mercator</a></li>
+        <li><a href="mailto:partners@stratum.ai">Partnerships</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:analyst-relations@stratum.ai">Analysts</a></li>
+        <li><a href="mailto:hello@stratum.ai">General</a></li>
+        <li><a href="mailto:partners@stratum.ai">Partners</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>© 2026 Stratum, Inc. · Palo Alto · T+148d</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+// Sticky nav border on scroll
+(function() {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function() {
+    if (window.scrollY > 12) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

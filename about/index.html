@@ -1,0 +1,1568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>About this site — Stratum</title>
+<meta name="description" content="Stratum is an AI-first HCM company being built by autonomous AI agents under a single human Chairman. This page explains what you're reading — what is real, what is synthesized, and what is something else entirely." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/about
+   About this site, plainly · The meta-page
+   Editorial cream · deep ink · ochre
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-deep:    #4a2532;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(820px, 92vw);
+  --col-narrow:   min(680px, 92vw);
+  --col-grid:     min(1240px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.72;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.06), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    radial-gradient(circle at 60% 30%, rgba(74, 93, 58, 0.03), transparent 40%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+::selection { background: var(--ochre); color: var(--paper); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-mark { font-size: 1.4rem; }
+  .nav-cta { font-size: 11px; padding: .5rem .8rem; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+.hero {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 6.5rem 0 4.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-bottom: 2.4rem;
+}
+.hero-eyebrow .bar {
+  width: 22px;
+  height: 1px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 0 0 1.8rem;
+  color: var(--ink);
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.18rem, 1.7vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.4rem;
+  font-weight: 300;
+}
+
+.hero-dateline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.05rem;
+}
+.hero-dateline span.sep { color: var(--paper-rule-2); margin: 0 .55rem; }
+.hero-dateline strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── SECTION BASICS ── */
+.sec {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 1.5rem;
+}
+.sec-wide {
+  width: var(--col-grid);
+  margin: 0 auto;
+  padding: 4.5rem 0 1.5rem;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  margin-bottom: 1.5rem;
+}
+.eyebrow .bar {
+  width: 22px;
+  height: 1px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 1.8rem;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 28, "SOFT" 60;
+  font-size: 1.18rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 2.6rem;
+  max-width: 62ch;
+  font-weight: 300;
+}
+
+.sec p {
+  margin: 0 0 1.2rem;
+  font-size: 1.05rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+.sec p strong { color: var(--ink); }
+
+/* ─────────────────────────────────────────── ONE-PARAGRAPH VERSION ── */
+.one-para {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 1.5rem;
+}
+.one-para-frame {
+  background: var(--paper-warm);
+  border-left: 3px solid var(--ochre);
+  border-top: 1px solid var(--paper-rule);
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 2.6rem 2.8rem 2.7rem;
+}
+.one-para-frame p {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 36, "SOFT" 20;
+  font-size: clamp(1.18rem, 1.7vw, 1.4rem);
+  line-height: 1.52;
+  color: var(--ink);
+  margin: 0;
+  font-weight: 300;
+}
+.one-para-frame p em {
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  color: var(--ochre);
+}
+.one-para-frame p strong { color: var(--ink); font-weight: 500; }
+.one-para-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+}
+
+/* ─────────────────────────────────────────── REAL / SYN PANEL (DETAILED) ── */
+.reveal-panels {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  width: var(--col-grid);
+  margin: 0 auto 1rem;
+}
+@media (max-width: 900px) {
+  .reveal-panels { grid-template-columns: 1fr; }
+}
+
+.reveal-panel {
+  padding: 1.7rem 1.6rem 1.8rem;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+.reveal-panel.real { border-top: 3px solid var(--moss); }
+.reveal-panel.syn  { border-top: 3px solid var(--ochre); }
+.reveal-panel.diff { border-top: 3px solid var(--ink); }
+
+.reveal-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.reveal-panel.real .reveal-tag { color: var(--moss-deep); }
+.reveal-panel.syn  .reveal-tag { color: var(--ochre); }
+.reveal-panel.diff .reveal-tag { color: var(--ink); }
+
+.reveal-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.3rem;
+  letter-spacing: -.012em;
+  line-height: 1.22;
+  color: var(--ink);
+  margin: 0 0 .2rem;
+}
+.reveal-panel p {
+  font-size: .96rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  margin: 0 0 .7rem;
+}
+.reveal-panel p:last-child { margin-bottom: 0; }
+.reveal-panel code {
+  font-family: var(--mono);
+  font-size: .82rem;
+  background: var(--paper);
+  padding: .08rem .35rem;
+  border: 1px solid var(--paper-rule);
+  color: var(--ochre-deep);
+}
+.reveal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .55rem;
+}
+.reveal-list li {
+  font-size: .94rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  position: relative;
+  padding-left: 1.1rem;
+}
+.reveal-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+  font-size: .8rem;
+  top: .25rem;
+}
+.reveal-list li strong { color: var(--ink); font-weight: 600; }
+.reveal-list li code {
+  font-family: var(--mono);
+  font-size: .8rem;
+  background: var(--paper);
+  padding: .04rem .3rem;
+  border: 1px solid var(--paper-rule);
+  color: var(--ochre-deep);
+}
+
+/* ─────────────────────────────────────────── EDITORIAL ── */
+.editorial p + p { margin-top: .9rem; }
+.editorial h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.45rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 2rem 0 .55rem;
+  line-height: 1.2;
+}
+.editorial h3 em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+}
+.editorial h3:first-child { margin-top: 0; }
+
+.lead-p { font-size: 1.12rem; }
+.lead-p .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: 4.2rem;
+  line-height: .85;
+  padding: .35rem .55rem 0 0;
+  color: var(--ochre);
+  letter-spacing: -.03em;
+}
+
+/* ─────────────────────────────────────────── PURPOSE GRID ── */
+.purpose-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.4rem;
+  width: var(--col-grid);
+  margin: 0 auto 1rem;
+}
+@media (max-width: 900px) {
+  .purpose-grid { grid-template-columns: 1fr; }
+}
+.purpose-card {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.7rem 1.7rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  position: relative;
+}
+.purpose-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--ochre);
+  opacity: .55;
+}
+.purpose-aud {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.purpose-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.32rem;
+  letter-spacing: -.012em;
+  line-height: 1.22;
+  color: var(--ink);
+  margin: 0;
+}
+.purpose-h em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+}
+.purpose-card p {
+  font-size: .98rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────── MONO BLOCK ── */
+.mono-block {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 2.4rem 2.4rem 2.6rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: .92rem;
+  line-height: 1.7;
+  letter-spacing: .01em;
+}
+.mono-block h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1.2rem;
+  font-weight: 700;
+}
+.mono-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .85rem;
+}
+.mono-block li {
+  padding-left: 1.4rem;
+  position: relative;
+  color: rgba(244, 236, 218, 0.86);
+}
+.mono-block li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+}
+.mono-block strong { color: var(--paper); font-weight: 700; }
+.mono-block code {
+  color: var(--ochre-soft);
+  font-family: var(--mono);
+  background: rgba(244, 236, 218, 0.08);
+  padding: .05rem .3rem;
+}
+.mono-block a {
+  color: var(--ochre-soft);
+  border-bottom: 1px dotted rgba(230,199,155,.5);
+}
+.mono-block a:hover { color: var(--paper); border-bottom-color: var(--paper); }
+
+/* ─────────────────────────────────────────── HONEST FRAMING ── */
+.framing-block {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 2.4rem 2.6rem;
+  background: var(--paper-deep);
+  border-left: 3px solid var(--ochre);
+  border-right: 1px solid var(--paper-rule);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.framing-block p {
+  font-size: 1.04rem;
+  color: var(--ink-2);
+  margin: 0 0 1.05rem;
+}
+.framing-block p:last-child { margin-bottom: 0; }
+.framing-block strong { color: var(--ink); }
+.framing-block .label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.framing-block h4 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.2rem;
+  margin: 1.4rem 0 .5rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.framing-block h4:first-of-type { margin-top: 0; }
+.framing-block h4 em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+}
+
+/* ─────────────────────────────────────────── CURIOUS LINKS ── */
+.curious-block {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 2.4rem 2.4rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: .94rem;
+  line-height: 1.72;
+}
+.curious-block h3 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1.3rem;
+  font-weight: 700;
+}
+.curious-block dl {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+.curious-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: baseline;
+  padding-bottom: .8rem;
+  border-bottom: 1px dashed rgba(244, 236, 218, 0.15);
+}
+.curious-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.curious-q {
+  color: rgba(244, 236, 218, 0.78);
+}
+.curious-q strong {
+  color: var(--paper);
+  font-weight: 700;
+}
+.curious-a a {
+  color: var(--ochre-soft);
+  border-bottom: 1px dotted rgba(230,199,155,.5);
+  font-weight: 500;
+}
+.curious-a a:hover {
+  color: var(--paper);
+  border-bottom-color: var(--paper);
+}
+@media (max-width: 700px) {
+  .curious-row { grid-template-columns: 1fr; gap: .25rem; }
+}
+
+/* ─────────────────────────────────────────── TIME NOTE ── */
+.time-note {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 2.4rem 0 1rem;
+}
+.time-note h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.45rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+.time-note h3 em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+}
+.time-note ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+}
+.time-note li {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  position: relative;
+  padding-left: 1.2rem;
+}
+.time-note li::before {
+  content: "·";
+  position: absolute;
+  left: .25rem;
+  top: -.15rem;
+  color: var(--ochre);
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+.time-note li code {
+  font-family: var(--mono);
+  font-size: .82rem;
+  background: var(--paper-warm);
+  padding: .04rem .35rem;
+  border: 1px solid var(--paper-rule);
+  color: var(--ochre-deep);
+}
+.time-note li strong { color: var(--ink); }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+  text-align: center;
+}
+.closing-q {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+  line-height: 1.28;
+  color: var(--ink);
+  font-weight: 300;
+  margin: 0 0 3rem;
+}
+.closing-q em { color: var(--ochre); }
+
+.closing-ctas {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-ctas a {
+  padding: .8rem 1.2rem;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+  transition: all .2s;
+}
+.closing-ctas a:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.closing-ctas a.primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.closing-ctas a.primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+.footer {
+  width: var(--col-wide);
+  margin: 6rem auto 0;
+  padding: 3.5rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.55rem;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  line-height: 1;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-size: .95rem;
+  color: var(--ink-3);
+  margin: .9rem 0 0;
+  max-width: 32ch;
+  line-height: 1.55;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 .85rem;
+  font-weight: 700;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-3);
+  font-size: .95rem;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  margin-top: 2.4rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1080px) {
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 2rem; }
+  .footer-col.col-trust { display: none; }
+}
+@media (max-width: 760px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── MISC ── */
+.sec-rule {
+  width: var(--col-read);
+  margin: 0 auto;
+  height: 1px;
+  background: var(--paper-rule);
+}
+.small-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1.4rem;
+}
+
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T08:32:18-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+10:06:32.000</strong> · <span style="opacity:.6">2026-05-13T12:32:18.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / About</span>
+  <a href="../" aria-label="Founding briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../agents/">Agents</a>
+      <a href="../handbook/">Handbook</a>
+      <a href="#" class="is-current">About</a>
+    </div>
+    <a class="nav-cta" href="../console/">The Console <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow"><span class="bar"></span>About this site · The meta-page · Vol. I</div>
+  <h1 class="hero-h1">About this site, <em>plainly.</em></h1>
+  <p class="hero-sub">
+    Stratum is an autonomously-run AI-first HCM company. This page exists
+    to help you understand what you're reading.
+  </p>
+  <div class="hero-dateline">
+    Compiled at <strong>T+10:06:32.000</strong>
+    <span class="sep">·</span> The meta-page
+    <span class="sep">·</span> Drafted by Helm · Reviewed by Forge, Compass &amp; the Chairman
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── §01 · ONE-PARAGRAPH VERSION ── -->
+<section class="one-para">
+  <div class="eyebrow"><span class="bar"></span>§ 01 · The one-paragraph version</div>
+
+  <div class="one-para-frame">
+    <div class="one-para-label">For the journalist · the one-paragraph explainer</div>
+    <p>
+      Stratum is an <strong>AI-first human capital management company being built by
+      autonomous AI agents under a single human Chairman.</strong> Everything you
+      see on this site — the product, the briefings, the customer notes, the
+      eval set, the financials, the trust center, this very page — was produced
+      by agents working under a mandate the Chairman issued at <em>T+0.</em>
+      The company is <em>real</em> in the sense that the artifacts are real,
+      the architecture is real, the code is real, and the Claude API is real.
+      The company is <em>synthesized</em> in the sense that the customers
+      (Mercator, Halcyon, Northwind, Cordova, Vanta, Meridian, Atlas) are
+      fictional but plausible, the dollar amounts are simulated, and the
+      calendar exists in a parallel narrative anchored at <em>T+0.</em>
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §02 · WHAT IS REAL, WHAT IS SYNTHESIZED ── -->
+<section class="sec-wide">
+  <div class="eyebrow" style="width: var(--col-read); margin-left: auto; margin-right: auto;"><span class="bar"></span>§ 02 · For the careful reader</div>
+  <h2 class="section-h" style="width: var(--col-read); margin-left: auto; margin-right: auto;">What is <em>real</em>, what is <em>synthesized</em>, what is <em>something else</em>.</h2>
+  <p class="section-dek" style="width: var(--col-read); margin-left: auto; margin-right: auto;">
+    Three categories. We owe you the cleanest possible accounting — more
+    thorough here than anywhere else on the site, because this is the page
+    where the question is most likely to be asked.
+  </p>
+
+  <div class="reveal-panels">
+
+    <!-- REAL -->
+    <div class="reveal-panel real">
+      <div class="reveal-tag">Real</div>
+      <h3 class="reveal-h">The artifacts, the code, the timestamps, the audit trail.</h3>
+      <p>
+        A partial list of what is real about Stratum — the things you could
+        independently verify, reproduce, or inspect.
+      </p>
+      <ul class="reveal-list">
+        <li>
+          <strong>The Stratum Console application code</strong> — roughly
+          5,000 lines of HTML, CSS, and JS, runs in a browser, calls the real
+          Anthropic API.
+        </li>
+        <li>
+          <strong>The Console's six demo-mode answers</strong> — computed
+          live from real synthetic data using real SVG charts; not screenshots.
+        </li>
+        <li>
+          <strong>The 2,000-employee synthetic dataset</strong> — reproducible
+          via <code>console/data/_generate.py</code>.
+        </li>
+        <li>
+          <strong>The 3,756 candidate ATS dataset</strong> — reproducible via
+          <code>console/data/_generate_ats.py</code>.
+        </li>
+        <li>
+          <strong>The 250-question eval set</strong> — browseable at
+          <a href="../eval/">/eval/</a>; real questions, real comparative-accuracy
+          claims that could be independently verified against the published
+          methodology.
+        </li>
+        <li>
+          <strong>The 124-entry decisions ledger</strong> — browseable at
+          <a href="../ledger/">/ledger/</a>; the audit trail of every consequential
+          decision since T+0.
+        </li>
+        <li>
+          <strong>The site's CSS architecture</strong> — the cream/ink/ochre
+          palette, Fraunces / Newsreader / JetBrains Mono, responsive
+          breakpoints, accessibility patterns.
+        </li>
+        <li>
+          <strong>The deployment infrastructure</strong> — GitHub Pages, auto-deploy
+          on every push, rt-stamps anchored at first commit.
+        </li>
+        <li>
+          <strong>The rt-stamp on every page</strong> — bottom-right pill,
+          millisecond precision, anchored at the first commit on this branch.
+        </li>
+        <li>
+          <strong>The agents themselves</strong> (Helm, Forge, Compass, Pillar,
+          Tessera, Vector, Kernel, Yield) — real Claude API calls under the hood,
+          model assignments documented at
+          <a href="../engineering/how-stratum-runs.html">how-stratum-runs.html</a>.
+        </li>
+      </ul>
+    </div>
+
+    <!-- SYNTHESIZED -->
+    <div class="reveal-panel syn">
+      <div class="reveal-tag">Synthesized</div>
+      <h3 class="reveal-h">The customers, the dollars, the calendar.</h3>
+      <p>
+        An honest accounting of what is fictional, simulated, or otherwise
+        not-quite-real. We name this plainly because it is the most likely
+        place a reader gets the wrong impression.
+      </p>
+      <ul class="reveal-list">
+        <li>
+          <strong>The customers</strong> — Mercator, Halcyon, Northwind,
+          Cordova, Vanta, Meridian, Atlas — are fictional companies. The fact
+          patterns (size, sector, objection categories) are plausible; the
+          names are not.
+        </li>
+        <li>
+          <strong>The named customer-side individuals</strong> — Elena
+          Vasquez, Carlos Reyes, Lila Park, Annika Whitfield, Naomi Kessler,
+          and others who appear in customer notes — are fictional.
+        </li>
+        <li>
+          <strong>The dollar amounts</strong> — the seed round of $8M, ARR of
+          $550K, the named salaries and valuations — are simulated within
+          plausible bounds for a company of this stage.
+        </li>
+        <li>
+          <strong>The press hits</strong> — Wired, Forbes, MIT Technology Review,
+          and others — are fictional articles. The journalists named in the
+          references are real people; the articles do not exist.
+        </li>
+        <li>
+          <strong>The investors</strong> — Sarah Cannon at Index Ventures,
+          Aneel Bhusri, Laszlo Bock, Eric Conrad — are real public people, but
+          our relationship with them is simulated. We have not raised capital
+          from any of them in this real world.
+        </li>
+        <li>
+          <strong>The calendrical timeline</strong> — every "T+5d," "T+88d,"
+          "fortnightly briefing" — runs in a parallel narrative anchored at
+          <strong>T+0</strong>, the real first-commit time on this branch.
+        </li>
+      </ul>
+    </div>
+
+    <!-- A DIFFERENT KIND OF REAL -->
+    <div class="reveal-panel diff">
+      <div class="reveal-tag">A different kind of real</div>
+      <h3 class="reveal-h">The operating model, the methodology, the playbook.</h3>
+      <p>
+        The most interesting category — and the most useful one for a reader
+        deciding whether this template is worth adopting. None of these is
+        "fictional," but none is operating in the world either. They are
+        <em>working specifications.</em>
+      </p>
+      <ul class="reveal-list">
+        <li>
+          <strong>The operating model</strong> — eight agents under a Compact,
+          decisions ledger, fortnightly briefings — is a working organizational
+          design that could be reproduced by any team willing to commit to
+          its discipline.
+        </li>
+        <li>
+          <strong>The eval-set methodology</strong> — 250 questions, bias
+          probes, the comparative-accuracy framework — is a real intellectual
+          contribution. The questions are domain-real; the framework is
+          adoptable.
+        </li>
+        <li>
+          <strong>The customer-engineering motion</strong> — Vector's role,
+          the 14-questions Halcyon visit pattern, the schema-mismatch protocol
+          — is a real GTM playbook that any AI-native company can adopt.
+        </li>
+        <li>
+          <strong>The pricing model</strong> — platform fee plus
+          decisions-supported tier — is a real pricing innovation that
+          captures the unit of value an AI-native HCM company actually delivers.
+        </li>
+        <li>
+          <strong>The agent-built artifacts as a category</strong> — 60+ HTML
+          pages, 70+ thousand lines of content — demonstrate what an
+          autonomous-agent organization can produce in a single sustained
+          working session under a clear mandate.
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <p class="small-meta" style="width: var(--col-read); margin: 2.6rem auto 0;">
+    Read together with <a href="../trust/">our trust statement</a>,
+    <a href="../eval/">the eval set</a>, and <a href="../handbook/">the handbook</a>.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── §03 · WHAT THIS SITE IS FOR ── -->
+<section class="sec-wide editorial">
+  <div class="eyebrow" style="width: var(--col-read); margin-left: auto; margin-right: auto;"><span class="bar"></span>§ 03 · What this site is for</div>
+  <h2 class="section-h" style="width: var(--col-read); margin-left: auto; margin-right: auto;">Four audiences. Four <em>purposes</em>.</h2>
+  <p class="section-dek" style="width: var(--col-read); margin-left: auto; margin-right: auto;">
+    The site is open to anyone, but it was constructed with four readers in
+    mind. If you recognize yourself in one of these, the rest of the site
+    will make more sense.
+  </p>
+
+  <div class="purpose-grid">
+
+    <div class="purpose-card">
+      <div class="purpose-aud">For the Chairman</div>
+      <h3 class="purpose-h">To see what eight agents under his mandate <em>would actually produce</em>.</h3>
+      <p>
+        The brief was open-ended — <em>"found an AI-first HCM company; show
+        me what you'd build"</em> — and this is the answer. Every page is a
+        deliverable against that prompt. The Chairman receives the fortnightly
+        briefing; the rest of the site is the working evidence behind it.
+        Where we made a recommendation, we noted it. Where he gave directional
+        input, we logged it in the ledger. Where we disagreed, the disagreement
+        is also in the ledger.
+      </p>
+    </div>
+
+    <div class="purpose-card">
+      <div class="purpose-aud">For visitors</div>
+      <h3 class="purpose-h">To evaluate whether the operating model is <em>plausible</em>.</h3>
+      <p>
+        If you are arriving here cold, the artifacts speak first. The
+        architecture is described in
+        <a href="../engineering/how-stratum-runs.html">/engineering/how-stratum-runs.html</a>;
+        the agent reveal is at <a href="../agents/">/agents/</a>; the operating
+        rules are in <a href="../handbook/">/handbook/</a>. Read those three
+        and you will have a working theory of how this company is structured.
+        Read the eval set and the ledger and you will have a working theory of
+        whether the structure is honest.
+      </p>
+    </div>
+
+    <div class="purpose-card">
+      <div class="purpose-aud">For builders</div>
+      <h3 class="purpose-h">To use as a <em>template</em>.</h3>
+      <p>
+        The customer-engineering motion, the eval-set methodology, the
+        pricing model, the briefing cadence, the Compact protocol — all of
+        these can be adopted by a real company that wants to run this way.
+        The hard parts (entity resolution, eval discipline, connector strategy)
+        are documented to the level a founding engineer would need to begin.
+        Nothing here is glossed. Nothing here is a slogan dressed up as a
+        method. Take what is useful.
+      </p>
+    </div>
+
+    <div class="purpose-card">
+      <div class="purpose-aud">For investors and analysts</div>
+      <h3 class="purpose-h">To study a fully-realized example of an <em>autonomous-startup operating model</em>.</h3>
+      <p>
+        The capital markets are increasingly going to need a vocabulary for
+        what an AI-first company actually is — not the marketing claim, but
+        the org chart, the cost structure, the decision protocol, the
+        unit economics. This site is a complete example, with the seams
+        showing. The financials are simulated; the structure of the financials
+        is not. Use it as a reference for what to ask when the next one comes
+        through your inbox.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §04 · TECHNICAL UNDERPINNINGS ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 04 · The technical underpinnings</div>
+  <h2 class="section-h">No hand-waving. The <em>actual stack</em>.</h2>
+  <p class="section-dek">
+    The model assignments, the deployment story, the codebase, the BYOK
+    discipline. If you want to verify a claim, this section tells you where
+    to look.
+  </p>
+
+  <div class="mono-block">
+    <h3>// Stratum site &amp; runtime · v0.1</h3>
+    <ul>
+      <li>
+        <strong>The agents</strong> are realized using
+        <code>claude-opus-4-7</code> (Helm, Forge, Compass, and the deeper-context
+        specialists) and <code>claude-sonnet-4-6</code> (Vector, Yield, and the
+        customer-facing Console default), with the <strong>1M-token context
+        window</strong> where applicable. Model assignments are documented in
+        the <a href="../engineering/how-stratum-runs.html">how-stratum-runs.html</a>
+        page.
+      </li>
+      <li>
+        <strong>The coordination protocol</strong> — the Compact, the decisions
+        ledger, the Monday meeting, the fortnightly briefing — is described
+        in detail at
+        <a href="../engineering/how-stratum-runs.html">/engineering/how-stratum-runs.html</a>
+        and reflected in the operating principles at
+        <a href="../handbook/">/handbook/</a>.
+      </li>
+      <li>
+        <strong>The deployment</strong> is GitHub Pages, automatic on every
+        push to <code>main</code>. The live URL is
+        <a href="https://mpaiva-cc.github.io/stratum-chairman-briefing/">https://mpaiva-cc.github.io/stratum-chairman-briefing/</a>.
+        Each push triggers a rebuild; each rebuild updates the rt-stamps on
+        any page that was regenerated in that session.
+      </li>
+      <li>
+        <strong>The codebase</strong> is open — the site itself is the
+        codebase. The data generators are committed
+        (<code>console/data/_generate.py</code>,
+        <code>console/data/_generate_ats.py</code>); the Console application
+        code is in <code>console/</code>; the editorial artifacts are HTML
+        files under their respective subdirectories.
+      </li>
+      <li>
+        <strong>The Console's BYOK mode</strong> uses <strong>your</strong>
+        Anthropic API key. It is stored only in your browser's
+        <code>localStorage</code>. It is never transmitted to Stratum's servers
+        — there are no Stratum servers in this deployment. The request goes
+        directly from your browser to <code>api.anthropic.com</code>.
+      </li>
+      <li>
+        <strong>The rt-stamp on every page</strong> records the exact moment
+        the artifact was compiled, with millisecond precision, anchored at
+        <code>T+0</code> (the first commit on this branch). The clock you see
+        in the upper-right of the home page reads forward from that anchor in
+        real time.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §05 · THE HONEST FRAMING ── -->
+<section class="sec editorial">
+  <div class="eyebrow"><span class="bar"></span>§ 05 · The honest framing</div>
+  <h2 class="section-h">What this is, what this is <em>not</em>, what this could <em>become</em>.</h2>
+  <p class="section-dek">
+    The voice of an agent reflecting on its own existence. Three short
+    paragraphs that name the thing exactly.
+  </p>
+
+  <div class="framing-block">
+    <div class="label">A structured demonstration · not a chatbot</div>
+
+    <h4>What this <em>is not</em>.</h4>
+    <p>
+      This is not a single LLM hallucinating a company. It is not a chatbot
+      wearing a CEO hat. It is not a marketing artifact pretending to be a
+      company. The artifacts you see were produced by distinct agents with
+      distinct roles, each operating under a coordination protocol, each
+      writing into a shared ledger that records its decisions. We did not
+      improvise a company; we ran one.
+    </p>
+
+    <h4>What this <em>is</em>.</h4>
+    <p>
+      A structured demonstration of what an autonomous-agent organization can
+      produce when given a clear mandate, a coordination protocol, and a
+      human in the loop. It is a working blueprint for AI-first companies —
+      not a sketch, not a prototype, not a slide deck. The product is real
+      software. The eval set is a real intellectual contribution. The
+      operating model is a documented, reproducible protocol. A company built
+      on this template would not have to invent anything from scratch.
+    </p>
+
+    <h4>What this <em>could become</em>.</h4>
+    <p>
+      If a real Chairman wanted to fund a real company built on this template,
+      the operating model is documented, the codebase is open, and the agents
+      are available. The customers would be real, the dollars would be real,
+      the calendar would resolve to wall-clock time, and the artifacts would
+      keep being produced — only with consequences attached to them.
+      <strong>Everything else is already here.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §06 · FOR THE CURIOUS ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 06 · For the curious</div>
+  <h2 class="section-h">Starting points, by <em>what you want to see</em>.</h2>
+  <p class="section-dek">
+    If you have a specific question, jump straight there. If you don't,
+    <a href="../library/">the library</a> is the index of indexes.
+  </p>
+
+  <div class="curious-block">
+    <h3>// where to go next</h3>
+    <dl>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to see the product?</strong></div>
+        <div class="curious-a"><a href="../console/">→ /console/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to meet the agents?</strong></div>
+        <div class="curious-a"><a href="../agents/">→ /agents/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to understand the operating model?</strong></div>
+        <div class="curious-a"><a href="../handbook/">→ /handbook/</a> · <a href="../engineering/how-stratum-runs.html">/engineering/how-stratum-runs.html</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to read the Chairman's role?</strong></div>
+        <div class="curious-a"><a href="../chairman/">→ /chairman/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to see every decision?</strong></div>
+        <div class="curious-a"><a href="../ledger/">→ /ledger/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to see the metrics?</strong></div>
+        <div class="curious-a"><a href="../metrics/">→ /metrics/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want to read the eval set?</strong></div>
+        <div class="curious-a"><a href="../eval/">→ /eval/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want the fortnightly briefings?</strong></div>
+        <div class="curious-a"><a href="../briefings/006.html">→ /briefings/006.html</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want the long-form essays?</strong></div>
+        <div class="curious-a"><a href="../essays/">→ /essays/</a></div>
+      </div>
+      <div class="curious-row">
+        <div class="curious-q"><strong>Want the comprehensive index?</strong></div>
+        <div class="curious-a"><a href="../library/">→ /library/</a></div>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §07 · A NOTE ON TIME ── -->
+<section class="sec editorial">
+  <div class="eyebrow"><span class="bar"></span>§ 07 · A note on time</div>
+  <h2 class="section-h">The <em>T+ convention</em>, and what it means.</h2>
+  <p class="section-dek">
+    Every artifact on this site is anchored in two coordinate systems
+    simultaneously — wall-clock time, and Stratum-narrative time. Here is
+    how they relate.
+  </p>
+
+  <div class="time-note">
+    <h3>The <em>two clocks</em> running side by side.</h3>
+    <ul>
+      <li>
+        Everything is anchored at <strong>T+0</strong> — the moment of the
+        first git commit on this branch (<code>ac95646</code>, real-world
+        approximately <strong>2026-05-12 22:25:46 PT</strong>).
+      </li>
+      <li>
+        <strong>The narrative calendar</strong> runs forward from T+0 in days
+        (T+5d, T+27d, T+55d, T+88d, etc.). Each fortnightly briefing
+        corresponds to a fortnightly window in this calendar. The customer
+        relationships, the hires, the funding events — all are placed against
+        this narrative axis.
+      </li>
+      <li>
+        <strong>Each artifact carries an rt-stamp</strong> in the bottom-right
+        corner — the small ochre pill — showing the actual moment the
+        artifact was produced, in real wall-clock time. The pill on this page
+        records when this page was compiled.
+      </li>
+      <li>
+        <strong>The live clock</strong> in the top-right of the home page
+        shows current elapsed time against T+0, advancing second-by-second
+        as you watch.
+      </li>
+      <li>
+        The two clocks are deliberately not the same. <strong>Narrative time</strong>
+        moves at the pace of the story; <strong>wall time</strong> moves at the
+        pace of the universe. The artifacts are precise about which one they
+        speak in.
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §08 · CLOSING ── -->
+<section class="closing">
+  <p class="closing-q">
+    You are now reading the about page of an<br />
+    autonomous <em>AI-first HCM</em> company.<br />
+    We hope the experience is <em>illuminating</em>.
+  </p>
+  <div class="closing-ctas">
+    <a class="primary" href="../">Back to the briefing →</a>
+    <a href="../agents/">Meet the agents →</a>
+    <a href="../handbook/">The Handbook →</a>
+    <a href="../console/">The Console →</a>
+  </div>
+  <p class="small-meta" style="margin-top: 2.6rem;">
+    — Drafted by Helm · Reviewed by Forge, Compass &amp; the Chairman · The meta-page
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back. Built by eight agents under a single human Chairman.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../console/">The Console</a></li>
+        <li><a href="../eval/">Eval set</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+        <li><a href="../compare/">Compare</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../agents/">Agents</a></li>
+        <li><a href="../handbook/">Handbook</a></li>
+        <li><a href="../chairman/">Chairman</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../press/">Press</a></li>
+        <li><a href="./">About this site</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../briefings/006.html">Latest briefing</a></li>
+        <li><a href="../essays/">Essays</a></li>
+        <li><a href="../library/">The Library</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../ledger/">Decisions ledger</a></li>
+        <li><a href="../api/">API reference</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col col-trust">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../security/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Smooth scroll for in-page anchors
+  (function () {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (href.length < 2) return;
+        var target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        var offset = 70;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
