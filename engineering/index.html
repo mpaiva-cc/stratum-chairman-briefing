@@ -1,0 +1,1889 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Engineering — Notes from the people building Stratum.</title>
+<meta name="description" content="Notes from the engineers and designers building Stratum's data and agent infrastructure. Entity resolution, compliance posture, agent surfaces, and the people graph." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/engineering — engineering blog
+   Editorial · cream paper, deep ink, ochre accent
+   Wider serif body (Newsreader 18.5/1.65) for long-form
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(720px, 92vw);
+  --col-read-wide:min(820px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18.5px;
+  line-height: 1.65;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 14%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.15em; }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current {
+  color: var(--ink);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── BLOG HEADER ── */
+
+.blog-header {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.blog-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.blog-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.blog-wordmark {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.8rem, 7.2vw, 5.6rem);
+  line-height: .98;
+  letter-spacing: -.034em;
+  color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+.blog-wordmark .slash {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  margin: 0 .15em;
+}
+.blog-wordmark .sub {
+  display: block;
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  color: var(--ink-2);
+  font-size: 0.55em;
+  letter-spacing: -.02em;
+  font-weight: 300;
+  margin-top: .1em;
+}
+
+.blog-sub {
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 56ch;
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  margin: 0 0 2.6rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.chip {
+  display: inline-block;
+  padding: .45rem .85rem;
+  border: 1px solid var(--paper-rule-2);
+  color: var(--ink-3);
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--paper-rule-2);
+}
+.chip.is-active {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.chip:hover { color: var(--ink); border-color: var(--ink-3); }
+
+/* ─────────────────────────────────────────── INDEX LIST ── */
+
+.index {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.index-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 2rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.index-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+
+.index-list {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.index-item {
+  display: grid;
+  grid-template-columns: 132px 132px 1fr 180px;
+  gap: 1.8rem;
+  align-items: baseline;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.index-item:last-child { border-bottom: 1px solid var(--paper-rule); }
+
+.index-item.is-forthcoming { opacity: .56; }
+
+.idx-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.idx-cat {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  text-transform: uppercase;
+}
+.idx-body { color: var(--ink); }
+.idx-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.5rem;
+  line-height: 1.18;
+  letter-spacing: -.018em;
+  margin: 0 0 .35rem;
+}
+.idx-title a {
+  color: var(--ink);
+  border-bottom: 0;
+}
+.idx-title a:hover { color: var(--ochre); }
+.idx-dek {
+  font-size: .98rem;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+}
+.idx-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  color: var(--ink-mute);
+  text-align: right;
+}
+.idx-meta .author {
+  color: var(--ink-2);
+  display: block;
+  margin-bottom: .15rem;
+}
+.idx-meta .read { text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
+
+@media (max-width: 820px) {
+  .index-item {
+    grid-template-columns: 1fr;
+    gap: .35rem;
+  }
+  .idx-meta { text-align: left; }
+}
+
+/* ─────────────────────────────────────────── POST ── */
+
+.post {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+  position: relative;
+}
+.post + .post { border-top: 1px solid var(--paper-rule); }
+
+.post-rule {
+  width: var(--col-wide);
+  margin: 0 auto;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.post-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.6rem;
+}
+.post-eyebrow .num {
+  background: var(--ochre);
+  color: var(--paper);
+  padding: .14rem .5rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+}
+.post-eyebrow .cat { color: var(--ink-mute); }
+
+.post-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+  line-height: 1.04;
+  letter-spacing: -.024em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+}
+.post-h1 em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "WONK" 1;
+}
+
+.post-byline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.4rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  padding-bottom: 1.6rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.post-byline .author {
+  color: var(--ink);
+  letter-spacing: .04em;
+  font-weight: 500;
+}
+.post-byline .author::before {
+  content: "By ";
+  color: var(--ink-mute);
+  font-weight: 400;
+}
+.post-byline .sep {
+  color: var(--paper-rule-2);
+}
+
+.post-body {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+.post-body > p:first-of-type::first-line {
+  font-variant: small-caps;
+  letter-spacing: .06em;
+  color: var(--ink);
+}
+.post-body p { margin: 0 0 1.35em; }
+.post-body p.lede {
+  font-size: 1.32rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  margin-bottom: 1.8em;
+  border-left: 2px solid var(--ochre);
+  padding-left: 1.1em;
+}
+
+.post-body h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: 1.55rem;
+  line-height: 1.2;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 2.6em 0 .8em;
+}
+.post-body h2 .ord {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: .35rem;
+  font-weight: 500;
+}
+
+.post-body h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  font-size: 1.18rem;
+  color: var(--ink);
+  margin: 1.8em 0 .5em;
+}
+
+.post-body blockquote {
+  margin: 1.8em 0;
+  padding: 0 0 0 1.2em;
+  border-left: 2px solid var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 20;
+  color: var(--ink);
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.post-body ul, .post-body ol {
+  margin: 0 0 1.35em;
+  padding-left: 1.4em;
+}
+.post-body li { margin-bottom: .35em; }
+.post-body li::marker { color: var(--ochre); }
+
+.post-body a {
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre-soft);
+}
+.post-body a:hover { border-bottom-color: var(--ochre); }
+
+/* Editorial code/data block */
+.dataframe {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ochre);
+  padding: 1.05rem 1.25rem;
+  margin: 1.8em 0;
+  color: var(--ink);
+  overflow-x: auto;
+  white-space: pre;
+  letter-spacing: -.005em;
+}
+.dataframe .h {
+  color: var(--ink-mute);
+  font-weight: 500;
+}
+.dataframe .em { color: var(--ochre); font-weight: 600; }
+.dataframe .mute { color: var(--ink-mute); }
+.dataframe-caption {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: -.8em 0 1.8em;
+  padding-left: .2em;
+}
+
+.inline-mono {
+  font-family: var(--mono);
+  font-size: .88em;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: .04em .35em;
+  color: var(--ink);
+}
+
+/* SVG figure */
+.figure {
+  margin: 2.4em 0 1.4em;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.figure-cap {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1rem;
+  padding-top: .9rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  gap: 1rem;
+}
+.figure-cap .num {
+  color: var(--ochre);
+  font-weight: 600;
+}
+
+/* Footnotes / refs */
+.footnotes {
+  margin-top: 3.5em;
+  padding: 1.4rem 1.4rem;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ink-mute);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: var(--ink-3);
+}
+.footnotes .ftn-h {
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .9rem;
+}
+.footnotes ol {
+  list-style: none;
+  margin: 0; padding: 0;
+  counter-reset: ftn;
+}
+.footnotes li {
+  counter-increment: ftn;
+  position: relative;
+  padding-left: 2.4rem;
+  margin-bottom: .8rem;
+}
+.footnotes li::before {
+  content: "[" counter(ftn) "]";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+  font-weight: 600;
+}
+
+.post-foot {
+  margin-top: 3.4em;
+  padding-top: 1.4em;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.post-foot .author-bio {
+  font-family: var(--serif);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: .95rem;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  flex: 1 1 380px;
+  max-width: 50ch;
+  line-height: 1.45;
+}
+
+/* Pull-quote */
+.pull {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 48, "WONK" 1;
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 2em -.4em 2em;
+  padding: .8em 0 .8em 1.2em;
+  border-left: 3px solid var(--ochre);
+  letter-spacing: -.012em;
+}
+
+/* ─────────────────────────────────────────── SUBSCRIBE ── */
+
+.subscribe {
+  width: var(--col-read-wide);
+  margin: 0 auto;
+  padding: 4.5rem 0 4.5rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: center;
+}
+.subscribe-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin: 0 0 .9rem;
+}
+.subscribe-h em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 60, "WONK" 1;
+}
+.subscribe p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-3);
+  font-size: 1.05rem;
+  margin: 0 auto 1.6rem;
+  max-width: 50ch;
+}
+.subscribe-form {
+  display: inline-flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.6rem;
+}
+.subscribe-form input[type="email"] {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .04em;
+  padding: .8rem 1rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+  color: var(--ink);
+  min-width: 280px;
+  outline: none;
+}
+.subscribe-form input[type="email"]:focus {
+  border-color: var(--ochre);
+}
+.subscribe-form button {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .8rem 1.2rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.subscribe-form button:hover { background: var(--ochre); border-color: var(--ochre); }
+
+.rss {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.rss .ochre { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 2rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.8rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-size: .98rem;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  line-height: 1.5;
+  max-width: 38ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  font-size: .98rem;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-foot .briefing-link {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  html, body { font-size: 17px; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; }
+  .post { padding: 3.5rem 0 2.5rem; }
+  .blog-header { padding: 3rem 0 2.5rem; }
+}
+
+/* ─────────────────────────────────────────── ENTRANCE ── */
+
+.blog-header, .index, .post, .subscribe, .footer {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: rise .9s ease-out forwards;
+}
+.blog-header { animation-delay: .04s; }
+.index { animation-delay: .12s; }
+.post { animation-delay: .18s; }
+.subscribe { animation-delay: .24s; }
+.footer { animation-delay: .28s; }
+
+@keyframes rise {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../product/index.html" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="#" class="is-current">Engineering</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────────────────────── BLOG HEADER ── -->
+<header class="blog-header">
+  <div class="blog-eyebrow">
+    <span class="bar"></span>
+    <span>stratum.ai/engineering · No. 003</span>
+  </div>
+
+  <h1 class="blog-wordmark">
+    Stratum<span class="slash">/</span>Engineering
+    <span class="sub">notes from the people building it.</span>
+  </h1>
+
+  <p class="blog-sub">
+    We are six weeks old. This is what we have been arguing about — entity resolution,
+    compliance posture, the shape of the agent surface, and why every important
+    decision at this company is, at root, a data decision.
+  </p>
+
+  <div class="chips">
+    <span class="chip is-active">All · 5</span>
+    <span class="chip">People graph · 2</span>
+    <span class="chip">Copilot · 1</span>
+    <span class="chip">Infrastructure · 1</span>
+    <span class="chip">Eval · 1</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────── INDEX LIST ── -->
+<section class="index" id="index">
+  <div class="index-h">Index · 5 posts · 3 published · 2 forthcoming</div>
+
+  <ul class="index-list">
+
+    <li class="index-item">
+      <div class="idx-date">19 Jun 2026</div>
+      <div class="idx-cat">Copilot</div>
+      <div class="idx-body">
+        <h3 class="idx-title"><a href="#post-03">Designing the agent surface</a></h3>
+        <p class="idx-dek">On day one of design week I drew the copilot surface and counted eleven jobs it was being asked to do. By day five, it was doing four.</p>
+      </div>
+      <div class="idx-meta">
+        <span class="author">Tomás Iglesias</span>
+        <span class="read">6 min read</span>
+      </div>
+    </li>
+
+    <li class="index-item">
+      <div class="idx-date">14 Jun 2026</div>
+      <div class="idx-cat">People graph</div>
+      <div class="idx-body">
+        <h3 class="idx-title"><a href="#post-01">Entity resolution on the people graph</a></h3>
+        <p class="idx-dek">Every enterprise has fifty source systems and the same person appears as eleven different entities. This is the problem we have to solve before anything else works.</p>
+      </div>
+      <div class="idx-meta">
+        <span class="author">David Okonkwo</span>
+        <span class="read">12 min read</span>
+      </div>
+    </li>
+
+    <li class="index-item">
+      <div class="idx-date">09 Jun 2026</div>
+      <div class="idx-cat">Infrastructure</div>
+      <div class="idx-body">
+        <h3 class="idx-title"><a href="#post-02">What we mean when we say &lsquo;born compliant&rsquo;</a></h3>
+        <p class="idx-dek">Compliance is the only feature where the customer punishes you for being late, not for being early. Here is how that shapes the architecture.</p>
+      </div>
+      <div class="idx-meta">
+        <span class="author">David Okonkwo</span>
+        <span class="read">8 min read</span>
+      </div>
+    </li>
+
+    <li class="index-item is-forthcoming">
+      <div class="idx-date">est. 28 Jun</div>
+      <div class="idx-cat">People graph</div>
+      <div class="idx-body">
+        <h3 class="idx-title">Why the people graph beats the people record</h3>
+        <p class="idx-dek">A record is a row. A graph is a sentence. The difference shows up in the fourth question, not the first.</p>
+      </div>
+      <div class="idx-meta">
+        <span class="author">Maya Chen</span>
+        <span class="read">forthcoming</span>
+      </div>
+    </li>
+
+    <li class="index-item is-forthcoming">
+      <div class="idx-date">est. mid-July</div>
+      <div class="idx-cat">Eval</div>
+      <div class="idx-body">
+        <h3 class="idx-title">The eval set, in public</h3>
+        <p class="idx-dek">We are publishing the 1,000 questions Stratum has to answer correctly. The wrong answers, too.</p>
+      </div>
+      <div class="idx-meta">
+        <span class="author">David Okonkwo &middot; Maya Chen</span>
+        <span class="read">forthcoming</span>
+      </div>
+    </li>
+
+  </ul>
+</section>
+
+<!-- ──────────────────────────────────────────────────── POST 01 ── -->
+<article class="post" id="post-01">
+
+  <div class="post-eyebrow">
+    <span class="num">01</span>
+    <span>People graph</span>
+    <span class="cat">· 14 Jun 2026 · No. 001</span>
+  </div>
+
+  <h1 class="post-h1">Entity resolution on the <em>people graph</em>.</h1>
+
+  <div class="post-byline">
+    <span class="author">David Okonkwo</span>
+    <span class="sep">·</span>
+    <span>Founding engineer, data</span>
+    <span class="sep">·</span>
+    <span>12 min read</span>
+    <span class="sep">·</span>
+    <span>Saved as: <span style="color:var(--ochre)">entity-res-001.md</span></span>
+  </div>
+
+  <div class="post-body">
+
+    <p class="lede">
+      On the day Stratum was incorporated — 28 April 2026 — three of us stood at a
+      whiteboard in a borrowed conference room in Palo Alto and tried to write down
+      the hardest technical problem the company would face. We did not arrive at
+      &ldquo;entity resolution&rdquo; quickly. We arrived at it inevitably.
+    </p>
+
+    <p>
+      Every other problem we wrote down — fast queries, defensible answers,
+      copilot reasoning, drift detection, compliance — collapsed back into the
+      same root: <em>who, exactly, is this person?</em> If you cannot answer that
+      question with high confidence, every downstream answer the system gives is a
+      guess wearing a suit. So we put it at the top of the list and we have been
+      working on it, in some form, every week since.
+    </p>
+
+    <h2><span class="ord">§ 01 — The shape of the problem</span>The fifty-systems problem.</h2>
+
+    <p>
+      An enterprise of 40,000 employees does not have an employee database. It has,
+      on average, between forty-eight and sixty-three systems that <em>each
+      believe they are the source of truth</em> about who works there. Workday says
+      one thing. The ATS (Greenhouse, often) says another. Okta has a third
+      opinion. The badge system has a fourth, the laptop fleet system a fifth, the
+      ticketing system a sixth. Slack has its own. So does GitHub. So does the
+      benefits administrator. So does payroll, which is frequently a different
+      vendor in every country.
+    </p>
+
+    <p>
+      Inside any one of those systems, the person <em>Asha Pillai</em> is
+      reasonably consistent: she has an employee ID, an email, a manager, a cost
+      centre. Across systems, she is eleven different entities. In one she is
+      <span class="inline-mono">a.pillai@stratum.ai</span>. In another she is
+      <span class="inline-mono">asha.p@stratum-corp.com</span> because of a
+      half-finished domain migration in 2024. In the contractor system she is
+      <span class="inline-mono">apillai_ext</span> with a different employee ID
+      because she started as a six-month contract before converting. In Slack she
+      is <span class="inline-mono">@asha</span>. In the badge system she is
+      <span class="inline-mono">EMP-441207</span>. In the laptop fleet she is
+      <span class="inline-mono">apillai-mbp-3</span> because her first laptop got
+      stolen and the asset record was never reconciled.
+    </p>
+
+    <p>
+      None of this is unusual. This is what every Fortune 500 HRIS looks like
+      under the hood. It is the normal cost of a large company having existed for
+      a long time. But if we are going to answer questions like &ldquo;what is the
+      attrition rate for engineers in their second year, who joined as
+      contractors, who report into VPs hired in the last eighteen months&rdquo; —
+      and we are; that is the product — then we have to know, with high
+      confidence, that the eleven Ashas are one Asha.
+    </p>
+
+    <h2><span class="ord">§ 02 — A worked example</span>Eleven records, one person.</h2>
+
+    <p>
+      Here is what the raw input looks like. This is synthetic — Asha graciously
+      let us use her name for the example, but the numbers are fictional — and it
+      is representative of the join keys we get from a mid-sized customer&apos;s
+      first batch of connectors.
+    </p>
+
+    <pre class="dataframe"><span class="h">source            id              name              email                          start         manager      </span>
+─────────────────────────────────────────────────────────────────────────────────────────────────────────
+workday           E441207         Asha Pillai       a.pillai@stratum.ai            2024-08-12    E338019
+greenhouse        cand_8821       Asha S. Pillai    asha.pillai@gmail.com          2024-02-04    <span class="mute">—</span>
+okta              0oa3k1lm9d      Asha Pillai       a.pillai@stratum.ai            2024-08-13    <span class="mute">—</span>
+slack             U05A7Q2W4       asha              <span class="mute">—</span>                              2024-08-15    <span class="mute">—</span>
+badge             B-22871         A. Pillai         <span class="mute">—</span>                              2024-08-13    <span class="mute">—</span>
+laptop_fleet      apillai-mbp-3   Asha Pillai       a.pillai@stratum.ai            2024-08-19    <span class="mute">—</span>
+contractor_sys    apillai_ext     Asha Pillai       asha.p@stratum-corp.com        2024-02-19    E101552
+github            asha-p          <span class="mute">—</span>                <span class="mute">—</span>                              2024-08-20    <span class="mute">—</span>
+benefits_admin    BA-99203        Pillai, Asha      a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
+payroll_us        P-77118         Asha Pillai       a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
+expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai            2024-08-19    E338019      </pre>
+    <div class="dataframe-caption">Fig. 0 · Eleven source records, one human. Synthetic data; representative shape.</div>
+
+    <p>
+      Some of this is easy. Six of the records share the email
+      <span class="inline-mono">a.pillai@stratum.ai</span>. That is a strong
+      signal. But that email is itself an artifact of a 2025 domain consolidation,
+      and the contractor record predates it and uses the old domain. The
+      Greenhouse record uses a personal email — which is correct, because that is
+      how she applied. The Slack, badge, and GitHub records have no email at all;
+      they have a handle and a start date. Two of the records use a different
+      start date because she actually started as a contractor in February and
+      converted to full-time in August.
+    </p>
+
+    <h2><span class="ord">§ 03 — Why the naive approach breaks</span>Deterministic matching, and where it fails.</h2>
+
+    <p>
+      The obvious thing to try first — and the thing every existing HRIS in the
+      market does try — is deterministic matching. Pick a join key. Email works
+      most of the time. Employee ID works when it exists. Fall back to a fuzzy
+      name match when neither does. Build a graph of pairwise matches, run union-find,
+      done.
+    </p>
+
+    <p>
+      It works for about seventy percent of the records. Then it fails in three
+      specific ways that turn out to be the same three ways it always fails, in
+      every enterprise we have looked at:
+    </p>
+
+    <ol>
+      <li><strong>The contractor-to-employee transition.</strong> Different ID, different email, different start date, often a gap in tenure. The deterministic matcher creates two entities. Tenure analytics are wrong from that moment forward.</li>
+      <li><strong>The acquisition / re-org.</strong> An employee from an acquired company gets a new email at the parent domain but keeps an old employee ID in the legacy payroll system that nobody ever migrated. Deterministic match fails on email; succeeds on ID; the matcher does not know which to trust.</li>
+      <li><strong>The data-entry collisions.</strong> Two real people named &ldquo;David Chen&rdquo; on the same team in the same office. The fuzzy matcher merges them. Their performance reviews and compensation history are now mixed.</li>
+    </ol>
+
+    <p>
+      Each of these failures is rare in isolation — single-digit percentages. In
+      aggregate they account for between four and nine percent of records at every
+      customer we have looked at. Four to nine percent of an HRIS is a lot of
+      people being slightly the wrong person.
+    </p>
+
+    <h2><span class="ord">§ 04 — Our approach</span>Probabilistic matching, with the graph as confirming evidence.</h2>
+
+    <p>
+      We do two things at once.
+    </p>
+
+    <p>
+      <strong>First</strong>, we do probabilistic matching on a feature vector
+      per record: normalized name (with phonetic encoding via Double Metaphone),
+      email local-part, email domain, employee ID prefix, start-date proximity,
+      cost-centre, country, manager-of-record. Each pair of records gets a match
+      score between zero and one. We tuned the threshold against a hand-labeled
+      eval set of 4,200 record pairs from three design partners; the F1-optimal
+      threshold landed at <strong>0.93</strong>. Above that we propose a merge;
+      below it we keep them separate; in the middle band (0.82 to 0.93) we route
+      to a human reviewer with an explanation of which features agreed and which
+      did not. <a href="#fn1" id="ref1">[1]</a>
+    </p>
+
+    <p>
+      <strong>Second</strong>, and this is the part that does the heavy lifting,
+      we use the graph itself as confirming evidence. If two candidate records
+      both report to the same manager, both sit in the same cost-centre, and both
+      have laptop assignments adjacent in serial number, the joint probability of
+      them being the same person goes up — not because any one signal is strong,
+      but because <em>independent</em> signals compound. We borrowed the
+      formulation from the Google entity-matching paper <a href="#fn2">[2]</a>
+      and adapted it for the asymmetry of HR data, where some signals
+      (manager-of-record) are far more discriminating than others (cost-centre).
+    </p>
+
+    <p>
+      The graph also gives us a way to detect bad merges <em>after</em> the fact.
+      If we merge two records and the resulting entity now appears to report to
+      two managers simultaneously, that is a signal — not a guarantee — that the
+      merge was wrong. We flag it and a human looks at it. The reverse holds too:
+      if a candidate merge would dissolve an inconsistency that previously
+      existed in the graph, that is evidence the merge was correct.
+    </p>
+
+    <div class="figure">
+      <!-- SVG diagram · 11 source records → 7 resolved entities -->
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" aria-label="Entity resolution diagram">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#0e1626"/>
+          </marker>
+          <marker id="arrow-ochre" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#b8651f"/>
+          </marker>
+        </defs>
+
+        <!-- column labels -->
+        <text x="100" y="22" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#6c7180">SOURCE  ·  11 RECORDS</text>
+        <text x="380" y="22" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#6c7180">MATCHER  ·  PROB. + GRAPH</text>
+        <text x="600" y="22" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#6c7180">RESOLVED  ·  7 ENTITIES</text>
+
+        <!-- left column: source records (11 small boxes) -->
+        <g font-family="JetBrains Mono" font-size="10" fill="#0e1626">
+          <g><rect x="40" y="40" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="55">workday · E441207</text></g>
+          <g><rect x="40" y="68" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="83">greenhouse · cand_8821</text></g>
+          <g><rect x="40" y="96" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="111">okta · 0oa3k1lm9d</text></g>
+          <g><rect x="40" y="124" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="139">slack · U05A7Q2W4</text></g>
+          <g><rect x="40" y="152" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="167">badge · B-22871</text></g>
+          <g><rect x="40" y="180" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="195">laptop · apillai-mbp-3</text></g>
+          <g><rect x="40" y="208" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="223">contractor · apillai_ext</text></g>
+          <g><rect x="40" y="236" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="251">github · asha-p</text></g>
+          <g><rect x="40" y="264" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="279">benefits · BA-99203</text></g>
+          <g><rect x="40" y="292" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="307">payroll · P-77118</text></g>
+          <g><rect x="40" y="320" width="170" height="22" fill="#f7f0e0" stroke="#c8b894"/><text x="48" y="335">expense · EXP-44A</text></g>
+        </g>
+
+        <!-- middle: matcher block -->
+        <g>
+          <rect x="290" y="120" width="180" height="120" fill="none" stroke="#0e1626" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text x="380" y="148" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#0e1626">probabilistic</text>
+          <text x="380" y="166" text-anchor="middle" font-family="Fraunces" font-style="italic" font-size="14" fill="#0e1626">+ graph-confirm</text>
+          <line x1="310" y1="180" x2="450" y2="180" stroke="#d8cdb6"/>
+          <text x="380" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="1" fill="#b8651f">threshold τ = 0.93</text>
+          <text x="380" y="218" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="1" fill="#6c7180">review band 0.82–0.93</text>
+        </g>
+
+        <!-- right column: 7 entities -->
+        <g font-family="JetBrains Mono" font-size="10" fill="#0e1626">
+          <g><rect x="540" y="50" width="190" height="32" fill="#ebe1c9" stroke="#b8651f" stroke-width="1.3"/>
+             <text x="548" y="65" font-weight="bold">Asha Pillai</text>
+             <text x="548" y="78" fill="#6c7180">7 records · conf 0.97</text></g>
+          <g><rect x="540" y="92" width="190" height="32" fill="#ebe1c9" stroke="#b8651f" stroke-width="1.3"/>
+             <text x="548" y="107" font-weight="bold">Asha Pillai (contractor)</text>
+             <text x="548" y="120" fill="#6c7180">1 record · conf 0.88 · review</text></g>
+          <g><rect x="540" y="134" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
+             <text x="548" y="149">entity #2 · 1 record</text></g>
+          <g><rect x="540" y="162" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
+             <text x="548" y="177">entity #3 · 1 record</text></g>
+          <g><rect x="540" y="190" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
+             <text x="548" y="205">entity #4 · 1 record</text></g>
+          <g><rect x="540" y="218" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
+             <text x="548" y="233">entity #5 · 1 record</text></g>
+          <g><rect x="540" y="246" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
+             <text x="548" y="261">entity #6 · 1 record</text></g>
+        </g>
+
+        <!-- arrows from sources to matcher -->
+        <g stroke="#0e1626" stroke-width="0.7" fill="none" opacity="0.55">
+          <path d="M210 51 C 250 51, 260 170, 290 175" marker-end="url(#arrow)"/>
+          <path d="M210 79 C 250 79, 260 170, 290 178"/>
+          <path d="M210 107 C 250 107, 260 170, 290 180"/>
+          <path d="M210 135 C 250 135, 260 170, 290 182"/>
+          <path d="M210 163 C 250 163, 260 170, 290 184"/>
+          <path d="M210 191 C 250 191, 260 175, 290 186"/>
+          <path d="M210 219 C 250 219, 260 180, 290 188"/>
+          <path d="M210 247 C 250 247, 260 180, 290 190"/>
+          <path d="M210 275 C 250 275, 260 185, 290 192"/>
+          <path d="M210 303 C 250 303, 260 185, 290 194"/>
+          <path d="M210 331 C 250 331, 260 190, 290 196"/>
+        </g>
+
+        <!-- arrows from matcher to resolved -->
+        <g stroke="#b8651f" stroke-width="1.1" fill="none">
+          <path d="M470 160 C 500 90, 520 70, 540 66" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 175 C 500 130, 520 110, 540 108" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 185 C 500 155, 520 145, 540 145" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 195 C 500 180, 520 175, 540 173" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 205 C 500 200, 520 200, 540 201" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 215 C 500 220, 520 225, 540 229" marker-end="url(#arrow-ochre)"/>
+          <path d="M470 225 C 500 240, 520 250, 540 257" marker-end="url(#arrow-ochre)"/>
+        </g>
+      </svg>
+      <div class="figure-cap">
+        <span class="num">Fig. 1</span>
+        <span>Eleven source records collapse to seven resolved entities. One pair sits in the review band — a contractor-to-employee transition we&apos;ll come back to in §06.</span>
+      </div>
+    </div>
+
+    <h2><span class="ord">§ 05 — The tradeoff</span>False positives, false negatives, and why we are more afraid of one.</h2>
+
+    <p>
+      Entity resolution has two failure modes and they are not equally bad.
+    </p>
+
+    <p>
+      A <strong>false negative</strong> — failing to merge two records that
+      should be one — produces a system that under-counts people. Your tenure
+      analytics show a discontinuity at the contractor-to-employee mark; your
+      attrition rates are slightly off; your headcount in a slice is one or two
+      lower than it should be. This is bad. It is also recoverable: a human can
+      look at the data, see the gap, and fix it.
+    </p>
+
+    <p>
+      A <strong>false positive</strong> — merging two records that should be
+      separate — is much worse. It means the system has confidently attributed
+      one person&apos;s performance review, compensation history, or termination
+      reason to another person. The numbers still <em>look</em> right. There is
+      no obvious tell. And if a CHRO acts on that data — and the entire point of
+      our product is that CHROs will act on this data — they have just made a
+      decision on a phantom.
+    </p>
+
+    <p>
+      So we are asymmetric. We choose τ = 0.93, which gives us a precision of
+      0.991 against our eval set and a recall of 0.873. We accept that we will
+      miss thirteen percent of legitimate merges and route them to human review,
+      because the cost of merging two real people we shouldn&apos;t have is, in
+      our judgment, an order of magnitude higher than the cost of asking someone
+      to make a call.
+    </p>
+
+    <p class="pull">
+      A false negative is an inconvenience.<br/>A false positive is a phantom in
+      the data, wearing a name.
+    </p>
+
+    <h2><span class="ord">§ 06 — A specific bug</span>The temp-to-perm transition, found in 36 hours.</h2>
+
+    <p>
+      <strong>Asha Pillai</strong> — the engineer, not the synthetic example —
+      joined Stratum on her first day after a six-month contract via a staffing
+      agency. She is a real person and graciously agreed to be cited here. On
+      her second working day, while reviewing the entity-resolution pipeline
+      she had not written, she found a bug.
+    </p>
+
+    <p>
+      The matcher was generating two entities for every employee who had
+      converted from contract. The probabilistic score was sitting at 0.91 — just
+      below threshold — because the start dates differed by months, the employee
+      IDs were structurally different (the contractor system used a different
+      prefix), and the email domains were different across the transition.
+      Three independent signals all said &ldquo;different person&rdquo;; the name
+      match alone said &ldquo;same person.&rdquo; The matcher correctly applied
+      its rule and refused to merge.
+    </p>
+
+    <p>
+      The bug was not in the matcher. The bug was that we had not given the
+      graph-confirmation step access to <strong>temporal continuity</strong> as a
+      feature. Two records with the same name and phonetic encoding, where one
+      ends exactly when the other begins, and where the second references the
+      first in a <span class="inline-mono">prior_id</span> field that we had
+      been ignoring, should compound to well above threshold.
+    </p>
+
+    <p>
+      Asha found it in 36 hours. The fix was twelve lines of Python. The
+      revalidation against the full eval set took longer — and we caught a
+      separate regression in the review-band routing that we&apos;d shipped two
+      weeks earlier — but the underlying lesson was hers: <em>we had been
+      treating each source as independent when in many cases the source
+      already knew about the predecessor.</em> The data was richer than our
+      features.
+    </p>
+
+    <p>
+      We added <span class="inline-mono">prior_id_chain</span> as a strong
+      feature. Precision went up slightly. Recall went up by four percentage
+      points. We now correctly resolve approximately ninety-two percent of
+      contractor-to-employee transitions without human review, against
+      approximately fifty-eight percent before her patch.
+    </p>
+
+    <h2><span class="ord">§ 07 — The open problem</span>Non-human entities.</h2>
+
+    <p>
+      We do not have a good answer yet for what to do with non-human entities in
+      the people graph. There are a lot of them. Service accounts. Bots.
+      Contractors-of-contractors — agency employees of staffing firms who appear
+      in the customer&apos;s systems but are not, in any meaningful sense, the
+      customer&apos;s people. And, in the near future, agents. Stratum&apos;s
+      own copilot will appear in our customers&apos; audit logs as an actor.
+      Is that a person? Is it an entity? Does it have a manager? Does it have
+      tenure?
+    </p>
+
+    <p>
+      We think it is an entity of a different kind, and that the graph needs a
+      typed-node model rather than a single <span class="inline-mono">person</span>
+      type. We are sketching this now. We are not yet shipping it. We mention it
+      here because we suspect it is the next big problem we will have to solve,
+      and because it is genuinely open — if you have thought hard about this and
+      have a perspective, we would like to hear from you.
+    </p>
+
+    <h2><span class="ord">§ 08 — Why this is the bet</span>Entity resolution is the most important technical decision we will make.</h2>
+
+    <p>
+      The reason entity resolution is on the whiteboard at week zero and still on
+      the whiteboard at week six is that every other claim Stratum makes — that
+      our answers are defensible, that our copilot reasons over the right
+      cohort, that our analytics can be trusted at the CHRO level — collapses if
+      the underlying entities are wrong. Every product surface, every eval set,
+      every customer demo, every audit-grade citation, is downstream of getting
+      this right.
+    </p>
+
+    <p>
+      It is also the thing that, if we get right, is hardest to copy. A
+      well-tuned probabilistic matcher with a graph-confirmation layer and three
+      years of customer-specific eval feedback is not a moat that a competitor
+      builds in a quarter. It is the kind of moat that compounds.
+    </p>
+
+    <p>
+      So we are going to keep writing about it. The next post in this series —
+      Maya is drafting it now — is about why we chose a graph representation in
+      the first place, instead of the &ldquo;people record&rdquo; pattern that
+      every existing HRIS uses. The short version: a record can answer a
+      question. A graph can answer the question after that one. We will write the
+      long version on 28 June.
+    </p>
+
+    <div class="footnotes">
+      <div class="ftn-h">Footnotes · References</div>
+      <ol>
+        <li id="fn1">Christophides, V. et al. (2020). &ldquo;End-to-end entity resolution for big data: a survey.&rdquo; <em>Stanford CS 545 reading list, autumn 2024.</em> Our threshold-tuning methodology follows §4.3, adapted for asymmetric precision-recall preferences.</li>
+        <li id="fn2">Bhattacharya, I. &amp; Getoor, L. (2007). &ldquo;Collective entity resolution in relational data.&rdquo; <em>ACM TKDD 1(1).</em> Foundational for the graph-as-confirming-evidence approach; later operationalized in the Google Knowledge Graph pipeline as &ldquo;collective inference.&rdquo;</li>
+        <li id="fn3">Stratum eval-set methodology, v0.3. Internal document; will be published in the &ldquo;Eval set, in public&rdquo; post (mid-July). 4,200 hand-labeled record pairs sourced from three design partners under DPA. The set is small. It is also more carefully labeled than anything we have seen in the public literature for HR data.</li>
+      </ol>
+    </div>
+
+    <div class="post-foot">
+      <div class="author-bio">
+        <strong style="font-family: var(--display); font-style: normal;">David Okonkwo</strong> is a founding engineer at Stratum and leads the data platform. He spent six years at Palantir Foundry working on enterprise data integration, and three at Stripe on the merchant graph. He has written eleven good entity resolvers and approximately forty bad ones.
+      </div>
+      <div>
+        <div>14 Jun 2026</div>
+        <div>People graph · No. 001</div>
+      </div>
+    </div>
+
+  </div>
+</article>
+
+<div class="post-rule"></div>
+
+<!-- ──────────────────────────────────────────────────── POST 02 ── -->
+<article class="post" id="post-02">
+
+  <div class="post-eyebrow">
+    <span class="num">02</span>
+    <span>Infrastructure</span>
+    <span class="cat">· 09 Jun 2026 · No. 002</span>
+  </div>
+
+  <h1 class="post-h1">What we mean when we say <em>born compliant</em>.</h1>
+
+  <div class="post-byline">
+    <span class="author">David Okonkwo</span>
+    <span class="sep">·</span>
+    <span>Founding engineer, data</span>
+    <span class="sep">·</span>
+    <span>8 min read</span>
+    <span class="sep">·</span>
+    <span>Saved as: <span style="color:var(--ochre)">compliance-stance-001.md</span></span>
+  </div>
+
+  <div class="post-body">
+
+    <p class="lede">
+      Compliance is the only feature where the customer punishes you for being
+      late, not for being early. Most startups treat it as a tax to be deferred
+      until Series B. We&apos;ve made the opposite bet: that doing the controls
+      from week one is cheaper than retrofitting them, and that it shapes the
+      architecture in ways we will be glad of in 2028.
+    </p>
+
+    <h2><span class="ord">§ 01 — Why this is not an afterthought</span>The four frameworks shaping the architecture.</h2>
+
+    <p>
+      Four regulatory regimes touch what we build. Each one would, in isolation,
+      reshape the system. Together they define the contour of the product.
+    </p>
+
+    <ul>
+      <li><strong>SOC 2 Type II</strong> — the security baseline US enterprise buyers expect before they will even take a meeting. Access controls, encryption, monitoring, incident response. Audited annually.</li>
+      <li><strong>ISO 27001</strong> — the international counterpart. Adds risk management process and broader information-security governance. Required by most European buyers and an increasing share of US Fortune 500.</li>
+      <li><strong>EU AI Act</strong> — in force since August 2024, with most obligations applying from August 2026. Classifies AI systems by risk. HR-related decision systems are by default <em>high risk</em>, with substantial obligations — unless the system is structured such that consequential decisions require human-in-the-loop, in which case it falls to <em>limited risk</em>.</li>
+      <li><strong>NYC AEDT (Local Law 144)</strong> — the most operationally specific. Requires bias audits of automated employment decision tools used in NYC. The audits must be public.</li>
+    </ul>
+
+    <p>
+      None of these is optional. None can be retrofitted cheaply. Each one rules
+      out architectural decisions that would otherwise look attractive. So we
+      built around them from the first commit.
+    </p>
+
+    <h2><span class="ord">§ 02 — Concrete consequences</span>How SOC 2 shaped our identity provider.</h2>
+
+    <p>
+      The first place this shows up is identity. SOC 2 requires that access to
+      production systems be (a) authenticated against a single source of truth,
+      (b) authorized by role and reviewed quarterly, (c) auditable for the
+      preceding twelve months, and (d) revocable within an hour of an employee
+      departure.
+    </p>
+
+    <p>
+      You can hand-roll this. Many startups do, with a combination of GitHub
+      teams, a shared 1Password vault, and a Notion page that says
+      &ldquo;remember to remove people when they leave.&rdquo; This pattern fails
+      audit. It also fails reality — there is always someone who left in 2024 who
+      still has prod read on something.
+    </p>
+
+    <p>
+      We picked Okta on day one, even though there are six of us and it costs
+      more than the engineering coffee budget, because it gives us audit logs
+      from week zero that we will not have to reconstruct in week one hundred.
+      Every prod system — AWS, Snowflake, GitHub, Tailscale, the Slack admin
+      console, the Vanta admin console itself — is behind Okta SSO with SCIM
+      provisioning. Quarterly access reviews are a checkbox-and-export. We
+      believe this will save us approximately one engineer-month per year for
+      the next three years.
+    </p>
+
+    <h2><span class="ord">§ 03 — The EU AI Act decision</span>Limited risk by construction, not by policy.</h2>
+
+    <p>
+      The most consequential compliance decision we have made is to position
+      Stratum&apos;s copilot as <em>limited risk</em> under the EU AI Act. This
+      is not a marketing posture; it is an architectural commitment.
+    </p>
+
+    <p>
+      The Act allows an HR-adjacent AI system to be classified as limited risk
+      <em>if and only if</em> consequential decisions — hiring, firing,
+      promotion, compensation changes, performance ratings — are not made by the
+      system itself. The system can <em>analyse</em>. It can <em>recommend</em>.
+      It can <em>surface evidence</em>. It cannot <em>act</em>.
+    </p>
+
+    <p>
+      We have built this constraint into the agent surface, not into a policy
+      document. The copilot — internally now called the &ldquo;console&rdquo;,
+      see Tomás&apos;s post — cannot execute a consequential action without an
+      explicit human approval step. This is not a config flag. It is the shape
+      of the API. The action types that the agent can directly perform are
+      restricted at the schema level to: query, summarise, cite, draft, route.
+      The action types that require human approval — change_compensation,
+      terminate, promote, set_rating — are physically a different endpoint, with
+      a different authorization scope, that the agent cannot call without a
+      countersigning JWT issued by a human session.
+    </p>
+
+    <p>
+      The reason for putting this in the architecture rather than the policy is
+      simple: policies degrade. Architectures do not. A future engineer cannot
+      accidentally let the agent fire someone if the function literally does not
+      exist on the agent&apos;s side of the boundary.
+    </p>
+
+    <h2><span class="ord">§ 04 — The training-data posture</span>What we will and won&apos;t do with customer data.</h2>
+
+    <p>
+      We do not train foundation models on customer data. We do not fine-tune
+      foundation models on customer data. We do not use customer data to
+      improve the base model that any customer&apos;s tenant runs on. None of
+      these is a future possibility we are leaving open; all three are
+      contractually prohibited in our standard DPA and architecturally
+      enforced.
+    </p>
+
+    <p>
+      The one place customer data, in a derivative form, may be used is in our
+      internal eval set. The graph schema — node types, edge types, the
+      <em>shape</em> of a customer&apos;s people data — is fully anonymized
+      (all identifiers replaced, all PII stripped, only structural statistics
+      retained) and may be used to extend our product evaluation methodology.
+      This is disclosed in §4.2 of the DPA. We will write more about this when
+      we publish the eval set in July.
+    </p>
+
+    <h2><span class="ord">§ 05 — The state of the posture, today</span>Where we actually are at week six.</h2>
+
+    <p>
+      Compliance posturing is cheap. Compliance reality, less so. Here is where
+      we actually are, with no rounding:
+    </p>
+
+    <pre class="dataframe"><span class="h">framework                control count        state              auditor             gap to audit  </span>
+─────────────────────────────────────────────────────────────────────────────────────────────────────
+SOC 2 Type II            41 / 87 implemented   evidence accruing  Prescient (TBD)     ~14 weeks
+ISO 27001                <span class="mute">—</span>                     <span class="mute">not started</span>        <span class="mute">—</span>                   <span class="mute">Q4 2026</span>
+EU AI Act                classification: <span class="em">limited risk</span>           self-attested       in progress
+NYC AEDT (LL 144)        n/a until customers   <span class="mute">—</span>                  <span class="mute">—</span>                   on contact
+GDPR · DPA               standard contractual clauses + SCCs   ✔ signed             —
+HIPAA                    out of scope          <span class="mute">—</span>                  <span class="mute">—</span>                   <span class="mute">—</span>             </pre>
+    <div class="dataframe-caption">Fig. 2 · Compliance state of play. Week six. Honest accounting.</div>
+
+    <p>
+      Forty-one of eighty-seven SOC 2 controls implemented at the policy and
+      evidence level after six weeks is, by Vanta&apos;s benchmarks, in the top
+      ten percent of seed-stage companies. It is also less than half. We expect
+      to hit auditor-ready around week twenty. ISO 27001 is queued behind it;
+      the controls overlap heavily, so the marginal cost is small once the
+      foundation is in place.
+    </p>
+
+    <p>
+      We are six weeks old. Vanta is on a wall. We are taking compliance more
+      seriously than a six-person company has any right to, because the cost of
+      doing it now is small and the cost of doing it later — when we have a
+      customer in production and a regulator&apos;s attention — is enormous.
+      That is the entire argument.
+    </p>
+
+    <div class="post-foot">
+      <div class="author-bio">
+        Written between the SOC 2 readiness scoping call and the third
+        attempt at getting the Okta SCIM integration to provision Snowflake
+        correctly. The integration eventually worked.
+      </div>
+      <div>
+        <div>09 Jun 2026</div>
+        <div>Infrastructure · No. 002</div>
+      </div>
+    </div>
+
+  </div>
+</article>
+
+<div class="post-rule"></div>
+
+<!-- ──────────────────────────────────────────────────── POST 03 ── -->
+<article class="post" id="post-03">
+
+  <div class="post-eyebrow">
+    <span class="num">03</span>
+    <span>Copilot</span>
+    <span class="cat">· 19 Jun 2026 · No. 003</span>
+  </div>
+
+  <h1 class="post-h1">Designing the <em>agent surface</em>.</h1>
+
+  <div class="post-byline">
+    <span class="author">Tomás Iglesias</span>
+    <span class="sep">·</span>
+    <span>Founding designer (pre-start, design week)</span>
+    <span class="sep">·</span>
+    <span>6 min read</span>
+    <span class="sep">·</span>
+    <span>Saved as: <span style="color:var(--ochre)">console-001.md</span></span>
+  </div>
+
+  <div class="post-body">
+
+    <p class="lede">
+      On day one of my design week, I drew the copilot surface and counted
+      eleven jobs it was being asked to do. By day five, it was doing four.
+      That subtraction is the entire story.
+    </p>
+
+    <h2><span class="ord">§ 01 — The problem with eleven jobs</span>Every job dilutes the agent&apos;s authority.</h2>
+
+    <p>
+      The first draft of the copilot surface — done by the engineering team
+      before I arrived, with the best intentions — had a chat panel, a
+      cohort-inspector panel, a citations sidebar, a draft-document area, a
+      notifications stream, a saved-questions list, a connector status panel,
+      a feedback widget, a tenant-switcher, a permissions visualiser, and a
+      changelog. Eleven jobs in one surface.
+    </p>
+
+    <p>
+      Each one of those was a reasonable thing the agent could help with. Taken
+      together, they made the agent feel like a settings page that occasionally
+      answered questions. The reason is mechanical, not aesthetic: every job a
+      surface is asked to do reduces the user&apos;s confidence that any one
+      thing the surface does is the thing it is <em>for</em>. An agent surface
+      is, in its essence, a place where the user delegates judgment. You cannot
+      delegate judgment to a Swiss army knife.
+    </p>
+
+    <h2><span class="ord">§ 02 — The subtraction</span>What I cut, and why.</h2>
+
+    <p>
+      I removed seven of the eleven over the course of the week. Some of them
+      got moved to other surfaces (connector status is now a thin item in the
+      tenant admin; the changelog has its own page). Some got removed entirely
+      (the feedback widget; we have a Slack channel). Some got folded into the
+      four jobs that remained.
+    </p>
+
+    <p>
+      The four jobs that remain are not chosen by taste. They are chosen by
+      necessity: any agent surface that produces defensible answers about an
+      enterprise&apos;s people <em>must</em> do these four things, and any one
+      of them removed breaks the contract.
+    </p>
+
+    <ol>
+      <li><strong>Ask.</strong> The user types a question. This is the conversation.</li>
+      <li><strong>Inspect the cohort.</strong> The user can see, at a glance, the set of people the answer is about. Not the answer — the underlying set.</li>
+      <li><strong>Cite the source.</strong> The user can see, for any number in the answer, which source system and which records produced it. Click-through, no abstraction.</li>
+      <li><strong>Confirm or revert.</strong> If the agent has taken a non-consequential action (a draft, a route, a tag), the user can accept or undo it in one keystroke.</li>
+    </ol>
+
+    <div class="figure">
+      <svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" aria-label="Four-pane console layout">
+        <!-- frame -->
+        <rect x="20" y="20" width="720" height="320" fill="none" stroke="#0e1626" stroke-width="1.2"/>
+
+        <!-- vertical and horizontal split lines -->
+        <line x1="430" y1="20" x2="430" y2="340" stroke="#0e1626" stroke-width="1"/>
+        <line x1="430" y1="180" x2="740" y2="180" stroke="#0e1626" stroke-width="1"/>
+
+        <!-- ASK pane -->
+        <g>
+          <text x="40" y="48" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#b8651f">§ 01 · ASK</text>
+          <text x="40" y="80" font-family="Fraunces" font-style="italic" font-size="18" fill="#0e1626">What is the attrition</text>
+          <text x="40" y="102" font-family="Fraunces" font-style="italic" font-size="18" fill="#0e1626">rate for engineers in</text>
+          <text x="40" y="124" font-family="Fraunces" font-style="italic" font-size="18" fill="#0e1626">their second year?</text>
+          <line x1="40" y1="148" x2="400" y2="148" stroke="#d8cdb6"/>
+          <text x="40" y="172" font-family="Newsreader" font-size="13" fill="#2a3344">Across all geos in the last</text>
+          <text x="40" y="190" font-family="Newsreader" font-size="13" fill="#2a3344">trailing twelve months, the rate</text>
+          <text x="40" y="208" font-family="Newsreader" font-size="13" fill="#2a3344">is <tspan font-weight="700" fill="#0e1626">14.2%</tspan>, against a peer-</text>
+          <text x="40" y="226" font-family="Newsreader" font-size="13" fill="#2a3344">company benchmark of 11.9%.</text>
+          <line x1="40" y1="244" x2="400" y2="244" stroke="#d8cdb6"/>
+          <text x="40" y="266" font-family="JetBrains Mono" font-size="10" fill="#6c7180">based on 318 people · 14 sources</text>
+          <text x="40" y="282" font-family="JetBrains Mono" font-size="10" fill="#6c7180">confidence 0.94 · refreshed 2m ago</text>
+          <rect x="40" y="298" width="120" height="26" fill="none" stroke="#0e1626"/>
+          <text x="100" y="316" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="1" fill="#0e1626">EXPLAIN ↓</text>
+          <rect x="170" y="298" width="120" height="26" fill="#0e1626"/>
+          <text x="230" y="316" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="1" fill="#f4ecda">DRAFT MEMO →</text>
+        </g>
+
+        <!-- INSPECT pane (top right) -->
+        <g>
+          <text x="450" y="48" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#b8651f">§ 02 · INSPECT COHORT</text>
+          <text x="450" y="70" font-family="JetBrains Mono" font-size="10" fill="#6c7180">318 people · filterable</text>
+          <!-- small rows -->
+          <g font-family="JetBrains Mono" font-size="9" fill="#0e1626">
+            <line x1="450" y1="80" x2="730" y2="80" stroke="#d8cdb6"/>
+            <text x="450" y="94">A. Pillai     · ENG · SF   · y2.1</text>
+            <text x="450" y="108">D. Chen       · ENG · NYC  · y2.4</text>
+            <text x="450" y="122">M. Okafor     · ENG · LON  · y2.0</text>
+            <text x="450" y="136">S. Tanaka     · ENG · TOK  · y2.8</text>
+            <text x="450" y="150">+ 314 more <tspan fill="#b8651f">→</tspan></text>
+          </g>
+        </g>
+
+        <!-- CITE pane (bottom right top half) -->
+        <g>
+          <text x="450" y="200" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#b8651f">§ 03 · CITE</text>
+          <g font-family="JetBrains Mono" font-size="9" fill="#0e1626">
+            <text x="450" y="220">workday/headcount · 4,118 rows</text>
+            <text x="450" y="234">workday/term · 281 rows</text>
+            <text x="450" y="248">bamboohr/eng · 891 rows</text>
+            <text x="450" y="262">ats/cohort · 318 rows</text>
+          </g>
+          <text x="450" y="290" font-family="Fraunces" font-style="italic" font-size="11" fill="#4b5365">click any row to see the</text>
+          <text x="450" y="304" font-family="Fraunces" font-style="italic" font-size="11" fill="#4b5365">underlying records.</text>
+        </g>
+
+        <!-- CONFIRM/REVERT — bottom strip -->
+        <g>
+          <rect x="40" y="338" width="0" height="0"/>
+          <text x="40" y="356" font-family="JetBrains Mono" font-size="9" letter-spacing="1.5" fill="#6c7180">§ 04 · CONFIRM/REVERT · ⏎ accept · ⌘Z revert · no consequential actions taken without countersign</text>
+        </g>
+      </svg>
+      <div class="figure-cap">
+        <span class="num">Fig. 3</span>
+        <span>The console: four panes, four jobs. Ask · Inspect · Cite · Confirm. Anything that did not serve one of these four was cut.</span>
+      </div>
+    </div>
+
+    <h2><span class="ord">§ 03 — A note on the rename</span>From &ldquo;copilot&rdquo; to &ldquo;console&rdquo;.</h2>
+
+    <p>
+      Halfway through the week we changed the internal name. We had been calling
+      it the copilot, which is what the market calls everything of this shape.
+      But the word makes a promise about authority — a copilot can fly the plane
+      — that we are explicitly not making. Stratum&apos;s agent does not act on
+      consequential decisions. It analyses, it recommends, it cites, it drafts.
+      Calling it a copilot was setting an expectation we would then have to
+      apologise for the first time it asked the user to approve a change.
+    </p>
+
+    <p>
+      <em>Console</em> sets a different expectation. A console is an instrument.
+      You sit in front of it. It tells you what is happening, in real time, with
+      enough fidelity that you can make the call. It does not make the call. The
+      word does most of the work for us.
+    </p>
+
+    <p>
+      We have not changed the customer-facing name yet — we are still calling it
+      the Stratum copilot externally, because the market does not yet know how
+      to think about a more restrained surface. We will likely move the public
+      name to &ldquo;console&rdquo; in the first half of 2027, when we have
+      enough customer evidence that the restraint is a feature.
+    </p>
+
+    <h2><span class="ord">§ 04 — Close</span>The agent surface is a conversation.</h2>
+
+    <p>
+      The agent surface is the company&apos;s only conversation with its user.
+      Every other surface — admin, billing, settings, connectors — is a tool.
+      The console is where the user goes to <em>think</em>. If the surface is
+      cluttered, the user&apos;s thinking is cluttered. If the surface is
+      restrained, the user&apos;s thinking is restrained.
+    </p>
+
+    <p>
+      Treat it like a conversation. Most of the work of designing it is
+      knowing what to leave out.
+    </p>
+
+    <div class="post-foot">
+      <div class="author-bio">
+        <strong style="font-family: var(--display); font-style: normal;">Tomás Iglesias</strong> joined as founding designer in late June. He spent four years at Figma on the file canvas, and two at Airtable on the schema-builder. He has redesigned a copilot surface approximately fourteen times in the last three years and is not yet bored.
+      </div>
+      <div>
+        <div>19 Jun 2026</div>
+        <div>Copilot · No. 003</div>
+      </div>
+    </div>
+
+  </div>
+</article>
+
+<!-- ─────────────────────────────────────────────── SUBSCRIBE ── -->
+<section class="subscribe">
+  <h2 class="subscribe-h">Subscribe to <em>Stratum/Engineering</em>.</h2>
+  <p>We publish a post when we have something honest to say. About one per fortnight. No tracking, no growth-hacking, no AI-generated summaries of other people&apos;s ideas.</p>
+  <form class="subscribe-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Subscribed ✓';">
+    <input type="email" placeholder="you@company.com" required />
+    <button type="submit">Subscribe →</button>
+  </form>
+  <div class="rss">RSS · <span class="ochre">stratum.ai/engineering/feed.xml</span> · or follow <span class="ochre">@stratum_eng</span></div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="#">Engineering</a></li>
+        <li><a href="#">Press</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#post-01">People graph notes</a></li>
+        <li><a href="#post-02">Compliance posture</a></li>
+        <li><a href="#post-03">Console design</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="#">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to the Chairman&apos;s Briefing · <strong>Briefing No. 001</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function(){
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll(){
+      if (window.scrollY > 12) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+
+</body>
+</html>

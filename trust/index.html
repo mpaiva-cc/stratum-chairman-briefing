@@ -1,0 +1,2221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Trust — Security, Privacy, Compliance</title>
+<meta name="description" content="Stratum's commitments to security, privacy, and compliance — for the procurement, infosec, and compliance reviewers of enterprise customers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/trust — Trust Center
+   Cream paper · deep ink · ochre · institutional, factual
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --hi:           #a13418;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-narrow:   min(960px, 90vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current {
+  color: var(--ochre);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.4rem, 9.6vw, 8.6rem);
+  line-height: .92;
+  letter-spacing: -.04em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+}
+.hero-h1 .slash {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+  padding: 0 .1em;
+}
+
+.hero-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 2.6rem;
+}
+
+.hero-meta-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .95rem 0;
+  margin-bottom: 2.4rem;
+}
+.hero-meta-row span strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.badge-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: .6rem;
+  margin-top: 0;
+}
+
+.badge {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: .85rem .8rem .8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  position: relative;
+}
+.badge-head {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.badge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex: 0 0 8px;
+}
+.badge-dot.ok    { background: var(--ok); }
+.badge-dot.warn  { background: var(--ochre); }
+.badge-dot.mute  { background: var(--ink-mute); opacity: .55; }
+
+.badge-name {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.15;
+}
+.badge-status {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.2;
+  margin-top: auto;
+}
+
+/* ─────────────────────────────────────────── SECTION CHROME ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 4.5rem 0 1rem;
+  scroll-margin-top: 80px;
+}
+
+.ornament {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.ornament .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0 0 .7rem;
+  color: var(--ink);
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem;
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin: 0 0 2.4rem;
+}
+
+/* ─────────────────────────────────────────── AT A GLANCE ── */
+
+.glance {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--paper-rule);
+  border-left: 1px solid var(--paper-rule);
+}
+.stat-tile {
+  padding: 1.3rem 1.3rem 1.2rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .75rem;
+}
+.stat-value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.stat-value .of {
+  font-size: 1.05rem;
+  font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre);
+  margin-left: .2rem;
+  letter-spacing: -.01em;
+}
+.stat-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-3);
+  font-size: 13.5px;
+  margin-top: .7rem;
+  line-height: 1.4;
+}
+
+.glance-prose {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1rem;
+}
+.glance-prose .where {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.glance-prose p {
+  margin: 0 0 .9rem;
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.55;
+  max-width: 50ch;
+}
+.glance-prose p:last-child { margin-bottom: 0; }
+.glance-prose .small {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-3);
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* ─────────────────────────────────────────── CONTROL FAMILY ── */
+
+.family {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+  margin-top: .4rem;
+}
+
+.control {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 2rem;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.control:last-child { border-bottom: 0; }
+
+.control-id {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  text-transform: uppercase;
+}
+.control-id .num {
+  display: block;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.9rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  text-transform: none;
+  line-height: 1;
+  margin-top: .4rem;
+  margin-bottom: .35rem;
+}
+.control-id .status {
+  display: inline-block;
+  margin-top: .3rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .2rem .5rem;
+  border: 1px solid var(--ok);
+  color: var(--ok);
+  background: rgba(74, 109, 74, .06);
+  border-radius: 999px;
+}
+.control-id .status.partial {
+  color: var(--ochre);
+  border-color: var(--ochre);
+  background: rgba(184, 101, 31, .06);
+}
+.control-id .status.planned {
+  color: var(--ink-3);
+  border-color: var(--ink-3);
+  background: transparent;
+}
+
+.control-body h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.55rem;
+  letter-spacing: -.015em;
+  margin: 0 0 .8rem;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.control-body p {
+  margin: 0 0 .9rem;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 70ch;
+}
+.control-body p.intro { color: var(--ink-2); }
+
+.impl {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .01em;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ochre);
+  padding: 1rem 1.1rem;
+  margin: 1rem 0 .8rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.impl .impl-label {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+  font-weight: 700;
+}
+.impl ul { margin: .25rem 0 0; padding-left: 1.1rem; }
+.impl li { margin-bottom: .25rem; }
+
+.refs {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .8rem;
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+.refs span { white-space: nowrap; }
+.refs strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── TIMELINE ── */
+
+.roadmap-wrap {
+  margin-top: 1rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 2.4rem;
+  position: relative;
+}
+
+.timeline {
+  position: relative;
+  padding: 2rem 0 3rem;
+  margin: 0;
+}
+.timeline-axis {
+  position: relative;
+  height: 2px;
+  background: var(--ink);
+  margin: 0 1rem;
+}
+.timeline-axis::before,
+.timeline-axis::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 10px; height: 10px;
+  background: var(--ink);
+  transform: rotate(45deg);
+}
+.timeline-axis::before { left: -10px; }
+.timeline-axis::after  { right: -10px; }
+
+.tl-marker {
+  position: absolute;
+  top: -10px;
+  transform: translateX(-50%);
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2px solid var(--ochre);
+  z-index: 2;
+}
+.tl-marker.now { background: var(--ochre); border-color: var(--ochre); }
+.tl-marker.future { background: var(--paper); border-color: var(--ink); }
+
+.tl-label {
+  position: absolute;
+  transform: translateX(-50%);
+  width: 150px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.tl-label.above { top: -110px; }
+.tl-label.below { top: 24px; }
+
+.tl-label .when {
+  display: block;
+  color: var(--ochre);
+  margin-bottom: .35rem;
+  font-weight: 700;
+}
+.tl-label .what {
+  display: block;
+  font-family: var(--serif);
+  font-size: 13.5px;
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.tl-label .meta {
+  display: block;
+  font-size: 9.5px;
+  color: var(--ink-3);
+  margin-top: .3rem;
+  letter-spacing: .14em;
+}
+
+.tl-mobile { display: none; }
+
+/* ─────────────────────────────────────────── TABLE (SUBPROCESSORS) ── */
+
+.sub-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 1rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.sub-table thead th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .9rem .8rem;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.sub-table tbody td {
+  padding: 1rem .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+  vertical-align: top;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.sub-table tbody tr:last-child td { border-bottom: 0; }
+.sub-table td.name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.sub-table td.region,
+.sub-table td.dpa {
+  white-space: nowrap;
+  color: var(--ochre);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+}
+.sub-table td.data {
+  color: var(--ink);
+}
+
+.sub-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  margin-top: 1rem;
+  max-width: 80ch;
+}
+
+/* ─────────────────────────────────────────── REQUEST CARDS ── */
+
+.requests {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.req {
+  display: flex;
+  flex-direction: column;
+  padding: 1.6rem 1.6rem 1.4rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  color: var(--ink);
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.req:hover {
+  transform: translateY(-2px);
+  border-top-color: var(--ochre);
+  background: var(--paper);
+}
+.req-kind {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  padding-bottom: .7rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.req-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem;
+  line-height: 1.12;
+  letter-spacing: -.015em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+.req-blurb {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  flex: 1;
+}
+.req-go {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.req-go .arr { color: var(--ochre); }
+
+.sig-line {
+  margin-top: 2.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.sig-line strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  align-items: start;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 96;
+  font-size: 3rem;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+  max-width: 32ch;
+  line-height: 1.5;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 1rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-3);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-mute);
+  border-bottom: 0;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .badge-row { grid-template-columns: repeat(4, 1fr); }
+  .tl-label { width: 120px; }
+}
+
+@media (max-width: 960px) {
+  .glance { grid-template-columns: 1fr; gap: 2rem; }
+  .control { grid-template-columns: 1fr; gap: .8rem; }
+  .control-id { display: flex; align-items: center; gap: .8rem; flex-wrap: wrap; }
+  .control-id .num { display: inline-block; margin: 0; font-size: 1.4rem; }
+  .control-id .status { margin-top: 0; }
+  .requests { grid-template-columns: 1fr; }
+  .badge-row { grid-template-columns: repeat(3, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+
+  /* Stack timeline on mobile */
+  .tl-desktop { display: none; }
+  .tl-mobile {
+    display: block;
+    border-top: 1px solid var(--ink);
+    margin-top: 1rem;
+  }
+  .tl-mobile-item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--paper-rule);
+  }
+  .tl-mobile-item .when {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ochre);
+  }
+  .tl-mobile-item .what {
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "opsz" 16;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .tl-mobile-item .meta {
+    display: block;
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-top: .3rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .stat-grid { grid-template-columns: 1fr; }
+  .badge-row { grid-template-columns: repeat(2, 1fr); }
+  .hero-meta-row { gap: 1rem; }
+  .sub-table thead { display: none; }
+  .sub-table tbody tr {
+    display: block;
+    padding: 1rem .4rem;
+    border-bottom: 1px solid var(--paper-rule);
+  }
+  .sub-table tbody td {
+    display: block;
+    padding: .2rem 0;
+    border: 0;
+  }
+  .sub-table td.name { font-size: 1.15rem; margin-bottom: .35rem; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+
+@media print {
+  body::before { display: none; }
+  .nav, .footer { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  body { font-size: 11pt; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="./index.html" class="is-current">Trust</a>
+    </div>
+    <a href="mailto:hello@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow"><span class="bar"></span> Trust Center · v2026.06</div>
+  <h1 class="hero-h1">Stratum<span class="slash">/</span>Trust</h1>
+  <p class="hero-sub">
+    Stratum's commitments to security, privacy, and compliance — current as of
+    24 June 2026. Written for the procurement, infosec, and compliance reviewers
+    of our enterprise prospects, and for the founders themselves.
+  </p>
+
+  <div class="hero-meta-row">
+    <span>Document owner · <strong>D. Okonkwo, CTO</strong></span>
+    <span>Review cadence · <strong>Quarterly</strong></span>
+    <span>Last updated · <strong>2026-06-24</strong></span>
+    <span>Next review · <strong>2026-09-22</strong></span>
+  </div>
+
+  <div class="badge-row">
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot warn"></span><span class="badge-name">SOC 2 Type II</span></div>
+      <div class="badge-status">In audit · 41 / 87</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot warn"></span><span class="badge-name">ISO 27001</span></div>
+      <div class="badge-status">Planned M14</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot ok"></span><span class="badge-name">GDPR</span></div>
+      <div class="badge-status">Compliant</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot ok"></span><span class="badge-name">CCPA</span></div>
+      <div class="badge-status">Compliant</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot warn"></span><span class="badge-name">EU AI Act</span></div>
+      <div class="badge-status">Class assessment</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot warn"></span><span class="badge-name">NYC AEDT</span></div>
+      <div class="badge-status">Audit ready</div>
+    </div>
+    <div class="badge">
+      <div class="badge-head"><span class="badge-dot mute"></span><span class="badge-name">HIPAA</span></div>
+      <div class="badge-status">Ready · not required</div>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── AT A GLANCE ── -->
+<section id="glance">
+  <div class="ornament"><span class="bar"></span> § 01 · At a glance</div>
+  <h2 class="section-h">Where we are, on the record</h2>
+  <p class="section-dek">
+    A six-week-old company that has chosen to publish its security posture
+    early — because waiting until the day before a buyer asks is a tell.
+  </p>
+
+  <div class="glance">
+    <div class="stat-grid">
+      <div class="stat-tile">
+        <div class="stat-label">Controls implemented</div>
+        <div class="stat-value">41<span class="of">/ 87</span></div>
+        <div class="stat-foot">SOC 2 Type II Trust Services Criteria · target 87 / 87 by M9</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">Pen-tests · 2026 YTD</div>
+        <div class="stat-value">1</div>
+        <div class="stat-foot">15 Apr — Rhino Security Labs · API and graph layer · report on request</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">Incidents to date</div>
+        <div class="stat-value">0</div>
+        <div class="stat-foot">Data · security · privacy · since incorporation, 09 May 2026</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-label">Data residency</div>
+        <div class="stat-value">US</div>
+        <div class="stat-foot">us-east-1 + us-west-2 · Frankfurt (eu-central-1) planned M14</div>
+      </div>
+    </div>
+
+    <div class="glance-prose">
+      <div class="where">Where we are · the four-sentence version</div>
+      <p>
+        Stratum is six weeks old and capitalized with $8M of seed funding. We
+        have no production customers and no production customer data; our
+        three design partners run pre-product against synthetic and
+        anonymized sample data, behind their own firewalls.
+      </p>
+      <p>
+        Our SOC 2 Type II audit is underway with Vanta as the GRC platform
+        and a Big-Four affiliate as the external auditor; we are 41 controls
+        of 87 implemented and expect the Type II report to issue in
+        February 2027.
+      </p>
+      <p>
+        Our governing principle is <em>born compliant</em>: the controls
+        listed below were designed into the system before the first line of
+        production code was written, not bolted on after a customer asked.
+      </p>
+      <p>
+        Everything in this document is, or will be, backed by a control
+        reference, an evidence artefact, and an owner. We will tell you what
+        is done, what is in progress, and what is on the roadmap — and we
+        will not call something "compliant" that isn't.
+      </p>
+      <div class="small">
+        Document scope · stratum.ai production system, Stratum, Inc. (DE C-Corp)<br>
+        Excludes · marketing site, blog, public documentation
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SECURITY ── -->
+<section id="security">
+  <div class="ornament"><span class="bar"></span> § 02 · Security architecture</div>
+  <h2 class="section-h">Security <em>architecture</em></h2>
+  <p class="section-dek">
+    Six control families covering identity, encryption, isolation, network,
+    audit, and vulnerability. Each control has an owner, an evidence
+    artefact, and a quarterly review date. Control IDs map 1:1 to our
+    internal GRC registry.
+  </p>
+
+  <div class="family">
+
+    <!-- SEC-1.0 -->
+    <div class="control" id="SEC-1">
+      <div class="control-id">
+        SEC-1.0
+        <span class="num">Identity &amp; access</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Single identity, hardware-bound, least-privileged.</h3>
+        <p class="intro">
+          Every human and every service principal at Stratum is rooted in a
+          single identity provider. There are no local accounts on production
+          systems. There are no shared credentials.
+        </p>
+        <p>
+          Okta is the canonical IDP for all employees, contractors, and
+          service accounts. Multi-factor authentication is enforced
+          universally; for engineering, administrative, and on-call roles
+          we require a FIDO2 hardware key (YubiKey 5C NFC, issued on day
+          one). SMS and TOTP are blocked for these roles by Okta policy.
+        </p>
+        <p>
+          Authorization is role-based at the API surface and
+          attribute-based on the people graph itself. Row- and
+          column-level filters are enforced at the storage layer, not in
+          the application — meaning a privilege-escalation in the app
+          cannot return rows the caller's attributes do not permit.
+          Privileged access (production console, audit log export, KMS
+          custodian) is reviewed quarterly by the CTO and recorded in the
+          access registry.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+$ okta groups list --scope=production
+  eng-on-call          (n=2)  mfa: webauthn  hw-key: required
+  data-platform-admin  (n=1)  mfa: webauthn  hw-key: required
+  finance-readonly     (n=1)  mfa: webauthn  hw-key: optional
+  customer-success     (n=0)  mfa: webauthn  hw-key: optional
+
+$ okta policy review --due
+  PAR-2026-Q3  due 2026-09-22  owner: D. Okonkwo  status: scheduled
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-IAM-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-18</strong></span>
+          <span>SOC2 · <strong>CC6.1, CC6.2, CC6.3</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEC-2.0 -->
+    <div class="control" id="SEC-2">
+      <div class="control-id">
+        SEC-2.0
+        <span class="num">Encryption</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Customer data is encrypted at every hop, with rotatable keys.</h3>
+        <p class="intro">
+          All data is encrypted in transit and at rest. Encryption is not a
+          single layer; it is layered through the request path, the
+          storage layer, the backup tier, and the inference pipeline.
+        </p>
+        <p>
+          In transit we require TLS 1.3 on all public and internal
+          endpoints; TLS 1.2 is explicitly disabled. Internal service-to-
+          service traffic is wrapped in mTLS via Linkerd. At rest, all
+          customer data is encrypted with AES-256-GCM, with keys held in
+          AWS KMS and managed under our key rotation policy (90-day
+          rotation, automated, with prior-key retention for replay).
+        </p>
+        <p>
+          Customers with their own KMS may bring their own key. BYOK is
+          available for design partners and enterprise customers; in BYOK
+          mode, no Stratum operator can decrypt customer data without the
+          customer's cooperation. Customer revocation of the key results
+          in an unrecoverable lockout, by design.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+crypto:
+  tls:
+    min_version: 1.3
+    cipher_suites:
+      - TLS_AES_256_GCM_SHA384
+      - TLS_CHACHA20_POLY1305_SHA256
+  at_rest:
+    algorithm: AES-256-GCM
+    kms_provider: aws-kms (us-east-1, us-west-2)
+    rotation_days: 90
+    byok: optional (per-tenant)
+  in_memory:
+    inference_key: per-tenant, 32-byte, rotated weekly
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-CRY-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-20</strong></span>
+          <span>SOC2 · <strong>CC6.7, CC6.8</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEC-3.0 -->
+    <div class="control" id="SEC-3">
+      <div class="control-id">
+        SEC-3.0
+        <span class="num">Data isolation</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>One customer cannot, by construction, read another customer's data.</h3>
+        <p class="intro">
+          Multi-tenancy is implemented as logical tenancy with cryptographic
+          separation. A bug in our application code cannot result in a
+          cross-tenant read; the storage layer rejects it.
+        </p>
+        <p>
+          Every customer is provisioned a tenant ID at onboarding. Every
+          row in every people-graph table carries that tenant ID as part
+          of its primary key, and Postgres row-level security policies
+          force the tenant ID into every query at the database session
+          level. The application code does not need to remember to filter
+          — it cannot do otherwise.
+        </p>
+        <p>
+          For LLM inference, each tenant has its own inference key and a
+          dedicated context scope. Prompts and retrieved context are
+          tagged at the orchestration layer; the inference proxy refuses
+          to issue a call to the model provider if the prompt's tenant
+          tag does not match the caller's claims.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+-- Postgres RLS, enforced at the role level
+CREATE POLICY tenant_isolation ON people_graph
+  USING (tenant_id = current_setting('app.tenant_id')::uuid);
+
+ALTER TABLE people_graph FORCE ROW LEVEL SECURITY;
+
+-- Inference proxy assertion (excerpt)
+assert prompt.tenant_id == auth.tenant_id, "TENANT_MISMATCH"
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>M. Chen</strong></span>
+          <span>Evidence · <strong>EV-ISO-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-22</strong></span>
+          <span>SOC2 · <strong>CC6.1, CC6.6</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEC-4.0 -->
+    <div class="control" id="SEC-4">
+      <div class="control-id">
+        SEC-4.0
+        <span class="num">Network</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>The data plane is not on the internet.</h3>
+        <p class="intro">
+          Our network is partitioned. The control plane (API surface,
+          public web) accepts inbound traffic; the data plane (graph
+          stores, vector index, inference queue) does not.
+        </p>
+        <p>
+          The production VPC is partitioned into three subnets with no
+          inbound public ingress to the data plane. The data plane is
+          reachable only from the control plane via authenticated,
+          mutually-authenticated internal services. Egress from the data
+          plane is allow-listed at the VPC level to a small set of named
+          destinations (KMS, S3 in-region, Datadog, Anthropic
+          api.anthropic.com); arbitrary outbound HTTP is dropped.
+        </p>
+        <p>
+          Bastion access for engineering use is via a SSO-mediated
+          short-lived session through AWS SSM, with no persistent SSH keys
+          and no long-lived bastion hosts. Every session is logged with
+          full command history; sessions over 30 minutes require a second
+          approver.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+vpc/prod-us-east-1
+  subnet/control-plane   cidr:10.0.0.0/22   ingress:443 (alb)
+  subnet/data-plane      cidr:10.0.4.0/22   ingress:none
+  subnet/management      cidr:10.0.8.0/24   ingress:ssm-only
+
+egress-allowlist:
+  - *.amazonaws.com (in-region)
+  - api.anthropic.com
+  - http-intake.logs.datadoghq.com
+  - default: DROP
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-NET-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-15</strong></span>
+          <span>SOC2 · <strong>CC6.6, CC7.1</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEC-5.0 -->
+    <div class="control" id="SEC-5">
+      <div class="control-id">
+        SEC-5.0
+        <span class="num">Audit &amp; logging</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Every read of the people graph and every agent decision is replayable.</h3>
+        <p class="intro">
+          The audit log is not a feature. It is the substrate. If we cannot
+          tell you who saw what, when, and on whose instruction, the
+          system did not work.
+        </p>
+        <p>
+          Every read of the people graph emits an immutable audit event:
+          the caller, the tenant, the query, the rows returned (by ID),
+          and the upstream cause (a user click, a scheduled job, an agent
+          decision). Every agent decision additionally carries a
+          provenance record — the rules invoked, the rows consulted, the
+          model version, and the human approval ID where applicable.
+        </p>
+        <p>
+          Logs are written to an append-only store with cryptographic
+          hashing of each prior event (a hash-linked chain), retained for
+          18 months hot and 7 years cold. Customer admins can stream
+          their own tenant's audit events to their SIEM via webhook or
+          S3 push; raw access to the audit store is restricted to the
+          tenant and to Stratum's security team under documented break-
+          glass procedure.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+audit.event {
+  id:            01HJ8...                          // ulid, monotonic
+  ts:            2026-06-24T14:22:09.118Z
+  tenant_id:     t_a3f9...                         // forced from session
+  actor:         user:u_882... | agent:a_copilot
+  action:        read.graph | suggest | recommend | decide
+  resource:      people_graph/row_count=14
+  cause:         user_click | scheduled | agent_chain
+  hash_prev:     0x9c4f...                         // chain link
+  hash_self:     0x4d1a...
+}
+retention:  hot=18mo  cold=7y  immutability=enforced
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>P. Rao</strong></span>
+          <span>Evidence · <strong>EV-AUD-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-22</strong></span>
+          <span>SOC2 · <strong>CC7.2, CC7.3, CC4.1</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SEC-6.0 -->
+    <div class="control" id="SEC-6">
+      <div class="control-id">
+        SEC-6.0
+        <span class="num">Vulnerability management</span>
+        <span class="status partial">In progress</span>
+      </div>
+      <div class="control-body">
+        <h3>We look for vulnerabilities continuously, and we patch on a clock.</h3>
+        <p class="intro">
+          A monoculture of "we patch when we hear about it" is unacceptable
+          at any scale. Stratum's vulnerability program is calendrical and
+          measurable.
+        </p>
+        <p>
+          Dependency scans run on every pull request and weekly across the
+          full inventory; findings are filed automatically as Linear
+          tickets with severity, owner, and SLA clock. Container images
+          are scanned at build and again at runtime; drift between built
+          and running images is alarmed.
+        </p>
+        <p>
+          We run internal pen-tests monthly (rotating focus: API,
+          authentication, the inference proxy, the audit chain) and a
+          third-party pen-test quarterly. The first third-party engagement
+          was completed on 15 April 2026 by Rhino Security Labs against
+          the API and graph layer; the report and our remediation log
+          are available under NDA.
+        </p>
+        <p>
+          Our SLA on remediation is fixed and tracked: Critical within 24
+          hours, High within 72 hours, Medium within 14 days, Low within
+          60 days. Open findings, time-to-remediate, and SLA breach
+          counts are reported to the founder team weekly.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+vulnerability-program:
+  dep-scan:        on-pr, weekly-full
+  image-scan:      on-build, on-deploy, on-runtime-drift
+  internal-pentest: monthly (rotating scope)
+  third-party-pentest: quarterly
+  sla:
+    critical:  24h
+    high:      72h
+    medium:    14d
+    low:       60d
+
+current-findings (as of 2026-06-24):
+  critical: 0   high: 0   medium: 2   low: 6
+  oldest-open: M-117 (medium) opened 2026-06-18 · 8d remaining
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-VUL-001 / EV-VUL-002</strong></span>
+          <span>Last reviewed · <strong>2026-06-24</strong></span>
+          <span>SOC2 · <strong>CC7.1, CC7.4</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.family -->
+</section>
+
+<!-- ─────────────────────────────────────────── PRIVACY ── -->
+<section id="privacy">
+  <div class="ornament"><span class="bar"></span> § 03 · Privacy &amp; data handling</div>
+  <h2 class="section-h">Privacy &amp; data <em>handling</em></h2>
+  <p class="section-dek">
+    Five commitments about whose data this is, what we do with it, and how
+    we let you take it back. These are contractual, not aspirational.
+  </p>
+
+  <div class="family">
+
+    <!-- PRI-1.0 -->
+    <div class="control" id="PRI-1">
+      <div class="control-id">
+        PRI-1.0
+        <span class="num">Customer data ownership</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>You own your data. We are the processor.</h3>
+        <p class="intro">
+          Under our standard Master Services Agreement and Data Processing
+          Addendum, the customer is the data controller and Stratum is
+          the data processor. We do not assert any independent right to
+          customer data.
+        </p>
+        <p>
+          A customer may request a full export of its tenant data at any
+          time and in any of the following formats: structured JSON
+          (one file per graph entity), Parquet (one file per table), or
+          CSV. The export includes the audit log and the provenance
+          records of every agent decision in scope. Our SLA on export
+          and on deletion request is seven calendar days.
+        </p>
+        <p>
+          Deletion is hard-deletion at the storage layer plus
+          cryptographic erasure of derived embeddings; see PRI-5.0 for
+          the technical detail.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo + counsel</strong></span>
+          <span>Evidence · <strong>EV-DPA-001</strong></span>
+          <span>DPA · <strong>available on request</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRI-2.0 -->
+    <div class="control" id="PRI-2">
+      <div class="control-id">
+        PRI-2.0
+        <span class="num">No training on customer data</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Customer data does not train models. Ours or anyone else's.</h3>
+        <p class="intro">
+          The single most-asked question from enterprise legal counsel.
+          The answer is unambiguous: no.
+        </p>
+        <p>
+          Customer data is never used to train Stratum-owned foundation
+          models (we have none) or third-party LLMs. Our contracts with
+          model providers (Anthropic; see PRI-3.0) include explicit
+          zero-retention and no-training clauses; we have negotiated and
+          documented these prohibitions and they are auditable.
+        </p>
+        <p>
+          For internal evaluation and quality work, we use synthetic data
+          generated from graph-schema fixtures and from anonymized
+          public records. No customer row is ever included in an eval
+          set, a regression suite, or a fine-tuning dataset.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+inference.providers:
+  - name: anthropic
+    endpoint: api.anthropic.com
+    contract: zero-retention, no-training
+    contract_ref: MSA-ANT-2026-04
+    audit_callback: enabled
+    model_pin: claude-* (per tenant config)
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>M. Chen</strong></span>
+          <span>Evidence · <strong>EV-AI-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-10</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRI-3.0 -->
+    <div class="control" id="PRI-3">
+      <div class="control-id">
+        PRI-3.0
+        <span class="num">Subprocessors</span>
+        <span class="status">Disclosed</span>
+      </div>
+      <div class="control-body">
+        <h3>Seven named subprocessors, each scoped to a data class.</h3>
+        <p class="intro">
+          We disclose every third party that may touch customer data,
+          along with the data class they receive and the region they
+          operate in. Customers receive 30 days' notice of any change
+          to this list and have the right to object.
+        </p>
+        <p>
+          The current list of subprocessors is published in § 05 below.
+          We will not add a subprocessor without updating this list and
+          notifying customers in writing.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-SUB-001</strong></span>
+          <span>Notification SLA · <strong>30 days</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRI-4.0 -->
+    <div class="control" id="PRI-4">
+      <div class="control-id">
+        PRI-4.0
+        <span class="num">International transfers</span>
+        <span class="status partial">Partial</span>
+      </div>
+      <div class="control-body">
+        <h3>SCCs in place today. EU residency by M14.</h3>
+        <p class="intro">
+          For our EU and UK design partners, personal data transfers to
+          the US are governed by the European Commission's Standard
+          Contractual Clauses (Module 2: Controller to Processor) and
+          the UK International Data Transfer Addendum, as appropriate.
+        </p>
+        <p>
+          We are working toward EU data residency in Frankfurt
+          (eu-central-1), targeted for M14 (July 2027). Once live,
+          EU-resident customers will be able to elect to have their
+          tenant data stored, processed, and inferred entirely within
+          the EU, with no transatlantic egress.
+        </p>
+        <p>
+          A Data Processing Addendum is available on request and pre-
+          executed in our standard form. We will sign customer-specific
+          DPAs subject to legal review.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo + counsel</strong></span>
+          <span>Evidence · <strong>EV-XBT-001</strong></span>
+          <span>EU residency · <strong>Target M14</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRI-5.0 -->
+    <div class="control" id="PRI-5">
+      <div class="control-id">
+        PRI-5.0
+        <span class="num">Right to be forgotten</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Deletion is irreversible, by design, within 30 days.</h3>
+        <p class="intro">
+          "Right to be forgotten" is harder than dropping a row. We have
+          designed for it.
+        </p>
+        <p>
+          On a verified deletion request — from a customer-admin via the
+          tenant console or from the customer's legal team via written
+          notice — the relevant rows are hard-deleted from the primary
+          store and from every read replica within 24 hours. Within 30
+          days, all derived artefacts (embeddings, vector indexes,
+          cached features, audit-log payloads — but not the audit log's
+          hash chain) are cryptographically erased.
+        </p>
+        <p>
+          Cryptographic erasure is achieved by destroying the per-tenant
+          inference key under which derived artefacts were encrypted at
+          rest; the underlying ciphertext is then unrecoverable. The
+          audit log's hash chain is preserved (for the immutability
+          guarantee in SEC-5.0), but the payload that the hash protects
+          is itself erased.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+deletion-pipeline:
+  t+0       request received, verified, ticketed
+  t+24h     primary + replica row delete (hard)
+  t+24h     downstream feature store invalidation
+  t+7d      backup rotation past deletion frontier
+  t+30d    crypto-erase derived embeddings (tenant key rotated, prior key destroyed)
+  t+30d    confirmation letter to customer, signed by D. Okonkwo
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>P. Rao + D. Okonkwo</strong></span>
+          <span>Evidence · <strong>EV-RTF-001</strong></span>
+          <span>Last reviewed · <strong>2026-06-19</strong></span>
+          <span>GDPR · <strong>Art. 17</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.family -->
+</section>
+
+<!-- ─────────────────────────────────────────── AI SAFETY ── -->
+<section id="ai">
+  <div class="ornament"><span class="bar"></span> § 04 · AI safety &amp; governance</div>
+  <h2 class="section-h">AI <em>safety</em> &amp; governance</h2>
+  <p class="section-dek">
+    Six controls that distinguish a serious AI-native HCM system from a
+    chatbot bolted to a database. This is the section that should not
+    exist in a non-AI vendor's trust page; it is the one ours leans on.
+  </p>
+
+  <div class="family">
+
+    <!-- AI-1.0 -->
+    <div class="control" id="AI-1">
+      <div class="control-id">
+        AI-1.0
+        <span class="num">Decision class taxonomy</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Every agent action is classified. Consequential actions require a human.</h3>
+        <p class="intro">
+          The copilot does not decide. It proposes; a human disposes.
+          This is not a UI convention — it is a server-side gate.
+        </p>
+        <p>
+          Every action the copilot can take is classified into one of four
+          decision classes:
+        </p>
+        <p>
+          <strong>Read</strong> — retrieve information; no side effect.
+          <strong>Suggest</strong> — offer advice with no committed action.
+          <strong>Recommend</strong> — offer advice with stake, e.g. a draft
+          comp adjustment or a proposed PIP. <strong>Decide</strong> — take a
+          consequential action (write to a system of record, send a
+          notification to an employee, initiate a workflow with HR
+          consequence).
+        </p>
+        <p>
+          Every Decide-class action requires a human approval, captured
+          in the UI by a recorded click with an accompanying signed
+          token. The token is verified server-side before the action is
+          dispatched. This is not enforced in the system prompt; the
+          orchestration layer refuses to dispatch any Decide-class
+          action that does not carry a fresh, signed human-approval
+          token.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+agent.action {
+  class:           READ | SUGGEST | RECOMMEND | DECIDE
+  effect:          none | read | proposed_change | committed_change
+  requires_human:  (class == DECIDE)   // enforced server-side
+  approval_token:  required if requires_human
+  audit_event:     emitted for all classes
+}
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>M. Chen</strong></span>
+          <span>Evidence · <strong>EV-AI-002</strong></span>
+          <span>Last reviewed · <strong>2026-06-22</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI-2.0 -->
+    <div class="control" id="AI-2">
+      <div class="control-id">
+        AI-2.0
+        <span class="num">Provenance</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Every answer carries the rows and rules used to derive it.</h3>
+        <p class="intro">
+          A defensible answer is one you can replay. We treat every agent
+          response as a small lawsuit waiting to happen — and design
+          accordingly.
+        </p>
+        <p>
+          Every answer the copilot produces is paired with a citation
+          pack: the row IDs consulted (by primary key, not by content),
+          the policy rules applied, the model version pinned at the
+          time of the call, and the timestamp of every intermediate
+          step. The citation pack is queryable and replayable.
+        </p>
+        <p>
+          The user-visible "explain" button on any agent answer surfaces
+          the citation pack in plain language; the API exposes it
+          structurally for audit and for integration with the customer's
+          HRIS audit log.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>P. Rao</strong></span>
+          <span>Evidence · <strong>EV-AI-003</strong></span>
+          <span>Last reviewed · <strong>2026-06-22</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI-3.0 -->
+    <div class="control" id="AI-3">
+      <div class="control-id">
+        AI-3.0
+        <span class="num">Bias surveillance</span>
+        <span class="status partial">In progress</span>
+      </div>
+      <div class="control-body">
+        <h3>The eval set probes for fairness. Results are published quarterly.</h3>
+        <p class="intro">
+          Bias does not announce itself. It must be searched for, on a
+          schedule, with a method.
+        </p>
+        <p>
+          Our internal eval set currently contains 102 questions
+          covering the agent's core surfaces (people-search, comp
+          drafting, performance summarization, attrition prediction).
+          Of these, 28 are fairness probes — questions designed to
+          detect disparate treatment by protected characteristic
+          (where present in the data) or by proxy attribute (tenure
+          band, manager identity, team).
+        </p>
+        <p>
+          The eval set is run on every model change and on a weekly
+          cadence in steady state. Results — accuracy, calibration,
+          and fairness deltas — are published to the founder team and
+          to design partners every quarter. Target eval set size is
+          250 by end of M9.
+        </p>
+        <div class="impl">
+          <span class="impl-label">Implementation</span>
+eval-set v2026.06:
+  total_questions:        102
+  fairness_probes:        28
+  next-target:            250 (M9)
+  cadence:                weekly + on-model-change
+  publication:            quarterly to design partners
+  last-run:               2026-06-21
+  fairness-delta-max:     0.4 pp (current)  threshold: 1.0 pp
+        </div>
+        <div class="refs">
+          <span>Owner · <strong>P. Rao</strong></span>
+          <span>Evidence · <strong>EV-AI-004</strong></span>
+          <span>Last reviewed · <strong>2026-06-21</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI-4.0 -->
+    <div class="control" id="AI-4">
+      <div class="control-id">
+        AI-4.0
+        <span class="num">Model governance</span>
+        <span class="status">Implemented</span>
+      </div>
+      <div class="control-body">
+        <h3>Models are pinned per tenant. Changes are reviewed.</h3>
+        <p class="intro">
+          A model swap is a system change. We treat it accordingly.
+        </p>
+        <p>
+          Anthropic's Claude family is our primary reasoning model.
+          Each customer's contract pins the model version in effect at
+          contract signature; we do not silently upgrade the model
+          underneath a tenant. A model version change requires a
+          quarterly review, a rerun of the full eval set, a
+          customer-facing change-note, and a 30-day notice period
+          before activation.
+        </p>
+        <p>
+          Where a Stratum-trained small model is used for narrow tasks
+          (e.g. entity disambiguation on the people graph), the model
+          card — training data class, parameter count, intended use,
+          known limitations, eval results — is published in the trust
+          documentation pack on request.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>M. Chen</strong></span>
+          <span>Evidence · <strong>EV-AI-005</strong></span>
+          <span>Model-change SLA · <strong>30 days</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI-5.0 -->
+    <div class="control" id="AI-5">
+      <div class="control-id">
+        AI-5.0
+        <span class="num">EU AI Act class</span>
+        <span class="status partial">Assessment</span>
+      </div>
+      <div class="control-body">
+        <h3>Targeting "limited risk" with human-in-the-loop on every Decide.</h3>
+        <p class="intro">
+          The EU AI Act will be the binding framework for AI vendors
+          operating in the EU. We have begun our class assessment in
+          parallel with our EU residency plan.
+        </p>
+        <p>
+          Our preliminary classification, under counsel, is "limited
+          risk" — the system provides advice and produces drafts; it
+          does not make autonomous high-stakes decisions. The AI-1.0
+          control (human-in-the-loop on every Decide) is the
+          architectural fact that supports this classification.
+        </p>
+        <p>
+          We are not, today, in a high-risk category under Annex III as
+          we read it. Should a customer deploy Stratum in a manner
+          that falls into the high-risk perimeter (e.g. autonomous
+          screening of candidates), additional controls — including
+          per-decision logging, conformity assessment support, and
+          deployer-facing instructions — are available and contracted.
+          The class assessment is in active review with outside
+          counsel; final ratification is targeted for M16.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>D. Okonkwo + counsel</strong></span>
+          <span>Evidence · <strong>EV-EUAI-001</strong></span>
+          <span>Ratification · <strong>Target M16</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI-6.0 -->
+    <div class="control" id="AI-6">
+      <div class="control-id">
+        AI-6.0
+        <span class="num">NYC AEDT</span>
+        <span class="status">Audit ready</span>
+      </div>
+      <div class="control-body">
+        <h3>Bias audit ready for any employer screening NY candidates.</h3>
+        <p class="intro">
+          New York City Local Law 144 (the AEDT law) requires an
+          independent bias audit of any automated employment-decision
+          tool used in NYC, published annually.
+        </p>
+        <p>
+          Where a Stratum customer uses the copilot to screen, rank, or
+          recommend candidates for hire in New York City, the
+          customer is the deployer and the law's primary obligations
+          fall to them. We are committed to making compliance trivial.
+        </p>
+        <p>
+          We make available a bias audit on the AEDT surfaces (currently
+          candidate ranking and shortlisting), conducted by an
+          independent auditor, run quarterly, with results published
+          to the customer on request. The first audit completed on
+          12 May 2026 with a third-party auditor; the audit pack is
+          shareable under NDA.
+        </p>
+        <div class="refs">
+          <span>Owner · <strong>P. Rao</strong></span>
+          <span>Evidence · <strong>EV-AEDT-001</strong></span>
+          <span>Audit cadence · <strong>Quarterly</strong></span>
+          <span>Annual cycle · <strong>Next M18</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.family -->
+</section>
+
+<!-- ─────────────────────────────────────────── ROADMAP ── -->
+<section id="roadmap">
+  <div class="ornament"><span class="bar"></span> § 05 · Compliance roadmap</div>
+  <h2 class="section-h">Compliance <em>roadmap</em></h2>
+  <p class="section-dek">
+    The next eighteen months of named milestones, with owners and
+    target dates. Slip dates will be published; we will not quietly
+    move them.
+  </p>
+
+  <div class="roadmap-wrap">
+    <div class="timeline tl-desktop" aria-hidden="false">
+      <!-- Desktop SVG-free timeline using positioned markers -->
+      <div style="position: relative; height: 240px;">
+        <div class="timeline-axis" style="position: absolute; left: 0; right: 0; top: 120px;"></div>
+
+        <!-- Markers: positions in % -->
+        <div class="tl-marker now"    style="left: 4%;  top: 110px;"></div>
+        <div class="tl-marker"        style="left: 22%; top: 110px;"></div>
+        <div class="tl-marker future" style="left: 42%; top: 110px;"></div>
+        <div class="tl-marker future" style="left: 56%; top: 110px;"></div>
+        <div class="tl-marker future" style="left: 75%; top: 110px;"></div>
+        <div class="tl-marker future" style="left: 94%; top: 110px;"></div>
+
+        <!-- Above the line -->
+        <div class="tl-label above" style="left: 4%;  top: 0;">
+          <span class="when">Today</span>
+          <span class="what">SOC 2 controls 41 / 87 implemented</span>
+          <span class="meta">24 Jun 2026</span>
+        </div>
+        <div class="tl-label above" style="left: 42%; top: 0;">
+          <span class="when">M14 · Jul 2027</span>
+          <span class="what">ISO 27001 certified</span>
+          <span class="meta">Stage 2 audit complete</span>
+        </div>
+        <div class="tl-label above" style="left: 75%; top: 0;">
+          <span class="when">M16 · Sep 2027</span>
+          <span class="what">EU AI Act class assessment ratified</span>
+          <span class="meta">Outside counsel sign-off</span>
+        </div>
+
+        <!-- Below the line -->
+        <div class="tl-label below" style="left: 22%; top: 140px;">
+          <span class="when">M9 · Feb 2027</span>
+          <span class="what">SOC 2 Type II audit complete</span>
+          <span class="meta">Report issued by auditor</span>
+        </div>
+        <div class="tl-label below" style="left: 56%; top: 140px;">
+          <span class="when">M14 · Jul 2027</span>
+          <span class="what">EU data residency live · Frankfurt</span>
+          <span class="meta">eu-central-1, tenant elect</span>
+        </div>
+        <div class="tl-label below" style="left: 94%; top: 140px;">
+          <span class="when">M18 · Nov 2027</span>
+          <span class="what">NYC AEDT annual cycle 2</span>
+          <span class="meta">Public bias audit</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile fallback: stacked -->
+    <div class="tl-mobile">
+      <div class="tl-mobile-item">
+        <span class="when">Today<span class="meta">24 Jun 2026</span></span>
+        <span class="what">SOC 2 controls 41 / 87 implemented. Audit underway.</span>
+      </div>
+      <div class="tl-mobile-item">
+        <span class="when">M9<span class="meta">Feb 2027</span></span>
+        <span class="what">SOC 2 Type II audit complete; auditor report issued.</span>
+      </div>
+      <div class="tl-mobile-item">
+        <span class="when">M14<span class="meta">Jul 2027</span></span>
+        <span class="what">ISO 27001 certified — Stage 2 audit complete.</span>
+      </div>
+      <div class="tl-mobile-item">
+        <span class="when">M14<span class="meta">Jul 2027</span></span>
+        <span class="what">EU data residency live in Frankfurt (eu-central-1), tenant-elect.</span>
+      </div>
+      <div class="tl-mobile-item">
+        <span class="when">M16<span class="meta">Sep 2027</span></span>
+        <span class="what">EU AI Act class assessment ratified by outside counsel.</span>
+      </div>
+      <div class="tl-mobile-item">
+        <span class="when">M18<span class="meta">Nov 2027</span></span>
+        <span class="what">NYC AEDT annual bias-audit cycle 2 — public audit pack.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SUBPROCESSORS ── -->
+<section id="subprocessors">
+  <div class="ornament"><span class="bar"></span> § 06 · Subprocessors</div>
+  <h2 class="section-h">Named subprocessors</h2>
+  <p class="section-dek">
+    Seven third parties touch (or may touch) customer data, each scoped to
+    a specific data class and a specific region. Customers receive 30
+    days' notice of any change to this list.
+  </p>
+
+  <table class="sub-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Data class accessed</th>
+        <th>Region</th>
+        <th>DPA reference</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="name">AWS</td>
+        <td>Cloud infrastructure · compute, storage, KMS, networking</td>
+        <td class="data">All customer data (encrypted at rest, AES-256-GCM)</td>
+        <td class="region">us-east-1 · us-west-2</td>
+        <td class="dpa">DPA-AWS-2026-05</td>
+      </tr>
+      <tr>
+        <td class="name">Anthropic</td>
+        <td>LLM inference · primary reasoning model</td>
+        <td class="data">Prompt context only · zero retention · no training</td>
+        <td class="region">US</td>
+        <td class="dpa">MSA-ANT-2026-04</td>
+      </tr>
+      <tr>
+        <td class="name">Snowflake</td>
+        <td>Warehouse for customer-elected analytics export</td>
+        <td class="data">Customer-elected fact tables (opt-in per tenant)</td>
+        <td class="region">us-east-1</td>
+        <td class="dpa">DPA-SNO-2026-05</td>
+      </tr>
+      <tr>
+        <td class="name">Okta</td>
+        <td>Identity provider for Stratum employees and service principals</td>
+        <td class="data">Employee identity metadata · no customer data</td>
+        <td class="region">US</td>
+        <td class="dpa">DPA-OKT-2026-05</td>
+      </tr>
+      <tr>
+        <td class="name">Datadog</td>
+        <td>Application observability · logs, metrics, traces</td>
+        <td class="data">System telemetry · PII redacted at ingest</td>
+        <td class="region">US (us1)</td>
+        <td class="dpa">DPA-DDG-2026-05</td>
+      </tr>
+      <tr>
+        <td class="name">Vanta</td>
+        <td>GRC platform · control monitoring and evidence collection</td>
+        <td class="data">Audit metadata · no customer data</td>
+        <td class="region">US</td>
+        <td class="dpa">DPA-VAN-2026-05</td>
+      </tr>
+      <tr>
+        <td class="name">Linear</td>
+        <td>Engineering issue tracking · vulnerability ticketing</td>
+        <td class="data">Internal tickets · sanitized vulnerability metadata</td>
+        <td class="region">US</td>
+        <td class="dpa">DPA-LIN-2026-05</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="sub-foot">
+    Subprocessor list current as of 24 June 2026. Customers will receive
+    30 days' written notice before any addition; the right to object is
+    set out in our standard DPA, § 7.3. A historical change log of this
+    list is available on request.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── DOCS & REQUESTS ── -->
+<section id="docs">
+  <div class="ornament"><span class="bar"></span> § 07 · Documentation &amp; requests</div>
+  <h2 class="section-h">Documentation &amp; <em>requests</em></h2>
+  <p class="section-dek">
+    Three things you can ask for today. We reply within one business day
+    on the first two, and within four hours during business hours on
+    coordinated vulnerability disclosure.
+  </p>
+
+  <div class="requests">
+    <a class="req" href="mailto:security@stratum.ai?subject=Security%20Questionnaire%20Request">
+      <div class="req-kind">REQ-01 · Questionnaire</div>
+      <div class="req-title">Request our security questionnaire</div>
+      <p class="req-blurb">
+        Pre-filled CAIQ-Lite and SIG-Lite available. We can also complete
+        your custom questionnaire; expect a turnaround of three to five
+        business days for vendor-specific forms.
+      </p>
+      <div class="req-go"><span>security@stratum.ai</span><span class="arr">→</span></div>
+    </a>
+
+    <a class="req" href="mailto:dpa@stratum.ai?subject=DPA%20Template%20Request">
+      <div class="req-kind">REQ-02 · Data Processing Addendum</div>
+      <div class="req-title">Request our DPA template</div>
+      <p class="req-blurb">
+        Pre-executed in our standard form, with EU Standard Contractual
+        Clauses (Module 2) and UK IDTA addendum attached. We will sign
+        customer-specific DPAs subject to legal review.
+      </p>
+      <div class="req-go"><span>dpa@stratum.ai</span><span class="arr">→</span></div>
+    </a>
+
+    <a class="req" href="mailto:security@stratum.ai?subject=Vulnerability%20Disclosure">
+      <div class="req-kind">REQ-03 · Coordinated disclosure</div>
+      <div class="req-title">Report a vulnerability</div>
+      <p class="req-blurb">
+        We operate a coordinated disclosure policy with a 90-day window
+        from acknowledgement to public disclosure. Acknowledgement
+        within four business hours; named credit on resolution.
+      </p>
+      <div class="req-go"><span>security@stratum.ai · PGP available</span><span class="arr">→</span></div>
+    </a>
+  </div>
+
+  <div class="sig-line">
+    <span>Last updated · <strong>2026-06-24</strong> by <strong>D. Okonkwo, CTO</strong></span>
+    <span>Document ID · <strong>TRUST-2026.06.24-v1.4</strong></span>
+    <span>Next scheduled review · <strong>2026-09-22</strong></span>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="#security">SOC 2 · ISO 27001</a></li>
+        <li><a href="#privacy">GDPR · DPA</a></li>
+        <li><a href="#ai">EU AI Act stance</a></li>
+        <li><a href="#subprocessors">Sub-processors</a></li>
+        <li><a href="mailto:security@stratum.ai">Security</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Smooth scroll for in-page anchors
+  (function () {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (href.length < 2) return;
+        var target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        var offset = 80;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

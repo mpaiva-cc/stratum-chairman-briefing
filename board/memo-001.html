@@ -1,0 +1,1235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum, Inc. · Board Memorandum M-001 · 21 June 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   Stratum · Board Memorandum M-001
+   Aesthetic: governance-grade legal document · cream paper ·
+   deep ink · ochre accent · narrow 720px reading column
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-cool:   #efe6d0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Narrower reading column for the memo body */
+  --col:          min(720px, 92vw);
+  --col-wide:     min(880px, 94vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 12%, rgba(184, 101, 31, 0.04), transparent 42%),
+    radial-gradient(circle at 86% 88%, rgba(14, 22, 38, 0.035), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.01) 0, rgba(14, 22, 38, 0.01) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 0;
+}
+
+.mast-stamps {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.9;
+  padding-bottom: .9rem;
+}
+.mast-stamps .draft {
+  color: var(--ochre);
+  font-weight: 600;
+}
+.mast-stamps .doc-id {
+  color: var(--ink);
+  font-weight: 600;
+}
+.mast-stamps .sep {
+  color: var(--paper-rule-2);
+  padding: 0 .4rem;
+}
+
+.mast-rule-double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+  margin: .5rem 0 1.8rem;
+}
+
+.memo-header {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  column-gap: 1.2rem;
+  row-gap: .55rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.memo-header dt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 3px;
+}
+.memo-header dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+}
+.memo-header dd em { color: var(--ink-2); }
+
+/* ────────────────────────────────────────── SECTIONS ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 3.2rem 0 .6rem;
+}
+
+.section-mark {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .6rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.85rem;
+  line-height: 1.15;
+  letter-spacing: -.018em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+}
+
+.sub-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.15rem;
+  letter-spacing: -.005em;
+  margin: 1.8rem 0 .6rem;
+  color: var(--ink);
+}
+
+/* ────────────────────────────────────────── NUMBERED PARAGRAPHS ── */
+
+.p {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  column-gap: 1.1rem;
+  margin: 0 0 1rem;
+}
+
+.p .n {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--ochre);
+  padding-top: 6px;
+  white-space: nowrap;
+}
+
+.p .t {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.62;
+  color: var(--ink);
+}
+
+.p .t em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+/* Pull-quote / motion blocks */
+.motion {
+  margin: 1.2rem 0 1.4rem 56px;
+  padding: 1rem 1.2rem 1.05rem;
+  background: var(--paper-warm);
+  border-left: 3px solid var(--ochre);
+  border-top: 1px solid var(--paper-rule);
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.motion-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .4rem;
+}
+.motion-text {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  font-variation-settings: "opsz" 18;
+}
+
+/* ────────────────────────────────────────── DECISIONS GROUPS ── */
+
+.decision-group {
+  margin: 1.4rem 0;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.dg-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: .7rem 1rem .65rem;
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-cool);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.dg-head .label { color: var(--ink); font-weight: 600; }
+.dg-head .count { color: var(--ochre); }
+
+.dg-list {
+  list-style: none;
+  margin: 0;
+  padding: .55rem 1rem .75rem;
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.dg-list li {
+  padding: .35rem 0 .35rem 1.6rem;
+  position: relative;
+}
+.dg-list li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  top: .35rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ochre);
+}
+.dg-list li strong { color: var(--ink); }
+
+/* ────────────────────────────────────────── FINANCIAL TABLE ── */
+
+.fintable {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  margin: 1rem 0 .8rem;
+  background: var(--paper-warm);
+}
+.fintable tr { border-bottom: 1px solid var(--paper-rule); }
+.fintable tr:last-child { border-bottom: 0; }
+.fintable td {
+  padding: .65rem .85rem;
+  vertical-align: top;
+}
+.fintable td:first-child {
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  width: 60%;
+}
+.fintable td:last-child {
+  color: var(--ink);
+  text-align: right;
+  font-weight: 600;
+  font-feature-settings: "tnum";
+}
+.fintable .em-row td:first-child { color: var(--ink); font-weight: 600; }
+.fintable .em-row td:last-child  { color: var(--ochre); }
+.fintable .footnote td {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13.5px;
+  font-weight: 400 !important;
+  color: var(--ink-3) !important;
+  text-align: left !important;
+  padding-top: .9rem;
+}
+
+/* ────────────────────────────────────────── RISK INLINE ── */
+
+.risk-line {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  padding: .55rem 0 .55rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  column-gap: 1.1rem;
+}
+.risk-line .rcode {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ochre);
+  padding-top: 4px;
+}
+.risk-line .rtext { color: var(--ink-2); }
+.risk-line .rtext strong { color: var(--ink); }
+.chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .15rem .5rem;
+  border-radius: 999px;
+  border: 1px solid;
+  margin-left: .35rem;
+  vertical-align: 2px;
+}
+.chip-hi { color: var(--hi);    border-color: var(--hi);    background: rgba(161,52,24,.05); }
+.chip-md { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.chip-lo { color: var(--lo);    border-color: var(--lo);    background: rgba(107,122,74,.06); }
+
+/* ────────────────────────────────────────── RESOLUTIONS ── */
+
+.resolution {
+  margin: 1.4rem 0 1.6rem;
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.res-head {
+  background: var(--ink);
+  color: var(--paper);
+  padding: .7rem 1.1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.res-head .num { color: var(--ochre-soft); font-weight: 600; }
+.res-head .vote { color: var(--ochre-soft); }
+.res-body {
+  padding: 1.1rem 1.2rem 1rem;
+}
+.res-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem;
+  letter-spacing: -.005em;
+  line-height: 1.25;
+  margin: 0 0 .8rem;
+  color: var(--ink);
+}
+.res-motion {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  padding: .8rem 1rem;
+  background: var(--paper-cool);
+  border-left: 3px solid var(--ochre);
+  margin: 0 0 1rem;
+}
+.res-motion .marker {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: block;
+  margin-bottom: .35rem;
+}
+.res-detail {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: .55rem 0;
+}
+.res-detail strong { color: var(--ink); }
+.res-meta {
+  margin-top: .9rem;
+  padding-top: .7rem;
+  border-top: 1px dashed var(--paper-rule);
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: .35rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.res-meta dt { text-transform: uppercase; letter-spacing: .16em; }
+.res-meta dd { margin: 0; color: var(--ink-2); font-family: var(--serif); font-size: 14.5px; letter-spacing: 0; }
+
+/* ────────────────────────────────────────── DISCUSSION ITEMS ── */
+
+.disc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+.disc-list li {
+  padding: 1.1rem 0 1.1rem 4rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+  counter-increment: d;
+}
+.disc-list li::before {
+  content: "D" counter(d, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.15rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ochre);
+}
+.disc-list { counter-reset: d; }
+.disc-list strong { font-weight: 600; }
+
+/* ────────────────────────────────────────── CALENDAR ── */
+
+.calendar {
+  font-family: var(--mono);
+  font-size: 13px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+  background: var(--paper-warm);
+}
+.cal-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 110px;
+  gap: 1rem;
+  padding: .65rem .85rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.cal-row:last-child { border-bottom: 0; }
+.cal-when {
+  color: var(--ochre);
+  font-weight: 600;
+  letter-spacing: .04em;
+}
+.cal-what {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+}
+.cal-kind {
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+/* ────────────────────────────────────────── ATTACHMENTS ── */
+
+.attach {
+  font-family: var(--mono);
+  font-size: 13px;
+  border-top: 1px solid var(--ink);
+}
+.attach-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 100px;
+  gap: 1rem;
+  padding: .75rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.attach-row:last-child { border-bottom: 0; }
+.attach-id {
+  color: var(--ochre);
+  letter-spacing: .04em;
+}
+.attach-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+}
+.attach-title a { color: var(--ink); border-bottom: 1px dotted var(--ink-3); }
+.attach-title a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+.attach-kind {
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+/* ────────────────────────────────────────── SIGNOFF & COLOPHON ── */
+
+.signoff-block {
+  width: var(--col);
+  margin: 3rem auto 1rem;
+  padding: 2rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.signoff-line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 17px;
+  color: var(--ink);
+  margin: 0;
+}
+.signoff-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .9rem;
+}
+
+.colophon {
+  width: var(--col-wide);
+  margin: 3rem auto 2.5rem;
+  padding-top: 1rem;
+}
+.colophon-rule {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-text {
+  padding: 1.2rem .25rem 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  line-height: 1.85;
+}
+.colophon-end {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1.6rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* ────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 720px) {
+  .memo-header { grid-template-columns: 64px 1fr; column-gap: .8rem; }
+  .p { grid-template-columns: 50px 1fr; column-gap: .75rem; }
+  .motion { margin-left: 50px; }
+  .p .n { font-size: 10px; }
+  .risk-line { grid-template-columns: 48px 1fr; }
+  .cal-row { grid-template-columns: 1fr; gap: .2rem; padding: .8rem .85rem; }
+  .cal-kind { text-align: left; }
+  .attach-row { grid-template-columns: 1fr; gap: .2rem; padding: .8rem .25rem; }
+  .attach-kind { text-align: left; }
+  .dg-head { flex-direction: column; gap: .2rem; }
+}
+
+@media (max-width: 480px) {
+  html, body { font-size: 15.5px; }
+  .section-h { font-size: 1.55rem; }
+  .mast-stamps .sep { display: inline; }
+}
+
+/* ────────────────────────────────────────── PRINT ── */
+
+@media print {
+  body { background: #fff; font-size: 10.5pt; }
+  body::before { display: none; }
+  :root {
+    --paper: #ffffff;
+    --paper-warm: #fafafa;
+    --paper-cool: #f3f3f3;
+    --paper-rule: #bbbbbb;
+    --paper-rule-2: #999999;
+    --ink: #000000;
+    --ink-2: #111111;
+    --ink-3: #333333;
+    --col: 6.5in;
+    --col-wide: 6.5in;
+  }
+  section { page-break-inside: avoid; padding: 1.4rem 0; }
+  .resolution, .motion, .decision-group, .fintable, .calendar { page-break-inside: avoid; }
+  .colophon { page-break-before: avoid; }
+  a { color: #000; border-bottom: none; }
+}
+
+/* ────────────────────────────────────────── FADE ── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, section, .signoff-block, .colophon {
+  animation: fade-up .5s ease-out both;
+}
+section:nth-of-type(1) { animation-delay: .05s; }
+section:nth-of-type(2) { animation-delay: .10s; }
+section:nth-of-type(3) { animation-delay: .15s; }
+section:nth-of-type(4) { animation-delay: .20s; }
+section:nth-of-type(5) { animation-delay: .25s; }
+section:nth-of-type(6) { animation-delay: .30s; }
+section:nth-of-type(7) { animation-delay: .35s; }
+section:nth-of-type(8) { animation-delay: .40s; }
+section:nth-of-type(9) { animation-delay: .45s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════
+     MASTHEAD
+     ════════════════════════════════════════════════════════════ -->
+<header class="masthead">
+  <div class="mast-stamps">
+    <span class="doc-id">STRATUM, INC.</span><span class="sep">·</span>BOARD MEMORANDUM<br />
+    DOCUMENT NO. <span class="doc-id">M-001</span><span class="sep">·</span><span class="draft">DRAFT FOR REVIEW</span><br />
+    DISTRIBUTED: 21 JUN 2026<span class="sep">·</span>MEETING: 24 JUN 2026
+  </div>
+
+  <div class="mast-rule-double"></div>
+
+  <dl class="memo-header">
+    <dt>To:</dt>
+    <dd>The Board of Directors&nbsp;·&nbsp;Stratum, Inc.</dd>
+
+    <dt>From:</dt>
+    <dd>Maya Chen, Co-founder &amp; CEO</dd>
+
+    <dt>Date:</dt>
+    <dd>21 June 2026 <em>(Sunday)</em></dd>
+
+    <dt>Re:</dt>
+    <dd>Six-week operating update; review of decisions 001–045; three matters for board consideration</dd>
+
+    <dt>CC:</dt>
+    <dd>P. Rao <em>(Co-founder, CCO)</em>; D. Okonkwo <em>(Co-founder, CTO)</em>; the Chairman</dd>
+  </dl>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════
+     § I — EXECUTIVE SUMMARY
+     ════════════════════════════════════════════════════════════ -->
+<section id="exec">
+  <div class="section-mark">§ I &nbsp;·&nbsp; Executive Summary</div>
+  <h2 class="section-h">Six weeks in, the company is on plan, with three exceptions.</h2>
+
+  <div class="p">
+    <div class="n">¶1.01</div>
+    <div class="t">
+      <strong>Operating state.</strong> Stratum has six employees on the cap table — four active (the three founders and Asha Pillai, who joined 02 June) and two who have accepted offers and not yet started (Tomás Iglesias, design, starts 23 June; Sofia Vargas, customer engineering, starts 30 June). Cash on hand is <strong>$7.13M</strong> against a $8.0M seed closed 12 May, yielding twenty months of runway at our current operating plan. We have signed five design partners against an internal target of five; we have shipped two of twelve planned connectors to alpha state; and we have zero production customers, which is consistent with the operating plan we shared at the founding round.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶1.02</div>
+    <div class="t">
+      <strong>Material variance from plan.</strong> Three items warrant the Board's attention before this body convenes on Wednesday. <em>First</em>, the connector roadmap is tracking nine days behind the alpha cadence committed in the founding plan; D. Okonkwo's view is that the slippage is recoverable inside the current quarter and does not threaten the Q4 design-partner go-live commitments. <em>Second</em>, the Halcyon Health partnership — our second-signed design partner and the one with the highest near-term revenue gravity — has downgraded from production-track to a sixty-day evaluation following an internal sponsor transition; this is documented in Briefing No. 003 and addressed at § V below. <em>Third</em>, monthly burn is running approximately $20K above plan, driven by a recruiter retainer initiated 19 May and an unbudgeted customer-engineering hire (S. Vargas) approved by the Chairman on 09 June under the case-by-case delegation; both variances are explained and contained.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶1.03</div>
+    <div class="t">
+      <strong>Asks of the Board.</strong> Three matters are submitted for resolution at the meeting on 24 June and are set out in full at <strong>§ VI</strong>: <em>(i)</em> authorization to enter a 90-day usage-based pricing pilot with one design partner; <em>(ii)</em> a $200K out-of-budget appropriation for a third-party security audit ahead of the Halcyon decision window; and <em>(iii)</em> approval of the Compensation Committee's first action — a 0.2% top-up grant to the founding designer in recognition of pre-start contributions. Three further items at <strong>§ VII</strong> are submitted for discussion without vote.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § II — DECISIONS LOG REVIEW
+     ════════════════════════════════════════════════════════════ -->
+<section id="decisions">
+  <div class="section-mark">§ II &nbsp;·&nbsp; Decisions Log Review &nbsp;·&nbsp; Nos. 001–045</div>
+  <h2 class="section-h">Forty-five decisions logged since 12 May; forty-one remain in force.</h2>
+
+  <div class="p">
+    <div class="n">¶2.01</div>
+    <div class="t">
+      The founders maintain a running decisions ledger as the system of record for every choice that meaningfully shapes the company. The ledger is reviewed at the weekly founders' standup and at every Chairman briefing. What follows is a structured summary of the forty-five decisions logged between <strong>12 May 2026</strong> (incorporation) and <strong>20 June 2026</strong> (the day before this memo). Decisions are grouped by domain; counts are exact; the full ledger is available to the Board in the operating dashboard at <code>/ops/decisions/</code>.
+    </div>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Capital decisions</span><span class="count">04 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-002.</strong> Incorporation as a Delaware C-corp; standard founder vesting; double-trigger acceleration.</li>
+      <li><strong>D-003.</strong> Seed round closed at $8.0M on a $34M pre-money; led by Index Ventures (Cannon); A. Bhusri angel at $250K.</li>
+      <li><strong>D-019.</strong> Pricing framework ratified: hybrid platform-plus-usage; no public list; design-partner contracts at zero-platform.</li>
+      <li><strong>D-038.</strong> Chairman-approved off-budget hire (S. Vargas, customer engineering) under case-by-case delegation; ratification proposed at § VII.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">People decisions</span><span class="count">07 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-008.</strong> Hire #1: Asha Pillai (ex-Snowflake data infrastructure); $235K base + 1.2%; start 02 Jun.</li>
+      <li><strong>D-026.</strong> Hire #2: Tomás Iglesias (ex-Linear principal designer); $215K base + 1.0%; start 23 Jun.</li>
+      <li><strong>D-039.</strong> Hire #3: Sofia Vargas (customer engineering lead, ex-Stripe solutions); $225K + 0.9%; start 30 Jun.</li>
+      <li><strong>D-042.</strong> Hire #4 offer extended: Kenji Watanabe (AI / agents engineer, ex-Anthropic applied); pending acceptance; target start 14 Jul.</li>
+      <li><strong>D-014, D-029, D-041.</strong> Three further candidates in active pipeline: a second platform engineer, a security engineer, and a head of partnerships.</li>
+      <li><strong>D-021.</strong> Compensation philosophy: percentile 75 cash, percentile 65 equity, against H1 2026 Carta + Pave seed-stage data.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Product &amp; architecture decisions</span><span class="count">12 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-005, D-006, D-007.</strong> Graph-first architecture as the core data substrate; Postgres + property-graph layer; identity resolution at ingestion.</li>
+      <li><strong>D-011.</strong> Correctness gate: no agent surface ships to a customer until the underlying graph passes a defined accuracy threshold (95% on entity resolution, 99% on payroll-grade facts).</li>
+      <li><strong>D-016, D-017.</strong> Connector framework v1 specification; the twelve-connector roadmap (Workday, BambooHR, Rippling, ADP, Gusto, Greenhouse, Lever, Okta, Carta, Sequoia One, NetSuite HRMS, Paylocity).</li>
+      <li><strong>D-024.</strong> Internal product rename: the agent surface is "<strong>Stratum / Console</strong>"; the underlying graph remains "Stratum".</li>
+      <li><strong>D-031.</strong> Schema v2 refactor scheduled for week of 13 Jul; one-week feature freeze on connectors during refactor.</li>
+      <li><strong>D-018, D-022, D-027, D-033.</strong> Four further product decisions: evals harness, observability stack (OTel), tenant isolation model, plugin API for design-partner extensions.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Customer decisions</span><span class="count">08 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-009.</strong> Design partner #1: a 1,900-employee fintech (NDA-bound; internal codename Lighthouse); fully signed.</li>
+      <li><strong>D-013.</strong> Design partner #2: Halcyon Health (4,400 EE); signed; now in 60-day evaluation (see § V).</li>
+      <li><strong>D-020.</strong> Design partner #3: a 2,300-employee professional-services firm; signed.</li>
+      <li><strong>D-028.</strong> Design partner #4: Northwind Studios (1,200 EE, creative agency, Brooklyn / Lisbon); signed via the Bhusri dinner.</li>
+      <li><strong>D-035.</strong> Design partner #5: Cordova (5,200 EE specialty manufacturer); signed via A. Whitfield; closed in 11 days, the fastest in the cohort.</li>
+      <li><strong>D-013-R.</strong> Halcyon downgrade — partnership re-papered from production-track to 60-day evaluation following the CHRO promotion to COO; remediation in flight.</li>
+      <li><strong>D-036.</strong> Design partner cohort cap held at five; no further partners signed before September.</li>
+      <li><strong>D-040.</strong> Design partner success metric defined: each partner must produce at least one externally citable artifact (case study, joint blog, or quote) by M9.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Compliance &amp; legal decisions</span><span class="count">05 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-015.</strong> SOC 2 Type II program engaged with Vanta; controls library configured 28 May; 47% implemented as of 20 Jun.</li>
+      <li><strong>D-023.</strong> ISO 27001 deferred to month sixteen (post-Series A); rationale: SOC 2 Type II + EU AI Act class is the prerequisite stack for the FY26 enterprise pipeline.</li>
+      <li><strong>D-030.</strong> EU AI Act self-classification in process; current working class is "limited risk" with documented derogations; counsel review with Wilson Sonsini scheduled 02 Jul.</li>
+      <li><strong>D-032.</strong> Data Processing Agreement template v1 ratified; standard SCCs annexed.</li>
+      <li><strong>D-043.</strong> Security incident response plan v1 drafted; tabletop exercise scheduled 17 Jul with Pillai as IC.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Pricing &amp; GTM decisions</span><span class="count">04 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-019.</strong> Hybrid pricing model ratified (see <em>Capital</em>).</li>
+      <li><strong>D-025.</strong> Usage-tier experiment authorized in principle; specific pilot terms submitted at <strong>Resolution 1</strong>.</li>
+      <li><strong>D-034.</strong> Public-facing pricing page deferred until M9; design partners are informed of model but not list.</li>
+      <li><strong>D-037.</strong> The Information profile (M. Chen feature) declined; rationale: premature category definition would compress optionality.</li>
+    </ul>
+  </div>
+
+  <div class="decision-group">
+    <div class="dg-head"><span class="label">Governance decisions</span><span class="count">05 items</span></div>
+    <ul class="dg-list">
+      <li><strong>D-001.</strong> Founder Compact ratified by the three founders on 11 May; six clauses; signed by all parties.</li>
+      <li><strong>D-004.</strong> Chairman cadence locked: bi-weekly briefings, quarterly board, monthly informal one-on-one with M. Chen.</li>
+      <li><strong>D-010.</strong> Sarah Cannon's Index board seat confirmed; independent seat reserved (target fill: M9–M12).</li>
+      <li><strong>D-012.</strong> Decisions ledger formalized as the load-bearing instrument for company memory; weekly review.</li>
+      <li><strong>D-044.</strong> Founder confidence pulse instituted — bi-weekly anonymous 1–7 score across nine dimensions; first reading on 14 Jun was 5.2 (range 4–6).</li>
+    </ul>
+  </div>
+
+  <div class="p">
+    <div class="n">¶2.02</div>
+    <div class="t">
+      <strong>Synthesis.</strong> Of the forty-five logged decisions, <strong>forty-one remain in force</strong>. Four have been reversed or materially modified: <em>(a)</em> <strong>D-013</strong> (Halcyon production-track) modified to evaluation-track per <strong>D-013-R</strong> in response to sponsor transition; <em>(b)</em> <strong>D-016</strong> (initial connector ordering — ADP first) reversed in favor of Workday-first after design-partner demand signal; <em>(c)</em> <strong>D-022</strong> (proprietary evals harness) modified to Inspect-based after engineering review; <em>(d)</em> <strong>D-029</strong> (head-of-partnerships role) deferred pending the Series A in favor of routing partnership work through P. Rao directly. We regard a ~9% modification rate over six weeks as healthy — high enough to suggest the ledger is being used as a thinking tool rather than a record, low enough to suggest the founding judgments are durable.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § III — FINANCIAL STATE
+     ════════════════════════════════════════════════════════════ -->
+<section id="financials">
+  <div class="section-mark">§ III &nbsp;·&nbsp; Financial State &nbsp;·&nbsp; Unaudited</div>
+  <h2 class="section-h">Twenty months of runway; an artificially elevated run-rate that normalizes by July.</h2>
+
+  <div class="p">
+    <div class="n">¶3.01</div>
+    <div class="t">
+      The figures below are unaudited management accounts as of close of business <strong>Friday, 19 June 2026</strong>. The live model — including the full T+12 headcount plan, vendor commitments, and the Series A sensitivity grid — is maintained at <a href="../financials/">/financials/</a> and is open to the Board.
+    </div>
+  </div>
+
+  <table class="fintable" role="table" aria-label="Financial summary as of 19 June 2026">
+    <tr class="em-row">
+      <td>Cash on hand <em>(21 Jun 2026)</em></td>
+      <td>$7,131,000</td>
+    </tr>
+    <tr>
+      <td>YTD burn <em>(since 12 May incorporation)</em></td>
+      <td>$869,000</td>
+    </tr>
+    <tr>
+      <td>6-week burn run-rate <em>(blended)</em></td>
+      <td>$145K / week</td>
+    </tr>
+    <tr>
+      <td>Annualized at blended rate</td>
+      <td>$610K / month</td>
+    </tr>
+    <tr>
+      <td>Trailing 2-week burn <em>(post-founding-costs)</em></td>
+      <td>$430K / month</td>
+    </tr>
+    <tr>
+      <td>Headcount cost run-rate at full T+12</td>
+      <td>$580K / month</td>
+    </tr>
+    <tr class="em-row">
+      <td>Projected cash at Series A target window <em>(Q2 2027)</em></td>
+      <td>$1.4M</td>
+    </tr>
+    <tr class="footnote">
+      <td colspan="2">
+        Run-rate is artificially elevated by founding costs (legal, vendor onboarding, equipment for three founders, $40K Vanta annualized prepay, $60K recruiter retainer). Trailing 2-week burn of $430K / month is the closer estimate of the company's steady-state cost structure; the gap closes by end-July. The $1.4M Q2 2027 projection is uncomfortable but not threatening — we expect to be in Series A conversations from Q1 2027 onward, and a $25M raise at the planned $120M pre-money would re-anchor runway at thirty-plus months.
+      </td>
+    </tr>
+  </table>
+
+  <div class="p">
+    <div class="n">¶3.02</div>
+    <div class="t">
+      <strong>Variance commentary.</strong> The $20K/mo overrun against the founding plan is composed of two items, both itemized in the ledger: (i) the recruiter retainer (<strong>D-014</strong>, $60K annual, $5K/mo equivalent), which was budgeted as a one-time per-hire spend in the founding model and reclassified to retainer to accelerate the Watanabe and security-engineer searches; and (ii) the Vargas hire (<strong>D-038</strong>), $15K/mo loaded cost from her 30 June start. P. Rao and the Chairman have reviewed both; neither requires Board ratification under the standing delegation but the latter is surfaced at § VII for confirmation.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶3.03</div>
+    <div class="t">
+      <strong>What we are watching.</strong> Three line items have the largest variance bandwidth in the next two quarters: <em>(i)</em> compute spend, currently $18K/mo and expected to triple as connectors come online and evals run continuously; <em>(ii)</em> the SOC 2 audit window in October, which carries a $40–60K external audit fee plus contingent remediation cost; and <em>(iii)</em> the security audit / pen-test proposed at <strong>Resolution 2</strong>, which would add an unbudgeted $200K one-time spend in Q3.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § IV — RISK REGISTER UPDATE
+     ════════════════════════════════════════════════════════════ -->
+<section id="risk">
+  <div class="section-mark">§ IV &nbsp;·&nbsp; Risk Register Update</div>
+  <h2 class="section-h">Eight risks carry forward; one downgrade, one new addition.</h2>
+
+  <div class="p">
+    <div class="n">¶4.01</div>
+    <div class="t">
+      The Board is referred to <strong>Briefing No. 001, § Risk</strong> (R1–R8) for the full register and its narrative; this memo updates only the entries that have moved since the founding briefing. The full register is reproduced in the operating dashboard at <a href="../ops/">/ops/risk/</a>.
+    </div>
+  </div>
+
+  <div class="risk-line">
+    <div class="rcode">R3 ↓</div>
+    <div class="rtext"><strong>Enterprise sales cycle drag.</strong> Downgraded from <span class="chip chip-md">Med</span>/<span class="chip chip-hi">High</span> to <span class="chip chip-md">Med</span>/<span class="chip chip-md">Med</span>. Rationale: the Bhusri-network compression of two of our five design partners (Northwind and Cordova) signed in &lt;14 days each suggests the network premium is materially larger than we underwrote at founding. We are not yet revising the FY26 booking plan on the basis of two data points, but the directional update is real.</div>
+  </div>
+
+  <div class="risk-line">
+    <div class="rcode">R10 ✦</div>
+    <div class="rtext"><strong>Partnership-label inflation. NEW.</strong> <span class="chip chip-md">Med</span>/<span class="chip chip-md">Med</span>. Owner: <strong>P. Rao</strong>. The Halcyon transition exposed a risk we under-weighted: when an early-stage company signs a logo whose sponsor is a known buyer, the partnership label compresses two distinct things — <em>(a)</em> the sponsor's personal interest, and <em>(b)</em> the buying organization's institutional commitment. The first does not survive an org change; the second does. Mitigation in flight: every new design partner must produce a multi-party stakeholder map (sponsor, economic buyer, operating owner, IT) before contract signature, with at least three signatures across that map. This is being added to the contracting checklist effective 22 June.</div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶4.02</div>
+    <div class="t">
+      <strong>Risks that remain unchanged but warrant Board attention.</strong> <strong>R1</strong> (correctness of the underlying graph at the payroll-grade threshold) and <strong>R2</strong> (model-vendor concentration on the agent stack) remain the two highest-severity items on the register; both are being actively engineered against and neither is the subject of a resolution in this memo. The Board may wish to discuss either at the meeting on 24 June.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § V — MATERIAL OPERATIONAL EVENTS
+     ════════════════════════════════════════════════════════════ -->
+<section id="events">
+  <div class="section-mark">§ V &nbsp;·&nbsp; Material Operational Events &nbsp;·&nbsp; Six-Week Window</div>
+  <h2 class="section-h">Five events meriting the Board's direct notice.</h2>
+
+  <div class="p">
+    <div class="n">¶5.01</div>
+    <div class="t">
+      <strong>Pillai onboarding.</strong> Asha Pillai joined as Hire #1 on <strong>02 June</strong>, eleven days after offer acceptance. Within thirty-six hours of receiving repo access she identified and resolved a latent schema bug in the entity-resolution module that the founders had logged but not prioritized; the fix has been merged and the test that catches the regression is in CI. She has since taken ownership of the connector framework and is leading the Workday alpha. We regard the first two weeks as <em>ahead of expectations</em>; the relevant signal is not the bug fix but the choice to surface it as a learning artifact rather than a credit-grab. Onboarding scorecard: 6.3 / 7.0.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶5.02</div>
+    <div class="t">
+      <strong>Halcyon sponsor transition and remediation.</strong> On <strong>02 June</strong>, Halcyon Health's CEO promoted the CHRO who sponsored our partnership (Deepa Marsh's predecessor) to Chief People &amp; Operations Officer, with the existing COO retiring 30 September. The HCM transformation project was, on the same day, reassigned to the inheriting COO, R. Marsh, who had not previously been read in. M. Chen flew to Phoenix on <strong>11 June</strong> and held a 90-minute transition meeting with Marsh on 12 June; the working outcome is a sixty-day evaluation period running through <strong>31 August</strong>, after which Halcyon either confirms production track or releases us from the design-partner contract. Remediation: S. Vargas's first thirty days as Customer Engineering lead (starting 30 June) are scoped entirely to Halcyon; M. Chen will fly to Phoenix monthly through August; the partnership has been re-papered.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶5.03</div>
+    <div class="t">
+      <strong>The Bhusri dinner.</strong> The dinner Aneel hosted at his home in Marin County on <strong>04 June</strong> produced two outcomes worth recording. <em>First</em>, an accelerated partnership: Annika Whitfield, CHRO at Cordova, arrived having read the brief, asked the three sharpest questions of the evening, and signed a design-partner contract eleven days later (<strong>D-035</strong>). <em>Second</em>, a journalist introduction (The Information, M. Chen profile feature) which we <em>declined</em> under <strong>D-037</strong>; the rationale is documented in Briefing No. 003 § 11 and turns on the cost of category-definition before the product exists. The dinner also produced four further conversations that have not yet converted and one that is unlikely to.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶5.04</div>
+    <div class="t">
+      <strong>Iglesias design week.</strong> Tomás Iglesias's accepted offer included an optional pre-start design sprint, which he elected to take from his apartment in Madrid over the week of <strong>16–20 June</strong>. Two artifacts came out of it that warrant Board notice: <em>(a)</em> a renaming of the agent surface — the product is now <strong>Stratum / Console</strong> internally, distinguishing the platform graph from the human-facing console, a distinction the founders had been groping toward for three weeks; and <em>(b)</em> a sixty-day design language for the console, including a token system, eleven core component patterns, and a content style guide. The grant top-up proposed at <strong>Resolution 3</strong> is, in part, in recognition of this contribution.
+    </div>
+  </div>
+
+  <div class="p">
+    <div class="n">¶5.05</div>
+    <div class="t">
+      <strong>Compliance progress.</strong> The SOC 2 Type II program is at <strong>47% control implementation</strong> as of 20 June, against a target of 60% by 01 August and audit-ready by 01 October. The Vanta-managed control library is current. The audit window with the elected firm (Schellman) opens in October; we expect a Type II report attestation in March 2027 (which is the earliest a Type II report can be issued, given the six-month observation period). EU AI Act self-classification is in counsel review at Wilson Sonsini, scheduled to close 02 July. No compliance-attributable contract holds in the design-partner pipeline as of this writing.
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § VI — MATTERS FOR BOARD RESOLUTION
+     ════════════════════════════════════════════════════════════ -->
+<section id="resolutions">
+  <div class="section-mark">§ VI &nbsp;·&nbsp; Matters for Board Resolution</div>
+  <h2 class="section-h">Three resolutions submitted for vote at the 24 June meeting.</h2>
+
+  <div class="p">
+    <div class="n">¶6.01</div>
+    <div class="t">
+      The following resolutions are submitted under the company's bylaws and the founding investor agreement. Each requires the affirmative vote of the Board members present. For each: a proposed motion in italic, a rationale, an expected impact, and a description of how a yes-or-no vote affects the operating model. The independent seat is unfilled; the two seated Board members are the CEO (M. Chen) and the Index designee (S. Cannon).
+    </div>
+  </div>
+
+  <!-- RESOLUTION 1 -->
+  <div class="resolution" id="r1">
+    <div class="res-head">
+      <span><span class="num">Resolution&nbsp;1</span><span class="sep">&nbsp;·&nbsp;</span>Usage-Based Pricing Pilot</span>
+      <span class="vote">Vote required</span>
+    </div>
+    <div class="res-body">
+      <h3 class="res-title">Authorization to enter a 90-day usage-based pricing pilot with one design partner.</h3>
+      <div class="res-motion">
+        <span class="marker">Proposed motion</span>
+        <em>Resolved, that the CEO is authorized to enter into a single, time-bound 90-day pricing pilot with one design partner of the Company's choosing under a usage-based fee structure with no platform floor, on the express understanding that the pilot is one-time, non-recurring, terminates automatically at 90 days, and that the data produced thereunder will inform the Company's pricing model v1 to be presented to the Board at its September meeting.</em>
+      </div>
+      <p class="res-detail">
+        <strong>Rationale.</strong> The hybrid pricing model ratified at <strong>D-019</strong> includes a usage component whose unit economics are unknown. A 90-day pilot — single-partner, no floor, automatic sunset — gives us a real-world signal at low contractual risk before we publish a pricing page in September. P. Rao recommends Cordova as the pilot partner: their CHRO (Whitfield) has indicated openness, the workload is well-instrumented, and the contract length aligns with our model-v1 timeline.
+      </p>
+      <p class="res-detail">
+        <strong>Expected impact.</strong> Zero revenue impact in the pilot window (design-partner contracts are at zero-platform regardless). Material learning impact on the September pricing-model presentation. Small contractual complexity (one bespoke amendment); P. Rao has the template drafted.
+      </p>
+      <p class="res-detail">
+        <strong>If approved:</strong> P. Rao proceeds with Cordova; pilot live by 15 July; readout at the September Board meeting. <strong>If declined:</strong> we present a pricing model v1 in September built entirely on internal modeling, with materially wider confidence intervals.
+      </p>
+      <dl class="res-meta">
+        <dt>Sponsor</dt>     <dd>P. Rao, CCO</dd>
+        <dt>Proposed by</dt> <dd>M. Chen, CEO</dd>
+        <dt>Ledger ref</dt>  <dd>D-025 (parent); pilot-specific decision to be logged at D-046 on approval</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- RESOLUTION 2 -->
+  <div class="resolution" id="r2">
+    <div class="res-head">
+      <span><span class="num">Resolution&nbsp;2</span><span class="sep">&nbsp;·&nbsp;</span>Out-of-Budget Security Audit</span>
+      <span class="vote">Vote required</span>
+    </div>
+    <div class="res-body">
+      <h3 class="res-title">Authorization for up to $200,000 in out-of-budget spend on a third-party security audit and penetration test ahead of the Halcyon decision window.</h3>
+      <div class="res-motion">
+        <span class="marker">Proposed motion</span>
+        <em>Resolved, that the CEO is authorized to expend up to two hundred thousand dollars ($200,000) outside the approved FY26 operating budget on a third-party security audit and external penetration test, to be commissioned from a firm selected at the CEO's discretion from a list of three reviewed by counsel, with the audit to be substantially complete prior to Halcyon Health's evaluation decision on 31 August 2026.</em>
+      </div>
+      <p class="res-detail">
+        <strong>Rationale.</strong> The Halcyon evaluation will, by Marsh's account, centrally turn on the security posture of a vendor handling employee data for 4,400 healthcare workers. SOC 2 Type II will not be attested until March 2027; we cannot accelerate it. A third-party penetration test plus a written security audit from a recognized firm (we are evaluating Bishop Fox, NCC Group, and Trail of Bits) is the next-best instrument. It also benefits the broader pipeline.
+      </p>
+      <p class="res-detail">
+        <strong>Expected impact.</strong> Cash impact: $200K one-time in Q3, against $7.13M cash on hand. Runway impact: approximately twenty days. Halcyon impact: not determinative but materially positive. Pipeline impact: the audit attestation can be referenced in every late-stage enterprise conversation through the SOC 2 Type II attestation in March 2027.
+      </p>
+      <p class="res-detail">
+        <strong>If approved:</strong> firm selection by 01 July; engagement starts 15 July; report by 25 August. <strong>If declined:</strong> we attempt to satisfy Halcyon's security requirement using internal documentation plus the SOC 2 Type I report (available August); we judge this materially less likely to clear the bar.
+      </p>
+      <dl class="res-meta">
+        <dt>Sponsor</dt>     <dd>D. Okonkwo, CTO</dd>
+        <dt>Proposed by</dt> <dd>M. Chen, CEO</dd>
+        <dt>Ledger ref</dt>  <dd>To be logged at D-047 on approval</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- RESOLUTION 3 -->
+  <div class="resolution" id="r3">
+    <div class="res-head">
+      <span><span class="num">Resolution&nbsp;3</span><span class="sep">&nbsp;·&nbsp;</span>Equity Top-Up — Founding Designer</span>
+      <span class="vote">Vote required</span>
+    </div>
+    <div class="res-body">
+      <h3 class="res-title">Approval of the Compensation Committee's first action: a 0.2% equity top-up grant to T. Iglesias, founding designer.</h3>
+      <div class="res-motion">
+        <span class="marker">Proposed motion</span>
+        <em>Resolved, that the Board approves a supplemental option grant of two-tenths of one percent (0.20%) of fully-diluted equity to Tomás Iglesias, employee no. 002, in recognition of pre-start contributions during the week of 16–20 June 2026, on the Company's standard four-year vesting with a one-year cliff, with the vesting clock to begin on his start date of 23 June 2026, bringing his total grant to 1.20%.</em>
+      </div>
+      <p class="res-detail">
+        <strong>Rationale.</strong> The Compensation Committee — which under the founding investor agreement consists of M. Chen and S. Cannon — convened informally on 19 June and recommends the grant. Two grounds: <em>(i)</em> the artifacts produced during design week (renaming and the design language) are durable and exceed what we would expect from a pre-start sprint; <em>(ii)</em> the grant brings Iglesias's total to 1.20%, which puts him at the same level as Pillai and is, in our judgment, the correct internal anchor for founding-team designers.
+      </p>
+      <p class="res-detail">
+        <strong>Expected impact.</strong> Dilution: 0.20% from the option pool, which currently has 9.4% available against an authorized 15% pool — non-material. Precedent: this is the first Compensation Committee action and will be cited going forward. M. Chen recommends explicitly noting in the minutes that this is a one-time pre-start recognition, not a recurring instrument.
+      </p>
+      <p class="res-detail">
+        <strong>If approved:</strong> grant papered and executed by 30 June. <strong>If declined:</strong> we believe Iglesias accepts the no with grace, but the signal — that an exceptional pre-start contribution does not produce a compensation response — is a signal we would rather not send.
+      </p>
+      <dl class="res-meta">
+        <dt>Sponsor</dt>     <dd>The Compensation Committee (M. Chen, S. Cannon)</dd>
+        <dt>Proposed by</dt> <dd>M. Chen, CEO</dd>
+        <dt>Ledger ref</dt>  <dd>To be logged at D-048 on approval</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § VII — DISCUSSION ITEMS
+     ════════════════════════════════════════════════════════════ -->
+<section id="discussion">
+  <div class="section-mark">§ VII &nbsp;·&nbsp; Items for Board Discussion &nbsp;·&nbsp; No Vote Required</div>
+  <h2 class="section-h">Three items raised for the Board's consideration and counsel.</h2>
+
+  <div class="p">
+    <div class="n">¶7.01</div>
+    <div class="t">
+      The following items are not submitted for resolution but the founders would value the Board's view on each before the next quarterly meeting.
+    </div>
+  </div>
+
+  <ol class="disc-list">
+    <li>
+      <strong>Ratification of the Founder Compact as a formal corporate document.</strong> The Compact is the founders' six-clause working agreement signed on 11 May; its provisions cover decision-rights, dispute escalation, equity rebalancing on departure, and the cadence of difficult conversations. It has functioned well for six weeks. The question for the Board: should the Compact be entered as a Board-acknowledged document, or remain a private founder instrument? S. Cannon's advice is specifically invited; her view, informally, has been that ratification adds weight without cost. M. Chen is open; D. Okonkwo and P. Rao are open with a preference for retaining the right to amend without Board approval.
+    </li>
+    <li>
+      <strong>S. Cannon's request to attend the M6 retrospective in person.</strong> The founders run a structured retrospective every six months (the first falls in November). Cannon has asked to attend in person. The founders are open. The question is whether the Board considers this a precedent that should be governed by an explicit policy (e.g. one investor observer per retro), or whether case-by-case judgment is sufficient.
+    </li>
+    <li>
+      <strong>The Chairman's role in approving non-budgeted hires.</strong> Under the case-by-case delegation in place since 11 May, the Chairman approved the Vargas hire (D-038) on 09 June, twenty-one days before her start date. The mechanism worked: it was fast, it was informed, and it would have been awkward to take to the full Board for a single hire. The question is whether to formalize this as a standing delegation (Chairman may approve off-budget hires up to a defined cash-impact ceiling, with Board ratification at the next meeting) or maintain ad-hoc judgment. M. Chen's view: a standing delegation with a $30K/mo cash-impact ceiling and ratification-at-next-meeting would be the cleanest formalization.
+    </li>
+  </ol>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § VIII — FORWARD CALENDAR
+     ════════════════════════════════════════════════════════════ -->
+<section id="calendar">
+  <div class="section-mark">§ VIII &nbsp;·&nbsp; Forward Calendar</div>
+  <h2 class="section-h">Dates the Board may wish to hold.</h2>
+
+  <div class="p">
+    <div class="n">¶8.01</div>
+    <div class="t">
+      The following dates are the load-bearing milestones for the company's next twelve months. The full live calendar is at <a href="../ops/">/ops/calendar/</a>.
+    </div>
+  </div>
+
+  <div class="calendar" role="table" aria-label="Forward calendar">
+    <div class="cal-row">
+      <div class="cal-when">24 JUN 2026</div>
+      <div class="cal-what">Board Meeting No. 1 — this meeting.</div>
+      <div class="cal-kind">Governance</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">05 JUL 2026</div>
+      <div class="cal-what">Briefing No. 005 to the Chairman.</div>
+      <div class="cal-kind">Cadence</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">31 AUG 2026</div>
+      <div class="cal-what">Halcyon Health 60-day evaluation decision.</div>
+      <div class="cal-kind">Customer</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">SEP 2026</div>
+      <div class="cal-what">Board Meeting No. 2 (date TBC; week of 14 Sep proposed).</div>
+      <div class="cal-kind">Governance</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">OCT 2026</div>
+      <div class="cal-what">Vanta SOC 2 Type II audit window opens; Schellman engagement.</div>
+      <div class="cal-kind">Compliance</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">Q1 2027</div>
+      <div class="cal-what">Series A conversations begin (not commitments).</div>
+      <div class="cal-kind">Capital</div>
+    </div>
+    <div class="cal-row">
+      <div class="cal-when">Q2 2027</div>
+      <div class="cal-what">Series A target close — $25M on $120M pre-money.</div>
+      <div class="cal-kind">Capital</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     § IX — ATTACHMENTS
+     ════════════════════════════════════════════════════════════ -->
+<section id="attachments">
+  <div class="section-mark">§ IX &nbsp;·&nbsp; Attachments &amp; References</div>
+  <h2 class="section-h">Documents incorporated by reference.</h2>
+
+  <div class="p">
+    <div class="n">¶9.01</div>
+    <div class="t">
+      The following documents are incorporated into this memorandum by reference and form part of the record submitted to the Board on 21 June 2026. Relative links are operative within the Stratum operating environment; printed-copy readers may request any document from the office of the CEO.
+    </div>
+  </div>
+
+  <div class="attach">
+    <div class="attach-row">
+      <div class="attach-id">A-001</div>
+      <div class="attach-title"><a href="../index.html">Chairman's Briefing No. 001 — The Founding</a></div>
+      <div class="attach-kind">Briefing</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-002</div>
+      <div class="attach-title"><a href="../briefings/002.html">Chairman's Briefing No. 002 — Hire #1</a></div>
+      <div class="attach-kind">Briefing</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-003</div>
+      <div class="attach-title"><a href="../briefings/003.html">Chairman's Briefing No. 003 — Halcyon / Bhusri Readout</a></div>
+      <div class="attach-kind">Briefing</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-004</div>
+      <div class="attach-title"><a href="../briefings/004.html">Chairman's Briefing No. 004 — Pre-Board (if circulated)</a></div>
+      <div class="attach-kind">Briefing</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-005</div>
+      <div class="attach-title"><a href="../financials/">Operating Model v1 — full T+12 plan and Series A sensitivities</a></div>
+      <div class="attach-kind">Financial</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-006</div>
+      <div class="attach-title"><a href="../intel/">Competitive Intelligence Dossier No. 001</a></div>
+      <div class="attach-kind">Strategy</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-007</div>
+      <div class="attach-title"><a href="../trust/">Compliance Trust Center — SOC 2 progress, EU AI Act classification</a></div>
+      <div class="attach-kind">Compliance</div>
+    </div>
+    <div class="attach-row">
+      <div class="attach-id">A-008</div>
+      <div class="attach-title"><a href="../ops/">Operating Dashboard — live; decisions, risks, calendar</a></div>
+      <div class="attach-kind">Operations</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════
+     SIGNOFF
+     ════════════════════════════════════════════════════════════ -->
+<div class="signoff-block">
+  <p class="signoff-line">Respectfully submitted, M. Chen&nbsp;·&nbsp;for the founders&nbsp;·&nbsp;Stratum, Inc.</p>
+  <div class="signoff-meta">21 June 2026 &nbsp;·&nbsp; San Francisco</div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     COLOPHON
+     ════════════════════════════════════════════════════════════ -->
+<footer class="colophon">
+  <div class="colophon-rule"></div>
+  <div class="colophon-text">
+    Document number <strong>M-001</strong>&nbsp;·&nbsp;v1.0 (draft for review)&nbsp;·&nbsp;Compiled by M. Chen&nbsp;·&nbsp;Reviewed for accuracy by P. Rao and D. Okonkwo&nbsp;·&nbsp;Distributed via secure email to Board and Chairman on 21 June 2026 at 18:00 PT.
+  </div>
+  <div class="colophon-end">End of Memorandum</div>
+</footer>
+
+</body>
+</html>
