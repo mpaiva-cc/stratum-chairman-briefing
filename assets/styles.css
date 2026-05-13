@@ -1012,6 +1012,94 @@ section {
 .chip-md { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
 .chip-lo { color: var(--lo); border-color: var(--lo); background: rgba(107,122,74,.06); }
 
+/* ────────────────────────────────────────────── ARTIFACTS ── */
+
+.artifact-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+}
+
+.artifact {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1.6rem 1.4rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  color: var(--ink);
+  text-decoration: none;
+  transition: transform .25s ease, border-color .25s ease, background .25s ease;
+  position: relative;
+}
+.artifact:hover {
+  transform: translateY(-2px);
+  border-top-color: var(--ochre);
+  background: var(--paper);
+}
+.artifact:hover .artifact-go { color: var(--ochre); }
+
+.artifact-head {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+.artifact-kind { color: var(--ochre); }
+.artifact-id   { color: var(--ink-3); white-space: nowrap; }
+
+.artifact-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+
+.artifact-blurb {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  flex: 1;
+}
+
+.artifact-go {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .75rem;
+  transition: color .2s;
+}
+
+/* Next-issue link in the masthead nav (highlighted) */
+.masthead-nav .next-issue {
+  color: var(--ochre);
+  font-weight: 700;
+}
+.masthead-nav .next-issue:hover { color: var(--ochre-deep); }
+.masthead-nav .next-issue:hover::after { background: var(--ochre-deep); }
+
+@media (max-width: 960px) {
+  .artifact-grid { grid-template-columns: 1fr; }
+}
+
 /* ─────────────────────────────────────────────────── OPEN ── */
 
 .open-list {

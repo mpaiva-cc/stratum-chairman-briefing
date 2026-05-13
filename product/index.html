@@ -1,0 +1,2500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — The CHRO's copilot. Built for the next ten years of work.</title>
+<meta name="description" content="Stratum is the AI-native human capital platform for the enterprise. Ask any question of your people data and get a defensible answer in thirty seconds." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai — public product landing
+   Cream paper + deep ink + ochre · with a moss secondary accent
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 9.2vw, 8.4rem);
+  line-height: .92;
+  letter-spacing: -.038em;
+  margin: 0 0 1.8rem;
+  color: var(--ink);
+  max-width: 18ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+.hero-h1 .nbr { white-space: nowrap; }
+
+.hero-sub {
+  font-family: var(--serif);
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  font-variation-settings: "opsz" 24;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.4rem;
+}
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .9rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  border: 1px solid var(--ink);
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.btn-primary .arr { color: var(--ochre); transition: color .2s; }
+.btn-primary:hover .arr { color: var(--ink); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+
+.hero-meta {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 3rem;
+  align-items: end;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 2rem;
+}
+
+.partners-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.2rem;
+}
+.partners-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 30;
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  letter-spacing: -.01em;
+  color: var(--ink-3);
+  opacity: .8;
+}
+.partners-row span { white-space: nowrap; }
+.partners-row .sep { color: var(--paper-rule-2); font-style: normal; }
+
+.video-card {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: background .2s;
+  max-width: 320px;
+}
+.video-card:hover { background: var(--paper-deep); }
+.video-thumb {
+  flex: 0 0 60px;
+  height: 60px;
+  background: var(--ink);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-thumb::after {
+  content: "";
+  width: 0; height: 0;
+  border-left: 12px solid var(--ochre);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  margin-left: 3px;
+}
+.video-meta-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .3rem;
+}
+.video-meta-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.05rem;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+/* ─────────────────────────────────────────── PROBLEM (DARK) ── */
+
+.problem {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6rem 0 6.5rem;
+  margin-top: 2rem;
+  position: relative;
+}
+.problem::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(184, 101, 31, 0.07), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(244, 236, 218, 0.04), transparent 50%);
+  pointer-events: none;
+}
+
+.problem-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  position: relative;
+}
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.problem-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  margin: 0 0 1.2rem;
+  color: var(--paper);
+  max-width: 22ch;
+}
+.problem-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre-soft);
+}
+
+.problem-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.2rem;
+  color: var(--ochre-soft);
+  max-width: 58ch;
+  margin: 0 0 4rem;
+  line-height: 1.45;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(244, 236, 218, .25);
+}
+
+.stat {
+  padding: 2.2rem 1.8rem 2rem;
+  border-right: 1px solid rgba(244, 236, 218, .12);
+  border-bottom: 1px solid rgba(244, 236, 218, .12);
+  position: relative;
+}
+.stat:last-child { border-right: 0; }
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.4rem;
+}
+
+.stat-number {
+  font-family: var(--display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(4.4rem, 9vw, 8rem);
+  line-height: .9;
+  letter-spacing: -.045em;
+  color: var(--paper);
+  font-feature-settings: "tnum", "lnum";
+  margin-bottom: 1.2rem;
+}
+.stat-number .unit {
+  font-size: .42em;
+  color: var(--ochre);
+  letter-spacing: -.02em;
+  margin-left: .15em;
+  font-weight: 400;
+}
+
+.stat-copy {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: rgba(244, 236, 218, .82);
+  max-width: 32ch;
+}
+.stat-copy strong { color: var(--paper); }
+
+.stat-source {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .45);
+  margin-top: 1.4rem;
+  padding-top: .9rem;
+  border-top: 1px dashed rgba(244, 236, 218, .15);
+}
+
+.problem-foot {
+  margin-top: 4rem;
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 50;
+  font-style: italic;
+  font-size: clamp(1.4rem, 2.4vw, 2.1rem);
+  line-height: 1.25;
+  color: var(--ochre-soft);
+  max-width: 36ch;
+}
+.problem-foot strong {
+  color: var(--paper);
+  font-style: normal;
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────── PRODUCT ── */
+
+.product {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 6.5rem 0 4rem;
+}
+
+.product-header {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: end;
+  margin-bottom: 4rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0;
+  color: var(--ink);
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+.section-h .moss { color: var(--moss); font-style: italic; font-variation-settings: "opsz" 96, "SOFT" 100; }
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 52ch;
+  margin: 0;
+}
+.section-dek em { font-style: italic; color: var(--ochre); }
+
+.pillars {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+}
+
+.pillar {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 3rem;
+  align-items: center;
+}
+.pillar.reverse {
+  grid-template-columns: 1.3fr 1fr;
+}
+.pillar.reverse .pillar-copy { order: 2; }
+.pillar.reverse .pillar-visual { order: 1; }
+
+.pillar-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.pillar-tag .num {
+  display: inline-block;
+  border: 1px solid var(--ochre);
+  padding: .15rem .45rem;
+  color: var(--ochre);
+}
+
+.pillar-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  margin: 0 0 1.1rem;
+  color: var(--ink);
+  max-width: 18ch;
+}
+.pillar-h em { font-style: italic; color: var(--ochre); font-variation-settings: "opsz" 72, "SOFT" 100; }
+
+.pillar-body {
+  font-family: var(--serif);
+  font-size: 1.07rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  max-width: 44ch;
+}
+
+.pillar-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.pillar-bullets li {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr;
+  gap: .7rem;
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.pillar-bullets li::before {
+  content: "→";
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ochre);
+  padding-top: 2px;
+}
+
+/* ─── Product UI mocks ─────────────────────────────────────── */
+
+.mock {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 var(--paper-rule),
+    0 14px 40px -22px rgba(14, 22, 38, .35),
+    0 30px 80px -50px rgba(14, 22, 38, .25);
+}
+
+.mock-chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .65rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.mock-chrome .left { display: flex; align-items: center; gap: .8rem; }
+.mock-chrome .dots { display: inline-flex; gap: .35rem; }
+.mock-chrome .dots i {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(244,236,218,.25);
+  display: inline-block;
+}
+.mock-chrome .dots i:first-child { background: var(--ochre); }
+.mock-chrome .path { color: var(--ochre-soft); letter-spacing: .08em; text-transform: none; font-size: 11px; }
+.mock-chrome .right { color: rgba(244,236,218,.6); font-size: 10px; }
+
+/* Pillar 1: People graph SVG */
+
+.mock-graph {
+  height: 460px;
+  padding: 0;
+}
+.mock-graph svg { display: block; width: 100%; height: 100%; }
+
+.graph-legend {
+  position: absolute;
+  left: 1.1rem;
+  bottom: 1.1rem;
+  background: rgba(244, 236, 218, .92);
+  border: 1px solid var(--paper-rule);
+  padding: .7rem .9rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .35rem .55rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.graph-legend i {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 2px;
+}
+.graph-stat {
+  position: absolute;
+  right: 1.1rem;
+  top: 3.6rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  text-align: right;
+  background: rgba(244, 236, 218, .85);
+  padding: .6rem .8rem;
+  border: 1px solid var(--paper-rule);
+}
+.graph-stat strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.45rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  margin-bottom: .15rem;
+}
+
+/* Pillar 2: Copilot chat */
+
+.mock-chat {
+  padding: 1.4rem 1.4rem 1.6rem;
+}
+
+.chat-q {
+  display: flex;
+  gap: .9rem;
+  margin-bottom: 1.3rem;
+  align-items: flex-start;
+}
+.chat-avatar {
+  flex: 0 0 28px;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--moss);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.chat-avatar.ai {
+  background: var(--ink);
+  color: var(--ochre);
+}
+.chat-bubble {
+  flex: 1;
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.chat-bubble .who {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: .35rem;
+}
+
+.chat-a {
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.answer-body {
+  flex: 1;
+}
+.answer-lede {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  line-height: 1.5;
+}
+.answer-lede strong { color: var(--ochre); font-weight: 600; }
+
+.answer-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  margin-bottom: 1rem;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper);
+}
+.answer-table th {
+  text-align: left;
+  font-weight: 500;
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .55rem .7rem;
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.answer-table th.r, .answer-table td.r { text-align: right; }
+.answer-table td {
+  padding: .55rem .7rem;
+  border-bottom: 1px solid var(--paper-rule);
+  color: var(--ink-2);
+  font-feature-settings: "tnum";
+}
+.answer-table tr:last-child td { border-bottom: 0; }
+.answer-table .risk-hi { color: var(--ochre-deep); font-weight: 700; }
+.answer-table .risk-md { color: var(--ochre); }
+.answer-table .risk-lo { color: var(--moss); }
+
+.answer-citations {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.citation {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  padding: .3rem .55rem;
+  background: var(--paper);
+  border: 1px solid var(--paper-rule-2);
+  color: var(--ink-3);
+}
+.citation::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--moss);
+}
+.citation.ochre::before { background: var(--ochre); }
+
+.chat-input {
+  margin-top: 1.4rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-3);
+}
+.chat-input .cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: var(--ochre);
+  animation: blink 1s steps(2) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+.chat-input .placeholder { color: var(--ink-mute); }
+.chat-input .kbd {
+  margin-left: auto;
+  font-size: 9.5px;
+  letter-spacing: .15em;
+  border: 1px solid var(--paper-rule);
+  padding: .2rem .45rem;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Pillar 3: Decision card */
+
+.mock-decision {
+  padding: 1.4rem 1.4rem 1.6rem;
+}
+
+.decision-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.decision-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .3rem;
+}
+.decision-id {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.decision-state {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .3rem .55rem;
+  border: 1px solid var(--moss);
+  color: var(--moss);
+  background: rgba(74, 93, 58, .06);
+}
+
+.decision-rec {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  padding: 1rem 1.1rem;
+  margin-bottom: 1.2rem;
+}
+.decision-rec .rec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .4rem;
+}
+.decision-rec .rec-body {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.decision-rec .rec-body strong { color: var(--ochre-deep); font-weight: 600; }
+
+.decision-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .9rem;
+  margin-bottom: 1.2rem;
+}
+.decision-cell {
+  border: 1px solid var(--paper-rule);
+  padding: .7rem .8rem;
+  background: var(--paper);
+}
+.decision-cell .label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .35rem;
+}
+.decision-cell .value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.25rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  font-feature-settings: "tnum";
+}
+.decision-cell .value .delta {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--moss);
+  margin-left: .35rem;
+}
+
+.audit {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: .9rem;
+}
+.audit-label {
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .55rem;
+}
+.audit-trail {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+.audit-trail .row {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: .8rem;
+  align-items: baseline;
+  font-size: 11px;
+  line-height: 1.4;
+}
+.audit-trail .ts { color: var(--ochre); letter-spacing: .04em; }
+.audit-trail .ev { color: var(--ink-2); font-family: var(--serif); font-size: 14px; }
+.audit-trail .ev strong { color: var(--ink); font-weight: 600; }
+
+.decision-actions {
+  display: flex;
+  gap: .6rem;
+  margin-top: 1.2rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.act-btn {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem .85rem;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+}
+.act-btn.primary { background: var(--ink); color: var(--paper); }
+.act-btn.primary .arr { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── SAFETY ── */
+
+.safety {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 7rem 0 6rem;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 4rem;
+  align-items: start;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.safety-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 1.2rem;
+}
+
+.safety-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 50;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin: 0;
+  color: var(--ink);
+  font-style: italic;
+}
+.safety-h .ink { color: var(--ink); font-style: normal; }
+
+.safety-body p {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-variation-settings: "opsz" 24;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  max-width: 52ch;
+}
+.safety-body p strong { color: var(--ink); }
+
+.compliance-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: 1.6rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.compliance-chip {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .4rem .7rem;
+  border: 1px solid var(--moss);
+  color: var(--moss);
+  background: rgba(74, 93, 58, .04);
+}
+
+/* ─────────────────────────────────────────── CUSTOMER STORY ── */
+
+.story {
+  background: var(--paper-deep);
+  padding: 6rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  position: relative;
+}
+
+.story-inner {
+  width: var(--col);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.story-attrib {
+  position: sticky;
+  top: 6rem;
+}
+
+.story-portrait {
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  background:
+    radial-gradient(ellipse at 28% 30%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(0,0,0,.35), transparent 60%),
+    #2a3a5a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.2rem;
+}
+.story-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.04) 0 1px, transparent 1px 3px);
+}
+.story-portrait .mark {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: 7rem;
+  color: var(--paper);
+  letter-spacing: -.04em;
+  line-height: 1;
+  opacity: .92;
+  position: relative;
+  z-index: 1;
+}
+
+.story-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.story-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: .9rem;
+}
+.story-co {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+  padding-top: .8rem;
+  border-top: 1px solid var(--paper-rule-2);
+  line-height: 1.5;
+}
+.story-co dl {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 1rem;
+  row-gap: .25rem;
+  margin: 0;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.story-co dt { color: var(--ink-3); }
+.story-co dd { margin: 0; color: var(--ink); }
+
+.story-quote {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 30;
+  font-size: clamp(1.6rem, 3.2vw, 2.55rem);
+  line-height: 1.18;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 2rem;
+  position: relative;
+}
+.story-quote .oq {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+  font-size: 1.4em;
+  line-height: 0;
+  display: inline-block;
+  vertical-align: -.18em;
+  margin-right: .08em;
+}
+.story-quote em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.story-context {
+  font-family: var(--serif);
+  font-size: 1.07rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 1.6rem;
+}
+
+.story-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin-top: 2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule-2);
+}
+.story-metric .v {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 2.3rem;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--ochre);
+  margin-bottom: .35rem;
+}
+.story-metric .v .unit {
+  font-size: .5em;
+  color: var(--ink-3);
+  margin-left: .15em;
+}
+.story-metric .l {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+
+/* ─────────────────────────────────────────── PRICING ── */
+
+.pricing {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 7rem 0 5rem;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.pricing-header .section-eyebrow {
+  justify-content: center;
+}
+.pricing-header .section-h {
+  margin: 0 auto;
+  max-width: 16ch;
+}
+
+.plans {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+  align-items: stretch;
+}
+
+.plan {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 2.2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.plan.featured {
+  border-top-color: var(--ochre);
+  background: var(--paper-deep);
+}
+.plan.featured::before {
+  content: "Most adopted";
+  position: absolute;
+  top: -3px;
+  right: 1.4rem;
+  transform: translateY(-50%);
+  background: var(--ochre);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .3rem .65rem;
+}
+
+.plan-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+}
+
+.plan-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: 2.1rem;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 .6rem;
+}
+.plan-name em { color: var(--ochre); font-style: italic; font-variation-settings: "opsz" 72, "SOFT" 100; }
+
+.plan-tagline {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+  margin: 0 0 1.6rem;
+  line-height: 1.4;
+  max-width: 36ch;
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.plan-price .amount {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--ink);
+}
+.plan-price .per {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.plan-feats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.8rem;
+  flex: 1;
+}
+.plan-feats li {
+  display: grid;
+  grid-template-columns: 1.4rem 1fr;
+  gap: .6rem;
+  padding: .65rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.plan-feats li::before {
+  content: "✓";
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--moss);
+  padding-top: 3px;
+  font-weight: 700;
+}
+.plan-feats li strong { color: var(--ink); font-weight: 600; }
+.plan-feats li.new::before { content: "+"; color: var(--ochre); }
+
+.plan-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .85rem 1.2rem;
+  text-align: center;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.plan-cta:hover { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+.plan.featured .plan-cta { background: var(--ink); color: var(--paper); }
+.plan.featured .plan-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.plan.featured .plan-cta .arr { color: var(--ochre); }
+.plan.featured .plan-cta:hover .arr { color: var(--ink); }
+
+.pricing-note {
+  margin-top: 2.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: center;
+  padding-top: 1.6rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+.pricing-note strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── TEAM ── */
+
+.team {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 7rem 0 5rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  gap: 1.6rem;
+  align-items: stretch;
+  margin-top: 3rem;
+}
+
+.team-lede {
+  padding-right: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.team-lede p {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+}
+.team-cta {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: .2rem;
+  align-self: flex-start;
+}
+.team-cta:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+.team-cta .arr { color: var(--ochre); font-family: var(--mono); font-size: 1rem; }
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-portrait {
+  --portrait-tone: var(--ink);
+  aspect-ratio: 4 / 5;
+  position: relative;
+  background:
+    radial-gradient(ellipse at 28% 30%, rgba(255,255,255,.14), transparent 55%),
+    radial-gradient(ellipse at 80% 90%, rgba(0,0,0,.35), transparent 60%),
+    var(--portrait-tone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.team-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, rgba(0,0,0,.04) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+.team-portrait .mark {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: 4.5rem;
+  color: var(--paper);
+  letter-spacing: -.04em;
+  line-height: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.team-role {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .3rem;
+}
+.team-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.25rem;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+  line-height: 1.1;
+}
+.team-bio {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────── CLOSING CTA ── */
+
+.closing {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 8rem 0 7rem;
+  text-align: center;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  position: relative;
+}
+
+.closing-h {
+  font-family: var(--display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 60;
+  font-style: italic;
+  font-size: clamp(2.6rem, 6.4vw, 5.6rem);
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin: 0 auto 2.4rem;
+  max-width: 18ch;
+}
+.closing-h .ochre { color: var(--ochre); }
+
+.closing-cta { margin-bottom: 1.6rem; }
+
+.closing-fine {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  max-width: 56ch;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+.closing-fine strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  align-items: start;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 96;
+  font-size: 3rem;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+  max-width: 32ch;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 1rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-3);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-mute);
+  border-bottom: 0;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-cta { padding: .5rem .75rem; }
+  .hero { padding-top: 3.5rem; padding-bottom: 3rem; }
+  .hero-meta { grid-template-columns: 1fr; gap: 2rem; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat { border-right: 0; }
+  .product-header { grid-template-columns: 1fr; gap: 1.4rem; align-items: start; }
+  .pillar, .pillar.reverse { grid-template-columns: 1fr; }
+  .pillar.reverse .pillar-copy { order: 1; }
+  .pillar.reverse .pillar-visual { order: 2; }
+  .safety { grid-template-columns: 1fr; gap: 2rem; padding-top: 4rem; padding-bottom: 4rem; }
+  .story-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .story-attrib { position: static; display: flex; gap: 1.5rem; align-items: center; }
+  .story-portrait { width: 140px; aspect-ratio: 1; flex: 0 0 140px; margin-bottom: 0; }
+  .plans { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .team-lede { grid-column: 1 / -1; padding-right: 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 600px) {
+  .hero-h1 { font-size: clamp(2.6rem, 11vw, 4rem); }
+  .partners-row { font-size: 1.05rem; gap: 1.2rem; }
+  .product-header { margin-bottom: 2.5rem; }
+  .decision-grid { grid-template-columns: 1fr; }
+  .story-metrics { grid-template-columns: 1fr; gap: 1rem; }
+  .team-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .mock-graph { height: 360px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero, .problem-inner, .product, .safety, .story-inner, .pricing, .team, .closing, .footer {
+  animation: fade-up .7s ease-out both;
+}
+.problem-inner { animation-delay: .05s; }
+
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="#product">Product</a>
+      <a href="#customer">Customers</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#team">Company</a>
+      <a href="#team">Careers</a>
+    </div>
+    <a href="#closing" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────────────────────────────── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>Stratum · Series Seed · Palo Alto · 2026</span>
+  </div>
+
+  <h1 class="hero-h1">
+    The CHRO's <em>copilot.</em>
+    Built for the next ten years of <span class="nbr">work.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Ask any question of your people data and get a defensible answer in thirty seconds —
+    with the chart, the cohort, and the regulation already cited.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="#closing" class="btn btn-primary">Request a private preview <span class="arr">→</span></a>
+    <a href="#product" class="btn btn-ghost">See the product</a>
+  </div>
+
+  <div class="hero-meta">
+    <div class="partners">
+      <div class="partners-label">Trusted by the design partners</div>
+      <div class="partners-row">
+        <span>Mercator</span>
+        <span class="sep">·</span>
+        <span>Halcyon Health</span>
+        <span class="sep">·</span>
+        <span>Tessera Bank</span>
+        <span class="sep">·</span>
+        <span>Northwind Studios</span>
+      </div>
+    </div>
+
+    <a href="#" class="video-card" aria-label="What is Stratum, ninety seconds">
+      <div class="video-thumb"></div>
+      <div>
+        <div class="video-meta-label">Watch · 90s</div>
+        <div class="video-meta-title">What is Stratum?</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────── PROBLEM ── -->
+<section class="problem">
+  <div class="problem-inner">
+    <div class="section-eyebrow">
+      <span class="bar"></span>
+      <span>The problem</span>
+    </div>
+    <h2 class="problem-h">
+      Your incumbent HCM was built for a <em>2008</em> org.
+    </h2>
+    <p class="problem-dek">
+      The org chart is no longer a tree. It is a graph of employees, contractors, agents,
+      and software. The systems we sold you to run it were built before any of that was true.
+      Three numbers say everything.
+    </p>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">CHRO time spent reconciling</div>
+        <div class="stat-number">70<span class="unit">%</span></div>
+        <div class="stat-copy">
+          of a CHRO's week spent reconciling reports she did not ask for, across
+          systems that <strong>were supposed to talk to each other.</strong>
+        </div>
+        <div class="stat-source">Stratum CHRO survey · n=147 · Q1 2026</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Median Workday implementation</div>
+        <div class="stat-number">18<span class="unit">mo</span></div>
+        <div class="stat-copy">
+          before a single board question can be answered out of the system you
+          just paid <strong>seven figures</strong> to install.
+        </div>
+        <div class="stat-source">Gartner peer reviews · 2024–2026 cohort</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Median NPS, incumbent HCM</div>
+        <div class="stat-number">11</div>
+        <div class="stat-copy">
+          across the four largest vendors. Your team does not hate the software
+          quietly. They hate it <strong>out loud, on Slack, every Tuesday.</strong>
+        </div>
+        <div class="stat-source">G2 / TrustRadius weighted blend · 2025</div>
+      </div>
+    </div>
+
+    <p class="problem-foot">
+      We are not selling a faster horse. We are selling the <strong>system of truth</strong>
+      that sits above the systems you already run.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────── PRODUCT ── -->
+<section id="product" class="product">
+
+  <div class="product-header">
+    <div>
+      <div class="section-eyebrow">
+        <span class="bar"></span>
+        <span>The product</span>
+      </div>
+      <h2 class="section-h">
+        One graph. One copilot. <em>Every</em> decision, with receipts.
+      </h2>
+    </div>
+    <p class="section-dek">
+      Stratum sits on top of the fifty HR, payroll, equity, performance, and engagement
+      systems an enterprise already runs. It reconciles them into a single people graph,
+      answers questions about that graph in plain English, and writes the decisions back —
+      with every step logged.
+    </p>
+  </div>
+
+  <div class="pillars">
+
+    <!-- ─── Pillar 1: People Graph ─────────────────────────── -->
+    <article class="pillar">
+      <div class="pillar-copy">
+        <div class="pillar-tag"><span class="num">01</span><span>Unified people graph</span></div>
+        <h3 class="pillar-h">Every person, contractor, and agent — in <em>one</em> coherent graph.</h3>
+        <p class="pillar-body">
+          Stratum reconciles identity across Workday, Greenhouse, Carta, Lattice, ADP, and twelve regional
+          payrolls. Skills, comp bands, managers, projects, and contracts are first-class edges. The graph
+          is the source of truth — your existing systems remain the source of record.
+        </p>
+        <ul class="pillar-bullets">
+          <li>Entity resolution across 50+ source systems out of the box</li>
+          <li>Change-data-capture pipelines, not nightly batches</li>
+          <li>Schema designed for contractors, agents, and software workers</li>
+          <li>Lineage on every cell — you can audit how any answer was assembled</li>
+        </ul>
+      </div>
+
+      <div class="pillar-visual">
+        <div class="mock mock-graph" aria-label="People graph mock">
+          <div class="mock-chrome">
+            <div class="left">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="path">stratum.ai / graph / engineering · emea</span>
+            </div>
+            <div class="right">live · 12 May 2026</div>
+          </div>
+
+          <svg viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Network diagram of the people graph">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#4b5365" />
+              </marker>
+              <marker id="arrow-o" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,0 L10,5 L0,10 z" fill="#b8651f" />
+              </marker>
+            </defs>
+
+            <!-- Background grid -->
+            <g opacity=".22">
+              <path d="M0 80 H600 M0 160 H600 M0 240 H600 M0 320 H600" stroke="#c8b894" stroke-width=".5" stroke-dasharray="2 4"/>
+              <path d="M80 0 V400 M200 0 V400 M320 0 V400 M440 0 V400 M520 0 V400" stroke="#c8b894" stroke-width=".5" stroke-dasharray="2 4"/>
+            </g>
+
+            <!-- Edges with labels -->
+            <g fill="none" stroke="#4b5365" stroke-width="1.2">
+              <!-- VP → Mgr 1, Mgr 2 -->
+              <path d="M300 80 Q220 130 170 180" marker-end="url(#arrow)"/>
+              <path d="M300 80 Q380 130 430 180" marker-end="url(#arrow)"/>
+              <!-- Mgr 1 → ICs -->
+              <path d="M170 200 Q120 250 90 300" marker-end="url(#arrow)"/>
+              <path d="M170 200 Q170 250 175 300" marker-end="url(#arrow)"/>
+              <path d="M170 200 Q230 250 260 300" marker-end="url(#arrow)"/>
+              <!-- Mgr 2 → ICs -->
+              <path d="M430 200 Q360 250 340 300" marker-end="url(#arrow)"/>
+              <path d="M430 200 Q430 250 425 300" marker-end="url(#arrow)"/>
+              <path d="M430 200 Q500 250 515 300" marker-end="url(#arrow-o)" stroke="#b8651f" stroke-dasharray="0"/>
+            </g>
+
+            <!-- Comp_band edges (dashed, secondary, moss) -->
+            <g fill="none" stroke="#4a5d3a" stroke-width="1" stroke-dasharray="4 4" opacity=".8">
+              <path d="M90 305 H175"/>
+              <path d="M260 305 H340"/>
+              <path d="M425 305 H515"/>
+            </g>
+
+            <!-- Edge labels -->
+            <g font-family="JetBrains Mono, monospace" font-size="9" fill="#6c7180" letter-spacing=".06em">
+              <text x="218" y="125">reports_to</text>
+              <text x="356" y="125">reports_to</text>
+              <text x="118" y="252">manages</text>
+              <text x="194" y="252">manages</text>
+              <text x="240" y="252">manages</text>
+              <text x="364" y="252">manages</text>
+              <text x="409" y="252">manages</text>
+              <text x="468" y="252">manages</text>
+              <text x="115" y="324" fill="#4a5d3a">comp_band</text>
+              <text x="278" y="324" fill="#4a5d3a">comp_band</text>
+              <text x="445" y="324" fill="#4a5d3a">comp_band</text>
+              <text x="492" y="195" fill="#b8651f">flight_risk: 0.71</text>
+            </g>
+
+            <!-- Nodes -->
+            <!-- VP -->
+            <g transform="translate(300 60)">
+              <rect x="-58" y="-18" width="116" height="36" fill="#0e1626" stroke="#0e1626" rx="0"/>
+              <text text-anchor="middle" y="-2" font-family="Fraunces, serif" font-size="13" font-weight="500" fill="#f4ecda">A. Voss</text>
+              <text text-anchor="middle" y="12" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#e6c79b" letter-spacing=".1em">VP ENG · EMEA</text>
+            </g>
+
+            <!-- Manager 1 -->
+            <g transform="translate(170 195)">
+              <rect x="-50" y="-16" width="100" height="32" fill="#f7f0e0" stroke="#0e1626" rx="0"/>
+              <text text-anchor="middle" y="-2" font-family="Fraunces, serif" font-size="12" fill="#0e1626">M. Lindqvist</text>
+              <text text-anchor="middle" y="10" font-family="JetBrains Mono, monospace" font-size="8" fill="#6c7180" letter-spacing=".08em">DIR · PLATFORM</text>
+            </g>
+            <!-- Manager 2 -->
+            <g transform="translate(430 195)">
+              <rect x="-50" y="-16" width="100" height="32" fill="#f7f0e0" stroke="#0e1626" rx="0"/>
+              <text text-anchor="middle" y="-2" font-family="Fraunces, serif" font-size="12" fill="#0e1626">R. Achterberg</text>
+              <text text-anchor="middle" y="10" font-family="JetBrains Mono, monospace" font-size="8" fill="#6c7180" letter-spacing=".08em">DIR · PRODUCT</text>
+            </g>
+
+            <!-- ICs row -->
+            <g font-family="Fraunces, serif" font-size="11" fill="#0e1626">
+              <g transform="translate(90 308)">
+                <circle r="14" fill="#f4ecda" stroke="#0e1626"/>
+                <text text-anchor="middle" y="3" font-size="10">JK</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4b5365" letter-spacing=".06em">SE2 · P40</text>
+              </g>
+              <g transform="translate(175 308)">
+                <circle r="14" fill="#f4ecda" stroke="#0e1626"/>
+                <text text-anchor="middle" y="3" font-size="10">DM</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4b5365" letter-spacing=".06em">SE3 · P55</text>
+              </g>
+              <g transform="translate(260 308)">
+                <circle r="14" fill="#f4ecda" stroke="#0e1626"/>
+                <text text-anchor="middle" y="3" font-size="10">TS</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4b5365" letter-spacing=".06em">SE2 · P38</text>
+              </g>
+              <g transform="translate(340 308)">
+                <!-- contractor: diamond -->
+                <path d="M0 -14 L14 0 L0 14 L-14 0 z" fill="#f4ecda" stroke="#0e1626" stroke-dasharray="2 2"/>
+                <text text-anchor="middle" y="3" font-size="10">EV</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4b5365" letter-spacing=".06em">CTR · 6mo</text>
+              </g>
+              <g transform="translate(425 308)">
+                <circle r="14" fill="#f4ecda" stroke="#0e1626"/>
+                <text text-anchor="middle" y="3" font-size="10">NO</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4b5365" letter-spacing=".06em">SE3 · P48</text>
+              </g>
+              <g transform="translate(515 308)">
+                <!-- agent: square -->
+                <rect x="-12" y="-12" width="24" height="24" fill="#fff" stroke="#b8651f" stroke-width="1.4"/>
+                <text text-anchor="middle" y="3" font-size="9" fill="#b8651f">α</text>
+                <text text-anchor="middle" y="32" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#b8651f" letter-spacing=".06em">AGENT</text>
+              </g>
+            </g>
+
+            <!-- Skills band (decorative) -->
+            <g opacity=".7">
+              <text x="40" y="370" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4a5d3a" letter-spacing=".1em">skills: rust, kafka</text>
+              <text x="200" y="370" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4a5d3a" letter-spacing=".1em">skills: react, ts</text>
+              <text x="370" y="370" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#4a5d3a" letter-spacing=".1em">skills: pricing</text>
+            </g>
+          </svg>
+
+          <div class="graph-stat">
+            <strong>3,412</strong>
+            nodes resolved · 12 sources
+          </div>
+          <div class="graph-legend">
+            <i style="background:#0e1626"></i><span>Employee</span>
+            <i style="background:#fff; border:1px dashed #0e1626"></i><span>Contractor</span>
+            <i style="background:#b8651f"></i><span>Agent</span>
+            <i style="background:#4a5d3a"></i><span>comp_band edge</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ─── Pillar 2: Copilot ─────────────────────────────── -->
+    <article class="pillar reverse">
+      <div class="pillar-copy">
+        <div class="pillar-tag"><span class="num">02</span><span>Copilot</span></div>
+        <h3 class="pillar-h">Ask a <em>question.</em> Get an answer, with citations.</h3>
+        <p class="pillar-body">
+          The copilot is grounded in your people graph and the regulations that govern it.
+          Every answer arrives with the cohort, the chart, the methodology, and a clickable
+          citation to the row in the underlying system. No hallucination. No glossing.
+        </p>
+        <ul class="pillar-bullets">
+          <li>Plain-English queries across comp, performance, headcount, attrition, DEI</li>
+          <li>250+ CHRO-graded canonical questions in the eval set</li>
+          <li>Refuses to answer when the graph is incomplete — and tells you what's missing</li>
+          <li>Guardrails for GDPR, EU AI Act, NYC AEDT, and SOX baked in</li>
+        </ul>
+      </div>
+
+      <div class="pillar-visual">
+        <div class="mock mock-chat" aria-label="Copilot chat mock">
+          <div class="mock-chrome" style="margin: -1.4rem -1.4rem 1.4rem">
+            <div class="left">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="path">stratum.ai / copilot</span>
+            </div>
+            <div class="right">session · 04:12</div>
+          </div>
+
+          <div class="chat-q">
+            <div class="chat-avatar">SW</div>
+            <div class="chat-bubble">
+              <span class="who">Sarah Whitfield · CHRO</span>
+              Who is at flight risk in EMEA engineering with comp below band P50?
+            </div>
+          </div>
+
+          <div class="chat-a">
+            <div class="chat-avatar ai">S</div>
+            <div class="answer-body">
+              <span class="who" style="font-family:var(--mono); font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:.4rem;">Stratum · answered in 4.2s</span>
+              <p class="answer-lede">
+                <strong>Seven engineers</strong> in EMEA match. Five report to M. Lindqvist
+                (Platform), two to R. Achterberg (Product). Median comp gap to P50 is
+                <strong>−14%</strong>; median tenure 2.8 yrs.
+              </p>
+              <table class="answer-table">
+                <thead>
+                  <tr><th>Engineer</th><th>Mgr</th><th>Band</th><th class="r">Comp Δ to P50</th><th class="r">Flight risk</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>J. Kovač</td><td>Lindqvist</td><td>P40</td><td class="r">−18%</td><td class="r risk-hi">0.81</td></tr>
+                  <tr><td>T. Søderberg</td><td>Lindqvist</td><td>P38</td><td class="r">−21%</td><td class="r risk-hi">0.74</td></tr>
+                  <tr><td>N. Oduya</td><td>Achterberg</td><td>P48</td><td class="r">−7%</td><td class="r risk-md">0.62</td></tr>
+                  <tr><td>D. Møller</td><td>Lindqvist</td><td>P42</td><td class="r">−12%</td><td class="r risk-md">0.58</td></tr>
+                  <tr><td>+ 3 more</td><td>—</td><td>—</td><td class="r">—</td><td class="r risk-lo">&lt;0.5</td></tr>
+                </tbody>
+              </table>
+              <div class="answer-citations">
+                <span class="citation">Source · People Graph · 14 May 2026</span>
+                <span class="citation ochre">Method · attrition_v3 · eval-graded 0.91</span>
+                <span class="citation">Cohort · 142 EMEA eng</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat-input">
+            <span class="cursor"></span>
+            <span class="placeholder">Ask a follow-up — e.g. "draft a retention plan for these seven"</span>
+            <span class="kbd">⏎ to send</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ─── Pillar 3: Decisions with receipts ──────────────── -->
+    <article class="pillar">
+      <div class="pillar-copy">
+        <div class="pillar-tag"><span class="num">03</span><span>Decisions, with receipts</span></div>
+        <h3 class="pillar-h">Recommend, review, write back. With an <em>audit trail</em> for every step.</h3>
+        <p class="pillar-body">
+          Stratum doesn't just surface the answer. It proposes the decision, routes it for
+          approval, writes it back to your system of record, and keeps a permanent ledger
+          — so when the regulator asks how the decision was made, you have the receipt.
+        </p>
+        <ul class="pillar-bullets">
+          <li>Compensation review, headcount planning, succession, comp adjustments</li>
+          <li>Write-back to Workday, ADP, Greenhouse, and Carta</li>
+          <li>Immutable audit log; export to your GRC tool of choice</li>
+          <li>Built for EU AI Act human-oversight requirements from day one</li>
+        </ul>
+      </div>
+
+      <div class="pillar-visual">
+        <div class="mock mock-decision" aria-label="Decision card mock">
+          <div class="mock-chrome" style="margin: -1.4rem -1.4rem 1.4rem">
+            <div class="left">
+              <span class="dots"><i></i><i></i><i></i></span>
+              <span class="path">stratum.ai / decisions / DEC-04812</span>
+            </div>
+            <div class="right">pending · CHRO review</div>
+          </div>
+
+          <div class="decision-header">
+            <div>
+              <h4 class="decision-title">Q2 compensation true-up · EMEA Engineering</h4>
+              <div class="decision-id">DEC-04812 · opened 12 May 2026, 14:08 PT</div>
+            </div>
+            <div class="decision-state">Awaiting · 1 of 2</div>
+          </div>
+
+          <div class="decision-rec">
+            <div class="rec-label">Stratum recommendation</div>
+            <div class="rec-body">
+              Adjust <strong>5 engineers</strong> by an average of <strong>+11.8%</strong> to bring them within
+              90% of band P50. Estimated cost <strong>$184K annualized</strong>. Expected attrition
+              avoided: <strong>2.1 FTE</strong> over 12 months.
+            </div>
+          </div>
+
+          <div class="decision-grid">
+            <div class="decision-cell">
+              <div class="label">Headcount affected</div>
+              <div class="value">5 <span class="delta">of 7</span></div>
+            </div>
+            <div class="decision-cell">
+              <div class="label">Annualized cost</div>
+              <div class="value">$184K</div>
+            </div>
+            <div class="decision-cell">
+              <div class="label">Pay-equity Δ</div>
+              <div class="value" style="color:var(--moss);">−1.4pp</div>
+            </div>
+          </div>
+
+          <div class="audit">
+            <div class="audit-label">Audit trail · 4 events</div>
+            <div class="audit-trail">
+              <div class="row"><span class="ts">14:08:11</span><span class="ev">Stratum agent <strong>flagged 7 engineers</strong> below P50 · model attrition_v3</span></div>
+              <div class="row"><span class="ts">14:08:33</span><span class="ev">Pulled comp bands from <strong>Workday · 12 May 06:00 UTC</strong></span></div>
+              <div class="row"><span class="ts">14:11:02</span><span class="ev">M. Chen approved cohort · <strong>scope reduced 7 → 5</strong></span></div>
+              <div class="row"><span class="ts">14:14:47</span><span class="ev">Routed to <strong>S. Whitfield · CHRO</strong> for sign-off</span></div>
+            </div>
+          </div>
+
+          <div class="decision-actions">
+            <button class="act-btn primary">Approve &amp; write back <span class="arr">→</span></button>
+            <button class="act-btn">Request changes</button>
+            <button class="act-btn">Decline</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── SAFETY ── -->
+<section class="safety">
+  <div>
+    <div class="safety-eyebrow">A line on safety</div>
+    <h2 class="safety-h">
+      Stratum is <span class="ink">born compliant.</span>
+    </h2>
+  </div>
+  <div class="safety-body">
+    <p>
+      We do not retrofit. <strong>SOC 2 Type II is in audit window.</strong> Our EU AI Act class
+      assessment is underway with external counsel. Customer data is never used to train base
+      models — your graph is yours.
+    </p>
+    <p>
+      Every answer the copilot returns is grounded in your data, with citations and a stable
+      hash. Every decision is logged, reversible, and exportable. The audit is not a feature —
+      it is the architecture.
+    </p>
+    <div class="compliance-row">
+      <span class="compliance-chip">SOC 2 Type II</span>
+      <span class="compliance-chip">ISO 27001</span>
+      <span class="compliance-chip">GDPR</span>
+      <span class="compliance-chip">EU AI Act</span>
+      <span class="compliance-chip">NYC AEDT</span>
+      <span class="compliance-chip">HIPAA-ready</span>
+      <span class="compliance-chip">SOX controls</span>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────── CUSTOMER STORY ── -->
+<section id="customer" class="story">
+  <div class="story-inner">
+
+    <div class="story-attrib">
+      <div class="story-portrait">
+        <span class="mark">SW</span>
+      </div>
+      <div>
+        <div class="story-name">Sarah Whitfield</div>
+        <div class="story-role">Chief People Officer</div>
+        <div class="story-co">
+          <dl>
+            <dt>Company</dt><dd>Tessera Bank</dd>
+            <dt>Sector</dt><dd>Financial services</dd>
+            <dt>Headcount</dt><dd>3,400 EE</dd>
+            <dt>Geography</dt><dd>US · UK · DE</dd>
+            <dt>Live since</dt><dd>Jan 2026 (design partner)</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="story-body">
+      <div class="section-eyebrow">
+        <span class="bar"></span>
+        <span>Customer · Design Partner</span>
+      </div>
+
+      <blockquote class="story-quote">
+        <span class="oq">“</span>Last Tuesday at 4&nbsp;p.m. our board chair texted me a question about pay
+        equity in our European subs. I had the answer, with the cohort and the methodology, in
+        <em>eleven minutes</em>. Before Stratum that question would have taken my team a week.”
+      </blockquote>
+
+      <p class="story-context">
+        Tessera Bank runs Workday, ADP Streamline across nine countries, Greenhouse, Carta, and
+        a Lattice instance acquired with a 2024 fintech tuck-in. The data is correct in each system.
+        It has never been correct together. Stratum's connectors ingested it, the people graph
+        reconciled it, and the copilot put it in front of Sarah without a deck.
+      </p>
+      <p class="story-context">
+        Tessera signed as a design partner in November 2025. They went live on the people graph
+        in week eight and answered their first board-level question in week ten. Six months in,
+        their CHRO office has dissolved the weekly "report reconciliation" meeting outright.
+      </p>
+
+      <div class="story-metrics">
+        <div class="story-metric">
+          <div class="v">11<span class="unit">min</span></div>
+          <div class="l">From board question to defensible answer with citations</div>
+        </div>
+        <div class="story-metric">
+          <div class="v">9<span class="unit">wk</span></div>
+          <div class="l">Time to first production-grade copilot answer</div>
+        </div>
+        <div class="story-metric">
+          <div class="v">−68<span class="unit">%</span></div>
+          <div class="l">CHRO office time spent on report reconciliation</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── PRICING ── -->
+<section id="pricing" class="pricing">
+
+  <div class="pricing-header">
+    <div class="section-eyebrow">
+      <span class="bar"></span>
+      <span>Pricing</span>
+      <span class="bar"></span>
+    </div>
+    <h2 class="section-h">Priced by the <em>value</em> supported.</h2>
+  </div>
+
+  <div class="plans">
+
+    <article class="plan">
+      <div class="plan-label">Plan · 01</div>
+      <h3 class="plan-name">Platform</h3>
+      <p class="plan-tagline">The people graph and the copilot. The system of truth, ready to question.</p>
+      <div class="plan-price">
+        <span class="amount">Contact us</span>
+        <span class="per">/ annual</span>
+      </div>
+      <ul class="plan-feats">
+        <li><strong>Unified people graph</strong> · entity resolution across your sources</li>
+        <li><strong>Six connectors included</strong> · Workday, ADP, Greenhouse, Carta, Lattice, Slack</li>
+        <li><strong>Copilot · core</strong> · 250-question eval set, citations, refusal model</li>
+        <li>Standard SSO · SAML · SCIM provisioning</li>
+        <li>Dedicated Slack channel with your customer engineer</li>
+        <li>SOC 2 reports, DPA, sub-processor list</li>
+      </ul>
+      <a href="#closing" class="plan-cta">Talk to us <span class="arr">→</span></a>
+    </article>
+
+    <article class="plan featured">
+      <div class="plan-label">Plan · 02</div>
+      <h3 class="plan-name">Platform <em>+ Decisions</em></h3>
+      <p class="plan-tagline">Everything in Platform, plus write-back workflows for the decisions that compound.</p>
+      <div class="plan-price">
+        <span class="amount">Contact us</span>
+        <span class="per">/ annual</span>
+      </div>
+      <ul class="plan-feats">
+        <li>Everything in <strong>Platform</strong></li>
+        <li class="new"><strong>Write-back workflows</strong> · approval routing, audit trail, reversal</li>
+        <li class="new"><strong>Compensation review</strong> · run a full cycle end-to-end</li>
+        <li class="new"><strong>Headcount &amp; succession planning</strong></li>
+        <li class="new">Unlimited connectors · custom source onboarding</li>
+        <li class="new">EU data residency · dedicated VPC option</li>
+        <li class="new">Named CSM &amp; quarterly executive business review</li>
+      </ul>
+      <a href="#closing" class="plan-cta">Request a private preview <span class="arr">→</span></a>
+    </article>
+
+  </div>
+
+  <div class="pricing-note">
+    We price by <strong>value supported,</strong> not by seat count. No per-employee-per-month line item.
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── TEAM ── -->
+<section id="team" class="team">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>The team</span>
+  </div>
+  <h2 class="section-h">Three founders. <em>One</em> compact. Four to twenty-two.</h2>
+
+  <div class="team-grid">
+
+    <div class="team-lede">
+      <p>
+        We are four people becoming twenty-two — engineers, designers, and operators who
+        have shipped systems that move billions and care for hundreds of thousands of employees.
+        We are hiring the people who will make the rest of this true.
+      </p>
+      <a href="#" class="team-cta">Careers <span class="arr">→</span></a>
+    </div>
+
+    <article class="team-card">
+      <div class="team-portrait" style="--portrait-tone:#2a3a5a">
+        <span class="mark">MC</span>
+      </div>
+      <div class="team-role">CEO · Co-founder</div>
+      <h3 class="team-name">Maya Chen</h3>
+      <p class="team-bio">Former VP Product, Workday Talent &amp; Performance. PM at Greenhouse before. Stanford Symbolic Systems.</p>
+    </article>
+
+    <article class="team-card">
+      <div class="team-portrait" style="--portrait-tone:#3a2a1a">
+        <span class="mark">DO</span>
+      </div>
+      <div class="team-role">CTO · Co-founder</div>
+      <h3 class="team-name">David Okonkwo</h3>
+      <p class="team-bio">Former Principal Engineer at Stripe Money Movement. Shipped systems moving $400B/yr. MS CS, Carnegie Mellon.</p>
+    </article>
+
+    <article class="team-card">
+      <div class="team-portrait" style="--portrait-tone:#4a2a3a">
+        <span class="mark">PR</span>
+      </div>
+      <div class="team-role">CCO · Co-founder</div>
+      <h3 class="team-name">Priya Rao</h3>
+      <p class="team-bio">Head of People Ops at Ramp through 1,800 EE. McKinsey Org practice before. Princeton, Wharton MBA.</p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── CLOSING CTA ── -->
+<section id="closing" class="closing">
+  <div class="section-eyebrow" style="justify-content:center;">
+    <span class="bar"></span>
+    <span>The wager</span>
+    <span class="bar"></span>
+  </div>
+  <h2 class="closing-h">
+    Selling <span class="ochre">Tuesday afternoons</span> back to your CHRO.
+  </h2>
+  <div class="closing-cta">
+    <a href="mailto:partners@stratum.ai" class="btn btn-primary">Request a private preview <span class="arr">→</span></a>
+  </div>
+  <p class="closing-fine">
+    Currently working with <strong>3 design partners.</strong> Two seats remain.
+    Generally available <strong>Q1 2027.</strong>
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#product">People graph</a></li>
+        <li><a href="#product">Copilot</a></li>
+        <li><a href="#product">Decisions</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="#team">About</a></li>
+        <li><a href="#team">Careers</a></li>
+        <li><a href="#customer">Customers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">Connector library</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="#">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+        <li><a href="#">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">Briefing No. 001 · published 12 May · <strong>The Chairman's Briefing →</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastY = -1;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      if ((y > 8) !== (lastY > 8)) {
+        nav.classList.toggle('is-scrolled', y > 8);
+      }
+      lastY = y;
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Smooth in-page anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var id = a.getAttribute('href');
+        if (!id || id === '#') return;
+        var el = document.querySelector(id);
+        if (!el) return;
+        e.preventDefault();
+        var top = el.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

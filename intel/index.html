@@ -1,0 +1,1932 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Intelligence — Competitive Dossier No. 001</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Competitive Intelligence Dossier No. 001
+   Aesthetic: Bridgewater research note × Bloomberg print-out
+   Cream paper · deep ink · ochre accent · mono-dense
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-cool:   #ede3c8;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 94vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 10% 14%, rgba(184,101,31,.05), transparent 40%),
+    radial-gradient(circle at 90% 88%, rgba(14,22,38,.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14,22,38,.012) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ──────────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 1.6rem 0 0;
+}
+
+.masthead-classified {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--hi);
+  text-align: center;
+  padding: .35rem 0;
+  border-top: 1px solid var(--hi);
+  border-bottom: 1px solid var(--hi);
+  margin-bottom: 1rem;
+  background: rgba(161,52,24,.04);
+}
+
+.masthead-rule { height: 1px; background: var(--ink); }
+.masthead-rule.double {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-meta { display: flex; gap: 1.4rem; }
+.masthead-nav { display: flex; gap: 1rem; }
+.masthead-nav a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-back { color: var(--ochre) !important; }
+
+.masthead-title {
+  text-align: center;
+  padding: 2rem 0 .8rem;
+}
+
+.title-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.2rem;
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.4rem, 8.6vw, 7.4rem);
+  line-height: .9;
+  letter-spacing: -.035em;
+  margin: 0;
+  color: var(--ink);
+}
+.wordmark .slash { color: var(--ochre); font-style: italic; font-weight: 400; padding: 0 .15em; }
+.wordmark .intel { font-weight: 400; font-style: italic; font-variation-settings: "opsz" 144; }
+
+.title-folio {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.title-folio .sep { color: var(--paper-rule-2); padding: 0 .55rem; }
+.title-folio .compiled { color: var(--ink); }
+
+/* ──────────────────────────────────────────────── SECTIONS ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 3.4rem 0 .6rem;
+}
+
+.ornament {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .7rem;
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+}
+.ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--paper-rule);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0 0 .5rem;
+  color: var(--ink);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1rem;
+  color: var(--ink-2);
+  max-width: 68ch;
+  margin: 0 0 1.8rem;
+}
+
+.sub-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  margin: 1.6rem 0 .5rem;
+  color: var(--ink);
+}
+
+.mono-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* ───────────────────────────────────────── EXEC SUMMARY ── */
+
+.exec-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 2.6rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+}
+
+.exec-conclusions { list-style: none; padding: 0; margin: 0; }
+.exec-conclusions li {
+  display: grid;
+  grid-template-columns: 2.6rem 1fr;
+  gap: .6rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.exec-conclusions li:first-child { padding-top: 0; }
+.exec-conclusions li:last-child { border-bottom: 0; }
+.exec-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.7rem;
+  color: var(--ochre);
+  line-height: 1;
+  padding-top: 2px;
+}
+.exec-body { font-family: var(--serif); font-size: 15.5px; line-height: 1.5; color: var(--ink); }
+.exec-body strong { font-weight: 600; }
+.exec-body .tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-right: .5rem;
+  vertical-align: 1px;
+}
+
+/* Threat clock */
+
+.threat-clock {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.2rem 1.2rem 1.4rem;
+}
+.threat-clock .mono-label { margin-bottom: .8rem; }
+.threat-clock svg { width: 100%; height: auto; display: block; }
+.tc-legend {
+  margin-top: .9rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  line-height: 1.7;
+}
+.tc-legend .tc-pos { color: var(--ochre); font-weight: 700; }
+.tc-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-top: .8rem;
+  padding-top: .7rem;
+  border-top: 1px solid var(--paper-rule);
+  line-height: 1.5;
+}
+
+/* ──────────────────────────────────────── SCORING MATRIX ── */
+
+.matrix-wrap {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  overflow-x: auto;
+}
+.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+.matrix thead th {
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: center;
+  padding: .85rem .5rem;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+  vertical-align: bottom;
+}
+.matrix thead th.left { text-align: left; padding-left: .8rem; }
+.matrix tbody td {
+  padding: .85rem .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+  text-align: center;
+  color: var(--ink);
+  vertical-align: middle;
+}
+.matrix tbody tr:last-child td { border-bottom: 0; }
+.matrix .firm {
+  text-align: left;
+  padding-left: .8rem;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 14.5px;
+  font-variation-settings: "opsz" 24;
+  letter-spacing: -.005em;
+  color: var(--ink);
+}
+.matrix .firm .firm-sub {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 2px;
+  font-weight: 400;
+}
+.dots { font-family: var(--mono); letter-spacing: .04em; color: var(--ink); }
+.dots .off { color: var(--paper-rule-2); }
+.moves {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .02em;
+  color: var(--ink-2);
+  max-width: 24ch;
+  line-height: 1.5;
+}
+.threat-bar {
+  position: relative;
+  height: 10px;
+  width: 100%;
+  background: var(--paper-rule);
+  margin: 0 auto;
+}
+.threat-bar .fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--ochre-deep);
+}
+.threat-cell { min-width: 130px; }
+.threat-cell .score {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ochre-deep);
+  margin-bottom: 4px;
+  letter-spacing: .04em;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────── TEARDOWN CARDS ── */
+
+.teardown {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2rem;
+  padding: 2rem 0 1.8rem;
+  border-top: 1px solid var(--ink);
+}
+.teardown:first-of-type { margin-top: 0; }
+
+.td-sidebar {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.td-firm {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.td-firm-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.td-stat {
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  padding: .35rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.td-stat .k { color: var(--ink-3); letter-spacing: .08em; }
+.td-stat .v { color: var(--ink); font-weight: 500; text-align: right; }
+
+.td-body { display: grid; gap: 1.1rem; }
+.td-desc {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+  max-width: 70ch;
+}
+
+.td-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem 2rem;
+}
+
+.td-block .mono-label {
+  margin-bottom: .5rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.td-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.td-list li {
+  padding: .25rem 0 .25rem 1.2rem;
+  position: relative;
+}
+.td-list li::before {
+  content: "▸";
+  position: absolute; left: 0;
+  color: var(--ochre);
+}
+.td-list.weak li::before { content: "▾"; color: var(--hi); }
+.td-list.strong li::before { content: "▴"; color: var(--ok); }
+
+.td-prose {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+  margin: 0;
+  max-width: 70ch;
+}
+
+.td-pricing {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ochre);
+  padding: .7rem .9rem;
+  line-height: 1.6;
+}
+.td-pricing .k { color: var(--ink-3); letter-spacing: .08em; padding-right: .6rem; }
+.td-pricing .v { color: var(--ink); }
+
+.td-quote {
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1rem 0 .9rem;
+  margin: .4rem 0 0;
+}
+.td-quote blockquote {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--ochre);
+}
+.td-quote blockquote::before { content: "“"; color: var(--ochre); }
+.td-quote blockquote::after { content: "”"; color: var(--ochre); }
+.td-attr {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .55rem;
+  padding-left: 1rem;
+}
+.td-analyst {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-top: .5rem;
+  padding-left: 1rem;
+}
+
+.td-versus {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1rem;
+}
+.td-versus .vs-block .mono-label { margin-bottom: .4rem; }
+.td-versus p {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+.td-versus .vs-win .mono-label { color: var(--hi); }
+.td-versus .vs-lose .mono-label { color: var(--ok); }
+
+/* Challenger card variant — compact */
+.teardown.compact { grid-template-columns: 200px 1fr; padding: 1.6rem 0 1.4rem; }
+.teardown.compact .td-firm { font-size: 1.6rem; }
+
+/* ─────────────────────────────────────── LEDGER FEED ── */
+
+.ledger {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-row {
+  display: grid;
+  grid-template-columns: 24px 110px 90px 1fr 90px;
+  gap: .9rem;
+  padding: .8rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head {
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper-warm);
+  padding: .65rem .25rem;
+  border-bottom: 1px solid var(--ink);
+}
+.ledger-row .lr-id { color: var(--ochre); }
+.ledger-row .lr-date { color: var(--ink-3); }
+.ledger-row .lr-tag {
+  display: inline-block;
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border: 1px solid;
+  border-radius: 2px;
+  line-height: 1.5;
+}
+.lr-tag.tag-mna { color: var(--plum); border-color: var(--plum); }
+.lr-tag.tag-prod { color: var(--ochre); border-color: var(--ochre); }
+.lr-tag.tag-cap { color: var(--moss); border-color: var(--moss); }
+.lr-tag.tag-reg { color: var(--hi); border-color: var(--hi); }
+.lr-tag.tag-eol { color: var(--ink-3); border-color: var(--ink-3); }
+.lr-tag.tag-exec { color: var(--ink); border-color: var(--ink); }
+.ledger-row .lr-what {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.ledger-row .lr-what strong { font-weight: 600; }
+.ledger-row .lr-impact {
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.lr-impact.impact-hi { color: var(--hi); }
+.lr-impact.impact-md { color: var(--ochre); }
+.lr-impact.impact-lo { color: var(--lo); }
+
+/* ─────────────────────────────────────── QUADRANT MAP ── */
+
+.quadrant-wrap {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+}
+.quadrant-frame {
+  position: relative;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.quadrant-frame svg { width: 100%; height: auto; display: block; }
+.quadrant-legend {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .8rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+.quadrant-legend .ql-item {
+  padding-left: 1.4rem;
+  position: relative;
+}
+.quadrant-legend .ql-item::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 4px;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+.ql-item.ql-incumbent::before { background: var(--ink); }
+.ql-item.ql-challenger::before { background: var(--ochre); }
+.ql-item.ql-reg::before { background: var(--hi); border-radius: 0; transform: rotate(45deg); }
+
+/* ───────────────────────────────────── PLAYBOOK ── */
+
+.playbook {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.5rem;
+  display: grid;
+  gap: 1.1rem;
+}
+.play {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr 7rem;
+  gap: 1.2rem;
+  padding: 1.2rem 1.2rem 1.2rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.play:last-child { border-bottom: 0; }
+.play-num {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 72;
+  font-size: 2.4rem;
+  color: var(--ochre);
+  line-height: 1;
+}
+.play-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+.play-body p {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 64ch;
+}
+.play-owner {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+  padding-top: .5rem;
+}
+.play-owner strong {
+  display: block;
+  font-size: 13px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  margin-top: 4px;
+}
+
+/* ─────────────────────────────── SOURCES ── */
+
+.sources-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+}
+.sources-list {
+  list-style: none;
+  padding: 0; margin: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.sources-list li {
+  display: grid;
+  grid-template-columns: 3.4rem 1fr;
+  gap: .6rem;
+  padding: .35rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.sources-list .n { color: var(--ochre); letter-spacing: .06em; }
+.sources-list .src-label { color: var(--ink-3); letter-spacing: .12em; text-transform: uppercase; font-size: 10.5px; padding-top: 3px; }
+.sources-list .src-body { color: var(--ink); }
+
+.disclaimer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.2rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.disclaimer .mono-label {
+  color: var(--ochre-soft);
+  margin-bottom: .55rem;
+}
+
+/* ─────────────────────────────────── FOOTER ── */
+
+.colophon {
+  width: var(--col);
+  margin: 3.4rem auto 2.4rem;
+  padding-top: 1rem;
+}
+.colophon-rule.double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.4rem 0 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.colo-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -.04em;
+}
+.colo-dot { color: var(--ochre); }
+.colo-meta { margin-top: .35rem; line-height: 1.6; }
+.colo-issue { text-align: right; line-height: 1.7; }
+.colo-tag {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1.8rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* ─────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1000px) {
+  .exec-grid { grid-template-columns: 1fr; }
+  .teardown, .teardown.compact { grid-template-columns: 1fr; gap: 1.2rem; }
+  .td-cols { grid-template-columns: 1fr; }
+  .td-versus { grid-template-columns: 1fr; }
+  .sources-grid { grid-template-columns: 1fr; }
+  .masthead-nav { display: none; }
+  .ledger-row { grid-template-columns: 22px 90px 1fr 90px; }
+  .ledger-row .lr-tag { display: none; }
+  .ledger-head > div:nth-child(3) { display: none; }
+  .play { grid-template-columns: 2.6rem 1fr; }
+  .play-owner { grid-column: 1 / -1; text-align: left; padding-top: .4rem; }
+  .quadrant-legend { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .matrix { font-size: 11px; }
+  .matrix tbody td { padding: .6rem .25rem; }
+}
+
+/* ─────────────────────────────────── ANIM ── */
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, section { animation: fade-up .5s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  body::before { display: none; }
+  .masthead-nav { display: none; }
+  section { page-break-inside: avoid; padding: 1.2rem 0; }
+  body { font-size: 10pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- ───────────────────────────────────────────────── MASTHEAD ── §01 -->
+<header class="masthead">
+  <div class="masthead-classified">Classified — Founders · Chairman · Board · Hand-circulate only</div>
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span>Compiled by P. Rao · 12 May 2026 · Palo Alto</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#summary">Summary</a>
+      <a href="#matrix">Subjects</a>
+      <a href="#incumbents">Incumbents</a>
+      <a href="#challengers">Challengers</a>
+      <a href="#movements">Movements</a>
+      <a href="#map">Threat map</a>
+      <a href="#playbook">Playbook</a>
+      <a href="#sources">Sources</a>
+      <a href="../index.html" class="masthead-back">← Chairman's Briefing</a>
+    </nav>
+  </div>
+
+  <div class="masthead-title">
+    <div class="title-eyebrow">Competitive Intelligence · Dossier No. 001</div>
+    <h1 class="wordmark">Stratum<span class="slash">/</span><span class="intel">Intelligence</span></h1>
+    <div class="title-folio">
+      <span class="compiled">Vol. I · Issue 001</span>
+      <span class="sep">·</span>
+      Classified — Founders, Chairman, Board
+      <span class="sep">·</span>
+      Subjects: Workday · SAP SuccessFactors · Oracle HCM · Rippling · Lattice
+    </div>
+  </div>
+  <div class="masthead-rule double"></div>
+</header>
+
+<!-- ───────────────────────────────────────────── EXEC SUMMARY ── §02 -->
+<section id="summary">
+  <div class="ornament">§ 02 · Executive summary</div>
+  <h2 class="section-h">Four conclusions, one clock</h2>
+  <p class="section-dek">
+    A dossier of five subjects, eleven CHRO discovery calls, four ex-incumbent
+    employee conversations, and ninety days of public moves. Reduced to four
+    conclusions and a clock face. Read the clock first.
+  </p>
+
+  <div class="exec-grid">
+    <ol class="exec-conclusions">
+      <li>
+        <span class="exec-num">i.</span>
+        <div class="exec-body">
+          <span class="tag">Workday</span>
+          <strong>Workday's AI strategy is real, but architecturally constrained.</strong>
+          “Illuminate” is a credible orchestration layer, but it sits on a 2008
+          object model that assumes the org is a tree. They will ship demos
+          before they ship the underlying graph rewrite. Our wedge widens for
+          ~18 months; after that, depends on whether Bhusri funds the rewrite.
+        </div>
+      </li>
+      <li>
+        <span class="exec-num">ii.</span>
+        <div class="exec-body">
+          <span class="tag">SAP SF</span>
+          <strong>SAP SuccessFactors is the slowest mover and the most vulnerable.</strong>
+          Joule for HR landed to a middling reception in April. SF's TCO
+          conversation is collapsing as buyers see Workday and challengers
+          eat both flanks. Three of our discovery calls were active SF
+          replacement evaluations. This is the displacement quarry of 2027.
+        </div>
+      </li>
+      <li>
+        <span class="exec-num">iii.</span>
+        <div class="exec-body">
+          <span class="tag">Rippling</span>
+          <strong>Rippling is the most aggressive on price and the fastest on product.</strong>
+          $200M extension at $13.5B in April. Their platform-fee tactic
+          ($8 PEPM all-in for mid-market deals we have seen) is intended to
+          starve our ICP of budget headroom. We do not match. We compete on
+          decisions-supported, not seats.
+        </div>
+      </li>
+      <li>
+        <span class="exec-num">iv.</span>
+        <div class="exec-body">
+          <span class="tag">Regulation</span>
+          <strong>The regulatory shock hits incumbents harder than us.</strong>
+          EU AI Act enforcement begins August; NYC AEDT extended in April.
+          Incumbents will spend the next four quarters retrofitting agent
+          surfaces that were never designed under those rules. We have the
+          rare luxury of being born compliant. Convert it into positioning,
+          not just engineering.
+        </div>
+      </li>
+    </ol>
+
+    <aside class="threat-clock">
+      <div class="mono-label">Threat clock · imminence rank</div>
+      <svg viewBox="0 0 280 280" aria-label="Threat clock — five competitors plotted on a 12-position clock by speed of threat">
+        <!-- outer rings -->
+        <circle cx="140" cy="140" r="118" fill="none" stroke="#d8cdb6" stroke-width="1"/>
+        <circle cx="140" cy="140" r="96" fill="none" stroke="#d8cdb6" stroke-width="1" stroke-dasharray="2 3"/>
+        <circle cx="140" cy="140" r="70" fill="none" stroke="#d8cdb6" stroke-width="1" stroke-dasharray="2 3"/>
+        <circle cx="140" cy="140" r="42" fill="none" stroke="#d8cdb6" stroke-width="1"/>
+
+        <!-- 12 ticks -->
+        <g stroke="#0e1626" stroke-width="1">
+          <line x1="140" y1="18"  x2="140" y2="28"/>
+          <line x1="217" y1="55"  x2="211" y2="63"/>
+          <line x1="262" y1="140" x2="252" y2="140"/>
+          <line x1="217" y1="225" x2="211" y2="217"/>
+          <line x1="140" y1="262" x2="140" y2="252"/>
+          <line x1="63"  y1="225" x2="69"  y2="217"/>
+          <line x1="18"  y1="140" x2="28"  y2="140"/>
+          <line x1="63"  y1="55"  x2="69"  y2="63"/>
+        </g>
+
+        <!-- 12 position labels -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" letter-spacing="1">
+          <text x="140" y="14" text-anchor="middle">12 · IMMINENT</text>
+          <text x="270" y="143" text-anchor="end">3</text>
+          <text x="140" y="276" text-anchor="middle">6 · DISTANT</text>
+          <text x="10" y="143" text-anchor="start">9</text>
+        </g>
+
+        <!-- inner labels -->
+        <text x="140" y="138" text-anchor="middle" font-family="Fraunces" font-size="11" font-style="italic" fill="#4b5365">speed of</text>
+        <text x="140" y="152" text-anchor="middle" font-family="Fraunces" font-size="11" font-style="italic" fill="#4b5365">threat</text>
+
+        <!-- competitor markers. 12 = top (0deg from N), going clockwise. -->
+        <!-- Workday at ~1 o'clock (30deg), r=96. cx=140 + 96*sin(30)=188, cy=140 - 96*cos(30)=57 -->
+        <g>
+          <circle cx="188" cy="57" r="6" fill="#0e1626"/>
+          <line x1="188" y1="57" x2="206" y2="42" stroke="#0e1626" stroke-width=".75"/>
+          <text x="208" y="40" font-family="JetBrains Mono" font-size="10" fill="#0e1626" font-weight="700">WORKDAY</text>
+          <text x="208" y="52" font-family="JetBrains Mono" font-size="9" fill="#4b5365">~1 o'clock</text>
+        </g>
+        <!-- Rippling at ~2 o'clock (60deg), r=96. cx=140+96*sin(60)=223, cy=140-96*cos(60)=92 -->
+        <g>
+          <circle cx="223" cy="92" r="6" fill="#b8651f"/>
+          <line x1="223" y1="92" x2="245" y2="78" stroke="#b8651f" stroke-width=".75"/>
+          <text x="247" y="76" font-family="JetBrains Mono" font-size="10" fill="#b8651f" font-weight="700">RIPPLING</text>
+          <text x="247" y="88" font-family="JetBrains Mono" font-size="9" fill="#4b5365">~2 o'clock</text>
+        </g>
+        <!-- Oracle at ~4 o'clock (120deg), r=70. cx=140+70*sin(120)=200, cy=140-70*cos(120)=175 -->
+        <g>
+          <circle cx="200" cy="175" r="6" fill="#0e1626"/>
+          <line x1="200" y1="175" x2="222" y2="200" stroke="#0e1626" stroke-width=".75"/>
+          <text x="224" y="204" font-family="JetBrains Mono" font-size="10" fill="#0e1626" font-weight="700">ORACLE</text>
+          <text x="224" y="216" font-family="JetBrains Mono" font-size="9" fill="#4b5365">~4 o'clock</text>
+        </g>
+        <!-- SAP at ~7 o'clock (210deg), r=42. cx=140+42*sin(210)=119, cy=140-42*cos(210)=176 -->
+        <g>
+          <circle cx="119" cy="176" r="6" fill="#0e1626"/>
+          <line x1="119" y1="176" x2="80" y2="208" stroke="#0e1626" stroke-width=".75"/>
+          <text x="20" y="212" font-family="JetBrains Mono" font-size="10" fill="#0e1626" font-weight="700">SAP SF</text>
+          <text x="20" y="224" font-family="JetBrains Mono" font-size="9" fill="#4b5365">~7 o'clock</text>
+        </g>
+        <!-- Lattice at ~11 o'clock (330deg), r=96. cx=140+96*sin(330)=92, cy=140-96*cos(330)=57 -->
+        <g>
+          <circle cx="92" cy="57" r="6" fill="#b8651f"/>
+          <line x1="92" y1="57" x2="64" y2="42" stroke="#b8651f" stroke-width=".75"/>
+          <text x="62" y="40" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#b8651f" font-weight="700">LATTICE</text>
+          <text x="62" y="52" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#4b5365">~11 o'clock</text>
+        </g>
+
+        <!-- center dot = Stratum -->
+        <circle cx="140" cy="140" r="3" fill="#b8651f"/>
+      </svg>
+
+      <div class="tc-legend">
+        <span class="tc-pos">12</span> imminent · <span class="tc-pos">3</span> near · <span class="tc-pos">6</span> distant · <span class="tc-pos">9</span> dormant
+      </div>
+      <div class="tc-foot">
+        Centre = Stratum. Distance from centre × clock position = imminence
+        of the competitive threat at current trajectory. Re-cast quarterly.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────── SCORING MATRIX ── §03 -->
+<section id="matrix">
+  <div class="ornament">§ 03 · The five subjects</div>
+  <h2 class="section-h">Scoring matrix</h2>
+  <p class="section-dek">
+    Seven dimensions, five subjects, scored on a five-dot scale by Maya and
+    Priya independently, reconciled 10 May 2026. Methodology in §10.
+  </p>
+
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead>
+        <tr>
+          <th class="left">Subject</th>
+          <th>Architecture</th>
+          <th>AI-readiness</th>
+          <th>Enterprise depth</th>
+          <th>Pricing flexibility</th>
+          <th>Compliance posture</th>
+          <th>Recent moves</th>
+          <th class="threat-cell">Threat to Stratum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="firm">Workday <span class="firm-sub">NASDAQ : WDAY · $61B mkt cap</span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          <td><span class="dots">●●●●●</span></td>
+          <td><span class="dots">●<span class="off">●●●●</span></span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td class="moves">Illuminate · Aug '25 GA · 4 prod modules; Illuminate Labs acq.</td>
+          <td>
+            <span class="score">HIGH · 82%</span>
+            <div class="threat-bar"><div class="fill" style="width:82%"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="firm">SAP SuccessFactors <span class="firm-sub">DE : SAP · part of $250B parent</span></td>
+          <td><span class="dots">●<span class="off">●●●●</span></span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●●●</span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td class="moves">Joule for HR · beta Apr '26 · middling reception.</td>
+          <td>
+            <span class="score">MED · 48%</span>
+            <div class="threat-bar"><div class="fill" style="width:48%"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="firm">Oracle HCM <span class="firm-sub">NYSE : ORCL · $384B mkt cap</span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          <td class="moves">Quiet Taleo EOL · OCI HR Assistant beta · still selling Fusion.</td>
+          <td>
+            <span class="score">MED · 54%</span>
+            <div class="threat-bar"><div class="fill" style="width:54%"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="firm">Rippling <span class="firm-sub">Pvt · $13.5B last round</span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●●●</span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td class="moves">$200M extension · platform-fee strategy · moving up-market.</td>
+          <td>
+            <span class="score">HIGH · 74%</span>
+            <div class="threat-bar"><div class="fill" style="width:74%"></div></div>
+          </td>
+        </tr>
+        <tr>
+          <td class="firm">Lattice <span class="firm-sub">Pvt · last priced $3.0B</span></td>
+          <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td><span class="dots">●●●●<span class="off">●</span></span></td>
+          <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          <td class="moves">Pulse.io acq. · AI-HRIS bet · perf module retrenchment.</td>
+          <td>
+            <span class="score">LOW · 36%</span>
+            <div class="threat-bar"><div class="fill" style="width:36%"></div></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────── INCUMBENT TEARDOWNS ── §04 -->
+<section id="incumbents">
+  <div class="ornament">§ 04 · Incumbent teardowns</div>
+  <h2 class="section-h">The three system-of-record incumbents</h2>
+  <p class="section-dek">
+    Workday, SAP SuccessFactors, Oracle HCM. Collectively, they hold ~71%
+    of the enterprise HCM seat license at the 1,000–8,000 EE band. Reading
+    them in that order is reading them by threat density.
+  </p>
+
+  <!-- WORKDAY -->
+  <article class="teardown">
+    <aside class="td-sidebar">
+      <h3 class="td-firm">Workday</h3>
+      <div class="td-firm-sub">Incumbent · System of record</div>
+      <div class="td-stat"><span class="k">Founded</span><span class="v">2005</span></div>
+      <div class="td-stat"><span class="k">Ticker</span><span class="v">NASDAQ : WDAY</span></div>
+      <div class="td-stat"><span class="k">Mkt cap</span><span class="v">$61B</span></div>
+      <div class="td-stat"><span class="k">FY25 rev</span><span class="v">$8.45B</span></div>
+      <div class="td-stat"><span class="k">HCM rev</span><span class="v">~$5.8B</span></div>
+      <div class="td-stat"><span class="k">Customers</span><span class="v">10,500+</span></div>
+      <div class="td-stat"><span class="k">Median NPS</span><span class="v">18 (paraphrased)</span></div>
+      <div class="td-stat"><span class="k">Implementation</span><span class="v">14–22 months</span></div>
+      <div class="td-stat"><span class="k">Threat to us</span><span class="v" style="color:var(--hi)">HIGH · 82%</span></div>
+    </aside>
+
+    <div class="td-body">
+      <p class="td-desc">
+        Workday is the unambiguous category leader at 3,000+ EE and the
+        instrument that defines how the buyer thinks about HCM. Its current
+        AI bet, <em>Illuminate</em>, is a credible orchestration layer welded
+        onto an object model designed in 2008 — the most important
+        sentence in this dossier.
+      </p>
+
+      <div class="td-cols">
+        <div class="td-block">
+          <div class="mono-label">Strengths</div>
+          <ul class="td-list strong">
+            <li>Trust at the F500. Six-figure spend gets approved without a fight.</li>
+            <li>Deep workflows: comp planning, talent reviews, calibration, succession.</li>
+            <li>Bhusri's discipline — patient capital, long product cycles, founder still in seat.</li>
+          </ul>
+        </div>
+        <div class="td-block">
+          <div class="mono-label">Weaknesses</div>
+          <ul class="td-list weak">
+            <li>Tree-shaped data model. Org-as-graph is a costly rewrite they cannot pause to do.</li>
+            <li>NPS at 18. Customers stay because switching costs are punitive, not because they love it.</li>
+            <li>Implementation partner ecosystem is a tax — Deloitte, Accenture earn ~2× WDAY's license.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">AI strategy reading · "Illuminate"</div>
+        <p class="td-prose">
+          Illuminate is a competent orchestration product layered above the
+          Workday object graph: a routing agent, a small library of skills
+          (recruiting screen, comp recommendation, anomaly flag), and an
+          evaluator stack borrowed from their acquihire of HiredScore. It
+          ships demos quickly because the object model is rich. It ships
+          <em>capabilities</em> slowly because the object model assumes the
+          org is a tree, not a graph; agents reasoning across modules pay a
+          translation tax on every hop. The internal joke at WDAY engineering,
+          per two ex-employees, is that Illuminate is “a Ferrari engine in a
+          1970 chassis.” Their canonical path forward is to fund the chassis
+          rewrite next year. The market may not give them that year.
+        </p>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">Pricing intel</div>
+        <div class="td-pricing">
+          <span class="k">List ACV (5,000 EE)</span><span class="v">$540K – $820K base · $260K – $410K services y1</span><br>
+          <span class="k">Effective PEPM</span><span class="v">$9 – $14 blended (HCM + Recruiting + Talent)</span><br>
+          <span class="k">Illuminate add-on</span><span class="v">~+$3 PEPM at GA; bundled in F500 renewals through FY26</span><br>
+          <span class="k">Term</span><span class="v">3-year standard; 2-year possible at +18% list</span><br>
+          <span class="k">Discounting</span><span class="v">15–28% off list at signature; 5–9% on renewal · hardening since Q1</span>
+        </div>
+      </div>
+
+      <div class="td-quote">
+        <blockquote>
+          The Illuminate demo is genuinely beautiful. Then you ask it a
+          cross-module question — comp by attrition risk by manager tenure —
+          and it says it needs the data team to wire a new report. So we
+          are back to Friday-afternoon SQL again, just with a chatbot in
+          the front yard.
+        </blockquote>
+        <div class="td-attr">— CHRO · 4,800 EE healthcare network · 02 May 2026</div>
+        <div class="td-analyst">
+          <strong>Analyst note (PR):</strong> the cross-module question is
+          our wedge. The graph is the answer to it.
+        </div>
+      </div>
+
+      <div class="td-versus">
+        <div class="vs-block vs-win">
+          <div class="mono-label">Where they win against us</div>
+          <p>F500 procurement comfort, payroll-of-record at scale, fully wired implementation partner muscle. We will not beat WDAY on a payroll-anchored bake-off in 2027.</p>
+        </div>
+        <div class="vs-block vs-lose">
+          <div class="mono-label">Where we win against them</div>
+          <p>Any question that crosses three systems and needs an answer this week. Speed-to-insight is a category they cannot retrofit without rebuilding the chassis.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- SAP SF -->
+  <article class="teardown">
+    <aside class="td-sidebar">
+      <h3 class="td-firm">SAP SuccessFactors</h3>
+      <div class="td-firm-sub">Incumbent · Slowest mover</div>
+      <div class="td-stat"><span class="k">Founded</span><span class="v">2001 · acq. by SAP '12</span></div>
+      <div class="td-stat"><span class="k">Parent</span><span class="v">DE : SAP · $250B</span></div>
+      <div class="td-stat"><span class="k">HCM rev</span><span class="v">~$2.6B (est.)</span></div>
+      <div class="td-stat"><span class="k">Customers</span><span class="v">~7,800 (incl. SAP HR co-sells)</span></div>
+      <div class="td-stat"><span class="k">Median NPS</span><span class="v">11 (paraphrased)</span></div>
+      <div class="td-stat"><span class="k">Implementation</span><span class="v">16–28 months</span></div>
+      <div class="td-stat"><span class="k">Threat to us</span><span class="v" style="color:var(--ochre)">MED · 48%</span></div>
+    </aside>
+
+    <div class="td-body">
+      <p class="td-desc">
+        SAP SF is the largest installed footprint in EMEA enterprise HCM
+        and, by every signal we have, the most stagnant. The Joule for HR
+        beta launch in April was met with what a Goldman analyst privately
+        called “collegial silence.”
+      </p>
+
+      <div class="td-cols">
+        <div class="td-block">
+          <div class="mono-label">Strengths</div>
+          <ul class="td-list strong">
+            <li>EMEA F500 entrenchment: 14 of the DAX 40 run SF as system of record.</li>
+            <li>SAP ERP gravity well — payroll, finance, and HR co-pricing locks customers in.</li>
+            <li>Regional compliance breadth: 49 country localizations few competitors match.</li>
+          </ul>
+        </div>
+        <div class="td-block">
+          <div class="mono-label">Weaknesses</div>
+          <ul class="td-list weak">
+            <li>SF + EC + Onboarding + Recruiting still feel like four products from four acquisitions.</li>
+            <li>Joule positioning is muddled: HR-flavoured wrapper rather than HR-native reasoning.</li>
+            <li>Sales motion routed through SAP global account teams — slow, finance-led, multi-quarter.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">AI strategy reading · "Joule for HR"</div>
+        <p class="td-prose">
+          Joule is SAP's enterprise assistant umbrella. The HR beta is
+          functionally a retrieval layer over SF data plus a small set of
+          scripted skills (ask-about-leave, kickoff-recruiting-req). It does
+          not yet reason across SF modules, let alone across third-party
+          systems, and the EMEA buyer hears the demo and immediately asks
+          about Microsoft Copilot integration — which SAP is still
+          negotiating. Two of our discovery calls (a German engineering
+          group, a Nordic bank) explicitly described SF as “a default we
+          will replace within 24 months.” The replacement candidate they
+          named most often was Workday, not us. Translating that quiet
+          dissatisfaction into Stratum trials is the most attainable GTM
+          motion of 2027.
+        </p>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">Pricing intel</div>
+        <div class="td-pricing">
+          <span class="k">List ACV (5,000 EE)</span><span class="v">$420K – $680K base · services routinely 1.6× license y1</span><br>
+          <span class="k">Effective PEPM</span><span class="v">$7 – $11 (SF Suite); +$2–4 for Joule add-on at GA</span><br>
+          <span class="k">Term</span><span class="v">3-year standard; 5-year common when bundled with SAP ERP</span><br>
+          <span class="k">Discounting</span><span class="v">30–45% off list at signature; deep year-end posture · driven by SAP cloud booking targets</span>
+        </div>
+      </div>
+
+      <div class="td-quote">
+        <blockquote>
+          We are not running SuccessFactors because we love it. We are
+          running it because the CFO runs SAP ERP and the conversation
+          about replacing it is a five-year conversation I do not have
+          the political capital to start.
+        </blockquote>
+        <div class="td-attr">— CHRO · 11,000 EE European industrial · 28 Apr 2026</div>
+        <div class="td-analyst">
+          <strong>Analyst note (PR):</strong> she has the capital to start a
+          conversation about <em>augmenting</em> it. That is our door.
+        </div>
+      </div>
+
+      <div class="td-versus">
+        <div class="vs-block vs-win">
+          <div class="mono-label">Where they win against us</div>
+          <p>EMEA payroll localization, SAP ERP bundle pricing, finance-led procurement comfort. We do not chase the SAP-anchored replacement deal for at least 24 months.</p>
+        </div>
+        <div class="vs-block vs-lose">
+          <div class="mono-label">Where we win against them</div>
+          <p>Almost any narrative around speed, defensibility, or modern AI. SF buyers know what they have. We sell them what they do not have, on top of what they cannot move.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ORACLE HCM -->
+  <article class="teardown">
+    <aside class="td-sidebar">
+      <h3 class="td-firm">Oracle HCM</h3>
+      <div class="td-firm-sub">Incumbent · Quiet mover</div>
+      <div class="td-stat"><span class="k">Founded</span><span class="v">Fusion HCM, 2011</span></div>
+      <div class="td-stat"><span class="k">Parent</span><span class="v">NYSE : ORCL · $384B</span></div>
+      <div class="td-stat"><span class="k">HCM rev</span><span class="v">~$3.1B (est.)</span></div>
+      <div class="td-stat"><span class="k">Customers</span><span class="v">~5,400</span></div>
+      <div class="td-stat"><span class="k">Median NPS</span><span class="v">9 (paraphrased)</span></div>
+      <div class="td-stat"><span class="k">Implementation</span><span class="v">12–20 months</span></div>
+      <div class="td-stat"><span class="k">Threat to us</span><span class="v" style="color:var(--ochre)">MED · 54%</span></div>
+    </aside>
+
+    <div class="td-body">
+      <p class="td-desc">
+        Oracle is the dossier's quietest subject. The headline this
+        quarter is the silent end-of-life of Taleo recruiting, which
+        flushes ~1,800 customers into an evaluation cycle. Two of those
+        customers are in our pipeline.
+      </p>
+
+      <div class="td-cols">
+        <div class="td-block">
+          <div class="mono-label">Strengths</div>
+          <ul class="td-list strong">
+            <li>OCI infrastructure leverage — Oracle's data layer is genuinely competitive on price.</li>
+            <li>Larry's discount latitude: deals close at unprintable list reductions when strategic.</li>
+            <li>Strong in regulated US verticals: government, healthcare, public utilities.</li>
+          </ul>
+        </div>
+        <div class="td-block">
+          <div class="mono-label">Weaknesses</div>
+          <ul class="td-list weak">
+            <li>Fusion HCM UX has been the punchline of 14 years of CHRO conferences. Not exaggeration.</li>
+            <li>Org clarity confused — three competing AI initiatives, no public roadmap unification.</li>
+            <li>Sales motion technology-led (the CIO, not the CHRO) — bad for AI-era differentiation.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">AI strategy reading · "OCI HR Assistant"</div>
+        <p class="td-prose">
+          Oracle's HR AI bet currently sits inside OCI Generative AI Agents
+          rather than inside Fusion HCM itself, which tells us where the
+          executive sponsorship actually lives. The HR Assistant beta we
+          trialled in March is functional — answers leave-policy questions,
+          drafts requisitions — and architecturally interesting in that it
+          can reach across Fusion modules through OCI's data fabric. It is
+          also priced and packaged like an infrastructure product, which
+          means the CHRO never sees the demo. Until Oracle moves the
+          assistant into a CHRO-facing surface and assigns it a person, it
+          is a feature, not a product. The most-likely 2027 surprise: an
+          Oracle-funded acquisition of a mid-market HCM AI startup that
+          gives them that surface in eight weeks.
+        </p>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">Pricing intel</div>
+        <div class="td-pricing">
+          <span class="k">List ACV (5,000 EE)</span><span class="v">$380K – $640K base · OCI consumption add-on $90K – $220K</span><br>
+          <span class="k">Effective PEPM</span><span class="v">$6 – $10 (Fusion HCM core); HR Assistant currently unpriced (beta)</span><br>
+          <span class="k">Term</span><span class="v">3 or 5 year; 5-year locked to OCI commit deals</span><br>
+          <span class="k">Discounting</span><span class="v">35–55% off list common · deepest reductions when bundled with OCI compute spend</span>
+        </div>
+      </div>
+
+      <div class="td-quote">
+        <blockquote>
+          We bought Oracle HCM because the CIO loves Oracle. We picked
+          Stratum to try because the CIO does not need to know we picked it.
+        </blockquote>
+        <div class="td-attr">— Head of HR Tech · 6,200 EE US public utility · 19 Apr 2026</div>
+        <div class="td-analyst">
+          <strong>Analyst note (PR):</strong> Oracle's procurement gravity
+          is real but their CHRO product surface is thin. We slip in below
+          the CIO line and earn the CHRO's quarter.
+        </div>
+      </div>
+
+      <div class="td-versus">
+        <div class="vs-block vs-win">
+          <div class="mono-label">Where they win against us</div>
+          <p>OCI-anchored procurement, deep public-sector compliance, eye-watering bundled discounts when a customer is already in the Oracle camp.</p>
+        </div>
+        <div class="vs-block vs-lose">
+          <div class="mono-label">Where we win against them</div>
+          <p>CHRO mindshare. The CHRO sets the AI agenda in 2026; Oracle has not yet shipped a surface aimed at her. Our entire product is.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ───────────────────────────────────────── CHALLENGER TEARDOWNS ── §05 -->
+<section id="challengers">
+  <div class="ornament">§ 05 · Challenger teardowns</div>
+  <h2 class="section-h">Two challengers, two different bets</h2>
+  <p class="section-dek">
+    Rippling is moving up-market with a platform-fee compression strategy.
+    Lattice is attempting to evolve from performance into AI-HRIS. The
+    first is a price threat; the second is a positioning threat.
+  </p>
+
+  <!-- RIPPLING -->
+  <article class="teardown compact">
+    <aside class="td-sidebar">
+      <h3 class="td-firm">Rippling</h3>
+      <div class="td-firm-sub">Challenger · Up-market pressure</div>
+      <div class="td-stat"><span class="k">Founded</span><span class="v">2016</span></div>
+      <div class="td-stat"><span class="k">Last round</span><span class="v">$200M · Apr '26 · $13.5B</span></div>
+      <div class="td-stat"><span class="k">ARR (est.)</span><span class="v">~$650M run-rate</span></div>
+      <div class="td-stat"><span class="k">Customers</span><span class="v">~22,000 (mostly &lt;1,000 EE)</span></div>
+      <div class="td-stat"><span class="k">Implementation</span><span class="v">2–6 weeks SMB · 6–14 wks MM</span></div>
+      <div class="td-stat"><span class="k">Threat to us</span><span class="v" style="color:var(--hi)">HIGH · 74%</span></div>
+    </aside>
+
+    <div class="td-body">
+      <p class="td-desc">
+        Rippling is the most product-velocity competitor in this dossier
+        and now the most aggressive on price into the lower half of our
+        ICP. Their $200M April extension funds an 18-month push at the
+        1,000–3,000 EE band where they overlap us most.
+      </p>
+
+      <div class="td-cols">
+        <div class="td-block">
+          <div class="mono-label">Strengths</div>
+          <ul class="td-list strong">
+            <li>Engineering velocity is the best in the category, full stop.</li>
+            <li>Platform composability — a real graph product the buyer can configure.</li>
+            <li>Founder-led culture, Conrad in seat, willing to take pricing risk.</li>
+          </ul>
+        </div>
+        <div class="td-block">
+          <div class="mono-label">Weaknesses</div>
+          <ul class="td-list weak">
+            <li>Mid-market and up — proven SMB motion does not yet translate to 5,000 EE buyers.</li>
+            <li>Their AI surfaces are workflow automation, not analytical reasoning.</li>
+            <li>Trust gap in regulated industries — financial services, healthcare procurement still wary.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">Pricing intel · the platform-fee tactic</div>
+        <div class="td-pricing">
+          <span class="k">Platform fee</span><span class="v">$8 PEPM all-in (HCM + Payroll + Spend) on aggressive mid-market deals</span><br>
+          <span class="k">Comparator</span><span class="v">~32% below blended Workday equivalent for same scope</span><br>
+          <span class="k">Term</span><span class="v">1-year, no early-termination penalty — a deliberate procurement weapon</span><br>
+          <span class="k">Read</span><span class="v">Conrad is buying budget headroom from CFOs · starving incumbent renewals · and us</span>
+        </div>
+      </div>
+
+      <div class="td-quote">
+        <blockquote>
+          The Rippling AE quoted me $8 a head. Honestly, the question is
+          not whether they can deliver the analytics I want. The question
+          is whether my CFO will give me budget to look at anyone else.
+        </blockquote>
+        <div class="td-attr">— CHRO · 3,400 EE US fintech · 06 May 2026</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- LATTICE -->
+  <article class="teardown compact">
+    <aside class="td-sidebar">
+      <h3 class="td-firm">Lattice</h3>
+      <div class="td-firm-sub">Challenger · Positioning play</div>
+      <div class="td-stat"><span class="k">Founded</span><span class="v">2015</span></div>
+      <div class="td-stat"><span class="k">Last priced</span><span class="v">$3.0B · '22</span></div>
+      <div class="td-stat"><span class="k">ARR (est.)</span><span class="v">~$140M run-rate</span></div>
+      <div class="td-stat"><span class="k">Customers</span><span class="v">~5,500 (concentrated 200–2,000 EE)</span></div>
+      <div class="td-stat"><span class="k">Implementation</span><span class="v">2–8 weeks</span></div>
+      <div class="td-stat"><span class="k">Threat to us</span><span class="v" style="color:var(--ok)">LOW · 36%</span></div>
+    </aside>
+
+    <div class="td-body">
+      <p class="td-desc">
+        Lattice's “AI-HRIS” bet — the 2024 attempt to absorb employees of
+        record into the performance product — strained its design partner
+        roster and remains a credibility cost. The Pulse.io acquisition is
+        a sensible engagement-data bolt-on but does not reset the
+        positioning question.
+      </p>
+
+      <div class="td-cols">
+        <div class="td-block">
+          <div class="mono-label">Strengths</div>
+          <ul class="td-list strong">
+            <li>Brand love at the 200–1,500 EE band — designers and CPOs respect the craft.</li>
+            <li>Performance, engagement, and 1:1s data model is rich and underrated.</li>
+            <li>Engineering DNA — they ship clean software and have a clean visual language.</li>
+          </ul>
+        </div>
+        <div class="td-block">
+          <div class="mono-label">Weaknesses</div>
+          <ul class="td-list weak">
+            <li>HRIS pivot eroded trust with the design-partner base they need most.</li>
+            <li>No payroll, no comp ops — depth gap relative to incumbents at our buyer's scale.</li>
+            <li>Strategic uncertainty — leadership churn this year suggests an inflection moment.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="td-block">
+        <div class="mono-label">Pricing intel</div>
+        <div class="td-pricing">
+          <span class="k">List ACV (2,000 EE, all modules)</span><span class="v">$120K – $190K base</span><br>
+          <span class="k">Effective PEPM</span><span class="v">$5 – $8 across performance, engagement, growth, OKRs</span><br>
+          <span class="k">Term</span><span class="v">1 or 2 year; auto-renew · light termination terms</span>
+        </div>
+      </div>
+
+      <div class="td-quote">
+        <blockquote>
+          Lattice is genuinely the only HR tool my managers like opening.
+          That is not a competitive moat against AI, but it is a competitive
+          moat against being replaced by accident.
+        </blockquote>
+        <div class="td-attr">— Head of People · 1,200 EE design agency · 30 Apr 2026</div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- ─────────────────────────────────────────── MOVEMENTS LEDGER ── §06 -->
+<section id="movements">
+  <div class="ornament">§ 06 · Recent movements log</div>
+  <h2 class="section-h">Ninety days, twelve moves</h2>
+  <p class="section-dek">
+    Append-only feed. Tags: <span style="font-family:var(--mono);color:var(--plum);font-size:11px">M&amp;A</span> ·
+    <span style="font-family:var(--mono);color:var(--ochre);font-size:11px">PROD</span> ·
+    <span style="font-family:var(--mono);color:var(--moss);font-size:11px">CAP</span> ·
+    <span style="font-family:var(--mono);color:var(--hi);font-size:11px">REG</span> ·
+    <span style="font-family:var(--mono);color:var(--ink-3);font-size:11px">EOL</span> ·
+    <span style="font-family:var(--mono);color:var(--ink);font-size:11px">EXEC</span>.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>Tag</div><div>Move</div><div>Impact</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">012</div>
+      <div class="lr-date">2026-04-29</div>
+      <div><span class="lr-tag tag-mna">M&amp;A</span></div>
+      <div class="lr-what"><strong>Workday acquires Illuminate Labs</strong> — synthetic-data startup for HR scenarios — <em>$140M</em>. Tucks in under the Illuminate brand; eval-set generation tooling.</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">011</div>
+      <div class="lr-date">2026-04-25</div>
+      <div><span class="lr-tag tag-exec">EXEC</span></div>
+      <div class="lr-what"><strong>SAP names new SuccessFactors GM</strong> — Anika Vogt, ex-ServiceNow EVP. First sitting-CHRO outreach reported within 72 hours of appointment. Read: SAP knows the surface is thin.</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">010</div>
+      <div class="lr-date">2026-04-22</div>
+      <div><span class="lr-tag tag-prod">PROD</span></div>
+      <div class="lr-what"><strong>SAP SF launches Joule for HR beta</strong> · 14 pilot customers, none above 12,000 EE. Demo well-received in finance press; CHRO sentiment in our calls ranged from “polite” to “absent”.</div>
+      <div class="lr-impact impact-lo">LOW</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">009</div>
+      <div class="lr-date">2026-04-18</div>
+      <div><span class="lr-tag tag-cap">CAP</span></div>
+      <div class="lr-what"><strong>Rippling raises $200M extension at $13.5B</strong> — Greenoaks, Founders Fund, Coatue. Use of proceeds publicly: up-market GTM and AI. Privately, three sources say: budget for the platform-fee compression play.</div>
+      <div class="lr-impact impact-hi">HIGH</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">008</div>
+      <div class="lr-date">2026-04-15</div>
+      <div><span class="lr-tag tag-mna">M&amp;A</span></div>
+      <div class="lr-what"><strong>ServiceNow acqui-hires Embla.ai</strong> — 11-person team focused on agentic workflows. ServiceNow is not in our scope, but a 2027 ServiceNow Now-Assist-for-HR play is now likelier than it was 30 days ago.</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">007</div>
+      <div class="lr-date">2026-04-11</div>
+      <div><span class="lr-tag tag-mna">M&amp;A</span></div>
+      <div class="lr-what"><strong>Lattice acquires Pulse.io</strong> — engagement-survey data platform, terms undisclosed, est. $35–50M. Strengthens their engagement story; does not resolve the HRIS positioning question.</div>
+      <div class="lr-impact impact-lo">LOW</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">006</div>
+      <div class="lr-date">2026-04-08</div>
+      <div><span class="lr-tag tag-reg">REG</span></div>
+      <div class="lr-what"><strong>EU AI Act — high-risk classification guidance</strong> updated. HR use-cases reaffirmed as Annex III high-risk. Enforcement begins 02 Aug 2026. Incumbents face retrofit cycles; we face design cycles.</div>
+      <div class="lr-impact impact-hi">HIGH</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">005</div>
+      <div class="lr-date">2026-04-02</div>
+      <div><span class="lr-tag tag-reg">REG</span></div>
+      <div class="lr-what"><strong>NYC AEDT enforcement</strong> extended in scope to cover compensation-recommendation systems, not only hiring. Audit cadence tightens from annual to semi-annual. Workday and Oracle both have product surfaces affected.</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">004</div>
+      <div class="lr-date">2026-03-27</div>
+      <div><span class="lr-tag tag-eol">EOL</span></div>
+      <div class="lr-what"><strong>Oracle quietly EOLs Taleo Recruiting</strong> — sunset notice 31 Dec 2027, migration path into Fusion Recruiting. ~1,800 customers begin evaluation. Two are now in Stratum's pipeline; we expect six within ninety days.</div>
+      <div class="lr-impact impact-hi">HIGH</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">003</div>
+      <div class="lr-date">2026-03-19</div>
+      <div><span class="lr-tag tag-prod">PROD</span></div>
+      <div class="lr-what"><strong>Workday ships Illuminate Skills v2</strong> — comp-recommendation skill, anomaly-detection skill. CHRO reception split: F500 buyers favourable, mid-market buyers “waiting for the cross-module question.”</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">002</div>
+      <div class="lr-date">2026-03-12</div>
+      <div><span class="lr-tag tag-exec">EXEC</span></div>
+      <div class="lr-what"><strong>Lattice CRO departs</strong> after 14 months — fourth GTM leadership change in two years. Replacement search underway with Spencer Stuart. Reinforces our LOW threat read.</div>
+      <div class="lr-impact impact-lo">LOW</div>
+    </div>
+
+    <div class="ledger-row">
+      <div class="lr-id">001</div>
+      <div class="lr-date">2026-02-26</div>
+      <div><span class="lr-tag tag-cap">CAP</span></div>
+      <div class="lr-what"><strong>Workday Q4 earnings</strong> — subscription revenue beat by 3.4%; cRPO ahead of consensus. Bhusri commentary cautious on Illuminate monetization — earliest paid uplift Q3 FY27. Buys us roughly two quarters.</div>
+      <div class="lr-impact impact-md">MED</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── THREAT MAP ── §07 -->
+<section id="map">
+  <div class="ornament">§ 07 · Threat &amp; opportunity map</div>
+  <h2 class="section-h">A 2×2, annotated</h2>
+  <p class="section-dek">
+    The same five subjects plotted on speed × magnitude. The regulatory
+    shock is plotted as a contextual force, not a competitor — but the
+    direction of its arrow matters.
+  </p>
+
+  <div class="quadrant-wrap">
+    <div class="quadrant-frame">
+      <svg viewBox="0 0 1000 560" aria-label="2x2 threat map: speed of threat (x) by magnitude of threat (y)">
+        <!-- Background -->
+        <rect x="0" y="0" width="1000" height="560" fill="transparent"/>
+
+        <!-- Frame -->
+        <rect x="80" y="30" width="880" height="470" fill="none" stroke="#0e1626" stroke-width="1"/>
+
+        <!-- Axes (middle cross) -->
+        <line x1="520" y1="30" x2="520" y2="500" stroke="#c8b894" stroke-width="1" stroke-dasharray="3 4"/>
+        <line x1="80"  y1="265" x2="960" y2="265" stroke="#c8b894" stroke-width="1" stroke-dasharray="3 4"/>
+
+        <!-- Axis labels -->
+        <text x="520" y="20" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365">SPEED OF THREAT</text>
+        <text x="86"  y="528" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365">FAR ←</text>
+        <text x="954" y="528" text-anchor="end" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365">→ NEAR</text>
+
+        <text x="40" y="265" text-anchor="middle" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365" transform="rotate(-90 40 265)">MAGNITUDE</text>
+        <text x="40" y="490" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365" transform="rotate(-90 40 490)">LOW ↓</text>
+        <text x="40" y="60"  font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365" transform="rotate(-90 40 60)">↑ HIGH</text>
+
+        <!-- Quadrant labels (faint, top-left of each quadrant) -->
+        <g font-family="JetBrains Mono" font-size="9" letter-spacing="3" fill="#c8b894">
+          <text x="92"  y="48">Q-II · LATENT</text>
+          <text x="528" y="48">Q-I · IMMINENT &amp; LARGE</text>
+          <text x="92"  y="284">Q-III · BACKGROUND</text>
+          <text x="528" y="284">Q-IV · CLOSE BUT CONTAINED</text>
+        </g>
+
+        <!-- WORKDAY · top-near (Q-I, x=820, y=85) -->
+        <g>
+          <circle cx="820" cy="85" r="9" fill="#0e1626"/>
+          <line x1="820" y1="85" x2="888" y2="62" stroke="#0e1626" stroke-width=".75"/>
+          <text x="892" y="60" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#0e1626">WORKDAY</text>
+          <text x="892" y="76" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">Illuminate is real but chassis-bound; ~18mo wedge.</text>
+        </g>
+
+        <!-- SAP SF · top-far (Q-II, x=200, y=130) -->
+        <g>
+          <circle cx="200" cy="130" r="9" fill="#0e1626"/>
+          <line x1="200" y1="130" x2="92" y2="112" stroke="#0e1626" stroke-width=".75"/>
+          <text x="92" y="108" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#0e1626">SAP SF</text>
+          <text x="92" y="124" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">Big footprint, slowest mover; quarry of 2027.</text>
+        </g>
+
+        <!-- ORACLE · mid-far (Q-III border, x=340, y=275) -->
+        <g>
+          <circle cx="340" cy="275" r="9" fill="#0e1626"/>
+          <line x1="340" y1="275" x2="220" y2="320" stroke="#0e1626" stroke-width=".75"/>
+          <text x="92" y="335" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#0e1626">ORACLE HCM</text>
+          <text x="92" y="351" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">CIO-led; surfacing of OCI agent could change scoring.</text>
+        </g>
+
+        <!-- RIPPLING · mid-near (Q-IV / Q-I border, x=760, y=235, rising arrow) -->
+        <g>
+          <circle cx="760" cy="235" r="9" fill="#b8651f"/>
+          <!-- rising arrow -->
+          <line x1="760" y1="235" x2="760" y2="175" stroke="#b8651f" stroke-width="1.5"/>
+          <polygon points="760,168 754,180 766,180" fill="#b8651f"/>
+          <line x1="760" y1="235" x2="852" y2="248" stroke="#b8651f" stroke-width=".75"/>
+          <text x="856" y="244" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b8651f">RIPPLING ↑</text>
+          <text x="856" y="260" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">$200M raise · platform fee · rising into our band.</text>
+        </g>
+
+        <!-- LATTICE · low-near (Q-IV, x=680, y=420) -->
+        <g>
+          <circle cx="680" cy="420" r="9" fill="#b8651f"/>
+          <line x1="680" y1="420" x2="800" y2="448" stroke="#b8651f" stroke-width=".75"/>
+          <text x="804" y="444" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#b8651f">LATTICE</text>
+          <text x="804" y="460" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">Beloved brand, positioning drift; HRIS bet unresolved.</text>
+        </g>
+
+        <!-- REGULATORY SHOCK · diamond marker, near-top quadrant -->
+        <g>
+          <polygon points="640,80 660,100 640,120 620,100" fill="#a13418"/>
+          <line x1="640" y1="100" x2="640" y2="60" stroke="#a13418" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <line x1="640" y1="100" x2="556" y2="58" stroke="#a13418" stroke-width=".75"/>
+          <text x="548" y="56" text-anchor="end" font-family="JetBrains Mono" font-size="11" font-weight="700" fill="#a13418">REGULATORY SHOCK</text>
+          <text x="548" y="72" text-anchor="end" font-family="Newsreader" font-style="italic" font-size="11" fill="#2a3344">EU AI Act · 02 Aug 2026 · incumbent-skewed.</text>
+        </g>
+
+        <!-- STRATUM origin marker, off-axis bottom-left as observer not subject -->
+        <g>
+          <circle cx="125" cy="465" r="11" fill="#0e1626" stroke="#b8651f" stroke-width="2"/>
+          <text x="125" y="469" text-anchor="middle" font-family="Fraunces" font-size="11" font-weight="600" fill="#b8651f">S</text>
+          <text x="148" y="468" font-family="JetBrains Mono" font-size="10" letter-spacing="2" fill="#4b5365">STRATUM · observer</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="quadrant-legend">
+      <div class="ql-item ql-incumbent">Incumbent system-of-record subject (Workday, SAP SF, Oracle HCM)</div>
+      <div class="ql-item ql-challenger">Challenger subject (Rippling, Lattice) · arrow denotes trajectory</div>
+      <div class="ql-item ql-reg">Contextual force, not a competitor (regulatory shock)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PLAYBOOK ── §08 -->
+<section id="playbook">
+  <div class="ornament">§ 08 · Implications &amp; playbook</div>
+  <h2 class="section-h">Four moves in response</h2>
+  <p class="section-dek">
+    Four moves we propose to make in the next two quarters as a direct
+    response to this dossier. Each is paired with an owner and a rationale.
+  </p>
+
+  <div class="playbook">
+    <article class="play">
+      <div class="play-num">I.</div>
+      <div class="play-body">
+        <h3 class="play-title">Accelerate connector velocity to widen the data-readiness moat</h3>
+        <p>
+          The single hardest, loneliest thing in this category is entity
+          resolution across 50 source systems. Workday cannot build it
+          without rebuilding the chassis; Rippling can build it but is
+          spending its raise on price compression. We sprint: 12 connectors
+          to GA quality by month 6, six-week loops, one engineer per
+          connector. Every connector compounds the eval-set, the graph
+          schema, and the customer's switching cost.
+        </p>
+      </div>
+      <div class="play-owner">Owner<strong>DO</strong></div>
+    </article>
+
+    <article class="play">
+      <div class="play-num">II.</div>
+      <div class="play-body">
+        <h3 class="play-title">Publish our eval set publicly to set the credibility bar</h3>
+        <p>
+          Workday will market Illuminate against vendor-curated demos.
+          Rippling will market on price. We can set the conversation by
+          publishing a 250-question CHRO-graded eval set with rubrics —
+          and inviting the incumbents to score themselves against it. The
+          act of refusing is more damaging to them than the act of scoring.
+          The act of scoring is damaging on different terms.
+        </p>
+      </div>
+      <div class="play-owner">Owner<strong>MC</strong></div>
+    </article>
+
+    <article class="play">
+      <div class="play-num">III.</div>
+      <div class="play-body">
+        <h3 class="play-title">Pursue a regulatory-positioning asset — published interpretive guidance on EU AI Act in HR</h3>
+        <p>
+          Enforcement begins 02 August. Incumbents will retrofit; we are
+          born compliant. We translate that into a published Stratum
+          interpretive document — co-authored with Cleary Gottlieb or
+          Bird &amp; Bird — that becomes the CHRO's go-to reference. It is
+          a $90K investment that pre-empts an analyst note someone else
+          would otherwise write about us, and converts a defensive engineering
+          decision into proactive market positioning.
+        </p>
+      </div>
+      <div class="play-owner">Owner<strong>PR</strong></div>
+    </article>
+
+    <article class="play">
+      <div class="play-num">IV.</div>
+      <div class="play-body">
+        <h3 class="play-title">Hold pricing discipline — do not match Rippling on platform fee</h3>
+        <p>
+          Conrad is buying budget headroom. If we match on PEPM we lose
+          the conversation we are uniquely able to have: value per
+          decision supported. We hold the hybrid model (platform floor +
+          decision-tier) through 2027. The deals we lose to Rippling on
+          price we should be losing — they are not our wedge customer.
+          The deals we win at premium pricing we win because the answer
+          to the cross-module question matters more than the line item.
+        </p>
+      </div>
+      <div class="play-owner">Owner<strong>PR</strong></div>
+    </article>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────── SOURCES & METHODOLOGY ── §09 -->
+<section id="sources">
+  <div class="ornament">§ 09 · Sources &amp; methodology</div>
+  <h2 class="section-h">How this was built</h2>
+  <p class="section-dek">
+    Public material is paraphrased and cited; private conversations are
+    composited and anonymized. The dossier is shaped to be wrong about
+    specifics, right about direction.
+  </p>
+
+  <div class="sources-grid">
+    <ol class="sources-list">
+      <li><span class="n">S-01</span><div><span class="src-label">Primary · CHRO interviews</span><div class="src-body">11 discovery calls, 45–75 min each, between 11 Mar and 09 May 2026. Geographies: US (7), UK (1), Germany (1), Sweden (1), Singapore (1). Sectors: fintech, healthcare, industrial, public utility, retail, design services.</div></div></li>
+      <li><span class="n">S-02</span><div><span class="src-label">Primary · ex-incumbent</span><div class="src-body">4 conversations under personal NDA: 2× Workday (Product, Engineering), 1× SAP SF (Architecture), 1× Rippling (GTM).</div></div></li>
+      <li><span class="n">S-03</span><div><span class="src-label">Secondary · sell-side notes</span><div class="src-body">Two sell-side analyst notes paraphrased without attribution by request. Read for direction, not numbers.</div></div></li>
+      <li><span class="n">S-04</span><div><span class="src-label">Product · trials</span><div class="src-body">Hands-on trial of all five subjects between 14 Apr and 08 May. Workday Illuminate · SAP SF Joule beta · Oracle HCM + OCI HR Assistant beta · Rippling HCM full demo · Lattice + Pulse.io.</div></div></li>
+      <li><span class="n">S-05</span><div><span class="src-label">Public · financials</span><div class="src-body">WDAY 10-K FY25, ORCL 10-K FY25, SAP AG annual report 2025, Rippling press releases &amp; private rounds via PitchBook, Lattice press &amp; CrunchBase.</div></div></li>
+      <li><span class="n">S-06</span><div><span class="src-label">Public · regulatory</span><div class="src-body">EU AI Act consolidated text, Annex III guidance v3 (Apr 2026). NYC AEDT Local Law 144 + 2025 amendments. Cleary Gottlieb client briefing (Mar 2026).</div></div></li>
+      <li><span class="n">S-07</span><div><span class="src-label">Public · press</span><div class="src-body">TechCrunch, The Information, Pitchbook News, Wall Street Journal, Financial Times Q1 2026 archives, filtered.</div></div></li>
+      <li><span class="n">S-08</span><div><span class="src-label">Public · earnings</span><div class="src-body">WDAY Q4 FY26 transcript (26 Feb 2026); ORCL Q3 FY26 transcript (10 Mar 2026); SAP Q1 2026 transcript (22 Apr 2026).</div></div></li>
+      <li><span class="n">S-09</span><div><span class="src-label">Internal · pipeline</span><div class="src-body">Stratum design-partner pipeline as of 12 May 2026. 14 active conversations; 2 LOIs signed.</div></div></li>
+    </ol>
+
+    <aside class="disclaimer">
+      <div class="mono-label">Disclaimer</div>
+      Quotes attributed to titled CHROs and Heads of People are <strong>composites</strong>:
+      paraphrased and anonymized from multiple interviews to protect source
+      identity. Specific numbers (ACVs, PEPMs, term details) are best-effort
+      reconstructions from public material, trial pricing, and source
+      conversations — they are directional and should not be cited externally
+      without independent verification. Threat scores reflect the dossier
+      compiler's judgement at compile date and will be re-scored at the next
+      dossier.
+      <br><br>
+      Methodology: each subject scored independently by Maya and Priya on a
+      0–5 scale across seven dimensions; reconciled in a 60-minute working
+      session 10 May 2026. The overall threat percentage is a weighted
+      composite emphasizing AI-readiness (×1.5) and recent-moves momentum
+      (×1.3) over enterprise depth (×0.8).
+    </aside>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────── COLOPHON ── §10 -->
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div class="colophon-left">
+      <div class="colo-mark">S<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Stratum, Inc. · 2475 Hanover Street, Palo Alto, CA 94304<br/>
+        stratum.ai · intel@stratum.ai · @stratum_hcm
+      </div>
+    </div>
+    <div class="colophon-right">
+      <div class="colo-issue">
+        Competitive Intelligence Dossier No. 001<br/>
+        Compiled by Priya Rao · Tuesday, 12 May 2026<br/>
+        Set in Fraunces, Newsreader, and JetBrains Mono.<br/>
+        <strong style="color:var(--ochre)">Next dossier: 09 Jun 2026.</strong>
+      </div>
+    </div>
+  </div>
+  <div class="colo-tag">— END OF DOSSIER · CLASSIFIED — FOUNDERS, CHAIRMAN, BOARD —</div>
+</footer>
+
+</body>
+</html>
