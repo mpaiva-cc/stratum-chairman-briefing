@@ -1,0 +1,1834 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The graph between the databases: why entity resolution is the moat — Stratum Essays No. 02</title>
+<meta name="description" content="A long-form technical essay by David Okonkwo, founding CTO of Stratum. On entity resolution, the people graph, and why a 2,400-person hospital's identity-conflict review is the most important workflow in our entire stack." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Essays · No. 02 — David Okonkwo
+   "The graph between the databases: why entity resolution
+   is the moat."
+   Editorial profile. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   Companion sheet to No. 01 (Maya Chen).
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.72;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.5rem 0 3.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  line-height: 1.95;
+}
+.masthead-slug .l1 { color: var(--ochre); }
+.masthead-slug .l2 { color: var(--ink-3); }
+.masthead-slug .l3 { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.18rem, 1.6vw, 1.32rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.05rem;
+}
+.byline span.sep { color: var(--ink-mute); margin: 0 .55rem; }
+
+.subhead-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .9rem;
+  line-height: 1.6;
+}
+.subhead-row strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.55rem, 2.2vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* small-caps system list */
+.systems {
+  margin: 1.3rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+.systems li {
+  padding: .7rem 0;
+  border-top: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: 8.5rem 1fr;
+  gap: 1.1rem;
+  align-items: baseline;
+}
+.systems li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.systems .sys-name {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.systems .sys-body { color: var(--ink-2); }
+.systems .sys-body strong { color: var(--ink); font-weight: 600; }
+
+/* pipeline stage block */
+.stages {
+  margin: 1.6rem 0 1.8rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: stage;
+}
+.stages > li {
+  position: relative;
+  padding: 1.3rem 0 1.3rem 4.2rem;
+  border-top: 1px solid var(--paper-rule);
+  counter-increment: stage;
+}
+.stages > li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.stages > li::before {
+  content: "STAGE " counter(stage, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--ochre);
+}
+.stages .st-lead {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  font-size: 1.08rem;
+  line-height: 1.4;
+  color: var(--ink);
+  display: block;
+  margin-bottom: .5rem;
+}
+.stages p { margin: 0 0 .55rem; }
+
+/* ─────────────────────────────────────────── ASCII PIPELINE ── */
+
+.ascii {
+  margin: 1.8rem 0;
+  padding: 1.4rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  overflow-x: auto;
+  white-space: pre;
+}
+.ascii .o { color: var(--ochre); }
+.ascii .m { color: var(--ink-mute); }
+
+/* ─────────────────────────────────────────── CODE SNIPPET ── */
+
+.code-aside {
+  margin: 1.8rem 0;
+  padding: 1.4rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.code-aside .ca-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.code-aside pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: var(--ink-2);
+  white-space: pre;
+  overflow-x: auto;
+}
+.code-aside .kw { color: var(--ochre); }
+.code-aside .cm { color: var(--ink-mute); font-style: italic; }
+.code-aside .st { color: var(--ochre-deep); }
+.code-aside .nm { color: var(--ink); }
+
+/* ─────────────────────────────────────────── METRICS TABLE ── */
+
+.metrics-aside {
+  margin: 1.8rem 0;
+  padding: 1.4rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.metrics-aside .ma-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.metrics-aside table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+.metrics-aside th, .metrics-aside td {
+  text-align: left;
+  padding: .4rem .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.metrics-aside th {
+  font-weight: 500;
+  color: var(--ink-mute);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+.metrics-aside td { color: var(--ink-2); }
+.metrics-aside td strong { color: var(--ink); font-weight: 600; }
+.metrics-aside tr:last-child td { border-bottom: 0; }
+.metrics-aside td.num { text-align: right; color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── INLINE CALLOUT ── */
+
+.callout {
+  margin: 1.8rem 0;
+  padding: 1.2rem 1.4rem;
+  border-left: 2px solid var(--ochre);
+  background: var(--paper-warm);
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-2);
+  font-size: .98rem;
+  line-height: 1.6;
+}
+.callout strong { font-style: normal; color: var(--ink); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.4rem auto;
+  padding: 2.6rem 0 2.6rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AUTHOR BIO ── */
+
+.author-bio {
+  width: var(--col-read);
+  margin: 4rem auto 0;
+  padding: 2.4rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 1.6rem;
+  align-items: start;
+}
+.author-portrait {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6a3d1c 0%, #8a4711 45%, #4a2a13 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 2.1rem;
+  color: var(--paper);
+  letter-spacing: -.02em;
+  box-shadow: inset 0 -8px 18px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.05);
+}
+.author-meta .author-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin-bottom: .15rem;
+}
+.author-meta .author-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .9rem;
+}
+.author-meta p {
+  margin: 0 0 .9rem;
+  color: var(--ink-2);
+  font-size: .98rem;
+  line-height: 1.65;
+}
+.author-links {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.author-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 2px;
+}
+.author-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+@media (max-width: 540px) {
+  .author-bio { grid-template-columns: 1fr; }
+  .author-portrait { width: 72px; height: 72px; font-size: 1.7rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); border-bottom: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── MOBILE READABILITY ── */
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+  body { font-size: 17.5px; }
+  .article { font-size: 1.04rem; }
+  .masthead { padding-top: 3.4rem; padding-bottom: 2.4rem; }
+  .article { padding-top: 3.2rem; }
+  .systems li { grid-template-columns: 1fr; gap: .25rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .article { font-size: 1.02rem; line-height: 1.7; }
+  .masthead-h1 { font-size: clamp(2.4rem, 9vw, 3.2rem); }
+  .pullquote { margin: 2.4rem auto; padding: 2rem 0; }
+  .pullquote-text { font-size: clamp(1.7rem, 7vw, 2.2rem); }
+  .ascii, .code-aside pre { font-size: 10.5px; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .mob-bar, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article, .masthead, .closing, .pullquote, .author-bio { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Essay — David Okonkwo</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/mercator.html">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../intel/">Compare</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="./why-i-left-workday.html" class="is-current">Essays</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div class="l1">Stratum / Essays</div>
+    <div class="l2">No. 02 · The architecture series</div>
+    <div class="l3">By David Okonkwo</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    The graph between the databases: why <em>entity resolution</em> is the moat.
+  </h1>
+
+  <p class="masthead-dek">
+    Why a 2,400-person hospital's identity-conflict review is the most
+    important workflow in our entire stack.
+  </p>
+
+  <div class="byline">
+    By David Okonkwo<span class="sep">·</span>27 May 2026<span class="sep">·</span>18-minute read<span class="sep">·</span>Published in the Stratum Essays series
+  </div>
+
+  <div class="subhead-row">
+    <strong>Second in a series.</strong> &nbsp; The previous essay was Maya's, on the layer. The next will be Priya's, on the motion.
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">Twelve thousand people.</h2>
+
+    <p>
+      <span class="dropcap">H</span>alcyon Health is a 2,400-employee
+      regional hospital system headquartered in Phoenix. It runs four
+      acute-care campuses, eleven outpatient clinics, two rural-hospital
+      subsidiaries acquired in 2022, and a graduate medical education
+      program. Carlos Reyes, the chief people officer, can tell you the
+      number of badged employees on any given Tuesday morning to within
+      twelve. He can tell you how many of those employees are physicians
+      and how many are nurses and how many are in revenue-cycle
+      operations. He can tell you, because his board asks him to tell
+      them, the headcount in each of his four cost centers, broken out
+      by full-time, part-time, per-diem, and contractor status. He
+      cannot tell you, without a Senior Analyst named Greg and three
+      working days of preparation, who any one of those people actually
+      <em>is</em> across the systems that pay them.
+    </p>
+
+    <p>
+      The reason is that the same 2,400 people, when you count every
+      system that holds an identity record about them, are not 2,400
+      people. They are roughly 12,000. I want to walk through the count,
+      because the count is the entire argument.
+    </p>
+
+    <ul class="systems">
+      <li>
+        <span class="sys-name">Workday HR Core</span>
+        <span class="sys-body"><strong>2,400 records.</strong> The system of record for badged employees. Clean schema, stable IDs, owned by Halcyon's HRIS team. This is the universe Carlos's board thinks the company runs in.</span>
+      </li>
+      <li>
+        <span class="sys-name">UKG Pro</span>
+        <span class="sys-body"><strong>300 records.</strong> The two rural-hospital subsidiaries acquired in 2022 are still on UKG; the integration was scoped, descoped, rescoped, and quietly deferred. Roughly 240 of these rows describe people who <em>also</em> exist in Workday under a different employee ID assigned at acquisition. The remaining 60 are net-new to UKG and have never been written to Workday at all.</span>
+      </li>
+      <li>
+        <span class="sys-name">Greenhouse</span>
+        <span class="sys-body"><strong>~1,800 new records per month.</strong> The applicant tracking system. Most of these records are candidates who will never become employees. A small fraction — roughly 4% — convert. When they convert, Greenhouse hands them off to Workday via an integration that re-keys them with a new ID, severing the application-to-employment link. Halcyon hires about 70 net-new people a month; it leaves behind 1,730 orphan candidate records.</span>
+      </li>
+      <li>
+        <span class="sys-name">Credentialing</span>
+        <span class="sys-body"><strong>1,150 records.</strong> Every physician (550), every advanced-practice clinician (200), and 400 of the 600 active contractors who need clinical privileges. Names appear here in a format the credentialing committee requires: <em>last, first MI, suffix, terminal degree.</em> Bob Smith is <em>SMITH, ROBERT J, JR, MD.</em> There is no foreign key to Workday.</span>
+      </li>
+      <li>
+        <span class="sys-name">Carta</span>
+        <span class="sys-body"><strong>22 records.</strong> The twenty-two executives and physician-leaders who hold equity in the Halcyon parent entity. Carta uses the legal name on the stock-purchase agreement, which is, in three cases, different from the name in Workday (one marriage, one preferred-name change, one transliteration).</span>
+      </li>
+      <li>
+        <span class="sys-name">Cornerstone Learning</span>
+        <span class="sys-body"><strong>3,800 records.</strong> Every employee (2,400), plus 1,200 contractors who must complete annual HIPAA and bloodborne-pathogens training, plus around 200 terminated employees who remain active in compliance training because their records are retained for a federally-mandated period. Some of those 200 also still appear in Workday with a <em>terminated</em> status; some do not.</span>
+      </li>
+      <li>
+        <span class="sys-name">ADP</span>
+        <span class="sys-body"><strong>2,640 records.</strong> Payroll. Uses yet a third ID schema — ADP's File Number, six-digit, position-based, reused after termination. Includes the 2,400 Workday employees, the 240 UKG-overlap employees, and roughly 30 historical anomalies (rehires whose original File Numbers were reassigned to new hires before being un-reassigned in a 2023 cleanup that was never fully reconciled).</span>
+      </li>
+    </ul>
+
+    <p>
+      Add it up: 2,400 + 300 + 1,800 + 1,150 + 22 + 3,800 + 2,640 =
+      12,112. The same person — let us call him Dr. Bob Smith, the
+      composite physician we use in our internal eval — is, depending on
+      how you count, between four and eleven of those rows. He is one
+      person. The systems are accurate about what they each know. The
+      <em>aggregate</em> is wrong because there is no aggregate. There
+      are seven databases, and the truth lives between them.
+    </p>
+
+    <p>
+      My first job at Stratum, in the eight weeks between when I left
+      Stripe in March and when the first design partner signed in May,
+      was to design the system that reconciles them. We call it the
+      resolver. It is the most important piece of software in the
+      company. If it is wrong, every answer above it is wrong, and we
+      are in a different business than the one we are trying to be in.
+      Maya wrote the previous essay in this series about <em>why</em> we
+      are building this layer. This one is about <em>how,</em> and what
+      I have learned about how hard it is.
+    </p>
+
+    <p>
+      I want to say one thing up front, because it sets the tone for
+      everything that follows. Entity resolution is not a glamorous
+      problem. It is not, on the surface, an <em>AI</em> problem. It
+      will not appear on the keynote slide and it will not be the demo
+      that closes the deal. It will be, six months into a deployment,
+      the workflow that the customer's People Analytics lead opens
+      every Wednesday morning to clear forty-seven conflicts before her
+      coffee gets cold. That workflow is the moat. If we build it well
+      it is the reason the customer renews; if we build it poorly it is
+      the reason the customer sues. There is no third option.
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">Why this is hard, and why it is hard in a specific way.</h2>
+
+    <p>
+      Entity resolution is a fifty-year-old computer-science problem. The
+      original record-linkage paper — Fellegi and Sunter, <em>A theory for
+      record linkage,</em> <cite>JASA</cite> 1969 — predates most of the
+      systems we are trying to resolve across. The literature is mature.
+      What has changed, and what makes the problem feel new again at
+      every customer, is not the math. It is the shape of the data.
+    </p>
+
+    <p>
+      The hardness comes in four kinds, and they compound multiplicatively.
+      The first is <strong>noise.</strong> Bob Smith is also <em>Robert
+      Smith,</em> also <em>Robert J. Smith Jr.,</em> also <em>Bob,</em>
+      also <em>R. J. Smith,</em> also — in the credentialing system —
+      <em>SMITH, ROBERT J, JR, MD.</em> A naive string compare will tell
+      you these are six different people. A reasonable string compare,
+      with Levenshtein and Soundex, will tell you they are probably the
+      same person, but with confidence that you cannot quite write down,
+      and certainly cannot defend in front of a board. Names are noisy.
+      So are emails (<em>r.smith@halcyon.org</em> versus
+      <em>robert.smith@halcyonhealth.com</em> versus the system-generated
+      <em>rsmith@halcyon-sso.local</em>). So are dates of birth, which are
+      sometimes stored, sometimes redacted, sometimes <em>truncated to
+      year</em> for privacy reasons, sometimes wrong because somebody
+      typed 1974 when they meant 1947. The noise is not malicious. It is
+      just data, behaving the way data behaves.
+    </p>
+
+    <p>
+      The second is <strong>schema incompatibility.</strong> Workday has
+      a single <code>email</code> field with a strict format validator.
+      Greenhouse has <code>personalEmail</code> and <code>workEmail</code>
+      and a derived <code>primaryEmail</code> that picks between them on
+      rules the schema does not document. Okta generates a
+      <code>serviceAccount@</code> that is technically an email and is
+      stored in the same column as a real one. The credentialing system
+      has no email field at all; it has a <code>contactMethod</code>
+      blob that, in 73% of rows, contains an email, and in the rest
+      contains a fax number, a pager, or the string <em>"see HR."</em>
+      You cannot join these. Not with a foreign key, not with a view,
+      not with the kind of SQL that an analyst writes on a Wednesday
+      afternoon. They must be probabilistically reconciled.
+    </p>
+
+    <p>
+      The third is <strong>organizational and security separation.</strong>
+      The data lives in different administrative units inside the
+      customer. Workday is owned by HRIS. ADP is owned by Payroll
+      Operations, which reports through Finance. Credentialing is owned
+      by Medical Affairs and lives behind an extra layer of HIPAA-scoped
+      access control. Greenhouse is owned by Talent Acquisition.
+      Cornerstone is owned by Learning &amp; Development. Each of these
+      teams has a different idea of what a <em>person</em> means, a
+      different lifecycle for those records, and a different appetite
+      for sharing them. When we ingest, we are not just joining
+      databases. We are joining departments, each with a different
+      definition of correctness and a different risk profile if their
+      record turns out to be the canonical one.
+    </p>
+
+    <p>
+      The fourth is <strong>time.</strong> The records change. Bob Smith
+      gets married and becomes Bob Smith-Patel in Workday on the third
+      of August; he becomes Bob Smith-Patel in Cornerstone on the
+      eleventh of September; he never gets updated in the credentialing
+      system at all, because the credentialing committee certifies under
+      the legal name on the medical license, and his license still says
+      Smith. A resolver that runs once at ingestion and never again will
+      drift. A resolver that runs continuously will sometimes
+      <em>un-merge</em> records it previously merged, which is a
+      class of failure that breaks downstream caches and, more
+      importantly, breaks the customer's trust. Time is the dimension
+      that turns a hard one-shot problem into a hard streaming problem.
+    </p>
+
+    <p>
+      These four hardnesses multiply. If you have a 95%-accurate
+      resolver under noise alone, and a 95%-accurate resolver under
+      schema mismatch alone, and a 95%-accurate resolver under security
+      separation alone, and a 95%-accurate resolver under temporal
+      drift alone, you do not have a 95%-accurate resolver. You have a
+      0.95<sup>4</sup> ≈ 81% accurate resolver, which is unacceptable.
+      Each layer has to be worse-case 99% for the whole stack to be
+      acceptable, and 99% on real customer data, on the kind of edge
+      that a contractor-to-employee transition creates, is hard.
+    </p>
+
+    <p>
+      The state of the art is documented in the Christophides survey —
+      Christophides, Efthymiou, Palpanas, Papadakis, Stefanidis, <em>End-
+      to-end entity resolution for big data: a survey,</em> ACM
+      <cite>Computing Surveys</cite> 2020 — which is the single best
+      synthesis of where the field actually is, as opposed to where
+      vendors say it is. We use §4 of that survey as the architectural
+      skeleton for the resolver. The two-stage decomposition into
+      <em>blocking</em> and <em>matching</em> is theirs. The asymmetric
+      precision-recall framing is theirs. The graph-confirmation step is
+      our addition, and is older than us — it is the operationalized
+      descendant of Bhattacharya &amp; Getoor's <em>Collective entity
+      resolution in relational data</em> (ACM TKDD 2007), which itself
+      became, a decade later, the inference layer underneath the Google
+      Knowledge Graph.
+    </p>
+
+    <p>
+      One more pointer. The Stanford Snorkel-AI line of work — Ratner,
+      Bach, Ehrenberg, Hancock, Snorkel, et al., starting with the 2017
+      VLDB paper on weak supervision and continuing into the labeling-
+      function literature — gave us the framework we use to train the
+      probabilistic matcher without hand-labeling tens of thousands of
+      pairs. Their core insight is that domain experts can write noisy
+      labeling functions much faster than they can hand-label rows, and
+      that the noise in those functions can itself be modeled and
+      denoised. Our Stage 2 model below was bootstrapped with seventeen
+      labeling functions and a generative label model in the Snorkel
+      tradition. We do not use Snorkel the library — we found we
+      outgrew it around twelve functions in — but the methodology is
+      theirs, and we cite it on every onboarding deck.
+    </p>
+
+    <p>
+      With that as the background, let me describe what we actually
+      built.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">The architecture I chose.</h2>
+
+    <p>
+      The resolver is a four-stage pipeline. Stages one and two are the
+      classical probabilistic record-linkage decomposition; stage three
+      is graph confirmation; stage four is human review. The output of
+      the pipeline is a set of <em>entity clusters,</em> each of which
+      represents one human being and contains pointers back to the
+      source rows in every system. Every cluster has an associated
+      confidence score and a provenance trail. Nothing in the rest of
+      the platform — not the Copilot, not the Decisions surface, not
+      the headcount queries Maya writes about — touches a raw source
+      row. They touch clusters. The cluster is the unit of person.
+    </p>
+
+    <div class="ascii"><span class="m">┌───────────────────────────────────────────────────────────────┐
+│                  THE PEOPLE-GRAPH RESOLVER                    │
+└───────────────────────────────────────────────────────────────┘</span>
+
+   raw records             stage 1                stage 2
+   <span class="m">──────────</span>              <span class="m">───────</span>                <span class="m">───────</span>
+   workday        ┐
+   greenhouse     │     <span class="o">candidate</span>            <span class="o">probabilistic</span>
+   ukg pro        ├──▶  <span class="o">generation</span>      ──▶  <span class="o">scoring</span>          ──┐
+   credentialing  │     (blocking)            (logistic       │
+   carta          │                            regression)    │
+   cornerstone    │     ~50k pairs            score ∈ [0,1]   │
+   adp            ┘     per 1k EEs                            │
+                                                              ▼
+                          stage 4              stage 3
+                          <span class="m">───────</span>              <span class="m">───────</span>
+                          <span class="o">human</span>                <span class="o">graph</span>
+                       ◀──<span class="o">review</span>        ◀──   <span class="o">confirmation</span>
+                          (0.45 – 0.65)       (manager,
+                          ~14% of pairs        team, office,
+                                               comp-band)
+                                                              │
+                                                              ▼
+                                                    <span class="o">entity clusters</span>
+                                                    one node = one
+                                                    human being</div>
+
+    <p>
+      <strong>Stage 1: candidate generation.</strong> Comparing every
+      pair of records to every other pair is O(n²), which for a
+      12,000-row corpus is 144 million pair comparisons and for a
+      100,000-row corpus is ten billion. We cannot afford that. Stage 1
+      is the cheap pre-filter that produces a manageable shortlist.
+    </p>
+
+    <p>
+      It uses three complementary blocking strategies. The first is
+      <em>hash blocking</em> on stable canonical keys — normalized
+      email, normalized phone, government-ID-hash where present. Any
+      pair that shares an exact hash on any one of these keys is
+      automatically a candidate. The second is <em>token blocking</em>
+      on names: we tokenize names into Soundex codes plus the first
+      letter of the surname, and any pair sharing a token is a
+      candidate. The third is <em>locality-sensitive hashing</em> over
+      a concatenated <em>name + DOB-year + employer + location</em>
+      string, with MinHash and Jaccard thresholding at 0.4. The three
+      strategies are unioned. They generate, on the Halcyon corpus
+      (12,112 rows across seven systems), roughly 580,000 candidate
+      pairs. Across our internal benchmark of synthetic
+      1,000-employee companies, the average is about 50,000 pairs per
+      1,000 employees. This is acceptable. Stage 1 runs offline and
+      completes in under three minutes on commodity hardware.
+    </p>
+
+    <aside class="code-aside" aria-label="Pseudocode: candidate scoring">
+      <div class="ca-label">Aside · Stage 2 candidate scoring (pseudo)</div>
+<pre><span class="cm"># Logistic regression over six feature functions.</span>
+<span class="cm"># Weights learned via Snorkel-style weak-supervision</span>
+<span class="cm"># label model bootstrapped from 17 labeling functions,</span>
+<span class="cm"># then fine-tuned on ~3,200 hand-labeled pairs.</span>
+
+<span class="kw">def</span> <span class="nm">score_pair</span>(a, b):
+    f = {
+        <span class="st">"name_jw"</span>:    jaro_winkler(norm(a.name), norm(b.name)),
+        <span class="st">"email_ov"</span>:   email_overlap(a.emails, b.emails),
+        <span class="st">"dob_ov"</span>:     dob_compat(a.dob, b.dob),
+        <span class="st">"role_sim"</span>:   role_embed_cos(a.role, b.role),
+        <span class="st">"loc_ov"</span>:     location_overlap(a.locs, b.locs),
+        <span class="st">"mgr_ov"</span>:     manager_overlap(a.mgrs, b.mgrs),
+    }
+    logit = (
+        <span class="o">2.81</span> * f[<span class="st">"name_jw"</span>] +
+        <span class="o">3.12</span> * f[<span class="st">"email_ov"</span>] +
+        <span class="o">1.94</span> * f[<span class="st">"dob_ov"</span>] +
+        <span class="o">0.88</span> * f[<span class="st">"role_sim"</span>] +
+        <span class="o">0.71</span> * f[<span class="st">"loc_ov"</span>] +
+        <span class="o">0.42</span> * f[<span class="st">"mgr_ov"</span>] -
+        <span class="o">3.67</span>     <span class="cm"># intercept</span>
+    )
+    <span class="kw">return</span> sigmoid(logit)   <span class="cm"># ∈ [0, 1]</span></pre>
+    </aside>
+
+    <p>
+      <strong>Stage 2: probabilistic scoring.</strong> Each candidate
+      pair is scored by a logistic regression model over six feature
+      functions: Jaro-Winkler name similarity (after normalization for
+      common diacritics, suffix stripping, and a small dictionary of
+      diminutives — <em>Bob ↔ Robert,</em> <em>Liz ↔ Elizabeth,</em>
+      and so on, presently 184 entries); email-set overlap; date-of-
+      birth compatibility (where both are present); role-title
+      similarity via a 384-dimensional sentence embedding cosine; and
+      two contextual features — location overlap and manager overlap —
+      that lean on the graph that is in the process of being built.
+      Output is a calibrated confidence score in [0, 1]. We deliberately
+      kept the model small. We tried a 768-dim transformer pair-encoder
+      and it added eleven points of cost-per-pair and roughly zero
+      points of usable accuracy on the precision-recall frontier that
+      matters at our thresholds. The logistic is faster, cheaper, and —
+      this is the part that matters for the buyer — auditable. Asha
+      can read every coefficient. So can the customer's compliance
+      officer. So can the regulator.
+    </p>
+
+    <p>
+      <strong>Stage 3: graph confirmation.</strong> This is where we
+      depart from the textbook. Pairs with confidence above 0.85 are
+      auto-merged into a single cluster. Pairs below 0.45 are presumed
+      distinct. Pairs in the band <em>0.65 to 0.85</em> are not yet
+      decided; instead they are passed to a graph-confirmation step that
+      asks: <em>do the two records share neighbors that the rest of the
+      graph already considers identical?</em> If <em>Bob Smith</em> in
+      Workday and <em>R. J. Smith</em> in credentialing have a name-
+      similarity score of 0.72 alone, but they share the same manager
+      (a single, already-merged entity), the same office (a single
+      facility-graph node), and the same comp band (an already-resolved
+      band-id), the graph collapses the joint posterior to 0.93.
+      Conversely, if they share <em>none</em> of those neighbors, the
+      graph pulls the score down to 0.58 and the pair gets routed to
+      stage 4. Graph confirmation is the difference between a resolver
+      that is 88% accurate and a resolver that is 93% accurate on the
+      same probabilistic core. It is also where Bhattacharya &amp;
+      Getoor's <em>collective</em> framing earns its keep: identities
+      are confirmed not in isolation, but against each other.
+    </p>
+
+    <p>
+      <strong>Stage 4: human review.</strong> Records with confidence
+      between 0.45 and 0.65 after graph confirmation are surfaced to the
+      customer's People Analytics lead — at Halcyon, this is Greg —
+      through a workflow we call the <em>conflict queue.</em> Each
+      conflict displays both candidate records side by side, with
+      provenance, with the source-row payloads, and with the model's
+      reasoning summarized in plain language. Greg is asked, in
+      sixty seconds or less, to confirm <em>same person, different
+      people,</em> or <em>defer.</em> His answer becomes a labeled
+      training pair, fed back into the model on the next nightly
+      retrain. The conflict queue is the most-used workflow in the
+      entire Stratum platform at Halcyon. It is also the workflow that
+      compounds. The longer Greg uses it, the more accurate it gets;
+      the more accurate it gets, the less Greg has to use it; the less
+      he uses it, the more his hours go back to the work he was hired
+      to do. This is the flywheel Maya wrote about, expressed at the
+      level of the engineer.
+    </p>
+
+    <p>
+      Below 0.45 in the confidence band, the resolver presumes the
+      records are distinct. We do not auto-create merges below this
+      threshold under any circumstance, including the case where a
+      downstream query would benefit from the merge. The asymmetry is
+      deliberate: a false negative (failing to merge two records that
+      are the same person) shows up to the customer as a duplicate, and
+      duplicates are recoverable. A false positive (merging two records
+      that are not the same person) shows up as a privacy incident, and
+      privacy incidents are not recoverable. We optimize for precision
+      at the expense of recall, and we tell the customer we do, in
+      writing, before they sign.
+    </p>
+
+    <div class="callout">
+      <strong>Note for engineers.</strong> The thresholds — 0.45, 0.65,
+      0.85 — are not magic. They are tuned per-customer against a
+      precision-recall curve constructed from the customer's own labeled
+      pairs in the first two weeks of deployment. The defaults above
+      are reasonable starting points for a mid-market enterprise with
+      seven-to-ten source systems. They will move. They should move. We
+      version every threshold and tag every cluster with the version
+      that produced it, so we can re-resolve historical data when the
+      thresholds change.
+    </div>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">The bug Asha found.</h2>
+
+    <p>
+      Asha Pillai joined Stratum as our fifth employee on the second of
+      June. She had spent four years at Snowflake on the data-lineage
+      team and the eighteen months before that at a fintech startup
+      whose name I will leave out of the essay because she will write
+      her own story when she is ready. We hired her to lead the
+      ingestion-and-resolution layer, which is the half of the stack I
+      had been holding together with what David Lebovitz, in a different
+      context, once called <em>vibes and string.</em> The first
+      assignment I gave her was a validation pass on the Halcyon
+      resolver, with full access to the synthetic and the real data.
+    </p>
+
+    <p>
+      Thirty-six hours later — by which I mean the morning of the
+      fourth, before our weekly standup — she came into the back room
+      of the office we were then renting in Palo Alto, sat down at the
+      whiteboard, and said: <em>your resolver is reproducing a bug in
+      Workday's data model and you do not know it.</em>
+    </p>
+
+    <p>
+      What she had found was this. Halcyon hires roughly 70 people a
+      month, of whom — based on her count of the previous fourteen
+      months — 14 are contractors who eventually convert to full-time
+      employees. Workday treats this conversion the way Workday treats
+      every conversion: it creates a brand-new employee record with a
+      brand-new employee ID, terminates the contractor record on the
+      same day, and provides no foreign key linking the two. The
+      assumption baked into the Workday data model is that the
+      contractor and the employee are different <em>positions,</em>
+      which they are, but the model elides the fact that they are the
+      same <em>person.</em> Workday is not wrong; the model is just
+      built for a question that is not the question we are trying to
+      answer.
+    </p>
+
+    <p>
+      Our resolver, on its first pass through the Halcyon data, was
+      faithfully reproducing this bug. The contractor row had an email
+      like <em>jane.doe@halcyon-contractors.com</em> and the employee
+      row, three months later, had <em>jane.doe@halcyon.org.</em>
+      Different domains, low email-overlap score. The names matched
+      strongly, but the date-of-birth was missing on the contractor
+      side (contractors are 1099, the field is not collected), and the
+      manager had changed in the conversion (contractor managers report
+      through the vendor; employee managers report internally). The
+      combined Stage 2 score landed at 0.61 — squarely in the conflict
+      queue, where it would have shown up to Greg as an ambiguous
+      merge, fourteen times a month, forever.
+    </p>
+
+    <p>
+      Asha's fix was elegant. She added one labeling function — a
+      Snorkel-style noisy rule, in our framework — that fires on a very
+      specific pattern: <em>contractor-row termination date equals
+      employee-row start date, within ±1 calendar day, and either the
+      personal email or the date-of-birth-hash matches.</em> When this
+      pattern fires, it contributes a high-confidence positive signal
+      regardless of the other features. She also added a graph-side
+      check: when the pattern fires, the resolver looks at the
+      contractor's <em>previous</em> manager — the one before the
+      vendor-of-record manager — to confirm that the employee's new
+      manager is in the same reporting chain. If it is, the joint
+      score collapses to 0.94, and the merge is automatic.
+    </p>
+
+    <p>
+      The fix was forty-seven lines of Python plus eleven lines of
+      configuration. She wrote it in a long afternoon on the fifth. We
+      reviewed it on the eighth. We added two new test fixtures to the
+      eval set — one positive, one adversarial-negative for the case
+      where two unrelated people happen to share a termination/start
+      adjacency by coincidence. We shipped it on the twenty-eighth. The
+      number of conflict-queue items it eliminated, on the Halcyon
+      backfill, was 184 over a four-year history window. The number it
+      created, falsely, was zero. The fix is in production today and
+      we have not had to touch it.
+    </p>
+
+    <p>
+      I am writing this story in detail because it is, in miniature,
+      what the resolver actually does for a living. The state of the
+      art does not solve entity resolution. What it does is give you a
+      framework into which a sharp engineer can drop a forty-seven-line
+      fix that eliminates 184 conflicts and creates zero. Asha is
+      worth, in this respect, much more than her salary. So is the
+      framework. Neither, alone, is enough.
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      Most AI-first companies think the moat is the model. We disagree.
+      The moat is the data the model can reason over.
+    </p>
+    <div class="pullquote-attr">
+      <strong>David Okonkwo</strong> · Co-founder &amp; CTO · Stratum, Inc.
+    </div>
+  </div>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">Why the moat is the graph, not the model.</h2>
+
+    <p>
+      I want to pivot now from the architectural to the strategic,
+      because the technical decisions I have described do not
+      themselves explain why we have chosen to spend the founding year
+      of the company on entity resolution rather than on the agentic
+      surface that everyone wants to demo. The strategic argument is
+      this: most AI-first companies in our category think the moat is
+      the model. We disagree. The moat is the data the model can reason
+      over.
+    </p>
+
+    <p>
+      A model — any model — is a function. You can replace it. You can
+      fine-tune a different base model on the same data and you will
+      get something within a few points of the original. The frontier
+      labs ship a better model every six months, and the cost-per-token
+      drops by an order of magnitude every eighteen. If your moat is
+      the model, your moat is decaying at the rate of the underlying
+      hardware curve, which is roughly the worst rate at which a moat
+      can decay. We have not, inside Stratum, ever pretended otherwise.
+      We will use the best model available, and we will switch when a
+      better one ships, and we will not get attached.
+    </p>
+
+    <p>
+      The graph is different. The graph is not a function; it is a
+      <em>history.</em> It is the accumulated, customer-specific record
+      of which records refer to which people, with what confidence,
+      under which labels, against which conflicts, resolved how, by
+      whom, when. Every conflict Greg clears at Halcyon adds a labeled
+      pair to a model that has been trained on three previous design
+      partners' labeled pairs plus a fourteen-month history of
+      Halcyon's own. Every threshold tweak Asha pushes propagates
+      forward but is tagged with a version, so historical clusters can
+      be re-resolved against the new thresholds and compared. The graph
+      gets more correct, monotonically, the longer the customer is on
+      the platform. The model does not. The compounding lives in the
+      graph.
+    </p>
+
+    <p>
+      And the compounding matters operationally, not just abstractly.
+      Consider the question Maya wrote about in the previous essay:
+      <em>who is at flight risk in EMEA engineering?</em> This is the
+      kind of question a CHRO actually asks. To answer it, the agent
+      has to identify the relevant cohort (EMEA engineering),
+      enumerate the people in that cohort, score their flight risk,
+      and return a ranked list with citations. If the resolver is
+      wrong — if the records that look like nine people are actually
+      four people, and the records that look like one person are
+      actually two — every step downstream of the resolver is wrong.
+      Cohort enumeration is wrong (you double-count the four-person
+      group and you under-count the one-person group). The flight-risk
+      model is wrong (it averages signals across rows that do not
+      belong together). The ranked list is wrong. The citations are
+      wrong. The CHRO presents the answer to the board, the answer is
+      wrong, and we do not get a second chance.
+    </p>
+
+    <p>
+      The model gets the credit when the answer is right and the blame
+      when the answer is wrong, but neither attribution is correct. The
+      resolver is upstream of both. The resolver is the foundation. A
+      flawless flight-risk model on a wrong people graph produces a
+      wrong answer, and a mediocre flight-risk model on a correct
+      people graph produces a defensible one. The buyer cannot tell the
+      difference from the dashboard. The difference is real all the
+      same.
+    </p>
+
+    <p>
+      Here is the flywheel, stated as compactly as I can. Correct
+      resolution → correct answers → user trust → increased usage →
+      more conflict-queue throughput → more labeled pairs → more
+      correct resolution. Round and round. The first turn of the
+      flywheel is the hardest, because the customer has not yet
+      labeled anything; we ship with a model trained on synthetic data
+      and three design-partner backfills, and the first two weeks of
+      deployment are dominated by the customer's own conflict-queue
+      labor. By week six, the conflict queue is down to the
+      genuinely-hard cases, and the customer's analyst is spending
+      less than an hour a week in it. By month six, on Mercator's
+      data, we are seeing under fifteen minutes a week. This is what
+      Maya means when she says we sell Tuesday afternoons back. The
+      Tuesday afternoons come out of the resolver, before they ever
+      reach the Copilot.
+    </p>
+
+    <p>
+      The strategic implication for me, as the engineer responsible
+      for this layer, is that I should be willing to under-invest in
+      the demo and over-invest in the conflict queue. I should be
+      willing to ship slower than our competitors on the agentic
+      surface, because the agentic surface is fungible — anybody can
+      bolt an LLM onto a database — and the resolver, after a few
+      years of compounding, is not. I should be willing to spend the
+      founding year on a workflow that the customer's analyst opens
+      every Wednesday morning, and the chief executive opens never. I
+      think this is the right call. I admit it is also the dull call,
+      and that there is a version of this company in which I would not
+      have made it. I had to write a lot of bad resolvers, at
+      Palantir and at Stripe, before I learned that the dull call is
+      usually the right one.
+    </p>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">What we get wrong, and what we do when we do.</h2>
+
+    <p>
+      I am going to be specific about our failure modes, because Maya's
+      essay made a commitment on behalf of the company — <em>the
+      architecture forbids the promise</em> — that I am responsible for
+      honoring at the level of the code.
+    </p>
+
+    <p>
+      On our internal benchmark — a 2,000-employee synthetic dataset
+      that I constructed in March, modeled on the Halcyon system
+      topology, with deliberately-injected hard cases (name changes,
+      contractor conversions, acquisition overlaps, generational
+      naming, transliteration, terminated rehires) — the resolver
+      currently scores <strong>0.93 precision and 0.89 recall</strong>
+      at the 0.65 threshold. On the Halcyon real data, on first pass,
+      before any customer-side labeling, we scored
+      <strong>0.91 precision and 0.82 recall.</strong> We had to send
+      14% of pairs (4,213 of 30,089) to the conflict queue for human
+      review. After two weeks of customer labeling and one threshold
+      retune, the numbers moved to 0.94 precision and 0.87 recall, and
+      the conflict-queue fraction dropped to 6%. We publish these
+      numbers, in this form, on every onboarding deck. We have
+      committed to publishing the worst-performing customer's numbers
+      in every quarterly transparency report, redacted of customer
+      identity, as soon as we have three customers in production. We
+      will be honest about this and we will not be cute about it.
+    </p>
+
+    <aside class="metrics-aside" aria-label="Precision and recall by dataset">
+      <div class="ma-label">Aside · Eval numbers (current production)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Dataset</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th class="num">HR queue</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Internal (synthetic, 2,000 EE)</strong></td>
+            <td>0.93</td>
+            <td>0.89</td>
+            <td class="num">9%</td>
+          </tr>
+          <tr>
+            <td><strong>Halcyon</strong> (first pass)</td>
+            <td>0.91</td>
+            <td>0.82</td>
+            <td class="num">14%</td>
+          </tr>
+          <tr>
+            <td><strong>Halcyon</strong> (week 2, tuned)</td>
+            <td>0.94</td>
+            <td>0.87</td>
+            <td class="num">6%</td>
+          </tr>
+          <tr>
+            <td><strong>Mercator</strong> (week 6)</td>
+            <td>0.96</td>
+            <td>0.91</td>
+            <td class="num">3%</td>
+          </tr>
+          <tr>
+            <td><strong>Target (24-mo)</strong></td>
+            <td>≥ 0.98</td>
+            <td>≥ 0.94</td>
+            <td class="num">&lt; 2%</td>
+          </tr>
+        </tbody>
+      </table>
+    </aside>
+
+    <p>
+      We have made one mistake in production that I want to describe in
+      enough detail that the field can learn from it. The customer was
+      Mercator. The bug was a false positive — the kind of error we
+      explicitly optimize against. On the morning of the eighteenth of
+      April, the resolver merged two records that referred to two
+      different physicians who happened to share the same name (<em>Dr.
+      Daniel Park</em>), the same medical specialty (internal medicine),
+      and the same office building (both worked out of Mercator's
+      downtown Chicago campus, though in different practice groups).
+      They had different NPI numbers, different dates of birth, and
+      different hire dates. The resolver should have caught the
+      difference on NPI alone, but the NPI field was missing on one of
+      the two records — a data-entry omission in the credentialing
+      system from 2019 that had never been corrected. The remaining
+      features pushed the joint score to 0.87, above the auto-merge
+      threshold. The merge surfaced one physician's comp band to the
+      other physician's manager, in a Copilot answer to the question
+      <em>"how do my direct reports' comp bands compare to the
+      practice-group median."</em>
+    </p>
+
+    <p>
+      We caught it within four hours, at 11:47 a.m. Pacific, because
+      the manager who saw the answer flagged it himself —
+      <em>this number is not right; my Dan Park is band 4, not band
+      6</em> — through the Copilot's <em>report-this-answer</em>
+      affordance, which routes to a Slack channel that on-call
+      engineers watch. Asha and I traced it within an hour. We pushed
+      a revert at 1:51 p.m. that un-merged the two clusters and
+      invalidated every downstream cached answer that touched either
+      record. The revert was complete at 1:58 p.m. Total exposure
+      window: six hours and eleven minutes.
+    </p>
+
+    <p>
+      We wrote a post-incident report — we publish them internally as
+      <em>PIRs</em>, with a customer-redacted version sent to the
+      affected customer's security lead — and we added what we now
+      call the <em>physician-dual-identity check</em> to the eval set.
+      The check: any candidate merge where both records have a
+      credentialing-system origin and where either record is missing
+      an NPI field requires either a positive DOB match or routes
+      automatically to human review, regardless of the joint score.
+      The check costs us, on the benchmark, about 0.4 points of recall.
+      We will pay that price every day.
+    </p>
+
+    <p>
+      I want to say something hard here. We were lucky on this one. The
+      Mercator manager who flagged the answer was the kind of careful
+      reader who notices when a number is wrong; not every manager is.
+      If the manager had not flagged it, the wrong comp band would
+      have been in the Copilot's working memory until the next
+      resolution pass — three hours later — at which point the new
+      labeled-data pass would not have caught it either, because the
+      manager had not labeled it. We have, since the incident, added
+      a separate <em>silent-evaluation</em> pipeline that flags any
+      cluster whose constituent records disagree on an exclusive-key
+      field (NPI, license number, government ID, executive equity
+      grant ID) <em>at all,</em> regardless of how confident the
+      resolver was when it merged them. The silent-evaluation runs
+      hourly. It would have caught the Park merge within sixty
+      minutes, not four hours. We should have built it before the
+      incident. We built it after. Both statements are true.
+    </p>
+
+    <p>
+      Mercator did not leave us over this. The CHRO read the PIR,
+      asked two questions, accepted our remediation, and added a
+      sentence to her quarterly board memo about Stratum that I have
+      her permission to quote: <em>"the vendor's response to the
+      incident is itself part of the diligence; the speed and
+      specificity of the response increased my confidence, not
+      decreased it."</em> I do not think she would have written that
+      sentence if we had spun the incident. I am certain she would not
+      have written it if we had hidden it. The cost of honesty in this
+      industry, in the year 2026, is lower than the cost of any
+      alternative. I am increasingly convinced this is true at every
+      time scale.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">Where this goes next.</h2>
+
+    <p>
+      Eventually, entity resolution will not be probabilistic plus
+      graph-confirmed. It will be graph-native, by which I mean that
+      every record in every source system will arrive at our ingestion
+      boundary already carrying a cryptographic identity proof — a
+      signed assertion, rotated on a schedule, that says <em>this
+      Greenhouse row refers to the same person as that Workday row,
+      because both were signed by an identity provider that knew it.</em>
+      We will not need to probabilistically infer the link. The link
+      will be present, deterministic, verifiable, and revocable. The
+      resolver, in that world, becomes a verifier rather than an
+      inferrer; it checks signatures and rejects records that cannot
+      be vouched for. Confidence intervals collapse to true/false.
+      Conflict-queue throughput drops to near zero. The People
+      Analytics lead gets her Wednesdays back entirely.
+    </p>
+
+    <p>
+      We are building the first version of this with two design
+      partners — Mercator and a second customer I cannot name yet —
+      using a small cross-system identity broker that issues short-
+      lived signed identity tokens at the moment of provisioning, and
+      that lives, as a hosted service, alongside the customer's IdP.
+      The first deployment of this broker — what we are internally
+      calling <em>the cross-record proof carrier</em> — is scheduled
+      for the first quarter of 2027. It will not eliminate the
+      probabilistic resolver, because the proof carriers will only
+      cover net-new records, and a five-year backlog of historical
+      records will continue to require probabilistic resolution. But
+      it changes the rate at which the graph degrades, and over a
+      decade it changes the architecture qualitatively. I am
+      ambivalent about how aggressively to market this — it is an
+      engineering bet, not yet a product — but it is the direction.
+    </p>
+
+    <p>
+      Beyond that, on a longer horizon, the architecture supports an
+      obvious extension that I want to flag and then walk away from.
+      Once entity resolution is solved within a single customer, the
+      next available problem is entity resolution <em>across</em>
+      customers — the same person, across two employers, over a
+      ten-year career arc. This unlocks features that are
+      operationally appealing: alumni networks, reference workflows,
+      passive candidate identification for recruiters. We will not
+      build any of those without explicit, per-person, revocable
+      consent. The default is no cross-customer linking; the user has
+      to opt in; the consent is revocable at any time; revocation
+      cascades through the graph and invalidates derived features in
+      real time. The architecture supports cross-customer resolution
+      because it would be irresponsible to build a graph-native
+      identity layer that could <em>not</em> handle the consent case
+      correctly, but the architecture supporting it is not a
+      commitment to ship it. I want to say this on the record. Our
+      engineering culture is the kind that builds capabilities and
+      then asks whether to expose them, in that order. Maya, Priya,
+      and I have agreed in writing that the cross-customer surface
+      will not ship without a board-level review and a customer-side
+      DPA addendum. I do not expect that review to happen before
+      2028. It may not happen at all.
+    </p>
+
+    <p>
+      I will close with a small confession. When Maya called me in
+      March and asked whether I wanted to spend the next five to seven
+      years of my professional life on the entity-resolution layer of
+      an enterprise HCM platform, I told her I needed twenty-four hours
+      to think about it. I called her back in eleven. The reason is
+      that I had spent the previous seven years at Stripe watching
+      what happens when you get the underlying graph right at a
+      payments company — the way every product team downstream of
+      that graph moves faster, the way every regulatory question
+      becomes answerable instead of approximately-answerable, the way
+      the company compounds in a direction that competitors cannot
+      easily intercept. The people graph in HR is the same shape of
+      problem as the merchant graph in payments. The hardness is
+      different in detail. The hardness in kind is the same. I have
+      written eleven good resolvers and approximately forty bad ones,
+      and I would like, this time, to write the one that compounds for
+      a decade. That is the work. That is, more than anything, what I
+      am here to do.
+    </p>
+  </section>
+
+  <!-- AUTHOR BIO -->
+  <aside class="author-bio" aria-label="About the author">
+    <div class="author-portrait" aria-hidden="true">DO</div>
+    <div class="author-meta">
+      <div class="author-name">David Okonkwo</div>
+      <div class="author-role">Co-founder &amp; CTO · Stratum, Inc.</div>
+      <p>
+        David leads engineering and the data platform at Stratum. He
+        spent six years at Palantir Foundry on enterprise data
+        integration and three at Stripe on the merchant graph. He has
+        written eleven good entity resolvers and approximately forty
+        bad ones, and is now trying to write one that compounds for a
+        decade. He lives in Oakland with his wife and two children.
+      </p>
+      <div class="author-links">
+        <a href="mailto:david@stratum.ai">david@stratum.ai</a>
+        <a href="mailto:david@stratum.ai">LinkedIn →</a>
+        <a href="../engineering/">Engineering blog →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    Author: David Okonkwo, Co-founder &amp; CTO, Stratum, Inc. ·
+    First drafted: 24 May 2026, Oakland; published: 27 May 2026 ·
+    Reviewed by: Maya Chen (CEO), Priya Rao (CCO), and Asha Pillai
+    (founding engineer, data platform) · Word count: ~5,000 · 18-minute
+    read · Cross-references: see also <em>"Entity resolution on the
+    people graph"</em> on the Stratum engineering blog, which is a
+    shorter, more code-forward version of the same argument and
+    contains the synthetic-Asha dataset used in the §I Halcyon
+    walkthrough. Halcyon material is published with Carlos Reyes's
+    review; the Mercator incident is published with Mercator's CHRO's
+    written permission and matches the redacted PIR delivered to her
+    security lead on 19 April 2026.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Next in the series: Priya, on the GTM motion. Expected
+      mid-July.
+    </div>
+    <div class="closing-links">
+      <a href="../">← Back to The Chairman's Briefing</a>
+      <a href="./why-i-left-workday.html">Read essay no. 01 (Maya) →</a>
+      <a href="../engineering/">Read the engineering blog →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../console/">Live console</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/mercator.html">Customers</a></li>
+        <li><a href="./why-i-left-workday.html">Essays</a></li>
+        <li><a href="../press/">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Writing</h4>
+      <ul>
+        <li><a href="./why-i-left-workday.html">No. 01 — Maya, on the layer</a></li>
+        <li><a href="./the-graph-between-the-databases.html">No. 02 — David, on resolution</a></li>
+        <li><a href="#">No. 03 — Priya, on the motion</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../">The Briefing</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>

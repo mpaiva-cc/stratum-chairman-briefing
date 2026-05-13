@@ -1,0 +1,1808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Status — Real-time system status</title>
+<meta name="description" content="Real-time operational status, 90-day uptime history, incident log, and performance metrics for stratum.ai. All systems normal." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/status — Public status page
+   Cream paper · deep ink · ochre accent · moss for OK
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-bright:  #6a8054;
+  --moss-soft:    #c5cdb1;
+
+  --plum:         #6b3a4a;
+
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --hi:           #a13418;
+  --crit:         #6d1b0c;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-narrow:   min(960px, 90vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.04), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--moss-deep); }
+.nav-links a.is-current::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--moss);
+}
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOB BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width:960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .mob-bar a { color: var(--ink-3); text-decoration: none; min-height: 36px; display: flex; align-items: center; padding: 0 .25rem; }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display); font-weight: 600; font-size: 1.05rem;
+    letter-spacing: -.02em; color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── BIG INDICATOR ── */
+
+.indicator {
+  width: var(--col);
+  margin: 3.2rem auto 0;
+  background: var(--moss);
+  color: var(--paper);
+  border: 1px solid var(--moss-deep);
+  padding: clamp(2.2rem, 5vw, 4.4rem) clamp(1.6rem, 4vw, 3.4rem);
+  position: relative;
+  overflow: hidden;
+}
+.indicator::before {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 88% 18%, rgba(244, 236, 218, 0.07), transparent 50%),
+    repeating-linear-gradient(135deg, rgba(244,236,218,.02) 0 1px, transparent 1px 14px);
+  pointer-events: none;
+}
+.indicator-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.6rem;
+  position: relative;
+}
+.indicator-eyebrow .bar {
+  height: 1px; width: 44px;
+  background: var(--moss-soft);
+  display: inline-block;
+}
+.indicator-eyebrow .dot-big {
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  background: var(--paper);
+  display: inline-block;
+  margin-left: .2rem;
+  animation: pulse 2.2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(244, 236, 218, 0.55);
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(244, 236, 218, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(244, 236, 218, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(244, 236, 218, 0); }
+}
+.indicator-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: .95;
+  letter-spacing: -.035em;
+  margin: 0 0 1.4rem;
+  color: var(--paper);
+  position: relative;
+}
+.indicator-h1 .punct { color: var(--ochre-soft); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+.indicator-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  line-height: 1.45;
+  color: var(--moss-soft);
+  max-width: 64ch;
+  margin: 0 0 1.8rem;
+  position: relative;
+}
+.indicator-sub strong { color: var(--paper); font-weight: 500; }
+.indicator-stamp {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  border-top: 1px solid rgba(244,236,218,.18);
+  padding-top: 1rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+.indicator-stamp strong { color: var(--paper); font-weight: 500; }
+
+/* ─────────────────────────────────────────── SECTION CHROME ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 4.5rem 0 1rem;
+  scroll-margin-top: 80px;
+}
+.ornament {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.ornament .bar {
+  height: 1px; width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0 0 .7rem;
+  color: var(--ink);
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  color: var(--ochre);
+}
+.section-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin: 0 0 2rem;
+}
+
+/* ─────────────────────────────────────────── COMPONENT GRID ── */
+
+.components {
+  border-top: 1px solid var(--ink);
+  margin-top: .6rem;
+}
+.comp-row {
+  display: grid;
+  grid-template-columns: 28px 1fr 160px 130px 130px;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.comp-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  margin-left: 6px;
+}
+.comp-dot.ok      { background: var(--moss); }
+.comp-dot.ok::after {
+  content: ""; position: absolute; inset: -4px;
+  border-radius: 50%; background: var(--moss);
+  opacity: .35; animation: pulse-small 2.4s ease-in-out infinite;
+}
+.comp-dot.warn    { background: var(--ochre); }
+.comp-dot.crit    { background: var(--hi); }
+.comp-dot.mute    { background: var(--ink-mute); opacity: .55; }
+@keyframes pulse-small {
+  0%, 100% { opacity: 0; transform: scale(.85); }
+  50%      { opacity: .25; transform: scale(1.35); }
+}
+.comp-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 32;
+  font-size: 1.12rem;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.comp-name .sub {
+  display: block;
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--ink-3);
+  margin-top: .15rem;
+  letter-spacing: 0;
+}
+.comp-status {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  padding: .35rem .6rem;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+}
+.comp-status.ok      { color: var(--moss-deep); background: rgba(74,93,58,.10); border: 1px solid rgba(74,93,58,.32); }
+.comp-status.warn    { color: var(--ochre-deep); background: rgba(184,101,31,.08); border: 1px solid rgba(184,101,31,.32); }
+.comp-status.planned { color: var(--ink-3); background: transparent; border: 1px solid var(--paper-rule-2); }
+.comp-uptime {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  text-align: right;
+  font-feature-settings: "tnum", "lnum";
+}
+.comp-uptime .lbl {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: .15rem;
+}
+.comp-uptime .val { color: var(--ink); font-weight: 500; }
+.comp-uptime .val.mute { color: var(--ink-mute); }
+
+/* Mobile cards for components */
+@media (max-width:780px) {
+  .comp-row {
+    grid-template-columns: 28px 1fr;
+    grid-template-areas:
+      "dot  name"
+      ".    status"
+      ".    uptime";
+    gap: .6rem 1rem;
+    padding: 1.2rem 0;
+  }
+  .comp-dot { grid-area: dot; align-self: start; margin-top: .5rem; }
+  .comp-name { grid-area: name; }
+  .comp-status { grid-area: status; justify-self: start; }
+  .comp-uptime {
+    grid-area: uptime;
+    text-align: left;
+    display: inline-flex;
+    gap: 1.4rem;
+  }
+  .comp-uptime .pair { display: block; }
+  .comp-uptime .lbl { margin-bottom: 0; display: inline; margin-right: .35rem; }
+}
+
+/* ─────────────────────────────────────────── 90 DAY GRID ── */
+
+.uptime-wrap {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+  margin-top: .8rem;
+}
+.uptime-grid {
+  display: grid;
+  grid-template-columns: repeat(90, 1fr);
+  gap: 3px;
+  margin: 1.4rem 0 1.2rem;
+}
+.uptime-cell {
+  aspect-ratio: 1 / 4;
+  border-radius: 1px;
+  background: var(--moss);
+  transition: transform .15s;
+  position: relative;
+}
+.uptime-cell:hover { transform: scaleY(1.08); }
+.uptime-cell.warn  { background: var(--ochre); }
+.uptime-cell.crit  { background: var(--hi); }
+.uptime-cell.out   { background: var(--crit); }
+
+.uptime-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: 1rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.uptime-legend .lg-item {
+  display: inline-flex; align-items: center;
+  gap: .5rem;
+}
+.uptime-legend .lg-swatch {
+  width: 12px; height: 12px;
+  border-radius: 1px;
+  background: var(--moss);
+}
+.uptime-legend .lg-swatch.warn { background: var(--ochre); }
+.uptime-legend .lg-swatch.crit { background: var(--hi); }
+.uptime-legend .lg-swatch.out  { background: var(--crit); }
+
+.uptime-axis {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-bottom: .4rem;
+}
+
+.uptime-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--paper-rule);
+  border-bottom: 0;
+  margin-top: 1.6rem;
+}
+.uptime-stats .st {
+  padding: 1rem 1.1rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.uptime-stats .st:last-child { border-right: 0; }
+.uptime-stats .st-l {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .5rem;
+}
+.uptime-stats .st-v {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.65rem;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.uptime-stats .st-v .of {
+  font-size: .95rem;
+  color: var(--ochre);
+  font-weight: 400;
+  margin-left: .15rem;
+}
+
+@media (max-width: 780px) {
+  .uptime-grid { grid-template-columns: repeat(30, 1fr); }
+  .uptime-cell { aspect-ratio: 1 / 3; }
+  .uptime-stats { grid-template-columns: 1fr 1fr; }
+}
+
+/* ─────────────────────────────────────────── INCIDENT TIMELINE ── */
+
+.incidents {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+  margin-top: .8rem;
+}
+.incident {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.6rem 1.7rem 1.5rem;
+  margin-bottom: 1.4rem;
+  position: relative;
+}
+.incident::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--ochre);
+}
+.incident.p3::before { background: var(--ochre-soft); }
+.incident.p1::before { background: var(--hi); }
+.incident-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: .8rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.incident-date {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 500;
+}
+.incident-sev {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .3rem .55rem;
+  border: 1px solid var(--paper-rule-2);
+  border-radius: 999px;
+  background: var(--paper);
+}
+.incident-sev.p2 { color: var(--ochre-deep); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.incident-sev.p3 { color: var(--ink-3); border-color: var(--paper-rule-2); }
+.incident-sev.p1 { color: var(--hi); border-color: var(--hi); background: rgba(161,52,24,.05); }
+.incident-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  margin: 0 0 1rem;
+  color: var(--ink);
+  width: 100%;
+}
+.incident-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper);
+  margin-bottom: 1rem;
+}
+.incident-meta .im {
+  padding: .7rem .85rem;
+  border-right: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+}
+.incident-meta .im:last-child { border-right: 0; }
+.incident-meta .im-l {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .3rem;
+}
+.incident-meta .im-v { color: var(--ink); font-weight: 500; font-feature-settings: "tnum"; }
+
+.inc-block {
+  margin-bottom: .9rem;
+}
+.inc-block:last-child { margin-bottom: 0; }
+.inc-block .inc-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 500;
+  display: block;
+  margin-bottom: .35rem;
+}
+.inc-block p {
+  margin: 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  max-width: 78ch;
+}
+.inc-block ul {
+  margin: .35rem 0 0;
+  padding-left: 1.2rem;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.inc-block ul li { margin-bottom: .25rem; }
+
+.incident-footer-note {
+  border-top: 1px solid var(--paper-rule);
+  padding: 1.6rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1rem;
+  color: var(--ink-3);
+  text-align: left;
+}
+
+@media (max-width:640px) {
+  .incident-meta { grid-template-columns: 1fr 1fr; }
+  .incident-meta .im { border-bottom: 1px solid var(--paper-rule); }
+  .incident-meta .im:nth-child(2) { border-right: 0; }
+  .incident-meta .im:nth-last-child(-n+2) { border-bottom: 0; }
+}
+
+/* ─────────────────────────────────────────── MAINTENANCE ── */
+
+.maint {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+  margin-top: .8rem;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 2rem;
+}
+.maint-card {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.3rem 1.4rem;
+}
+.maint-card .mc-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.maint-card h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem;
+  letter-spacing: -.015em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+.maint-card p {
+  margin: 0 0 .7rem;
+  font-size: 15.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+.maint-card p:last-child { margin-bottom: 0; }
+.maint-card .none {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+  padding: .55rem .8rem;
+  background: rgba(74,93,58,.08);
+  border: 1px solid rgba(74,93,58,.32);
+  border-radius: 999px;
+  display: inline-block;
+  margin: .35rem 0;
+}
+.maint-card .policy-line {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  border-top: 1px dashed var(--paper-rule-2);
+  padding-top: .8rem;
+  margin-top: .8rem;
+}
+
+@media (max-width:780px) {
+  .maint { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── METRICS ── */
+
+.metrics-wrap {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+  margin-top: .8rem;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--paper-rule);
+  border-bottom: 0;
+}
+.metric {
+  padding: 1.3rem 1.4rem 1.25rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  position: relative;
+}
+.metric:nth-child(3n) { border-right: 0; }
+.metric .m-l {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .55rem;
+}
+.metric .m-v {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 2.1rem;
+  line-height: 1;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.metric .m-v .u {
+  font-size: 1.05rem;
+  color: var(--ochre);
+  font-weight: 400;
+  margin-left: .1rem;
+  font-variation-settings: "opsz" 24;
+}
+.metric .m-f {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  margin-top: .5rem;
+  line-height: 1.4;
+}
+.metric .ok-pill {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+  padding: .2rem .45rem;
+  background: rgba(74,93,58,.10);
+  border: 1px solid rgba(74,93,58,.3);
+  border-radius: 999px;
+}
+
+.sla-line {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+  letter-spacing: .04em;
+  border-left: 2px solid var(--moss);
+  padding: .9rem 1.1rem;
+  background: var(--paper-warm);
+  margin-top: 1.5rem;
+  line-height: 1.6;
+}
+.sla-line strong {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  color: var(--moss-deep);
+  text-transform: uppercase;
+  margin-bottom: .4rem;
+  font-weight: 700;
+}
+
+@media (max-width:780px) {
+  .metrics-grid { grid-template-columns: 1fr 1fr; }
+  .metric:nth-child(3n) { border-right: 1px solid var(--paper-rule); }
+  .metric:nth-child(2n) { border-right: 0; }
+}
+@media (max-width:480px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .metric { border-right: 0 !important; }
+}
+
+/* ─────────────────────────────────────────── SUBSCRIBE ── */
+
+.subscribe {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+  margin-top: .8rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+.sub-form {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: 1.6rem 1.7rem 1.5rem;
+}
+.sub-form .sf-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+}
+.sub-form h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.45rem;
+  letter-spacing: -.015em;
+  margin: 0 0 .55rem;
+  color: var(--ink);
+}
+.sub-form p {
+  margin: 0 0 1.1rem;
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  max-width: 50ch;
+}
+.sub-form .sf-row {
+  display: flex;
+  gap: .55rem;
+}
+.sub-form input[type="email"] {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 13px;
+  background: var(--paper);
+  border: 1px solid var(--paper-rule-2);
+  padding: .75rem .9rem;
+  color: var(--ink);
+  outline: none;
+  letter-spacing: .02em;
+}
+.sub-form input[type="email"]:focus { border-color: var(--ochre); }
+.sub-form button {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  padding: .75rem 1.1rem;
+  cursor: pointer;
+}
+.sub-form button:hover { background: var(--ochre); border-color: var(--ochre); }
+
+.sub-channels {
+  border: 1px solid var(--paper-rule);
+  padding: 1.4rem 1.5rem;
+}
+.sub-channels .sc-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .9rem;
+}
+.sub-channels dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: .65rem 1.1rem;
+  align-items: baseline;
+}
+.sub-channels dt {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.sub-channels dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: .01em;
+}
+.sub-channels dd a { color: var(--ink); border-bottom: 1px dotted var(--paper-rule-2); }
+.sub-channels dd a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+@media (max-width:780px) {
+  .subscribe { grid-template-columns: 1fr; gap: 1.6rem; }
+  .sub-form .sf-row { flex-direction: column; }
+  .sub-form button { width: 100%; }
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  border-top: 1px solid var(--ink);
+  margin-top: 3rem;
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+  text-align: center;
+}
+.closing-quote {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  font-weight: 400;
+  font-size: clamp(1.4rem, 3vw, 2.1rem);
+  line-height: 1.3;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  max-width: 38ch;
+  margin: 0 auto 1.8rem;
+}
+.closing-quote::before,
+.closing-quote::after {
+  content: "“";
+  color: var(--ochre);
+  font-style: normal;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  margin-right: .1em;
+}
+.closing-quote::after { content: "”"; margin-left: .05em; margin-right: 0; }
+.closing-links {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  gap: 1.6rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 2px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--paper-rule);
+  padding: 3.5rem 0 2rem;
+  margin-top: 2rem;
+}
+.footer-inner { width: var(--col-wide); margin: 0 auto; }
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  align-items: start;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 96;
+  font-size: 3rem;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.05rem;
+  color: var(--ink-2);
+  max-width: 32ch;
+  line-height: 1.5;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 1rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-3);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-mute);
+  border-bottom: 0;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width:960px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width:640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .comp-dot.ok::after { display: none; }
+  .indicator-eyebrow .dot-big { animation: none; box-shadow: 0 0 0 0 transparent; }
+}
+
+@media print {
+  body::before { display: none; }
+  .nav, .footer, .mob-bar, .subscribe { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  .indicator { background: var(--paper-warm); color: var(--ink); border: 2px solid var(--moss); }
+  .indicator-h1, .indicator-sub, .indicator-stamp, .indicator-stamp strong { color: var(--ink) !important; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Status</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="../trust/index.html">Trust</a>
+      <a href="./index.html" class="is-current">Status</a>
+    </div>
+    <a href="mailto:hello@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── BIG INDICATOR ── -->
+<header class="indicator" role="status" aria-live="polite">
+  <div class="indicator-eyebrow">
+    <span class="bar"></span> System status · stratum.ai
+    <span class="dot-big" aria-hidden="true"></span>
+  </div>
+  <h1 class="indicator-h1">All systems normal<span class="punct">.</span></h1>
+  <p class="indicator-sub">
+    Last incident: <strong>22 April 2026</strong> (resolved, post-mortem published below).
+    Operating without incident for <strong>21 days</strong>.
+  </p>
+  <div class="indicator-stamp">
+    <span>Last updated · <strong id="last-updated">13 May 2026 · 03:14 PT</strong></span>
+    <span>Auto-refresh · <strong>every 60 seconds</strong></span>
+    <span>All times · <strong>America/Los_Angeles</strong></span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── COMPONENT GRID ── -->
+<section id="components">
+  <div class="ornament"><span class="bar"></span> § 01 · Component status</div>
+  <h2 class="section-h">Every public surface, individually <em>monitored</em>.</h2>
+  <p class="section-dek">
+    Each of the systems below is probed independently from three geographic regions
+    every thirty seconds. We publish 30-day and 90-day uptime for every component.
+  </p>
+
+  <div class="components">
+    <!-- 1 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">stratum.ai API <span class="sub">Production endpoints — REST &amp; GraphQL</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.97%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.94%</span></span></div>
+    </div>
+
+    <!-- 2 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Console <span class="sub">Web application · console.stratum.ai</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.99%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.98%</span></span></div>
+    </div>
+
+    <!-- 3 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Connector ingestion <span class="sub">Workday · Greenhouse · ADP · Lever</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.91%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.87%</span></span></div>
+    </div>
+
+    <!-- 4 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">People graph <span class="sub">Entity resolution &amp; lineage</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.95%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.93%</span></span></div>
+    </div>
+
+    <!-- 5 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Agent / model inference <span class="sub">Anthropic Claude · upstream dependency surfaced</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.83%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.79%</span></span></div>
+    </div>
+
+    <!-- 6 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Webhooks <span class="sub">Outbound event delivery to customer endpoints</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.89%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.85%</span></span></div>
+    </div>
+
+    <!-- 7 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Authentication / SSO <span class="sub">SAML 2.0 · OIDC · SCIM 2.0</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.98%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.97%</span></span></div>
+    </div>
+
+    <!-- 8 -->
+    <div class="comp-row">
+      <span class="comp-dot ok" aria-hidden="true"></span>
+      <div class="comp-name">Customer dashboards <span class="sub">Embedded analytics &amp; reporting</span></div>
+      <span class="comp-status ok">Operational</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">30 d</span><span class="val">99.99%</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">90 d</span><span class="val">99.98%</span></span></div>
+    </div>
+
+    <!-- 9 -->
+    <div class="comp-row">
+      <span class="comp-dot mute" aria-hidden="true"></span>
+      <div class="comp-name">EU residency · Frankfurt <span class="sub">Planned regional deployment</span></div>
+      <span class="comp-status planned">Not yet live</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">Target</span><span class="val mute">M14</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">ETA</span><span class="val mute">Aug 2027</span></span></div>
+    </div>
+
+    <!-- 10 -->
+    <div class="comp-row">
+      <span class="comp-dot mute" aria-hidden="true"></span>
+      <div class="comp-name">APAC residency · Singapore <span class="sub">Planned regional deployment</span></div>
+      <span class="comp-status planned">Not yet live</span>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">Target</span><span class="val mute">H2 2027</span></span></div>
+      <div class="comp-uptime"><span class="pair"><span class="lbl">ETA</span><span class="val mute">—</span></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 90-DAY UPTIME ── -->
+<section id="uptime">
+  <div class="ornament"><span class="bar"></span> § 02 · 90-day history</div>
+  <h2 class="section-h">Ninety days at a glance.</h2>
+  <p class="section-dek">
+    Each column is one calendar day. A green cell means a clean day with zero
+    incidents; an ochre cell means a degradation. The 22 April 2026 ochre cell
+    corresponds to the Anthropic upstream event documented below.
+  </p>
+
+  <div class="uptime-wrap">
+    <div class="uptime-axis">
+      <span>13 Feb 2026 ← 90 days ago</span>
+      <span>Today · 13 May 2026 →</span>
+    </div>
+    <div class="uptime-grid" id="uptime-grid">
+      <!-- 90 cells. Day 0 = 13 Feb 2026, day 89 = 13 May 2026.
+           Ochre cell at day index 68 = 22 April 2026. -->
+      <span class="uptime-cell" title="13 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="14 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="15 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="16 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="17 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="18 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="19 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="20 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="21 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="22 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="23 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="24 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="25 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="26 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="27 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="28 Feb 2026 · operational"></span>
+      <span class="uptime-cell" title="01 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="02 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="03 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="04 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="05 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="06 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="07 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="08 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="09 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="10 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="11 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="12 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="13 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="14 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="15 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="16 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="17 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="18 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="19 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="20 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="21 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="22 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="23 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="24 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="25 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="26 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="27 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="28 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="29 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="30 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="31 Mar 2026 · operational"></span>
+      <span class="uptime-cell" title="01 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="02 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="03 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="04 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="05 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="06 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="07 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="08 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="09 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="10 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="11 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="12 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="13 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="14 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="15 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="16 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="17 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="18 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="19 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="20 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="21 Apr 2026 · operational"></span>
+      <span class="uptime-cell warn" title="22 Apr 2026 · degraded — agent inference, 93 min"></span>
+      <span class="uptime-cell" title="23 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="24 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="25 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="26 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="27 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="28 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="29 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="30 Apr 2026 · operational"></span>
+      <span class="uptime-cell" title="01 May 2026 · operational"></span>
+      <span class="uptime-cell" title="02 May 2026 · operational"></span>
+      <span class="uptime-cell" title="03 May 2026 · operational"></span>
+      <span class="uptime-cell" title="04 May 2026 · operational"></span>
+      <span class="uptime-cell" title="05 May 2026 · operational"></span>
+      <span class="uptime-cell" title="06 May 2026 · operational"></span>
+      <span class="uptime-cell" title="07 May 2026 · operational"></span>
+      <span class="uptime-cell" title="08 May 2026 · operational"></span>
+      <span class="uptime-cell" title="09 May 2026 · operational"></span>
+      <span class="uptime-cell" title="10 May 2026 · operational"></span>
+      <span class="uptime-cell" title="11 May 2026 · operational"></span>
+      <span class="uptime-cell" title="12 May 2026 · operational"></span>
+      <span class="uptime-cell" title="13 May 2026 · operational"></span>
+    </div>
+
+    <div class="uptime-legend">
+      <span class="lg-item"><span class="lg-swatch"></span> Operational</span>
+      <span class="lg-item"><span class="lg-swatch warn"></span> Degraded</span>
+      <span class="lg-item"><span class="lg-swatch crit"></span> Partial outage</span>
+      <span class="lg-item"><span class="lg-swatch out"></span> Full outage</span>
+      <span class="lg-item" style="margin-left:auto;">Hover any cell for the date</span>
+    </div>
+
+    <div class="uptime-stats">
+      <div class="st">
+        <div class="st-l">30-day overall</div>
+        <div class="st-v">99.96<span class="of">%</span></div>
+      </div>
+      <div class="st">
+        <div class="st-l">90-day overall</div>
+        <div class="st-v">99.93<span class="of">%</span></div>
+      </div>
+      <div class="st">
+        <div class="st-l">Clean days · 90</div>
+        <div class="st-v">89<span class="of">/ 90</span></div>
+      </div>
+      <div class="st">
+        <div class="st-l">Days since incident</div>
+        <div class="st-v">21<span class="of"> d</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── INCIDENT HISTORY ── -->
+<section id="incidents">
+  <div class="ornament"><span class="bar"></span> § 03 · Incident history</div>
+  <h2 class="section-h">Every event, with a <em>root cause</em>.</h2>
+  <p class="section-dek">
+    We publish a record of every operational event, including those caused by
+    upstream providers. We do not redact severity, duration, or remediation.
+  </p>
+
+  <div class="incidents">
+
+    <!-- INCIDENT 1: 22 April 2026 -->
+    <article class="incident">
+      <div class="incident-head">
+        <span class="incident-date">22 April 2026 · resolved</span>
+        <span class="incident-sev p2">P2 · Degraded</span>
+        <h3 class="incident-title">Degraded performance — agent inference</h3>
+      </div>
+
+      <div class="incident-meta">
+        <div class="im"><span class="im-l">Detected</span><span class="im-v">14:08 PT</span></div>
+        <div class="im"><span class="im-l">Resolved</span><span class="im-v">15:41 PT</span></div>
+        <div class="im"><span class="im-l">Duration</span><span class="im-v">93 min</span></div>
+        <div class="im"><span class="im-l">Customer impact</span><span class="im-v">Latency only</span></div>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Summary</span>
+        <p>
+          Anthropic's API experienced elevated latency (p99 from 1.8s to 6.4s).
+          Stratum's agent responses were slow but not failed. No customer-data
+          impact. No data loss. We surfaced a banner in the Console for the
+          duration explaining the upstream cause.
+        </p>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Root cause</span>
+        <p>
+          Upstream provider (Anthropic) capacity event. We received no advance
+          notice. Anthropic's own status page acknowledged the event at 14:22 PT,
+          fourteen minutes after our internal probes detected it.
+        </p>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Remediation</span>
+        <ul>
+          <li>Circuit breaker implemented: switch from Opus to Sonnet when Opus p99 latency exceeds 4.0s for 5 minutes.</li>
+          <li>Graceful-degradation banner now ships by default — explains the situation to end users with an ETA when available.</li>
+          <li>Requested capacity visibility / advance-notice channel from Anthropic for the future. In progress.</li>
+        </ul>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Post-mortem</span>
+        <p>
+          Full post-mortem document available under NDA on request. Email
+          <a href="mailto:security@stratum.ai">security@stratum.ai</a>.
+        </p>
+      </div>
+    </article>
+
+    <!-- INCIDENT 2: 04 April 2026 -->
+    <article class="incident p3">
+      <div class="incident-head">
+        <span class="incident-date">04 April 2026 · resolved</span>
+        <span class="incident-sev p3">P3 · Informational</span>
+        <h3 class="incident-title">Brief connector backlog — ADP Workforce Now</h3>
+      </div>
+
+      <div class="incident-meta">
+        <div class="im"><span class="im-l">Detected</span><span class="im-v">09:32 PT</span></div>
+        <div class="im"><span class="im-l">Resolved</span><span class="im-v">09:58 PT</span></div>
+        <div class="im"><span class="im-l">Duration</span><span class="im-v">26 min</span></div>
+        <div class="im"><span class="im-l">Customer impact</span><span class="im-v">None</span></div>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Summary</span>
+        <p>
+          ADP-WFN connector experienced a 26-minute ingestion lag (records were
+          26 minutes stale at peak). No customer-facing impact: fallback poll
+          backfilled records before any downstream consumer queried them.
+        </p>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Root cause</span>
+        <p>
+          ADP's webhook delivery experienced an upstream queue.
+          Caught and remediated within 1 minute of detection via our
+          pre-existing fallback poll.
+        </p>
+      </div>
+
+      <div class="inc-block">
+        <span class="inc-label">Remediation</span>
+        <p>
+          We had already implemented a fallback poll for ADP's webhook delivery;
+          this incident validated the fallback worked correctly. No further
+          action required, though we tightened the poll cadence from 5 minutes
+          to 2 minutes for ADP-WFN specifically.
+        </p>
+      </div>
+    </article>
+
+    <p class="incident-footer-note">
+      No prior public-facing incidents. Stratum was founded 06 May 2026;
+      all operational events before the events above were pre-production
+      and therefore not customer-impacting.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── MAINTENANCE ── -->
+<section id="maintenance">
+  <div class="ornament"><span class="bar"></span> § 04 · Scheduled maintenance</div>
+  <h2 class="section-h">Maintenance windows.</h2>
+  <p class="section-dek">
+    Customer-impact maintenance is announced 72 hours in advance via the
+    customer portal and email. Routine maintenance is conducted during
+    low-traffic windows.
+  </p>
+
+  <div class="maint">
+    <div class="maint-card">
+      <div class="mc-eyebrow">Currently scheduled</div>
+      <h3>Nothing currently scheduled.</h3>
+      <p>No customer-impact maintenance is planned through 30 June 2026.</p>
+      <p><span class="none">● None scheduled · clear through 30 Jun</span></p>
+      <p class="policy-line">
+        Next routine maintenance window: <strong>Tue 19 May 2026 · 02:00–04:00 PT</strong>
+        — connector worker pool rotation, no expected impact.
+      </p>
+    </div>
+
+    <div class="maint-card">
+      <div class="mc-eyebrow">Policy</div>
+      <h3>How we notify.</h3>
+      <p>
+        Customer-impact maintenance is announced <strong>72 hours in advance</strong>
+        via the customer portal and email, and is repeated on this page.
+      </p>
+      <p>
+        Routine maintenance (no expected impact) is conducted in
+        <strong>02:00–04:00 PT</strong> windows on Tuesdays and Thursdays. It is
+        not separately announced; it is logged here after the fact.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PERFORMANCE METRICS ── -->
+<section id="performance">
+  <div class="ornament"><span class="bar"></span> § 05 · Real-time performance</div>
+  <h2 class="section-h">Performance, in <em>numbers</em>.</h2>
+  <p class="section-dek">
+    Six metrics computed over the last 24 hours. Targets are the same targets
+    we commit to in our standard SLA. Updated continuously; values shown below
+    are as of the timestamp at the top of the page.
+  </p>
+
+  <div class="metrics-wrap">
+    <div class="metrics-grid">
+
+      <div class="metric">
+        <div class="m-l">API median latency · 24h</div>
+        <div class="m-v">142<span class="u">ms</span></div>
+        <div class="m-f">Across all production endpoints, weighted by call volume.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+      <div class="metric">
+        <div class="m-l">API p95 latency · 24h</div>
+        <div class="m-v">412<span class="u">ms</span></div>
+        <div class="m-f">95th percentile across all calls. SLA target: &lt; 1.0s.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+      <div class="metric">
+        <div class="m-l">Console first paint · 24h</div>
+        <div class="m-v">0.8<span class="u">s</span></div>
+        <div class="m-f">Synthetic monitor from US-East / US-West / EU-West.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+      <div class="metric">
+        <div class="m-l">Agent response p50 · 24h</div>
+        <div class="m-v">2.1<span class="u">s</span></div>
+        <div class="m-f">Median first-token to final-token. Includes tool calls.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+      <div class="metric">
+        <div class="m-l">Agent response p95 · 24h</div>
+        <div class="m-v">8.4<span class="u">s</span></div>
+        <div class="m-f">95th percentile. Long tail dominated by deep tool chains.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+      <div class="metric">
+        <div class="m-l">Connector lag p99 · 24h</div>
+        <div class="m-v">4.2<span class="u">min</span></div>
+        <div class="m-f">99th percentile staleness across all active connectors.</div>
+        <span class="ok-pill">Within target</span>
+      </div>
+
+    </div>
+
+    <div class="sla-line">
+      <strong>Published SLA targets</strong>
+      API p95 &lt; 1.0s · Console first-paint &lt; 1.5s · Agent p50 &lt; 4.0s ·
+      Connector lag p99 &lt; 15 minutes. All currently within target.
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SUBSCRIBE ── -->
+<section id="subscribe">
+  <div class="ornament"><span class="bar"></span> § 06 · Subscribe</div>
+  <h2 class="section-h">Stay <em>notified</em>.</h2>
+  <p class="section-dek">
+    Get an email the moment we mark an incident, the moment we schedule
+    customer-impact maintenance, and the moment we mark everything resolved.
+  </p>
+
+  <div class="subscribe">
+    <form class="sub-form" action="mailto:status-subscribe@stratum.ai" method="post" enctype="text/plain">
+      <div class="sf-eyebrow">Email notifications</div>
+      <h3>One message per event. No marketing.</h3>
+      <p>
+        We send a notification when we open an incident, when we update an
+        incident, and when we resolve it. We send nothing else.
+      </p>
+      <div class="sf-row">
+        <input type="email" name="email" placeholder="you@yourcompany.com" required />
+        <button type="submit">Subscribe →</button>
+      </div>
+    </form>
+
+    <aside class="sub-channels">
+      <div class="sc-eyebrow">Other channels</div>
+      <dl>
+        <dt>Atom feed</dt>
+        <dd><a href="https://status.stratum.ai/feed.atom">status.stratum.ai/feed.atom</a></dd>
+        <dt>Slack</dt>
+        <dd>stratum-public.slack.com · <a href="#">#status-public</a></dd>
+        <dt>Twitter</dt>
+        <dd><a href="#">@stratum_status</a></dd>
+        <dt>Security</dt>
+        <dd><a href="mailto:security@stratum.ai">security@stratum.ai</a></dd>
+        <dt>RSS</dt>
+        <dd><a href="https://status.stratum.ai/feed.rss">status.stratum.ai/feed.rss</a></dd>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <div class="ornament" style="justify-content: center;"><span class="bar"></span> § 07 · A note from the team <span class="bar"></span></div>
+  <p class="closing-quote">Operational transparency is a feature, not a marketing artifact.</p>
+  <div class="closing-links">
+    <a href="../security/">Security architecture →</a>
+    <a href="../trust/">Trust center →</a>
+    <a href="../">The Chairman's Briefing →</a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="mark">Stratum<span class="dot">.</span></div>
+        <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Product</h4>
+        <ul>
+          <li><a href="../product/index.html#product">People graph</a></li>
+          <li><a href="../product/index.html#product">Copilot</a></li>
+          <li><a href="../product/index.html#product">Decisions</a></li>
+          <li><a href="../product/index.html#pricing">Pricing</a></li>
+          <li><a href="#">Connectors</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="../product/index.html#team">About</a></li>
+          <li><a href="../careers/index.html">Careers</a></li>
+          <li><a href="../product/index.html#customer">Customers</a></li>
+          <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="../engineering/">Engineering blog</a></li>
+          <li><a href="../api/">API reference</a></li>
+          <li><a href="../changelog/">Changelog</a></li>
+          <li><a href="../index.html">Briefing No. 001</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Trust &amp; status</h4>
+        <ul>
+          <li><a href="../trust/">Trust center</a></li>
+          <li><a href="../security/">Security architecture</a></li>
+          <li><a href="./index.html">Status page</a></li>
+          <li><a href="mailto:security@stratum.ai">Security contact</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-foot">
+      <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+      <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Smooth scroll for in-page anchors
+  (function () {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (href.length < 2) return;
+        var target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        var offset = 80;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  })();
+
+  // Status page "auto-refresh" stamp — purely cosmetic.
+  // We don't actually re-fetch; we tick the stamp forward each minute
+  // so a visitor parking the tab sees the page "feel live".
+  (function () {
+    var el = document.getElementById('last-updated');
+    if (!el) return;
+    // Page is hardcoded to "13 May 2026 · 03:14 PT" — advance from there.
+    var baseMinutes = 14;        // 03:14
+    var baseHour = 3;
+    var startedAt = Date.now();
+    function pad(n) { return n < 10 ? '0' + n : '' + n; }
+    function tick() {
+      var elapsedMin = Math.floor((Date.now() - startedAt) / 60000);
+      var totalMin = baseHour * 60 + baseMinutes + elapsedMin;
+      var hh = Math.floor(totalMin / 60) % 24;
+      var mm = totalMin % 60;
+      el.textContent = '13 May 2026 · ' + pad(hh) + ':' + pad(mm) + ' PT';
+    }
+    // Tick once a minute. We do not refresh data — there is no data.
+    setInterval(tick, 60 * 1000);
+  })();
+</script>
+
+</body>
+</html>

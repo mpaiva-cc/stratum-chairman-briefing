@@ -1,0 +1,1567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Roadmap · What we are shipping next, and what we are deliberately not.</title>
+<meta name="description" content="The Stratum public roadmap. Shipping now, up next, on the horizon, and the work we are deliberately not building yet — with reasoning. Last updated 13 May 2026." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/roadmap
+   The honest forward log. A rhyme with the changelog.
+   Cream paper, deep ink, ochre accent, moss for "now",
+   ink-mute for "not now".
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:    #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --now:          #4a5d3a;
+  --next:         #b8651f;
+  --horizon:      #2a4a6b;
+  --notnow:       #6c7180;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(880px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.1em; }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOB BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244, 236, 218, .96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3); text-decoration: none;
+    min-height: 36px; display: flex; align-items: center; padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600; font-size: 1.05rem; letter-spacing: -.02em;
+    color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.4rem 0 3.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.5rem, 9vw, 6.5rem);
+  line-height: .96;
+  letter-spacing: -.038em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+  max-width: 22ch;
+}
+.hero-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  color: var(--ochre);
+}
+
+.hero-sub {
+  font-family: var(--serif);
+  font-size: 1.32rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 64ch;
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  margin: 0 0 2.2rem;
+}
+
+.hero-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  max-width: 78ch;
+  padding: .9rem 1.1rem;
+  border-left: 2px solid var(--ochre);
+  background: rgba(184, 101, 31, 0.04);
+  margin-bottom: 2.2rem;
+}
+.hero-meta strong { color: var(--ink-2); letter-spacing: .12em; text-transform: uppercase; font-size: 11px; font-weight: 500; }
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+}
+.cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .8rem 1.2rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.cta-ink {
+  background: var(--ink);
+  color: var(--paper);
+}
+.cta-ink:hover { background: var(--ochre); border-color: var(--ochre); }
+.cta-ink .arr { color: var(--ochre); transition: color .2s; }
+.cta-ink:hover .arr { color: var(--ink); }
+
+.cta-ghost {
+  background: transparent;
+  color: var(--ink);
+}
+.cta-ghost:hover { background: var(--ink); color: var(--paper); }
+.cta-ghost:hover .arr { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── STRUCTURE NOTE ── */
+
+.structure {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.2rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 2.6rem;
+}
+.structure-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: .35rem 0 0;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  align-self: start;
+}
+.structure-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.structure-body {
+  max-width: 70ch;
+}
+.structure-body p {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  font-variation-settings: "opsz" 20;
+}
+.structure-body p em { color: var(--ink); font-style: italic; }
+.structure-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.4rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.structure-body li {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  padding: .35rem 0;
+}
+.structure-body li .key {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  padding-top: .35em;
+}
+.structure-body li .key.now { color: var(--now); }
+.structure-body li .key.next { color: var(--next); }
+.structure-body li .key.horizon { color: var(--horizon); }
+.structure-body li .key.notnow { color: var(--notnow); }
+.structure-body li .key.done { color: var(--ink-mute); }
+
+@media (max-width: 820px) {
+  .structure { grid-template-columns: 1fr; gap: 1.2rem; }
+  .structure-body li { grid-template-columns: 1fr; gap: .15rem; }
+  .structure-body li .key { padding-top: 0; }
+}
+
+/* ─────────────────────────────────────────── SECTION HEAD ── */
+
+.section {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 1rem;
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 2.6rem;
+  margin-bottom: 2.8rem;
+  align-items: end;
+}
+.section-rail {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding-bottom: .2rem;
+}
+.section-rail::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.section-rail.now { color: var(--now); }
+.section-rail.now::before { background: var(--now); }
+.section-rail.next { color: var(--next); }
+.section-rail.next::before { background: var(--next); }
+.section-rail.horizon { color: var(--horizon); }
+.section-rail.horizon::before { background: var(--horizon); }
+.section-rail.notnow { color: var(--notnow); }
+.section-rail.notnow::before { background: var(--notnow); }
+
+.section-title {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 .55rem;
+}
+.section-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  color: var(--ochre);
+}
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 22;
+  max-width: 60ch;
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .section-head { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+/* ─────────────────────────────────────────── CARD GRID ── */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.card {
+  padding: 2rem 1.8rem 2.2rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+  position: relative;
+}
+.card:nth-child(2n) { border-right: 0; }
+.card:last-child { border-bottom: 0; }
+.cards.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.cards.cols-3 .card { border-right: 1px solid var(--paper-rule); }
+.cards.cols-3 .card:nth-child(3n) { border-right: 0; }
+
+.card-cat {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.card-cat::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: var(--ochre);
+  flex-shrink: 0;
+  display: inline-block;
+}
+.card-cat.connector { color: var(--ochre); }
+.card-cat.connector::before { background: var(--ochre); }
+.card-cat.agent { color: var(--moss); }
+.card-cat.agent::before { background: var(--moss); }
+.card-cat.compliance { color: var(--horizon); }
+.card-cat.compliance::before { background: var(--horizon); }
+.card-cat.decisions { color: var(--plum); }
+.card-cat.decisions::before { background: var(--plum); }
+.card-cat.api { color: var(--ochre-deep); }
+.card-cat.api::before { background: var(--ochre-deep); }
+.card-cat.residency { color: var(--moss-deep); }
+.card-cat.residency::before { background: var(--moss-deep); }
+.card-cat.app { color: var(--ink-3); }
+.card-cat.app::before { background: var(--ink-3); }
+.card-cat.notnow { color: var(--ink-mute); }
+.card-cat.notnow::before { background: var(--ink-mute); }
+
+.card-title {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.7rem;
+  line-height: 1.15;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0;
+}
+.card-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  color: var(--ochre);
+}
+
+.card-target {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: .35rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.card-target .lbl {
+  color: var(--ink-mute);
+  letter-spacing: .2em;
+}
+.card-target .date {
+  color: var(--ink);
+}
+.card-target .date.moved {
+  color: var(--ochre);
+}
+
+.card-body {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.58;
+  color: var(--ink-2);
+  margin: 0;
+  font-variation-settings: "opsz" 18;
+}
+.card-body em {
+  color: var(--ink);
+  font-style: italic;
+}
+
+.card-foot {
+  margin-top: auto;
+  padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+}
+.card-foot .pill {
+  background: var(--paper-deep);
+  padding: .22rem .5rem;
+  color: var(--ink-3);
+}
+.card-foot .pill.moved { background: rgba(184, 101, 31, 0.12); color: var(--ochre-deep); }
+.card-foot .pill.beta { background: rgba(74, 93, 58, 0.14); color: var(--moss-deep); }
+
+@media (max-width: 820px) {
+  .cards, .cards.cols-3 { grid-template-columns: 1fr; }
+  .card, .cards.cols-3 .card { border-right: 0; }
+}
+
+/* ─────────────────────────────────────────── HORIZON LIST ── */
+
+.horizon-list {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex;
+  flex-direction: column;
+}
+.horizon-row {
+  display: grid;
+  grid-template-columns: 180px 160px 1fr 160px;
+  gap: 1.4rem;
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.horizon-row:last-child { border-bottom: 0; }
+.horizon-row .cat {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.horizon-row .cat::before {
+  content: "";
+  width: 7px; height: 7px;
+  background: var(--ochre);
+  flex-shrink: 0;
+  display: inline-block;
+}
+.horizon-row .cat.agent { color: var(--moss); }
+.horizon-row .cat.agent::before { background: var(--moss); }
+.horizon-row .cat.connector { color: var(--ochre); }
+.horizon-row .cat.connector::before { background: var(--ochre); }
+.horizon-row .cat.decisions { color: var(--plum); }
+.horizon-row .cat.decisions::before { background: var(--plum); }
+.horizon-row .cat.residency { color: var(--moss-deep); }
+.horizon-row .cat.residency::before { background: var(--moss-deep); }
+.horizon-row .cat.compliance { color: var(--horizon); }
+.horizon-row .cat.compliance::before { background: var(--horizon); }
+.horizon-row .cat.app { color: var(--ink-3); }
+.horizon-row .cat.app::before { background: var(--ink-3); }
+.horizon-row .when {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.horizon-row .what {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 48, "SOFT" 0;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: -.018em;
+  color: var(--ink);
+}
+.horizon-row .what em {
+  font-style: italic;
+  font-variation-settings: "opsz" 48, "WONK" 1;
+  color: var(--ochre);
+}
+.horizon-row .note {
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+}
+
+@media (max-width: 820px) {
+  .horizon-row {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+    padding: 1.25rem 0;
+  }
+}
+
+/* ─────────────────────────────────────────── NOT NOW ── */
+
+.notnow-list {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.notnow-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 2rem;
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.notnow-row:last-child { border-bottom: 0; }
+.notnow-row .stamp {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-top: .55rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .55rem;
+}
+.notnow-row .stamp::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: var(--ink-mute);
+  flex-shrink: 0;
+  display: inline-block;
+  margin-top: .55em;
+}
+.notnow-row .body { }
+.notnow-row .title {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.55rem;
+  line-height: 1.2;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+}
+.notnow-row .why {
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  line-height: 1.55;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 20;
+  margin: 0;
+  max-width: 70ch;
+}
+.notnow-row .why::before { content: "\201C"; color: var(--ochre); margin-right: .15em; }
+.notnow-row .why::after { content: "\201D"; color: var(--ochre); margin-left: .1em; }
+
+@media (max-width: 820px) {
+  .notnow-row { grid-template-columns: 1fr; gap: .5rem; }
+  .notnow-row .stamp { padding-top: 0; }
+}
+
+/* ─────────────────────────────────────────── CHANGELOG CALLOUT ── */
+
+.callout {
+  width: var(--col-wide);
+  margin: 4rem auto 0;
+  padding: 2.4rem 2rem;
+  background: var(--paper-warm);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: 230px 1fr auto;
+  gap: 2.6rem;
+  align-items: center;
+}
+.callout-rail {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.callout-body {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  font-style: italic;
+  font-variation-settings: "opsz" 20;
+}
+.callout-body strong { color: var(--ink); font-style: normal; }
+.callout-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  padding: .75rem 1.1rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--ink);
+  transition: background .2s, color .2s;
+}
+.callout-cta:hover { background: var(--ink); color: var(--paper); }
+.callout-cta:hover .arr { color: var(--ochre); }
+.callout-cta .arr { color: var(--ochre); }
+
+@media (max-width: 820px) {
+  .callout { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5rem 0 5rem;
+  text-align: center;
+  border-top: 1px solid var(--paper-rule);
+}
+.closing-h {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height: 1.18;
+  letter-spacing: -.024em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  font-style: italic;
+}
+.closing-h em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+}
+.closing p {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  max-width: 60ch;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.closing-ctas {
+  display: flex;
+  gap: .8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0 1.6rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .14);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  letter-spacing: -.034em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .68);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  max-width: 32ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.footer-col li {
+  margin-bottom: .55rem;
+}
+.footer-col a {
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: rgba(244, 236, 218, .85);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-foot a {
+  color: rgba(244, 236, 218, .85);
+  border-bottom: 0;
+}
+.footer-foot a:hover { color: var(--ochre); }
+.footer-foot .briefing-link strong {
+  color: var(--paper);
+  letter-spacing: .12em;
+}
+
+@media (max-width: 980px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .hero-title { font-size: 3.1rem; }
+}
+
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.mob-bar a) { min-height: 28px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────────── MOB BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Roadmap</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../product/index.html" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="#" class="is-current">Roadmap</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>stratum.ai/roadmap · public · last updated 13 May 2026</span>
+  </div>
+
+  <h1 class="hero-title">
+    What we are <em>shipping next</em> — and what we are deliberately not shipping <em>yet</em>.
+  </h1>
+
+  <p class="hero-sub">
+    Stratum publishes a public roadmap because the alternative — keeping it
+    secret — buys us nothing and costs us trust. Items move; we will be honest
+    when they do.
+  </p>
+
+  <div class="hero-meta">
+    <strong>Last updated</strong> &nbsp; 13 May 2026 &nbsp; · &nbsp;
+    <strong>Cadence</strong> &nbsp; refreshed monthly &nbsp; · &nbsp;
+    <strong>Source</strong> &nbsp; the same internal plan our team works against — nothing held back
+  </div>
+
+  <div class="hero-ctas">
+    <a href="mailto:roadmap@stratum.ai" class="cta cta-ghost">Submit a feature request <span class="arr">→</span></a>
+    <a href="../changelog/" class="cta cta-ink">Read the changelog <span class="arr">→</span></a>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────── STRUCTURE ── -->
+<section class="structure">
+  <div class="structure-h">How to read this page</div>
+  <div class="structure-body">
+    <p>
+      We split the roadmap into four tracks plus a link out. The further from
+      today, the less specific we get — because the further out we are, the
+      less honestly we can promise a date. A roadmap that pretends to know
+      Q3 2027 in May 2026 is a roadmap that has decided to be wrong on
+      purpose. We would rather be vague and right than precise and lying.
+    </p>
+    <ul>
+      <li><span class="key now">Shipping now</span><span>Items currently being engineered. Expected within ~6 weeks. Dates are firm to within a sprint.</span></li>
+      <li><span class="key next">Up next</span><span>Items in design. Expected Q3–Q4 2026. Quarter-level confidence; specific weeks subject to change.</span></li>
+      <li><span class="key horizon">On the horizon</span><span>Items in concept. Expected 2027. Half-year buckets only; we will narrow as we get closer.</span></li>
+      <li><span class="key notnow">Not now (and why)</span><span>Items we are deliberately not building. With reasoning, because that is the part most roadmaps hide.</span></li>
+      <li><span class="key done">Done</span><span>Already shipped. We keep that history in the <a href="../changelog/">Stratum changelog</a> — eleven internal builds across Foundation, Loam, and Marble.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SHIPPING NOW ── -->
+<section class="section" id="now">
+  <div class="section-head">
+    <div class="section-rail now">§ 01 · Shipping now</div>
+    <div>
+      <h2 class="section-title">Shipping <em>now</em></h2>
+      <p class="section-dek">Next ~6 weeks. Five items in flight, dates firm to within a sprint, owners attached. Anything that slips becomes a "Known" line in the changelog.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">Lever ATS connector — <em>GA</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target ship</span>
+        <span class="date">28 May 2026</span>
+      </div>
+      <p class="card-body">
+        Lever's full read-side connector graduates from beta to general availability
+        after eight clean weeks behind the partner firewall. Offer write-back to
+        Lever enters private preview alongside it, scoped to two design partners
+        — <em>Northwind</em> and <em>Mercator</em> — before broader rollout.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Read · GA</span>
+        <span class="pill">Write · private preview</span>
+        <span class="pill">2 design partners</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">ADP-Workforce Now — <em>extended fields</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target ship</span>
+        <span class="date">06 Jun 2026</span>
+      </div>
+      <p class="card-body">
+        The ADP-WFN connector ingests additional fields: regional sub-tenancies,
+        dual-citizenship handling, and shift-differential carries. This is the
+        precise gap we hit at <em>Halcyon</em> last quarter — fixing it unblocks
+        cohort analysis for any partner with multinational payroll.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Schema v2</span>
+        <span class="pill">Halcyon-driven</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat agent">Agent</div>
+      <h3 class="card-title">Multi-turn conversations in the <em>Console</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target ship</span>
+        <span class="date">11 Jun 2026</span>
+      </div>
+      <p class="card-body">
+        Today the <a href="../console/">Console</a> handles one question at a time.
+        Multi-turn lets users iterate on a cohort — <em>"now show me just
+        engineering," "now exclude contractors," "now compare against
+        last quarter"</em> — without retyping the original frame. Citations
+        carry forward across turns.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Console v0.3</span>
+        <span class="pill">Citation-preserving</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat agent">Agent</div>
+      <h3 class="card-title">Saved questions &amp; <em>shareable links</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target ship</span>
+        <span class="date">04 Jun 2026</span>
+      </div>
+      <p class="card-body">
+        Save a question for later; share a deep link to a specific answer for
+        board decks and exec one-pagers. Linked answers re-resolve against the
+        latest data and carry a "last refreshed" stamp, so a slide built on
+        Monday's data tells you when it stops being Monday.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Console v0.3</span>
+        <span class="pill">Re-resolving links</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat compliance">Compliance</div>
+      <h3 class="card-title">SOC 2 Type II — <em>audit reports issued</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target ship</span>
+        <span class="date">30 Jun 2026</span>
+      </div>
+      <p class="card-body">
+        Our first SOC 2 Type II report covering the audit period
+        <em>01 Jan 2026 → 30 Jun 2026</em>. The report itself is available under
+        NDA via the trust center. Type I cleared in Act II; Type II is the one
+        most procurement desks actually want before they will sign.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Audit · Jan–Jun</span>
+        <span class="pill">Under NDA</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────────── UP NEXT ── -->
+<section class="section" id="next">
+  <div class="section-head">
+    <div class="section-rail next">§ 02 · Up next</div>
+    <div>
+      <h2 class="section-title">Up <em>next</em></h2>
+      <p class="section-dek">Q3–Q4 2026. Ten items in design or early build. Quarter-level confidence; specific months are best estimates, not commitments. One has been pulled forward; we say so explicitly.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">Ashby ATS</h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q3 2026 · Aug–Sep</span>
+      </div>
+      <p class="card-body">
+        Read-side connector for Ashby; offer write-back follows in Q4. Currently
+        in early access with one design partner. Ashby is the modern-stack
+        complement to Greenhouse in our connector lineup.
+      </p>
+      <div class="card-foot">
+        <span class="pill beta">Early access · 1 partner</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">iCIMS</h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q3 2026</span>
+      </div>
+      <p class="card-body">
+        iCIMS read-side connector. iCIMS write-back is deferred to Q1 2027 due
+        to API constraints we don't control — we would rather ship a clean
+        read than ship a brittle write. Our <a href="../recruiting/">recruiting</a>
+        flows surface iCIMS data the day the read lands.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Read · Q3</span>
+        <span class="pill">Write · Q1 2027</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">Personio</h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q3 2026 · Sep</span>
+      </div>
+      <p class="card-body">
+        Read-side. This is the gap from <em>Northwind's Berlin office</em> —
+        the specific request that pulled Personio above two larger logos in
+        the queue. EMEA-first partners get an answer here in September.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Northwind-driven</span>
+        <span class="pill">EMEA</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat connector">Connector</div>
+      <h3 class="card-title">SAP SuccessFactors</h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q4 2026 · Oct</span>
+      </div>
+      <p class="card-body">
+        Read-only initially. Write-back is deferred to H1 2027; SuccessFactors'
+        write surface is large and we will not pretend otherwise. Read covers
+        worker, position, comp, and org structure on day one.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Read · Q4</span>
+        <span class="pill">Write · H1 2027</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat decisions">Decisions</div>
+      <h3 class="card-title">Comp Review <em>module</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q3 2026</span>
+      </div>
+      <p class="card-body">
+        Our first write-back workflow we own end-to-end. Users propose comp
+        adjustments in the Console; Stratum routes the approval to the right
+        manager, captures the citation pack, and writes back to Workday,
+        Greenhouse, or Lattice. The whole loop, with provenance, in one place.
+      </p>
+      <div class="card-foot">
+        <span class="pill">First write-back workflow</span>
+        <span class="pill">Citation pack</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat decisions">Decisions</div>
+      <h3 class="card-title">Headcount Planning <em>module</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q4 2026</span>
+      </div>
+      <p class="card-body">
+        Plan headcount by department and req template. Stratum surfaces gaps,
+        forecasts time-to-fill against your own historicals, and simulates the
+        impact on burn before the req opens. This is the workflow CHROs ask us
+        about before they finish reading our deck.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Forecasting</span>
+        <span class="pill">Burn simulation</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat agent">Agent</div>
+      <h3 class="card-title">Custom eval sets — <em>per customer</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q3 2026</span>
+      </div>
+      <p class="card-body">
+        Today the eval set is global — the same 250 questions for every partner.
+        Customers will be able to author and own a private eval set,
+        co-edited with us, that grades the agent on the cohort questions
+        <em>their</em> CHRO actually asks. Pass-rates published monthly.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Private eval</span>
+        <span class="pill">Co-edited with us</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat compliance">Compliance</div>
+      <h3 class="card-title">ISO 27001 — <em>audit kickoff</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q4 2026 · Oct</span>
+      </div>
+      <p class="card-body">
+        Multi-year process. We start the audit in October; certification itself
+        is on the 2027 horizon. We name it now so procurement teams who need to
+        plan against it can.
+      </p>
+      <div class="card-foot">
+        <span class="pill">Kickoff · Oct</span>
+        <span class="pill">Cert · H2 2027</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat api">API</div>
+      <h3 class="card-title">Public API — <em>GA</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date">Q4 2026 · Nov</span>
+      </div>
+      <p class="card-body">
+        The <a href="../api/">/api/</a> page documents the <em>v0.4 private
+        preview</em>. GA at v1.0 with stability commitments, deprecation
+        windows, and a published change-log. Until then, the API is for
+        design partners only.
+      </p>
+      <div class="card-foot">
+        <span class="pill">v0.4 → v1.0</span>
+        <span class="pill">Stability committed</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="card-cat residency">EU residency</div>
+      <h3 class="card-title">Frankfurt — <em>data residency</em></h3>
+      <div class="card-target">
+        <span class="lbl">Target window</span>
+        <span class="date moved">Q4 2026 · Dec &nbsp;·&nbsp; pulled forward</span>
+      </div>
+      <p class="card-body">
+        Originally planned for <em>M14 (Aug 2027)</em> in the chairman's
+        eighteen-month roadmap; pulled forward roughly six months in response
+        to direct demand from EMEA design partners. We are telling you the
+        date moved because that is the contract.
+      </p>
+      <div class="card-foot">
+        <span class="pill moved">Moved · M14 → Q4 2026</span>
+        <span class="pill">EMEA-driven</span>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── ON THE HORIZON ── -->
+<section class="section" id="horizon">
+  <div class="section-head">
+    <div class="section-rail horizon">§ 03 · On the horizon</div>
+    <div>
+      <h2 class="section-title">On the <em>horizon</em></h2>
+      <p class="section-dek">2027. Half-year buckets. The further out, the more these are <em>directions</em> rather than commitments. We will narrow them as we get closer; we will move them when we have to.</p>
+    </div>
+  </div>
+
+  <div class="horizon-list">
+
+    <div class="horizon-row">
+      <span class="cat decisions">Decisions</span>
+      <span class="when">H1 2027</span>
+      <span class="what">Succession Planning <em>module</em></span>
+      <span class="note">Identify and develop the bench, not just the seat.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat agent">Agent</span>
+      <span class="when">H1 2027</span>
+      <span class="what">Multi-agent <em>workflows</em></span>
+      <span class="note">Console plus customer-side custom agents via the API.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat connector">Connector</span>
+      <span class="when">H1 2027</span>
+      <span class="what">Workday Recruiting — <em>full write-back</em></span>
+      <span class="note">Read is live in Act I; full write closes the loop.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat connector">Connector</span>
+      <span class="when">H2 2027</span>
+      <span class="what">Custom connector <em>framework</em></span>
+      <span class="note">Customers and partners can write their own.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat residency">APAC residency</span>
+      <span class="when">H2 2027</span>
+      <span class="what">Singapore — <em>data residency</em></span>
+      <span class="note">Pulled by the same partner set that pulled Frankfurt.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat compliance">Compliance</span>
+      <span class="when">H2 2027</span>
+      <span class="what">ISO 27001 — <em>certified</em></span>
+      <span class="note">Audit kicks off Q4 2026; certification this half.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat agent">Agent</span>
+      <span class="when">H2 2027</span>
+      <span class="what">Bring-your-own-<em>model</em></span>
+      <span class="note">Console uses Claude today. GPT-5, Gemini, or open models on request, after security review.</span>
+    </div>
+
+    <div class="horizon-row">
+      <span class="cat app">App</span>
+      <span class="when">2027 · TBD</span>
+      <span class="what">Native <em>mobile companion</em> app</span>
+      <span class="note">Lower priority; we will only ship it when the web Console is genuinely complete.</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── NOT NOW ── -->
+<section class="section" id="not-now">
+  <div class="section-head">
+    <div class="section-rail notnow">§ 04 · Not now (and why)</div>
+    <div>
+      <h2 class="section-title">Not <em>now</em> — and why</h2>
+      <p class="section-dek">The most important section on this page. The work we are deliberately not building yet, with one-sentence reasoning. A roadmap that only says "yes" is a roadmap with no spine.</p>
+    </div>
+  </div>
+
+  <div class="notnow-list">
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">A full HRIS replacement</h3>
+        <p class="why">We are the system of truth <em>above</em> your HRIS, not a competitor to it. If you want to replace Workday or BambooHR, you don't want Stratum.</p>
+      </div>
+    </div>
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">Payroll processing</h3>
+        <p class="why">ADP, Gusto, Workday Payroll, and fourteen country-specific systems do this well. We integrate; we don't compete.</p>
+      </div>
+    </div>
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">An applicant-side careers portal</h3>
+        <p class="why">Greenhouse, Ashby, and Workday Recruiting offer good candidate-facing flows. We are the intelligence layer above them; we don't displace them.</p>
+      </div>
+    </div>
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">An L&amp;D or learning management system</h3>
+        <p class="why">Cornerstone, LinkedIn Learning, and Docebo serve this. We surface learning data; we don't host courses.</p>
+      </div>
+    </div>
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">A general-purpose AI assistant</h3>
+        <p class="why">We are deliberately narrow: CHRO and recruiting questions answered with citations. A general assistant is not a positioning we can defend.</p>
+      </div>
+    </div>
+
+    <div class="notnow-row">
+      <div class="stamp">Not now</div>
+      <div class="body">
+        <h3 class="title">A version of Stratum for sub-500 EE companies</h3>
+        <p class="why">Our pricing and complexity don't fit until you are running three or more HR systems. Come back to us when you grow into the 1,000+ EE band.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CHANGELOG CALLOUT ── -->
+<div class="callout">
+  <div class="callout-rail">§ 05 · Recently shipped</div>
+  <div class="callout-body">
+    For a complete history of what we have shipped — with codenames, build
+    hashes, and per-release changelog entries — see the
+    <strong>Stratum Changelog</strong>. Eleven internal builds across the
+    Foundation, Loam, and Marble groups; refreshed every time the agent
+    or graph changes shape.
+  </div>
+  <a href="../changelog/" class="callout-cta">Open the changelog <span class="arr">→</span></a>
+</div>
+
+<!-- ───────────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <h2 class="closing-h">A roadmap is a contract with our customers and with <em>ourselves</em>. We will move it when we have to. We will tell you when we do.</h2>
+  <p>
+    If we slip a date on this page, the slip is named on the next refresh
+    and explained. If we kill an item, the item moves to "Not now" with a
+    reason. If you have a feature request, the inbox is real and one of
+    the founders reads it.
+  </p>
+  <div class="closing-ctas">
+    <a href="mailto:roadmap@stratum.ai" class="cta cta-ink">Email roadmap@stratum.ai <span class="arr">→</span></a>
+    <a href="../console/" class="cta cta-ghost">Ask the Console <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../console/">Console</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+        <li><a href="#" class="is-current">Roadmap</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="../engineering/index.html">Engineering</a></li>
+        <li><a href="../press/">Press</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../engineering/index.html">Engineering blog</a></li>
+        <li><a href="../api/">API reference</a></li>
+        <li><a href="../status/">Status page</a></li>
+        <li><a href="../recruiting/">Recruiting</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">Trust center</a></li>
+        <li><a href="../security/">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to the Chairman's Briefing · <strong>Briefing No. 001</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function(){
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll(){
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
