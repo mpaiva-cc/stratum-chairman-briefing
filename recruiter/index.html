@@ -1,0 +1,2030 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Recruiter — The first AI-native ATS built for enterprise recruiters.</title>
+<meta name="description" content="Stratum Recruiter is the AI-native applicant tracking system for enterprise recruiters at 1,000–8,000 EE companies. Built on Stratum's people graph. Native AI matching, sourcing, scheduling, and offers. Now in private beta." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum Recruiter · stratum.ai/recruiter — public product page
+   Cream paper + deep ink + ochre · moss secondary
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NEW BANNER ── */
+.new-banner {
+  background: var(--ochre);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: .65rem 1rem;
+  border-bottom: 1px solid var(--ochre-deep);
+}
+.new-banner a {
+  color: var(--paper);
+  border-bottom: 1px solid rgba(244, 236, 218, .45);
+  margin-left: .35rem;
+}
+.new-banner a:hover { border-bottom-color: var(--paper); }
+.new-banner .tag {
+  background: var(--ink);
+  color: var(--ochre-soft);
+  padding: .12rem .5rem;
+  margin-right: .55rem;
+  letter-spacing: .18em;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+  gap: 1.4rem;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); font-weight: 500; }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a .new-pip {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ochre);
+  margin-left: .35rem;
+  vertical-align: 1px;
+  animation: pulse-pip 2.2s ease-in-out infinite;
+}
+@keyframes pulse-pip {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .55; transform: scale(1.25); }
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 1100px) {
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: .94;
+  letter-spacing: -.036em;
+  margin: 0 0 1.8rem;
+  color: var(--ink);
+  max-width: 19ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem);
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.4rem;
+}
+.hero-sub strong { font-style: normal; color: var(--ochre-deep); }
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-bottom: 3.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .9rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  border: 1px solid var(--ink);
+  transition: background .2s, color .2s, border-color .2s, transform .2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.btn-primary .arr { color: var(--ochre); transition: color .2s; }
+.btn-primary:hover .arr { color: var(--ink); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+
+.hero-meta {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.4rem;
+  align-items: end;
+}
+.hero-meta-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1rem;
+}
+.beta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 30;
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  letter-spacing: -.01em;
+  color: var(--ink-2);
+}
+.beta-row .sep { color: var(--paper-rule-2); }
+.beta-row .name { color: var(--ink); }
+.beta-row .ee   { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: .15em; }
+
+.hero-stat {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 1rem 1.2rem;
+}
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .55rem;
+}
+.hero-stat-value {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.hero-stat-value em { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── REASONS ── */
+
+.reasons {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  max-width: 24ch;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 3rem;
+}
+
+.reasons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.reason {
+  padding: 2.4rem 1.8rem 2.4rem;
+  border-right: 1px solid var(--paper-rule);
+}
+.reason:last-child { border-right: 0; }
+.reason-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.reason-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  max-width: 22ch;
+}
+.reason-h em { font-style: italic; color: var(--ochre); font-variation-settings: "opsz" 60, "SOFT" 100; }
+.reason-body {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+}
+.pull-quote {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.08rem;
+  line-height: 1.35;
+  color: var(--ochre-deep);
+  border-left: 2px solid var(--ochre);
+  padding-left: 1rem;
+  margin: 1rem 0 .5rem;
+}
+.pull-attr {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .35rem;
+}
+
+/* ─────────────────────────────────────────── FEATURES ── */
+
+.features {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.feature {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 1.8rem 1.6rem 1.6rem;
+  background: var(--paper-warm);
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 1.2rem;
+  align-items: start;
+}
+.feature-icon {
+  flex: 0 0 48px;
+  width: 48px; height: 48px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+}
+.feature-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.18rem;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+  letter-spacing: -.01em;
+}
+.feature-body {
+  font-family: var(--serif);
+  font-size: .98rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+.feature-body strong { color: var(--ink); font-weight: 600; }
+
+/* ─────────────────────────────────────────── PEOPLE GRAPH (DARK) ── */
+
+.graph {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6rem 0 6rem;
+  margin-top: 1.5rem;
+  position: relative;
+}
+.graph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(184, 101, 31, 0.07), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(244, 236, 218, 0.04), transparent 50%);
+  pointer-events: none;
+}
+.graph-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  position: relative;
+}
+.graph-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0 0 1rem;
+  color: var(--paper);
+  max-width: 22ch;
+}
+.graph-h em { font-style: italic; color: var(--ochre-soft); font-variation-settings: "opsz" 96, "SOFT" 100; }
+.graph-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.2rem;
+  color: var(--ochre-soft);
+  max-width: 58ch;
+  margin: 0 0 3.5rem;
+  line-height: 1.4;
+}
+.graph-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.graph-svg-wrap {
+  border: 1px solid rgba(244, 236, 218, .25);
+  background: rgba(244, 236, 218, .03);
+  padding: 1.6rem;
+}
+.graph-svg-wrap svg { width: 100%; height: auto; display: block; }
+.graph-paras p {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.6;
+  color: rgba(244, 236, 218, .85);
+  margin: 0 0 1.6rem;
+}
+.graph-paras p strong { color: var(--paper); }
+.graph-paras p:last-child { margin-bottom: 0; }
+.graph-paras h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 .6rem;
+}
+
+/* ─────────────────────────────────────────── WORKFLOW ── */
+
+.workflow {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+}
+.workflow-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  margin-top: 1.5rem;
+}
+.wf-step {
+  padding: 1.5rem 1.4rem 1.4rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+  position: relative;
+}
+.wf-step-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.wf-step-num .pip {
+  width: 10px; height: 10px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.wf-step-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  margin: 0 0 .55rem;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.wf-step-stratum {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0;
+}
+.wf-step-stratum strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── PRICING ── */
+
+.pricing {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-top: 1px solid var(--ink);
+}
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2.4rem;
+}
+.price-card {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 2.2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+}
+.price-card.featured {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  position: relative;
+}
+.price-card.featured::after {
+  content: "Best value";
+  position: absolute;
+  top: -1px; right: -1px;
+  background: var(--ochre);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .4rem .8rem;
+  border: 1px solid var(--ochre);
+}
+.price-tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.price-card.featured .price-tag { color: var(--ochre-soft); }
+.price-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  margin: 0 0 1rem;
+  max-width: 18ch;
+}
+.price-card.featured .price-name em { color: var(--ochre-soft); font-style: italic; font-variation-settings: "opsz" 60, "SOFT" 100; }
+.price-card .price-name em { color: var(--ochre); font-style: italic; font-variation-settings: "opsz" 60, "SOFT" 100; }
+.price-num {
+  font-family: var(--display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.8rem, 5vw, 3.8rem);
+  line-height: .95;
+  letter-spacing: -.04em;
+  margin: 0 0 .35rem;
+  font-feature-settings: "tnum", "lnum";
+}
+.price-num .from {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: block;
+  margin-bottom: .35rem;
+  font-weight: 400;
+}
+.price-card.featured .price-num .from { color: var(--ochre-soft); }
+.price-num .unit {
+  font-size: .35em;
+  color: var(--ochre);
+  letter-spacing: -.01em;
+  margin-left: .2em;
+}
+.price-card.featured .price-num .unit { color: var(--ochre-soft); }
+.price-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.3rem;
+}
+.price-card.featured .price-meta { color: rgba(244, 236, 218, .65); }
+.price-body {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  margin: 0 0 1.5rem;
+}
+.price-card .price-body { color: var(--ink-2); }
+.price-card.featured .price-body { color: rgba(244, 236, 218, .85); }
+.price-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.6rem;
+  border-top: 1px dashed var(--paper-rule-2);
+}
+.price-card.featured .price-list { border-top-color: rgba(244, 236, 218, .25); }
+.price-list li {
+  font-family: var(--serif);
+  font-size: .96rem;
+  padding: .55rem 0;
+  border-bottom: 1px dashed var(--paper-rule-2);
+  color: var(--ink-2);
+}
+.price-card.featured .price-list li {
+  color: rgba(244, 236, 218, .82);
+  border-bottom-color: rgba(244, 236, 218, .18);
+}
+.price-list li::before {
+  content: "✓";
+  color: var(--ochre);
+  margin-right: .55rem;
+  font-weight: 700;
+}
+.price-card.featured .price-list li::before { color: var(--ochre-soft); }
+.price-foot {
+  margin-top: auto;
+}
+.price-card.featured .btn-ghost {
+  color: var(--paper);
+  border-color: var(--paper);
+}
+.price-card.featured .btn-ghost:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+}
+.price-card.featured .btn-primary {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+}
+.price-card.featured .btn-primary:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+  color: var(--ink);
+}
+.price-card.featured .btn-primary .arr { color: var(--ink); }
+
+.price-compare {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--ink-3);
+  margin-top: 1.8rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--ochre);
+  background: rgba(184, 101, 31, .06);
+}
+.price-compare strong { color: var(--ochre-deep); font-style: normal; }
+
+/* ─────────────────────────────────────────── COMPLIANCE ── */
+
+.compliance {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.5rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.compliance-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+.compliance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.compliance-body {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .03em;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.compliance-body strong { color: var(--ink); }
+.compliance-body a {
+  border-bottom: 1px solid var(--ochre);
+}
+
+/* ─────────────────────────────────────────── EXISTING CUSTOMERS ── */
+
+.existing {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 5rem 0 5rem;
+}
+.existing-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+.existing-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0 0 1rem;
+  color: var(--ink);
+  max-width: 16ch;
+}
+.existing-h em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+}
+.existing-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  color: var(--ink-2);
+  max-width: 38ch;
+  line-height: 1.4;
+  margin: 0;
+}
+.existing-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.8rem;
+  border-top: 1px solid var(--ink);
+}
+.existing-list li {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5;
+  color: var(--ink-2);
+  padding: 1.2rem 0 1.2rem 3.5rem;
+  border-bottom: 1px solid var(--paper-rule-2);
+  position: relative;
+}
+.existing-list li::before {
+  content: attr(data-n);
+  position: absolute;
+  left: 0; top: 1.2rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--ochre);
+  font-weight: 600;
+}
+.existing-list strong { color: var(--ink); }
+
+/* ─────────────────────────────────────────── BETA COHORT ── */
+
+.cohort {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+}
+.cohort-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin-top: 2.5rem;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.cohort-card {
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 2rem 1.6rem 1.8rem;
+  background: var(--paper-warm);
+  display: flex;
+  flex-direction: column;
+}
+.cohort-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.cohort-tag .pip {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--ochre);
+  animation: pulse-pip 2s ease-in-out infinite;
+}
+.cohort-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.7rem;
+  line-height: 1.05;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+.cohort-ee {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.1rem;
+}
+.cohort-meta {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-2);
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule-2);
+  letter-spacing: .04em;
+}
+.cohort-meta strong { color: var(--ochre-deep); }
+
+.cohort-foot {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.cohort-foot-block {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.cohort-foot-block .label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: block;
+  margin-bottom: .6rem;
+}
+.cohort-foot-block strong { color: var(--ink); }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 6.5rem 0 5rem;
+  text-align: center;
+  border-top: 1px solid var(--ink);
+}
+.closing-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+  font-style: italic;
+  font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+  line-height: 1.06;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 auto 2.4rem;
+  max-width: 22ch;
+}
+.closing-h em { color: var(--ochre); }
+.closing-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: rgba(244, 236, 218, .85);
+  padding: 4.5rem 0 2.5rem;
+  margin-top: 0;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .15);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.7rem;
+  letter-spacing: -.035em;
+  color: var(--paper);
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand .mark .pname {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  color: var(--ochre-soft);
+  font-size: 1.15rem;
+  letter-spacing: -.01em;
+  margin-left: .25rem;
+}
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.5;
+  color: rgba(244, 236, 218, .68);
+  max-width: 36ch;
+  margin: 1rem 0 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+}
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.footer-col li {
+  margin-bottom: .55rem;
+  font-family: var(--serif);
+  font-size: .97rem;
+}
+.footer-col a {
+  color: rgba(244, 236, 218, .78);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-foot a { color: rgba(244, 236, 218, .8); border-bottom: 0; }
+.footer-foot a:hover { color: var(--ochre); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .hero-meta { grid-template-columns: 1fr; gap: 1.4rem; align-items: start; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 960px) {
+  .reasons-grid { grid-template-columns: 1fr; border-bottom: 1px solid var(--ink); }
+  .reason { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .reason:last-child { border-bottom: 0; }
+  .features-grid { grid-template-columns: 1fr; }
+  .workflow-steps { grid-template-columns: 1fr 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .compliance-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .existing-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .cohort-grid { grid-template-columns: 1fr; }
+  .cohort-foot { grid-template-columns: 1fr; gap: 1.4rem; }
+  .graph-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+  .footer-foot { flex-direction: column; gap: .8rem; align-items: flex-start; }
+}
+@media (max-width: 640px) {
+  .workflow-steps { grid-template-columns: 1fr; }
+  .new-banner { font-size: 11px; padding: .5rem .8rem; letter-spacing: .08em; }
+  .new-banner .tag { display: block; margin: 0 0 .35rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero, .reasons, .features, .graph-inner, .workflow, .pricing, .existing-inner, .cohort, .closing, .footer-grid {
+  animation: fade-up .7s ease-out both;
+}
+
+</style>
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+<style id="mobile-readability-patch">
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.row):not(.artifact):not(.mob-bar a) { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T19:24:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+20:58:14.000</strong> · <span style="opacity:.6">2026-05-13T23:24:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Recruiter</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NEW BANNER ── -->
+<div class="new-banner">
+  <span class="tag">New</span> Stratum Recruiter is in private beta. Three commercial customers piloting now (Cordova, Atlas, Vanta).
+  <a href="mailto:recruiter-beta@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20early%20access">Request early access →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../compare/">Compare</a>
+      <a href="#" class="is-current">Recruiter<span class="new-pip" aria-hidden="true"></span></a>
+      <a href="../recruiting/">Recruiting</a>
+      <a href="../about/">Company</a>
+      <a href="../careers/">Careers</a>
+      <a href="../api/">API</a>
+    </div>
+    <a class="nav-cta" href="mailto:recruiter-beta@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20Talk%20to%20us">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    Stratum Recruiter · AI-Native ATS · Private beta · 2026
+  </div>
+
+  <h1 class="hero-h1">
+    The first AI-native <em>ATS</em> built for enterprise recruiters.
+  </h1>
+
+  <p class="hero-sub">
+    Built on Stratum's people graph. Native AI matching, sourcing, scheduling, and offers.
+    Integrates with <strong>18 HRIS systems</strong>. Now in private beta with
+    three commercial customers.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="mailto:recruiter-beta@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20early%20access" class="btn btn-primary">Request early access <span class="arr">→</span></a>
+    <a href="./console/" class="btn btn-ghost">Try the live demo →</a>
+  </div>
+
+  <div class="hero-meta">
+    <div>
+      <div class="hero-meta-label">Beta cohort · piloting now</div>
+      <div class="beta-row">
+        <span><span class="name">Cordova Manufacturing</span> <span class="ee">5,200 EE</span></span>
+        <span class="sep">·</span>
+        <span><span class="name">Atlas Logistics</span> <span class="ee">1,800 EE</span></span>
+        <span class="sep">·</span>
+        <span><span class="name">Vanta</span> <span class="ee">1,200 EE</span></span>
+      </div>
+    </div>
+
+    <div class="hero-stat">
+      <div class="hero-stat-label">GA target</div>
+      <div class="hero-stat-value">T+<em>285d</em> · Q4 2026</div>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── REASONS ── -->
+<section class="reasons">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 01 · Why we built this</span>
+  </div>
+  <h2 class="section-h">
+    Three reasons we built an ATS we <em>never planned to build</em>.
+  </h2>
+  <p class="section-dek">
+    Stratum's original positioning was: <em>we sit above your ATS</em>. We still do.
+    But three of our commercial customers told us — in writing, in pilots,
+    on calls — that they wanted us to replace their ATS too. Here is why we said yes.
+  </p>
+
+  <div class="reasons-grid">
+
+    <article class="reason">
+      <div class="reason-num">§ Reason 01 · customer demand</div>
+      <h3 class="reason-h">Three commercial customers <em>asked us</em> to build it.</h3>
+      <p class="reason-body">
+        Cordova, Atlas, and Vanta — all current Stratum Console customers — explicitly
+        asked us to build a native ATS. Their existing systems (Workday Recruiting,
+        a bespoke in-house tool, and Greenhouse, respectively) felt like deadweight
+        next to the matching engine they were already paying us for.
+      </p>
+      <div class="pull-quote">
+        "Your matching engine is better than our ATS's. Can you just be our ATS?"
+      </div>
+      <div class="pull-attr">— Annika Whitfield, CHRO · Cordova Manufacturing</div>
+    </article>
+
+    <article class="reason">
+      <div class="reason-num">§ Reason 02 · architectural fit</div>
+      <h3 class="reason-h">Candidates and employees are <em>one</em> data fabric.</h3>
+      <p class="reason-body">
+        Other ATSes treat candidates as a separate database, then export to HRIS
+        as a one-way file on hire day. Our people graph already holds the employees.
+        Adding the candidates to the same graph is not a new system — it is a node
+        type. The data fabric runs continuously from first source contact through
+        year-three performance review.
+      </p>
+      <div class="pull-quote">
+        "We already had the harder half of the problem solved. Building the ATS
+        on top was the smaller engineering bet."
+      </div>
+      <div class="pull-attr">— Stratum engineering · Q1 2026 architecture review</div>
+    </article>
+
+    <article class="reason">
+      <div class="reason-num">§ Reason 03 · the category is ready</div>
+      <h3 class="reason-h">The incumbents have <em>left a door open</em>.</h3>
+      <p class="reason-body">
+        Workday Recruiting is bloated. Greenhouse is good but its AI is bolted on
+        after the fact. Lever is consolidating. Ashby is best-in-class for sourcing
+        but premium-priced and narrowly scoped. There is genuine room for an
+        AI-native challenger that starts from the graph and works outward, not
+        from a 2014 form-based ATS that bolts AI on at the edges.
+      </p>
+      <div class="pull-quote">
+        "The category is ten years overdue for a rewrite. We are not pretending
+        otherwise."
+      </div>
+      <div class="pull-attr">— Stratum product memo · Recruiter v0 · Feb 2026</div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FEATURES ── -->
+<section class="features" id="features">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 02 · The product, at a glance</span>
+  </div>
+  <h2 class="section-h">
+    Ten things <em>Stratum Recruiter</em> does on day one.
+  </h2>
+  <p class="section-dek">
+    Every feature below is shipping in the private beta. None of them is on a
+    roadmap behind a paywall. We will add more — but this is the floor, not the
+    ceiling.
+  </p>
+
+  <div class="features-grid">
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <path d="M4 5h12M4 9h16M4 13h10M4 17h14"/>
+          <circle cx="20" cy="6" r="2" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">AI-drafted JDs</h3>
+        <p class="feature-body">Type a sentence; get a job description draft tuned to your
+          company's voice and comp band. <strong>Reviewable, editable, never sent
+          without a human.</strong></p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <circle cx="9" cy="11" r="4"/>
+          <path d="M14.5 14.5L19 19M3 21l3-3"/>
+          <circle cx="9" cy="11" r="1.2" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">AI candidate matching</h3>
+        <p class="feature-body">Every applicant scored against the JD with the reasoning
+          visible. The system <strong>refuses to auto-reject</strong>; surfacing,
+          ranking, and the final call stays with the recruiter.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <rect x="3" y="4" width="5" height="16"/>
+          <rect x="10" y="4" width="5" height="11"/>
+          <rect x="17" y="4" width="4" height="14" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">Pipeline kanban</h3>
+        <p class="feature-body">Drag candidates between stages. Bulk operations supported.
+          Keyboard-first for recruiters who live in the tool. Stage definitions
+          customizable per req.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <rect x="4" y="3" width="16" height="18"/>
+          <path d="M7 8h10M7 12h10M7 16h6"/>
+          <path d="M16.5 16l1.2 1.2 2.3-2.3" stroke="#b8651f"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">Structured scorecards</h3>
+        <p class="feature-body">Define rubrics per role. Surface <strong>calibration
+          drift</strong> across interviewers and across panels. Bias signals
+          flagged for the recruiter, not hidden in a dashboard.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <circle cx="7" cy="8" r="2.5"/>
+          <circle cx="17" cy="8" r="2.5"/>
+          <circle cx="12" cy="16" r="2.5" fill="#b8651f" stroke="none"/>
+          <circle cx="12" cy="16" r="2.5" stroke="#0e1626" fill="none"/>
+          <path d="M5 13l5 1M19 13l-5 1"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">AI panel suggestions</h3>
+        <p class="feature-body">Given a candidate and a req, propose the optimal 4-person
+          interviewer panel — balanced for calibration history, availability, and
+          diversity of perspective. Recruiter approves before invites send.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <path d="M5 3h11l4 4v14H5z"/>
+          <path d="M16 3v4h4"/>
+          <path d="M8 13h8M8 17h5"/>
+          <circle cx="17" cy="17" r="1.5" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">AI offer drafting</h3>
+        <p class="feature-body">Aware of your comp bands and pay equity guardrails.
+          Templated by level and function. <strong>One-click revision</strong>;
+          finance and CHRO approval workflows built in.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <path d="M3 17l5-5 4 4 5-7 4 5"/>
+          <circle cx="17" cy="9" r="2" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">AI acceptance predictor</h3>
+        <p class="feature-body">Predict offer acceptance probability with the reasoning
+          surfaced — comp gap to market, candidate's flight-risk-at-current,
+          recency of competing offers, stage of conversation.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M12 7v5l3 2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="1.5" fill="#b8651f" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">Source analytics</h3>
+        <p class="feature-body">Cost-per-hire by source. First-year retention by source.
+          ROI on agency spend, broken out by agency. <strong>The numbers other
+          ATSes cannot calculate because they do not have the HRIS data.</strong></p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#4a5d3a" stroke-width="1.4">
+          <path d="M12 2l9 4v6c0 5-3.5 9-9 10-5.5-1-9-5-9-10V6z" fill="#c5cdb1"/>
+          <path d="M8 12l3 3 5-6" stroke="#364528" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">NYC AEDT compliance</h3>
+        <p class="feature-body">Annual bias audit ready out of the box. Output metrics
+          surfaced per requisition. Bias-audit report packs auto-generated for
+          your employment counsel — no quarterly fire drill.</p>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#0e1626" stroke-width="1.4">
+          <rect x="3" y="6" width="7" height="5" fill="#ebe1c9"/>
+          <rect x="14" y="6" width="7" height="5"/>
+          <rect x="3" y="13" width="7" height="5"/>
+          <rect x="14" y="13" width="7" height="5" fill="#b8651f" stroke="none"/>
+          <path d="M10 8.5h4M10 15.5h4M6.5 11v2M17.5 11v2"/>
+        </svg>
+      </div>
+      <div>
+        <h3 class="feature-title">18 HRIS integrations</h3>
+        <p class="feature-body">Native write-back to Workday, BambooHR, ADP, Rippling,
+          Personio, UKG, Paylocity, Paycom, Namely, HiBob, Justworks, Gusto,
+          SAP SuccessFactors, Oracle HCM, Ceridian Dayforce, Sage People, Zenefits,
+          and IRIS Cascade.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PEOPLE GRAPH ── -->
+<section class="graph" id="graph">
+  <div class="graph-inner">
+    <div class="section-eyebrow">
+      <span class="bar"></span>
+      <span>§ 03 · The architectural advantage</span>
+    </div>
+    <h2 class="graph-h">
+      Built on the <em>people graph</em>.
+    </h2>
+    <p class="graph-dek">
+      Other ATSes silo candidate data and export to HRIS on hire day.
+      Stratum Recruiter lives inside the same graph that already holds your
+      employees — so the hand-off is a node-type change, not a file transfer.
+    </p>
+
+    <div class="graph-layout">
+      <div class="graph-svg-wrap">
+        <svg viewBox="0 0 420 380" aria-label="The Stratum people graph: candidates flow to hires flow to employees, one continuous fabric">
+          <defs>
+            <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#b8651f"/>
+            </marker>
+          </defs>
+
+          <!-- top: candidates layer -->
+          <rect x="20" y="20" width="380" height="90" fill="rgba(184,101,31,0.10)" stroke="#b8651f" stroke-width="1"/>
+          <text x="34" y="44" font-family="JetBrains Mono" font-size="10" fill="#e6c79b" letter-spacing="1.6">CANDIDATES</text>
+
+          <circle cx="60" cy="80" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="100" cy="72" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="140" cy="84" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="180" cy="76" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="220" cy="82" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="260" cy="72" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="300" cy="84" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="340" cy="76" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="380" cy="82" r="9" fill="#b8651f" stroke="#f4ecda" stroke-width="1.4"/>
+
+          <!-- arrow down -->
+          <line x1="210" y1="130" x2="210" y2="170" stroke="#b8651f" stroke-width="1.6" marker-end="url(#ar)"/>
+          <text x="220" y="155" font-family="JetBrains Mono" font-size="9" fill="#e6c79b" letter-spacing="1">node-type change</text>
+
+          <!-- middle: hires layer -->
+          <rect x="20" y="170" width="380" height="70" fill="rgba(244,236,218,0.06)" stroke="#f4ecda" stroke-width="1"/>
+          <text x="34" y="194" font-family="JetBrains Mono" font-size="10" fill="#f4ecda" letter-spacing="1.6">HIRES (HANDOFF)</text>
+
+          <circle cx="120" cy="218" r="9" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="180" cy="218" r="9" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="240" cy="218" r="9" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.4"/>
+          <circle cx="300" cy="218" r="9" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.4"/>
+
+          <!-- arrow down -->
+          <line x1="210" y1="260" x2="210" y2="295" stroke="#b8651f" stroke-width="1.6" marker-end="url(#ar)"/>
+
+          <!-- bottom: employees layer -->
+          <rect x="20" y="295" width="380" height="70" fill="rgba(74,93,58,0.20)" stroke="#4a5d3a" stroke-width="1"/>
+          <text x="34" y="319" font-family="JetBrains Mono" font-size="10" fill="#c5cdb1" letter-spacing="1.6">EMPLOYEES</text>
+
+          <circle cx="60" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="92" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="124" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="156" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="188" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="220" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="252" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="284" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="316" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="348" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+          <circle cx="380" cy="345" r="7" fill="#c5cdb1" stroke="#f4ecda" stroke-width="1.2"/>
+        </svg>
+      </div>
+
+      <div class="graph-paras">
+        <h4>Other ATSes are siloed.</h4>
+        <p>
+          Greenhouse, Lever, Ashby, Workday Recruiting — they all store candidate
+          data in their own database. When a candidate becomes an employee, the
+          data is exported (often as a one-way file) to your HRIS. Context is
+          lost in transit. <strong>Cost-per-hire by source becomes a spreadsheet
+          exercise; first-year retention by source becomes a quarterly project.</strong>
+        </p>
+
+        <h4>Stratum Recruiter is unified.</h4>
+        <p>
+          Every candidate is a node in the same people graph that holds your
+          employees. When the candidate becomes a hire, the node converts —
+          <strong>no export, no data loss, no system seam.</strong> Source, screen,
+          interview, scorecard, offer, accept, hire, perform: one continuous
+          history per person.
+        </p>
+
+        <h4>What this enables.</h4>
+        <p>
+          Real cost-per-hire that accounts for first-year retention. Real
+          conversion rates that incorporate performance ratings six months in.
+          Real source-quality analysis where the agency that delivers fast but
+          high-attrition hires is correctly demoted. <strong>Things other ATSes
+          cannot do, because their data is siloed.</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── WORKFLOW ── -->
+<section class="workflow" id="workflow">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 04 · Sample workflow · the requisition lifecycle</span>
+  </div>
+  <h2 class="section-h">
+    One requisition. <em>Nine steps.</em> Stratum at each one.
+  </h2>
+  <p class="section-dek">
+    From "we need to backfill this senior engineer" to "she signed on Monday and
+    starts a week from Wednesday." Each step shows what the recruiter does and
+    what Stratum does for them.
+  </p>
+
+  <div class="workflow-steps">
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 01 · draft</div>
+      <h3 class="wf-step-h">Draft the JD</h3>
+      <p class="wf-step-stratum"><strong>Stratum drafts the JD</strong> in your company's voice
+        from one sentence of intent; the recruiter edits before posting.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 02 · approve</div>
+      <h3 class="wf-step-h">Approve internally</h3>
+      <p class="wf-step-stratum"><strong>Stratum routes the approval</strong> to the hiring manager
+        and finance with comp-band context and headcount-plan reconciliation attached.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 03 · post</div>
+      <h3 class="wf-step-h">Post to job boards</h3>
+      <p class="wf-step-stratum"><strong>Stratum syndicates</strong> to LinkedIn, Indeed, your
+        careers site, and 14 niche boards — with per-board tracking pre-tagged.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 04 · source</div>
+      <h3 class="wf-step-h">Source actively</h3>
+      <p class="wf-step-stratum"><strong>Stratum surfaces candidates</strong> from your existing
+        silver-medalist pool and outbound sources, with a per-candidate match
+        explanation.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 05 · screen</div>
+      <h3 class="wf-step-h">Screen applicants</h3>
+      <p class="wf-step-stratum"><strong>Stratum scores</strong> every applicant against the JD
+        with reasoning. <em>The system refuses to auto-reject;</em> recruiter
+        reviews the ranked list.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 06 · interview</div>
+      <h3 class="wf-step-h">Schedule and run interviews</h3>
+      <p class="wf-step-stratum"><strong>Stratum proposes the panel</strong>, books the calendar,
+        sends the prep, and collects structured scorecards. Calibration drift
+        is surfaced after the debrief.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 07 · offer</div>
+      <h3 class="wf-step-h">Draft the offer</h3>
+      <p class="wf-step-stratum"><strong>Stratum drafts</strong> the offer letter in your template,
+        checks pay-equity guardrails, predicts acceptance probability, and routes
+        for e-sign.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 08 · accept</div>
+      <h3 class="wf-step-h">Candidate accepts</h3>
+      <p class="wf-step-stratum"><strong>Stratum closes the loop</strong> on the offer, pushes
+        signed documents to e-records, and pre-stages the HRIS write-back.</p>
+    </div>
+
+    <div class="wf-step">
+      <div class="wf-step-num"><span class="pip"></span>Step 09 · hire</div>
+      <h3 class="wf-step-h">Hire and onboard</h3>
+      <p class="wf-step-stratum"><strong>Stratum writes</strong> to your HRIS (one of 18 supported),
+        converts the candidate node to an employee node in the people graph, and
+        starts the first-year retention clock.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PRICING ── -->
+<section class="pricing" id="pricing">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 05 · Pricing</span>
+  </div>
+  <h2 class="section-h">
+    Two ways to buy. <em>Bundle and save 18%.</em>
+  </h2>
+  <p class="section-dek">
+    Both plans include the standard decisions-supported tier — meaning every
+    answer the system gives you carries a citation pack to your auditors and
+    counsel. Annual prepaid; quarterly available with a 6% uplift.
+  </p>
+
+  <div class="pricing-grid">
+
+    <article class="price-card">
+      <div class="price-tag">Plan A · standalone</div>
+      <h3 class="price-name">Stratum <em>Recruiter</em> Standalone</h3>
+      <div class="price-num"><span class="from">From</span>$4,500<span class="unit">/mo</span></div>
+      <div class="price-meta">Annual prepaid · 1,000–5,000 EE band</div>
+      <p class="price-body">
+        For companies that want a great AI-first ATS but don't need full HCM
+        intelligence yet. Everything in the product, no surcharges for AI
+        features, NYC AEDT-ready on day one.
+      </p>
+      <ul class="price-list">
+        <li>All 10 product features (above)</li>
+        <li>18 HRIS write-back integrations</li>
+        <li>Unlimited recs, users, candidates</li>
+        <li>NYC AEDT annual bias audit included</li>
+        <li>SOC 2 Type II · standard DPA</li>
+        <li>Implementation in 30 days</li>
+      </ul>
+      <div class="price-foot">
+        <a href="mailto:procurement@stratum.ai?subject=Stratum%20Recruiter%20Standalone%20%E2%80%94%20procurement" class="btn btn-ghost">Talk to procurement →</a>
+      </div>
+    </article>
+
+    <article class="price-card featured">
+      <div class="price-tag">Plan B · bundled</div>
+      <h3 class="price-name">Stratum Platform + <em>Recruiter</em></h3>
+      <div class="price-num"><span class="from">From</span>$14,000<span class="unit">/mo</span></div>
+      <div class="price-meta">Annual prepaid · 1,000–5,000 EE band · 18% bundle discount</div>
+      <p class="price-body">
+        For customers who want the full unified people graph: HCM intelligence
+        across your HRIS, comp, performance, AND the native ATS. Save 18% vs.
+        Console + Recruiter purchased separately.
+      </p>
+      <ul class="price-list">
+        <li>Everything in Recruiter Standalone</li>
+        <li>Stratum Console (HCM intelligence layer)</li>
+        <li>Single unified people graph</li>
+        <li>Cross-product analytics (cost-per-hire × retention)</li>
+        <li>Priority customer-engineering support</li>
+        <li>Quarterly business reviews with the Stratum team</li>
+      </ul>
+      <div class="price-foot">
+        <a href="mailto:procurement@stratum.ai?subject=Stratum%20Platform%20%2B%20Recruiter%20%E2%80%94%20procurement" class="btn btn-primary">Talk to procurement <span class="arr">→</span></a>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="price-compare">
+    <strong>For reference:</strong> Workday Recruiting at the same EE band
+    typically runs <strong>$9,000–$18,000/month</strong>, often with separate
+    implementation fees of $200k+ and a 12-month deployment. Greenhouse Expert
+    at 3,000 EE runs roughly $80k/year for the ATS alone, with AI features
+    gated behind add-on SKUs.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── COMPLIANCE ── -->
+<section class="compliance">
+  <div class="compliance-grid">
+    <div class="compliance-label">§ 06 · Compliance &amp; security</div>
+    <div class="compliance-body">
+      <strong>NYC AEDT</strong> — annual bias-audit ready, per-req output metrics surfaced. ·
+      <strong>EU AI Act</strong> — Stratum Recruiter has completed the high-risk
+      class self-assessment; documentation pack available under NDA. ·
+      <strong>SOC 2 Type II</strong> — complete as of Q1 2026; report available
+      via the <a href="../trust/">trust center</a>. ·
+      <strong>ISO 27001</strong> — surveillance audit in progress; cert renewal
+      targeted Q3 2026. ·
+      <strong>GDPR · DPA · sub-processor list</strong> — see the
+      <a href="../trust/">trust center</a> for the current pack.
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── EXISTING CUSTOMERS ── -->
+<section class="existing" id="existing">
+  <div class="existing-inner">
+    <div>
+      <div class="section-eyebrow">
+        <span class="bar"></span>
+        <span>§ 07 · For Stratum Console customers</span>
+      </div>
+      <h2 class="existing-h">
+        Already on <em>Stratum Console</em>?
+      </h2>
+      <p class="existing-dek">
+        Three things to know before your next renewal conversation.
+      </p>
+    </div>
+
+    <div>
+      <ul class="existing-list">
+        <li data-n="01 ·"><strong>18% bundle discount.</strong> If you add Stratum
+          Recruiter to your existing Console contract, the combined annual price
+          is 18% below the standalone-plus-standalone total. The discount is
+          locked at renewal for the contract term.</li>
+        <li data-n="02 ·"><strong>Pilot at $0 for 90 days.</strong> Existing
+          Console customers can pilot Stratum Recruiter for 90 days at no cost
+          — extending the existing Stratum contract, no separate procurement
+          motion required. After the pilot, opt in or walk away cleanly.</li>
+        <li data-n="03 ·"><strong>Unified data fabric, instantly.</strong> Your
+          Console will start to surface candidate-level intelligence
+          (cost-per-hire by source, conversion by stage, offer-acceptance
+          prediction) as soon as the Recruiter is connected — because the data
+          flows into the same graph that already powers your dashboards.</li>
+      </ul>
+      <a href="mailto:existing-customers@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20existing%20customer%20interest" class="btn btn-primary">Tell us you're interested <span class="arr">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── BETA COHORT ── -->
+<section class="cohort" id="cohort">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 08 · The beta cohort</span>
+  </div>
+  <h2 class="section-h">
+    Three customers. <em>Three industries.</em> One AI-native ATS.
+  </h2>
+  <p class="section-dek">
+    Our private beta is intentionally narrow. Three commercial customers,
+    spread across manufacturing, logistics, and SaaS — each providing weekly
+    product feedback. We will admit a fourth and fifth beta customer in Q1
+    2027, with first preference to existing Stratum Console customers.
+  </p>
+
+  <div class="cohort-grid">
+
+    <article class="cohort-card">
+      <div class="cohort-tag"><span class="pip"></span>Beta · manufacturing</div>
+      <h3 class="cohort-name">Cordova Manufacturing</h3>
+      <div class="cohort-ee">5,200 EE · 14 plants · 3 continents</div>
+      <p class="wf-step-stratum">
+        Replacing Workday Recruiting. CHRO drove the conversation. Cordova's
+        pilot anchors the manufacturing use case (high-volume hourly +
+        salaried plant management).
+      </p>
+      <div class="cohort-meta">Starts <strong>T+165d</strong> · 6-week pilot · go-live target T+225d</div>
+    </article>
+
+    <article class="cohort-card">
+      <div class="cohort-tag"><span class="pip"></span>Beta · logistics</div>
+      <h3 class="cohort-name">Atlas Logistics</h3>
+      <div class="cohort-ee">1,800 EE · 22 hubs · US + Canada</div>
+      <p class="wf-step-stratum">
+        Replacing a bespoke in-house ATS that nobody on the talent team likes.
+        Atlas anchors the high-velocity hourly use case — driver and dock
+        worker hiring at scale.
+      </p>
+      <div class="cohort-meta">Starts <strong>T+175d</strong> · 6-week pilot · go-live target T+235d</div>
+    </article>
+
+    <article class="cohort-card">
+      <div class="cohort-tag"><span class="pip"></span>Beta · SaaS</div>
+      <h3 class="cohort-name">Vanta</h3>
+      <div class="cohort-ee">1,200 EE · 4 offices · US + EU</div>
+      <p class="wf-step-stratum">
+        Replacing Greenhouse. Vanta anchors the SaaS use case — engineering,
+        sales, and GTM hiring with structured scorecards and high-throughput
+        sourcing.
+      </p>
+      <div class="cohort-meta">Starts <strong>T+185d</strong> · 6-week pilot · go-live target T+245d</div>
+    </article>
+
+  </div>
+
+  <div class="cohort-foot">
+    <div class="cohort-foot-block">
+      <span class="label">GA target</span>
+      <strong>T+285d</strong> — Q4 2026. General availability for new customer
+      onboarding opens after the third beta customer completes their first
+      full quarter on the product.
+    </div>
+    <div class="cohort-foot-block">
+      <span class="label">Q1 2027 · beta cohort expansion</span>
+      We will admit a fourth and fifth beta customer in Q1 2027. Primary
+      criterion: existing Stratum Console customers willing to share product
+      feedback weekly. <a href="mailto:recruiter-beta@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20beta%20expansion%20interest">Email us to be considered →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing" id="closing">
+  <h2 class="closing-h">
+    We did not plan to build an ATS. Our <em>customers</em> planned it for us.
+  </h2>
+  <div class="closing-ctas">
+    <a href="mailto:recruiter-beta@stratum.ai?subject=Stratum%20Recruiter%20%E2%80%94%20early%20access" class="btn btn-primary">Request early access <span class="arr">→</span></a>
+    <a href="./console/" class="btn btn-ghost">Try the live demo →</a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span><span class="pname">Recruiter</span></div>
+      <p>The first AI-native ATS built for enterprise recruiters. One people
+        graph, two products: <a href="../product/">Stratum Console</a> for HCM
+        intelligence, Stratum Recruiter for native ATS. Buy either. Bundle and
+        save.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Recruiter</h4>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#workflow">Workflow</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#cohort">Beta cohort</a></li>
+        <li><a href="./console/">Live demo</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Related</h4>
+      <ul>
+        <li><a href="../product/">Stratum Console</a></li>
+        <li><a href="../recruiting/">Recruiting intelligence</a></li>
+        <li><a href="../compare/recruiting.html">Compare vs incumbents</a></li>
+        <li><a href="../pricing/">Pricing overview</a></li>
+        <li><a href="../api/">API</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../about/">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 Type II</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">NYC AEDT posture</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../security/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var apply = function () {
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    };
+    apply();
+    window.addEventListener('scroll', apply, { passive: true });
+  })();
+</script>
+
+</body>
+</html>

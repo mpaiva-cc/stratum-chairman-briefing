@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Recruiter · the AI-first ATS</title>
+<meta name="description" content="Stratum Recruiter — a native, AI-first applicant tracking system. Pipelines, candidates, offers, scheduling and analytics, grounded in the people graph." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-13T09:00:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none">
+  <span style="color:#b8651f">●</span> compiled at <strong id="rt-time" style="color:#0e1626">T+0</strong> · <span id="rt-iso" style="opacity:.6">—</span>
+</div>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<!-- Loading bar -->
+<div class="loadbar" id="loadbar" aria-hidden="true"></div>
+
+<!-- ────────────────────────── TOP BAR ────────────────────────── -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <button class="hamburger" id="hamburger" type="button" aria-label="Open navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="brand">
+      <span class="brand-mark">Stratum<span class="sl">/</span>Recruiter</span>
+      <span class="brand-meta">Demo · 140 reqs · 3,756 candidates · prototype build</span>
+    </div>
+    <div class="topbar-right">
+      <span class="kbd-hint"><kbd>?</kbd> shortcuts</span>
+      <div class="user-pill">
+        <span class="user-avatar">SV</span>
+        <span class="user-name">Sofia Vargas<span class="role">· Recruiter</span></span>
+      </div>
+      <a href="../../console/" class="back-link">← Stratum HCM</a>
+      <a href="../../library/" class="back-link">← Library</a>
+    </div>
+  </div>
+</header>
+
+<!-- ────────────────────────── APP SHELL ──────────────────────── -->
+<div class="shell" id="shell">
+
+  <!-- LEFT RAIL -->
+  <aside class="rail" id="rail" aria-label="Primary navigation">
+    <div class="rail-brand">
+      <div class="rail-brand-mark">Stratum<span class="sl">/</span>Recruiter</div>
+      <div class="rail-brand-sub">AI-first ATS · v0.4 prototype</div>
+    </div>
+
+    <nav class="rail-nav" role="navigation">
+      <button class="rail-item is-active" data-view="dashboard">
+        <span class="ri-sec">§</span><span class="ri-name">Dashboard</span>
+      </button>
+      <button class="rail-item" data-view="requisitions">
+        <span class="ri-sec">§</span><span class="ri-name">Requisitions</span>
+        <span class="ri-count" id="ri-count-reqs">140</span>
+      </button>
+      <button class="rail-item" data-view="pipeline">
+        <span class="ri-sec">§</span><span class="ri-name">Pipeline</span>
+        <span class="ri-count">kanban</span>
+      </button>
+      <button class="rail-item" data-view="candidates">
+        <span class="ri-sec">§</span><span class="ri-name">Candidates</span>
+        <span class="ri-count" id="ri-count-cands">3,756</span>
+      </button>
+      <button class="rail-item" data-view="scheduling">
+        <span class="ri-sec">§</span><span class="ri-name">Scheduling</span>
+      </button>
+      <button class="rail-item" data-view="offers">
+        <span class="ri-sec">§</span><span class="ri-name">Offers</span>
+        <span class="ri-count" id="ri-count-offers">12</span>
+      </button>
+      <button class="rail-item" data-view="analytics">
+        <span class="ri-sec">§</span><span class="ri-name">Analytics</span>
+      </button>
+      <button class="rail-item" data-view="integrations">
+        <span class="ri-sec">§</span><span class="ri-name">Integrations</span>
+        <span class="ri-count">30</span>
+      </button>
+      <button class="rail-item" data-view="settings">
+        <span class="ri-sec">§</span><span class="ri-name">Settings</span>
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="rail-foot-title">§ AI status</div>
+      <div class="rail-foot-row"><span class="dot ok"></span>Sourcing agent</div>
+      <div class="rail-foot-row"><span class="dot ok"></span>Match scorer</div>
+      <div class="rail-foot-row"><span class="dot warn"></span>Scheduler · queued</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="stage" id="main">
+
+    <!-- ──────────── DASHBOARD ──────────── -->
+    <section class="view is-active" id="view-dashboard">
+      <header class="view-head">
+        <div class="eyebrow">§ Wednesday · 13 May 2026</div>
+        <h1 class="hero">Welcome back, <em>Sofia.</em></h1>
+        <p class="hero-sub">You have 12 offers in flight and 3 candidates aging in screen for over a week. The funnel for <strong>REQ-00042</strong> dropped 40% in velocity this week — worth a look.</p>
+      </header>
+
+      <div class="kpi-grid" id="kpi-grid"></div>
+
+      <div class="dash-grid">
+        <article class="card">
+          <div class="card-head">
+            <div class="card-eyebrow">§ Today's priorities</div>
+            <span class="card-meta">5 items · sorted by urgency</span>
+          </div>
+          <ul class="priority-list" id="priority-list"></ul>
+        </article>
+
+        <article class="card ai-card">
+          <div class="card-head">
+            <div class="card-eyebrow ai"><span class="ai-mark">AI</span> Suggestions</div>
+            <span class="card-meta">based on funnel health · refreshed 12m ago</span>
+          </div>
+          <ul class="ai-list" id="ai-list"></ul>
+        </article>
+
+        <article class="card span-2">
+          <div class="card-head">
+            <div class="card-eyebrow">§ Recent activity</div>
+            <span class="card-meta">last 24 hours · live</span>
+          </div>
+          <ul class="activity" id="activity-list"></ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ──────────── REQUISITIONS ──────────── -->
+    <section class="view" id="view-requisitions">
+      <header class="view-head row">
+        <div>
+          <div class="eyebrow">§ Open requisitions</div>
+          <h1 class="hero sm">The <em>requisitions board.</em></h1>
+        </div>
+        <button class="btn btn-ochre" id="new-req-btn">+ New requisition</button>
+      </header>
+
+      <div class="filter-strip">
+        <div class="filter">
+          <label>Department</label>
+          <select id="r-dept"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label>Location</label>
+          <select id="r-loc"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label>Status</label>
+          <select id="r-status">
+            <option value="">All</option>
+            <option value="open">Open</option>
+            <option value="on_hold">On hold</option>
+            <option value="filled">Filled</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label>Priority</label>
+          <select id="r-prio">
+            <option value="">All</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="standard">Standard</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label>Hiring manager</label>
+          <select id="r-hm"><option value="">All</option></select>
+        </div>
+        <div class="filter grow">
+          <input type="text" id="r-search" placeholder="Search req title, team, location…" />
+        </div>
+        <button class="filter-clear" id="r-clear">Reset</button>
+      </div>
+
+      <div class="req-table-wrap">
+        <table class="req-table" id="req-table">
+          <thead>
+            <tr>
+              <th>Req</th>
+              <th>Title</th>
+              <th>Dept</th>
+              <th>Location</th>
+              <th>Lvl</th>
+              <th>Days</th>
+              <th>Pipeline</th>
+              <th>Hiring manager</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="req-tbody"></tbody>
+        </table>
+        <div class="empty" id="req-empty" hidden>No requisitions match your filters.</div>
+      </div>
+    </section>
+
+    <!-- ──────────── PIPELINE ──────────── -->
+    <section class="view" id="view-pipeline">
+      <header class="view-head row">
+        <div>
+          <div class="eyebrow">§ Pipeline · kanban</div>
+          <h1 class="hero sm">The <em>pipeline.</em></h1>
+        </div>
+        <div class="toolbar">
+          <select id="kb-req" class="select-inline">
+            <option value="">All open reqs</option>
+          </select>
+          <input type="text" id="kb-search" class="select-inline" placeholder="Search candidates…" />
+        </div>
+      </header>
+
+      <div class="kanban" id="kanban">
+        <div class="kb-col" data-stage="applied">
+          <header class="kb-head">
+            <span class="kb-stage">§ Applied</span>
+            <span class="kb-count"><span class="n">0</span> <span class="cap">/ 250</span></span>
+          </header>
+          <div class="kb-body" data-stage="applied"></div>
+        </div>
+        <div class="kb-col" data-stage="screen">
+          <header class="kb-head">
+            <span class="kb-stage">§ Screened</span>
+            <span class="kb-count"><span class="n">0</span> <span class="cap">/ 120</span></span>
+          </header>
+          <div class="kb-body" data-stage="screen"></div>
+        </div>
+        <div class="kb-col" data-stage="interview">
+          <header class="kb-head">
+            <span class="kb-stage">§ Interview</span>
+            <span class="kb-count"><span class="n">0</span> <span class="cap">/ 60</span></span>
+          </header>
+          <div class="kb-body" data-stage="interview"></div>
+        </div>
+        <div class="kb-col" data-stage="offer">
+          <header class="kb-head">
+            <span class="kb-stage">§ Offer</span>
+            <span class="kb-count"><span class="n">0</span> <span class="cap">/ 30</span></span>
+          </header>
+          <div class="kb-body" data-stage="offer"></div>
+        </div>
+        <div class="kb-col" data-stage="accepted">
+          <header class="kb-head">
+            <span class="kb-stage">§ Accepted</span>
+            <span class="kb-count"><span class="n">0</span></span>
+          </header>
+          <div class="kb-body" data-stage="accepted"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────── CANDIDATES ──────────── -->
+    <section class="view" id="view-candidates">
+      <header class="view-head row">
+        <div>
+          <div class="eyebrow">§ The candidate pool</div>
+          <h1 class="hero sm">All <em>candidates.</em></h1>
+        </div>
+        <span class="count-pill" id="cand-count">3,756 candidates</span>
+      </header>
+
+      <div class="filter-strip">
+        <div class="filter">
+          <label>Stage</label>
+          <select id="c-stage">
+            <option value="">All</option>
+            <option value="applied">Applied</option>
+            <option value="screen">Screened</option>
+            <option value="interview">Interview</option>
+            <option value="offer">Offer</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+            <option value="withdrew">Withdrew</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label>Req</label>
+          <select id="c-req"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label>Source</label>
+          <select id="c-source"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label>Country</label>
+          <select id="c-country"><option value="">All</option></select>
+        </div>
+        <div class="filter grow">
+          <input type="text" id="c-search" placeholder="Search name, role, company…" />
+        </div>
+        <button class="filter-clear" id="c-clear">Reset</button>
+      </div>
+
+      <div class="cand-table-wrap">
+        <table class="cand-table">
+          <thead>
+            <tr>
+              <th>Candidate</th>
+              <th>Role applied</th>
+              <th>Stage</th>
+              <th>Days</th>
+              <th>Match</th>
+              <th>Source</th>
+              <th>Last activity</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cand-tbody"></tbody>
+        </table>
+        <div class="empty" id="cand-empty" hidden>No candidates match your filters.</div>
+      </div>
+      <div class="pagination" id="cand-pagination"></div>
+    </section>
+
+    <!-- ──────────── SCHEDULING ──────────── -->
+    <section class="view" id="view-scheduling">
+      <header class="view-head row">
+        <div>
+          <div class="eyebrow">§ Interview scheduling</div>
+          <h1 class="hero sm">The <em>schedule.</em></h1>
+        </div>
+      </header>
+
+      <div class="sched-grid">
+        <article class="card">
+          <div class="card-head">
+            <div class="card-eyebrow">§ Pending schedules</div>
+            <span class="card-meta">8 candidates awaiting panel</span>
+          </div>
+          <ul class="pending-list" id="pending-list"></ul>
+        </article>
+
+        <article class="card span-2">
+          <div class="card-head">
+            <div class="card-eyebrow">§ This week · 11–17 May</div>
+            <span class="card-meta">28 interviews scheduled</span>
+          </div>
+          <div class="cal-wrap" id="cal-wrap"></div>
+        </article>
+
+        <article class="card span-3 ai-card">
+          <div class="card-head">
+            <div class="card-eyebrow ai"><span class="ai-mark">AI</span> Panel suggestion</div>
+            <span class="card-meta">balances availability · diversity · interview load</span>
+          </div>
+          <div class="panel-suggest" id="panel-suggest"></div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ──────────── OFFERS ──────────── -->
+    <section class="view" id="view-offers">
+      <header class="view-head row">
+        <div>
+          <div class="eyebrow">§ Offers in flight</div>
+          <h1 class="hero sm">Active <em>offers.</em></h1>
+        </div>
+        <span class="count-pill"><span id="offer-live">12</span> in flight</span>
+      </header>
+
+      <div class="offer-grid" id="offer-grid"></div>
+    </section>
+
+    <!-- ──────────── ANALYTICS ──────────── -->
+    <section class="view" id="view-analytics">
+      <header class="view-head">
+        <div class="eyebrow">§ Recruiter analytics · YTD</div>
+        <h1 class="hero sm">The <em>numbers.</em></h1>
+      </header>
+
+      <div class="analytics-grid">
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Pipeline funnel</div><span class="card-meta">all open reqs</span></div>
+          <div id="chart-funnel"></div>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Time-to-fill by department</div><span class="card-meta">median days · YTD</span></div>
+          <div id="chart-ttfill"></div>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Cost-per-hire by source</div><span class="card-meta">USD · YTD avg</span></div>
+          <div id="chart-cph"></div>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Source mix</div><span class="card-meta">of accepted hires · YTD</span></div>
+          <div id="chart-source"></div>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Offer acceptance rate</div><span class="card-meta">monthly · last 6 months</span></div>
+          <div id="chart-accept"></div>
+        </article>
+        <article class="card chart-card">
+          <div class="card-head"><div class="card-eyebrow">§ Quality of hire</div><span class="card-meta">1-year retention by source</span></div>
+          <div id="chart-quality"></div>
+        </article>
+
+        <article class="card span-3 ai-card">
+          <div class="card-head">
+            <div class="card-eyebrow ai"><span class="ai-mark">AI</span> Insights from this data</div>
+            <span class="card-meta">3 actionable observations</span>
+          </div>
+          <ul class="ai-list" id="analytics-ai"></ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- ──────────── INTEGRATIONS ──────────── -->
+    <section class="view" id="view-integrations">
+      <header class="view-head">
+        <div class="eyebrow">§ Connections · 30 partners</div>
+        <h1 class="hero sm">The <em>integration grid.</em></h1>
+        <p class="hero-sub">18 live HRIS write-back targets · 12 in beta or planned · everything else connected today.</p>
+      </header>
+
+      <div class="integration-cats" id="integration-cats"></div>
+    </section>
+
+    <!-- ──────────── SETTINGS ──────────── -->
+    <section class="view" id="view-settings">
+      <header class="view-head">
+        <div class="eyebrow">§ Workspace settings</div>
+        <h1 class="hero sm">Tune the <em>recruiter.</em></h1>
+      </header>
+
+      <div class="settings-grid-v">
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ Account</div></div>
+          <dl class="kv">
+            <dt>Name</dt><dd>Sofia Vargas</dd>
+            <dt>Email</dt><dd>sofia.vargas@stratum.example</dd>
+            <dt>Role</dt><dd>Recruiter — TA, EMEA</dd>
+            <dt>Region</dt><dd>EMEA + LATAM</dd>
+            <dt>2FA</dt><dd>Enabled · authenticator app</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ Team</div></div>
+          <dl class="kv">
+            <dt>Workspace</dt><dd>Tessera Bank</dd>
+            <dt>Seats</dt><dd>24 of 50 in use</dd>
+            <dt>Admins</dt><dd>4</dd>
+            <dt>Recruiters</dt><dd>18</dd>
+            <dt>Coordinators</dt><dd>2</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ Branding</div></div>
+          <dl class="kv">
+            <dt>Company name</dt><dd>Tessera Bank</dd>
+            <dt>Careers domain</dt><dd>jobs.tessera.example</dd>
+            <dt>Primary color</dt><dd>#0e1626 (deep ink)</dd>
+            <dt>Accent color</dt><dd>#b8651f (ochre)</dd>
+            <dt>Email sender</dt><dd>talent@tessera.example</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ AI policies</div></div>
+          <dl class="kv">
+            <dt>Match scoring</dt><dd>Enabled · v2 model</dd>
+            <dt>JD drafting</dt><dd>Enabled · human review required</dd>
+            <dt>Sourcing outreach</dt><dd>Drafts only · no auto-send</dd>
+            <dt>Acceptance prediction</dt><dd>Advisory · not used in decisions</dd>
+            <dt>Bias audit</dt><dd>Quarterly · last run 2026-04-18</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ Compliance</div></div>
+          <dl class="kv">
+            <dt>EEO/OFCCP</dt><dd>Compliant · last audit 2026-03</dd>
+            <dt>NYC AEDT</dt><dd>Bias audit on file · 2026-04-18</dd>
+            <dt>EU AI Act</dt><dd>High-risk system · transparency log on</dd>
+            <dt>GDPR</dt><dd>SCC + DPIA on file</dd>
+            <dt>Data retention</dt><dd>24 months (rejected) · 7 years (hired)</dd>
+          </dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><div class="card-eyebrow">§ API keys</div></div>
+          <dl class="kv">
+            <dt>Public key</dt><dd>pk_live_•••••••••• 4k2x</dd>
+            <dt>Webhooks</dt><dd>3 endpoints · 2 healthy</dd>
+            <dt>Rate limit</dt><dd>1,000 req/min · enterprise</dd>
+            <dt>Last rotation</dt><dd>2026-04-02</dd>
+          </dl>
+        </article>
+        <article class="card span-3">
+          <div class="card-head"><div class="card-eyebrow">§ Audit log</div><span class="card-meta">last 6 entries</span></div>
+          <ul class="activity" id="audit-list"></ul>
+        </article>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ────────────────────────── DRAWERS ──────────────────────── -->
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="drawer-head" id="drawer-head"></div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <button class="drawer-close" id="drawer-close" aria-label="Close">×</button>
+</aside>
+
+<!-- ────────────────────────── MODALS ───────────────────────── -->
+<div class="modal-backdrop" id="modal-backdrop"></div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <button class="modal-close" id="modal-close">×</button>
+  <div id="modal-body"></div>
+</div>
+
+<!-- ────────────────────────── SHORTCUTS HELP ─────────────── -->
+<div class="shortcuts" id="shortcuts" aria-hidden="true">
+  <div class="shortcuts-card">
+    <div class="shortcuts-title">§ Keyboard shortcuts</div>
+    <ul class="shortcuts-list">
+      <li><kbd>g</kbd> <kbd>d</kbd><span>Go to Dashboard</span></li>
+      <li><kbd>g</kbd> <kbd>r</kbd><span>Go to Requisitions</span></li>
+      <li><kbd>g</kbd> <kbd>p</kbd><span>Go to Pipeline</span></li>
+      <li><kbd>g</kbd> <kbd>c</kbd><span>Go to Candidates</span></li>
+      <li><kbd>g</kbd> <kbd>o</kbd><span>Go to Offers</span></li>
+      <li><kbd>g</kbd> <kbd>a</kbd><span>Go to Analytics</span></li>
+      <li><kbd>?</kbd><span>Show this help</span></li>
+      <li><kbd>esc</kbd><span>Close drawer / modal</span></li>
+    </ul>
+    <button class="btn btn-ghost" id="shortcuts-close">Close</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
