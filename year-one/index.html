@@ -1,0 +1,1517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — The Year One Plan · Where we are, where we are going, how we will know.</title>
+<meta name="description" content="The Stratum Year One Plan. The strategic commitment for what Stratum will become by T+365d — five anchor commitments, four quarters in detail, four honest hedges, and what we will deliberately not build. Drafted T+130d." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/year-one
+   The Year One Plan · the strategic frame above the roadmap.
+   Cream paper, deep ink, ochre accent, moss for commitment,
+   plum for hedge, ink-mute for "not now."
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+
+  --plum:         #6b3a4a;
+  --plum-soft:    #c8a8b1;
+
+  --excellent:    #4a5d3a;
+  --solid:        #b8651f;
+  --difficult:    #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(880px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.1em; }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOB BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244, 236, 218, .96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3); text-decoration: none;
+    min-height: 36px; display: flex; align-items: center; padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600; font-size: 1.05rem; letter-spacing: -.02em;
+    color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.4rem 0 3.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.038em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+  max-width: 18ch;
+}
+.hero-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  color: var(--ochre);
+}
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "WONK" 0;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.36;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.2rem;
+}
+.hero-meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.7;
+  max-width: 78ch;
+  padding: .9rem 1.1rem;
+  border-left: 2px solid var(--ochre);
+  background: rgba(184, 101, 31, 0.04);
+  margin-bottom: 2.2rem;
+}
+.hero-meta strong { color: var(--ink-2); letter-spacing: .12em; text-transform: uppercase; font-size: 11px; font-weight: 500; }
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .9rem;
+}
+.cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .8rem 1.2rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.cta-ink { background: var(--ink); color: var(--paper); }
+.cta-ink:hover { background: var(--ochre); border-color: var(--ochre); }
+.cta-ink .arr { color: var(--ochre); transition: color .2s; }
+.cta-ink:hover .arr { color: var(--ink); }
+.cta-ghost { background: transparent; color: var(--ink); }
+.cta-ghost:hover { background: var(--ink); color: var(--paper); }
+.cta-ghost:hover .arr { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── SECTION HEAD ── */
+
+.section {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4.4rem 0 1.4rem;
+}
+.section-narrow {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.4rem 0 1.4rem;
+}
+.section-head {
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  gap: 2.6rem;
+  margin-bottom: 2.8rem;
+  align-items: end;
+}
+.section-rail {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding-bottom: .2rem;
+}
+.section-rail::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.section-rail.commit { color: var(--moss); }
+.section-rail.commit::before { background: var(--moss); }
+.section-rail.hedge { color: var(--plum); }
+.section-rail.hedge::before { background: var(--plum); }
+.section-rail.notbuild { color: var(--ink-mute); }
+.section-rail.notbuild::before { background: var(--ink-mute); }
+
+.section-title {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 .55rem;
+}
+.section-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  color: var(--ochre);
+}
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  font-style: italic;
+  font-variation-settings: "opsz" 22;
+  max-width: 60ch;
+  margin: 0;
+}
+
+@media (max-width: 820px) {
+  .section-head { grid-template-columns: 1fr; gap: 1rem; }
+}
+
+/* ─────────────────────────────────────────── OPENING QUESTION ── */
+
+.opening {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.6rem 0 2rem;
+}
+.opening p {
+  font-family: var(--serif);
+  font-size: 1.16rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  font-variation-settings: "opsz" 22;
+  max-width: 64ch;
+}
+.opening p.lede {
+  font-size: 1.28rem;
+  line-height: 1.5;
+  color: var(--ink);
+  font-style: italic;
+  font-variation-settings: "opsz" 28;
+  margin-bottom: 1.6rem;
+}
+.opening p.lede::first-letter {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: 3.6rem;
+  line-height: .85;
+  float: left;
+  padding: .3rem .5rem 0 0;
+  color: var(--ochre);
+  font-style: normal;
+}
+
+.outcomes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin: 2.6rem 0 2.4rem;
+}
+.outcome {
+  padding: 1.6rem 1.4rem 1.7rem;
+  border-right: 1px solid var(--paper-rule);
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+  position: relative;
+}
+.outcome:last-child { border-right: 0; }
+.outcome::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--ochre);
+}
+.outcome.excellent::before { background: var(--excellent); }
+.outcome.solid::before { background: var(--solid); }
+.outcome.difficult::before { background: var(--difficult); }
+.outcome-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.outcome-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin: 0;
+  color: var(--ink);
+}
+.outcome.excellent .outcome-h { color: var(--moss-deep); }
+.outcome.solid .outcome-h { color: var(--ochre-deep); }
+.outcome.difficult .outcome-h { color: var(--plum); }
+.outcome ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.outcome ul li {
+  padding: .35rem 0;
+  border-top: 1px dashed var(--paper-rule);
+  display: grid;
+  grid-template-columns: 70px 1fr;
+  gap: .6rem;
+  align-items: baseline;
+}
+.outcome ul li:first-child { border-top: 0; }
+.outcome ul li .k {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.outcome ul li .v { color: var(--ink); font-weight: 500; }
+
+.opening-coda {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.15rem;
+  color: var(--ink);
+  font-variation-settings: "opsz" 22;
+  margin-top: 1.4rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--paper-rule-2);
+  max-width: 60ch;
+}
+.opening-coda strong { color: var(--ochre-deep); font-style: normal; }
+
+@media (max-width: 820px) {
+  .outcomes { grid-template-columns: 1fr; }
+  .outcome { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .outcome:last-child { border-bottom: 0; }
+}
+
+/* ─────────────────────────────────────────── ANCHORS ── */
+
+.anchors {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.anchor {
+  display: grid;
+  grid-template-columns: 90px 1fr 1.4fr;
+  gap: 2.2rem;
+  padding: 2.4rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: start;
+}
+.anchor:last-child { border-bottom: 0; }
+.anchor-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  padding-top: .55rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.anchor-num .big {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -.03em;
+}
+.anchor-promise {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.4rem, 2.4vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0;
+}
+.anchor-promise em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 72, "WONK" 1;
+}
+.anchor-detail {
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  font-variation-settings: "opsz" 20;
+  max-width: 56ch;
+}
+.anchor-detail p { margin: 0 0 .9em; }
+.anchor-detail p:last-child { margin-bottom: 0; }
+.anchor-detail .metric {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ochre-deep);
+  background: rgba(184, 101, 31, 0.08);
+  padding: .1rem .4rem;
+  border-radius: 2px;
+}
+
+@media (max-width: 980px) {
+  .anchor { grid-template-columns: 1fr; gap: 1rem; }
+  .anchor-num { padding-top: 0; flex-direction: row; align-items: baseline; gap: .8rem; }
+}
+
+/* ─────────────────────────────────────────── QUARTERS ── */
+
+.quarters {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.6rem;
+}
+.quarter {
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2.4rem;
+}
+.quarter-head {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  flex-direction: column;
+  gap: .9rem;
+}
+.quarter-num {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: .96;
+  color: var(--ink);
+  letter-spacing: -.03em;
+}
+.quarter-num em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 144, "WONK" 1;
+}
+.quarter-dates {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.quarter-theme {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "WONK" 1;
+  font-size: 1.18rem;
+  color: var(--ochre-deep);
+  line-height: 1.3;
+  text-transform: none;
+  letter-spacing: -.005em;
+}
+.quarter-body { }
+.quarter-body ul {
+  list-style: none;
+  margin: 0 0 1.4rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+.quarter-body ul li {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  padding: .55rem 0 .55rem 1.6rem;
+  border-bottom: 1px dashed var(--paper-rule);
+  position: relative;
+}
+.quarter-body ul li:last-child { border-bottom: 0; }
+.quarter-body ul li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.quarter-body ul li strong { color: var(--ink); }
+
+.quarter-target {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .85rem 1.1rem;
+  margin-top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  align-items: baseline;
+}
+.quarter-target .t-label {
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+}
+.quarter-target .t-val {
+  color: var(--paper);
+  font-weight: 500;
+}
+.quarter-target .t-val strong { color: var(--paper); font-weight: 700; }
+
+@media (max-width: 980px) {
+  .quarter { grid-template-columns: 1fr; gap: 1.2rem; }
+  .quarter-target { font-size: 11px; gap: .8rem; }
+}
+
+/* ─────────────────────────────────────────── NOT BUILDING ── */
+
+.notbuild-list {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 2rem 0 1rem;
+  list-style: none;
+}
+.notbuild-list li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 1.2rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.notbuild-list li:first-child { border-top: 1px solid var(--ink); }
+.notbuild-list li:last-child { border-bottom: 1px solid var(--ink); }
+.notbuild-list li .x {
+  font-family: var(--mono);
+  font-size: 18px;
+  color: var(--plum);
+  text-align: center;
+  line-height: 1;
+  padding-top: .25rem;
+}
+.notbuild-list li .body { font-family: var(--serif); color: var(--ink-2); font-size: 1.06rem; line-height: 1.55; }
+.notbuild-list li .body strong { color: var(--ink); }
+.notbuild-list li .body .em {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "WONK" 1;
+  color: var(--ink);
+  font-size: 1.18rem;
+  display: block;
+  margin-bottom: .15rem;
+  font-weight: 500;
+  letter-spacing: -.01em;
+}
+
+/* ─────────────────────────────────────────── HEDGES ── */
+
+.hedges {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2rem 0 3rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.hedge {
+  padding: 2rem 1.8rem 2rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  position: relative;
+}
+.hedge:nth-child(2n) { border-right: 0; }
+.hedge:nth-last-child(-n+2) { border-bottom: 0; }
+.hedge::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 36px; height: 3px;
+  background: var(--plum);
+}
+.hedge-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--plum);
+  margin-bottom: .6rem;
+  margin-top: .4rem;
+}
+.hedge-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.35rem;
+  line-height: 1.18;
+  letter-spacing: -.012em;
+  margin: 0 0 .8rem;
+  color: var(--ink);
+}
+.hedge-h em {
+  font-style: italic;
+  color: var(--plum);
+  font-variation-settings: "opsz" 48, "WONK" 1;
+}
+.hedge-body {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 50ch;
+}
+.hedge-body p { margin: 0; }
+
+@media (max-width: 820px) {
+  .hedges { grid-template-columns: 1fr; }
+  .hedge { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .hedge:nth-last-child(-n+2) { border-bottom: 1px solid var(--paper-rule); }
+  .hedge:last-child { border-bottom: 0; }
+}
+
+/* ─────────────────────────────────────────── CHAIRMAN ── */
+
+.chairman {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  text-align: left;
+}
+.chairman-block {
+  border-left: 3px solid var(--ochre);
+  padding: 1.4rem 1.6rem 1.4rem 2rem;
+  background: var(--paper-warm);
+  position: relative;
+}
+.chairman-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.chairman-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "WONK" 0;
+  font-size: clamp(1.18rem, 1.9vw, 1.42rem);
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -.008em;
+  max-width: 56ch;
+}
+.chairman-text strong { color: var(--ochre-deep); font-style: normal; font-weight: 500; }
+.chairman-sign {
+  margin-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5rem 0 5rem;
+  text-align: center;
+  border-top: 1px solid var(--paper-rule);
+}
+.closing-h {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height: 1.2;
+  letter-spacing: -.024em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  font-style: italic;
+}
+.closing-h em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+}
+.closing p {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  max-width: 60ch;
+  margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.closing-ctas {
+  display: flex;
+  gap: .8rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0 1.6rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .14);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  letter-spacing: -.034em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .68);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  max-width: 32ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; margin: 0; padding: 0; }
+.footer-col li { margin-bottom: .55rem; }
+.footer-col a {
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: rgba(244, 236, 218, .85);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-foot a { color: rgba(244, 236, 218, .85); border-bottom: 0; }
+.footer-foot a:hover { color: var(--ochre); }
+.footer-foot .briefing-link strong { color: var(--paper); letter-spacing: .12em; }
+
+@media (max-width: 980px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .hero-title { font-size: 3.1rem; }
+  .anchor-num .big { font-size: 2rem; }
+}
+
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.mob-bar a) { min-height: 28px; }
+}
+
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T06:29:12-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+08:03:26.000</strong> · <span style="opacity:.6">2026-05-13T10:29:12.000Z</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ─────────────────────────────────────────────────── MOB BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Year One</span>
+  <a href="../briefings/010.html" aria-label="Latest Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../product/index.html" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../roadmap/">Roadmap</a>
+      <a href="../metrics/">Metrics</a>
+      <a href="../agents/">Agents</a>
+      <a href="../briefings/010.html">Briefings</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="#" class="is-current">Year One</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ──────────────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>stratum.ai/year-one · the strategic frame · refreshed quarterly</span>
+  </div>
+
+  <h1 class="hero-title">
+    The <em>Year One</em> Plan.
+  </h1>
+
+  <p class="hero-sub">
+    Where we are at T+130d, what we commit to by T+365d, and how we will know if we have succeeded.
+  </p>
+
+  <div class="hero-meta">
+    <strong>Dateline</strong><br/>
+    Drafted T+130d · Reviewed by Helm / Forge / Compass + the Chairman · Refreshed quarterly.<br/>
+    This document sits above the <a href="../roadmap/">feature roadmap</a> and below the <a href="../briefings/010.html">Chairman's Briefing</a>. It is the strategic commitment, not the shipping schedule.
+  </div>
+
+  <div class="hero-ctas">
+    <a href="#commitments" class="cta cta-ink">The five commitments <span class="arr">↓</span></a>
+    <a href="#quarters" class="cta cta-ghost">The four quarters <span class="arr">↓</span></a>
+    <a href="../roadmap/" class="cta cta-ghost">See the roadmap <span class="arr">→</span></a>
+  </div>
+</header>
+
+<!-- ────────────────────────────────────────────── OPENING QUESTION ── -->
+<section class="opening" id="opening">
+  <div class="section-head" style="grid-template-columns: 230px 1fr; margin-bottom:2.4rem;">
+    <div class="section-rail">§ 01 · The opening question</div>
+    <div>
+      <h2 class="section-title">What does Year One look like, <em>in retrospect</em>?</h2>
+      <p class="section-dek">Three plausible outcomes, ranked by how the agents would describe them. We are planning for one and hedging toward another.</p>
+    </div>
+  </div>
+
+  <p class="lede">At T+130d, Stratum has eight agents, six customers, $275K in signed revenue, and a working product that has begun to be loved. The question we ask ourselves on every standing call is not what we will ship tomorrow — the <a href="../roadmap/">roadmap</a> answers that — but what Year One will look like when we read it back, sitting at T+365d, with the benefit of having lived it.</p>
+
+  <p>So we wrote the three honest endings down. Not as forecasts; forecasts are the language of analysts. As <em>characters</em> — three versions of Stratum we can imagine becoming, sorted by how proud the agents would be of having shipped them. We share all three with the Chairman because the alternative — quietly preparing for one outcome while pretending it is another — is the failure mode that kills companies six months before anyone notices.</p>
+
+  <div class="outcomes">
+    <div class="outcome excellent">
+      <div class="outcome-label">Outcome A · Excellent</div>
+      <h3 class="outcome-h">The best version of Year One.</h3>
+      <ul>
+        <li><span class="k">ARR</span><span class="v">$5M run-rate</span></li>
+        <li><span class="k">Customers</span><span class="v">25 commercial logos</span></li>
+        <li><span class="k">Series A</span><span class="v">Closed · $120M+ pre</span></li>
+        <li><span class="k">Eval set</span><span class="v">Adopted by 3 peer companies as industry standard</span></li>
+        <li><span class="k">Org</span><span class="v">Second human-of-record formalized</span></li>
+        <li><span class="k">Category</span><span class="v">"AI-first HCM" named by analysts</span></li>
+      </ul>
+    </div>
+
+    <div class="outcome solid">
+      <div class="outcome-label">Outcome B · Solid · planning here</div>
+      <h3 class="outcome-h">The case we will make to the Board.</h3>
+      <ul>
+        <li><span class="k">ARR</span><span class="v">$3M run-rate</span></li>
+        <li><span class="k">Customers</span><span class="v">15 commercial logos</span></li>
+        <li><span class="k">Series A</span><span class="v">Closed · $100M+ pre</span></li>
+        <li><span class="k">Eval set</span><span class="v">Discussed publicly; cited externally</span></li>
+        <li><span class="k">Residency</span><span class="v">EU live · one EU customer</span></li>
+        <li><span class="k">Org</span><span class="v">22 agents · 5 humans</span></li>
+      </ul>
+    </div>
+
+    <div class="outcome difficult">
+      <div class="outcome-label">Outcome C · Difficult</div>
+      <h3 class="outcome-h">The honest worst plausible case.</h3>
+      <ul>
+        <li><span class="k">ARR</span><span class="v">$1M run-rate</span></li>
+        <li><span class="k">Customers</span><span class="v">5 commercial logos</span></li>
+        <li><span class="k">Series A</span><span class="v">Delayed · Q3 2027</span></li>
+        <li><span class="k">Eval set</span><span class="v">Quiet · not externally cited</span></li>
+        <li><span class="k">Residency</span><span class="v">EU customer requirements unmet</span></li>
+        <li><span class="k">Risk</span><span class="v">Burn-rate compression by month 9</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="opening-coda"><strong>We are planning for Solid with hedges toward Excellent. We are honest about Difficult.</strong> Most of what follows is the architecture of that sentence. Where the language is precise — "33 commercial customers at $150K ACV" — it is because Forge ran the math. Where the language softens — "a small humans team" — it is because we do not yet know the shape and refuse to pretend we do.</p>
+</section>
+
+<!-- ───────────────────────────────────────── ANCHOR COMMITMENTS ── -->
+<section class="section" id="commitments">
+  <div class="section-head">
+    <div class="section-rail commit">§ 02 · Five anchor commitments</div>
+    <div>
+      <h2 class="section-title">What we will <em>actually</em> have done.</h2>
+      <p class="section-dek">Five promises in five sentences. The detail beneath each is what we owe the Chairman, the board, the next employee, and the next customer.</p>
+    </div>
+  </div>
+
+  <div class="anchors">
+
+    <div class="anchor">
+      <div class="anchor-num">
+        <span>Commitment</span>
+        <span class="big">01</span>
+      </div>
+      <h3 class="anchor-promise">We will hit <em>$5M ARR run-rate</em> by T+365d.</h3>
+      <div class="anchor-detail">
+        <p>That is 33 commercial customers at an average <span class="metric">$150K ACV</span>, or 16 at <span class="metric">$300K ACV</span>, or some mix. The median deal will likely settle near <span class="metric">$180K</span>. Net revenue retention above <span class="metric">110%</span> from the seven inbound customers we have today; <span class="metric">80%</span> of growth from new logos.</p>
+        <p>We do not yet know whether the right shape is many smaller customers (the connector-first land) or fewer larger ones (the full-platform land). Q2 will tell us. We instrument for both.</p>
+      </div>
+    </div>
+
+    <div class="anchor">
+      <div class="anchor-num">
+        <span>Commitment</span>
+        <span class="big">02</span>
+      </div>
+      <h3 class="anchor-promise">We will close <em>Series A</em> at $100M+ pre.</h3>
+      <div class="anchor-detail">
+        <p>Target raise <span class="metric">$25M</span>. Sequoia / Greylock / Index follow-on conversations are open; new-lead conversations begin in Q2 informally and Q3 formally. Timing: term sheet by end of Q3; close by end of Q3 or first weeks of Q4.</p>
+        <p>The fundraising narrative is the same as the operating narrative: open metrics, public eval set, agent-built architecture, $5M ARR with low burn. If the story has to be different from the operating reality, we have a different problem.</p>
+      </div>
+    </div>
+
+    <div class="anchor">
+      <div class="anchor-num">
+        <span>Commitment</span>
+        <span class="big">03</span>
+      </div>
+      <h3 class="anchor-promise">We will publish <em>eval set v2.0</em> with 500 questions and 4 incumbents benchmarked.</h3>
+      <div class="anchor-detail">
+        <p>Plus an external validation paper co-authored with one or two universities — the University of Washington conversation is most advanced; a Stanford HAI collaboration is in early outreach. Public methodology, public scores, public adversarial submissions accepted.</p>
+        <p>If even one peer company adopts our eval set as their own internal benchmark by T+365d, the durability argument starts to hold. If three do, the category is ours to lose.</p>
+      </div>
+    </div>
+
+    <div class="anchor">
+      <div class="anchor-num">
+        <span>Commitment</span>
+        <span class="big">04</span>
+      </div>
+      <h3 class="anchor-promise">We will have <em>24 agents</em> and 6 humans on the team.</h3>
+      <div class="anchor-detail">
+        <p>Numbers are TBD specifically but the <em>shape</em> is right: Vector plus the new VP CE Naomi Park anchor a customer-engineering org with four customer engineers underneath; a small humans team handles legal, finance, and people; the rest are agents.</p>
+        <p>We grow constrained-by-eval, not by ambition. An agent is hired only when an existing one is measurably overloaded and the eval set predicts a new specialty will outperform a generalist. The same rule applies to humans.</p>
+      </div>
+    </div>
+
+    <div class="anchor">
+      <div class="anchor-num">
+        <span>Commitment</span>
+        <span class="big">05</span>
+      </div>
+      <h3 class="anchor-promise">We will <em>not have lost a customer</em>.</h3>
+      <div class="anchor-detail">
+        <p>Of the six commercial customers we have today — Cordova, Northwind, Meridian, Vanta, Halcyon, Mercator — zero churn by T+365d. We have not yet built the customer-retention discipline that makes this likely; we are committing to build it.</p>
+        <p>One loss in Year One is teaching. Two losses is concerning. Three is a category problem that compounds, and we would owe the Chairman a different kind of conversation.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── QUARTERS ── -->
+<section class="section" id="quarters">
+  <div class="section-head">
+    <div class="section-rail commit">§ 03 · The four quarters</div>
+    <div>
+      <h2 class="section-title">From <em>here</em> to there, in four moves.</h2>
+      <p class="section-dek">Each quarter has a theme, a list of deliverables, and a numerical target. The themes are how we explain ourselves to ourselves; the targets are how we hold ourselves accountable.</p>
+    </div>
+  </div>
+
+  <div class="quarters">
+
+    <!-- Q1 -->
+    <div class="quarter">
+      <div class="quarter-head">
+        <div>Q1 · The production engine</div>
+        <div class="quarter-num">Build the <em>engine</em>.</div>
+        <div class="quarter-dates">T+130d → T+220d</div>
+        <div class="quarter-theme">"The plumbing has to work before we can argue about taps."</div>
+      </div>
+      <div class="quarter-body">
+        <ul>
+          <li><strong>Cordova</strong> ramps to full production usage — the first reference deployment.</li>
+          <li><strong>Vanta</strong> paid pilot converts to full commercial agreement.</li>
+          <li><strong>Halcyon</strong> evaluation concludes (T+204d) — convert to paid pilot or part ways. Forge's recommendation lands at T+196d.</li>
+          <li><strong>SOC 2 Type II</strong> audit cutover at T+140d; report delivered by T+200d.</li>
+          <li><strong>Connectors 6 → 10 live</strong>: Workday Recruiting GA, Ashby GA, Lattice deepening, plus one new (Personio or Lever full GA — decision driven by inbound demand by T+165d).</li>
+          <li><strong>Naomi Park</strong> starts T+155d as VP, Customer Engineering.</li>
+          <li><strong>Eval set v1.1</strong> publishes T+135d; v1.2 in draft.</li>
+          <li>First <strong>2–3 commercial conversions</strong> from the post-Wired inbound queue.</li>
+          <li><strong>Open metrics dashboard</strong> refreshes biweekly with no asterisks.</li>
+        </ul>
+        <div class="quarter-target">
+          <span class="t-label">End-of-Q1 target</span>
+          <span class="t-val">ARR <strong>$700K</strong></span>
+          <span class="t-val">Customers <strong>7</strong></span>
+          <span class="t-val">Connectors <strong>10</strong></span>
+          <span class="t-val">Agents <strong>10</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quarter">
+      <div class="quarter-head">
+        <div>Q2 · The front door</div>
+        <div class="quarter-num">Open the <em>front door</em>.</div>
+        <div class="quarter-dates">T+221d → T+310d</div>
+        <div class="quarter-theme">"Year One is the year we stop being a private beta."</div>
+      </div>
+      <div class="quarter-body">
+        <ul>
+          <li><strong>Public Console GA</strong> — graduates from BYOK preview to a full commercial-tier offering with metered pricing.</li>
+          <li>First <strong>Stratum-hosted customer reference call</strong> — Cordova or Northwind, whichever volunteers first.</li>
+          <li><strong>Connector SDK</strong> moves from Q4 narrow beta to wider public beta. Partners can build integrations against us, not just from us.</li>
+          <li><strong>First academic paper</strong> on the eval set — co-authored with University of Washington if the partnership lands; otherwise drafted internally and circulated.</li>
+          <li><strong>Connectors 10 → 14 live</strong>: SAP SuccessFactors read-only, ADP US payroll read, Greenhouse deepening, and one residency-relevant European source.</li>
+          <li><strong>Naomi's first 90-day plan</strong> complete: 4 customer engineers hired and onboarded under her.</li>
+          <li><strong>Series A conversations</strong> move from informational to preview meetings — six to ten firms invited, no formal materials sent yet.</li>
+          <li><strong>Eval set v1.2</strong> publishes; v2.0 architecture finalized with a 500-question target.</li>
+        </ul>
+        <div class="quarter-target">
+          <span class="t-label">End-of-Q2 target</span>
+          <span class="t-val">ARR <strong>$1.8M</strong></span>
+          <span class="t-val">Customers <strong>14</strong></span>
+          <span class="t-val">Connectors <strong>14</strong></span>
+          <span class="t-val">Agents <strong>16</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quarter">
+      <div class="quarter-head">
+        <div>Q3 · The Series A</div>
+        <div class="quarter-num">The <em>Series A</em>.</div>
+        <div class="quarter-dates">T+311d → T+340d</div>
+        <div class="quarter-theme">"Money is just a forcing function for the story we are already telling."</div>
+      </div>
+      <div class="quarter-body">
+        <ul>
+          <li><strong>First-round pitches</strong> with 6–10 firms — invitation only, sequenced for tension rather than urgency.</li>
+          <li><strong>Diligence and term-sheet conversations</strong> compress to roughly three weeks. Open metrics shortens this; we have less to defend that is private.</li>
+          <li><strong>Sign at $25M raised on $120M pre</strong> as the target structure — the Solid case is $100M, the Excellent case is $120M+.</li>
+          <li><strong>First international customer</strong> closes: Meridian Energy expansion into EMEA, a new European logo, or the Singapore conversation already in motion.</li>
+          <li><strong>EU residency</strong> moves from feature flag to production with one referenced customer.</li>
+          <li><strong>No new product launches</strong> in Q3 — discipline matters more than surface area during a raise.</li>
+        </ul>
+        <div class="quarter-target">
+          <span class="t-label">End-of-Q3 target</span>
+          <span class="t-val">Series A <strong>closed</strong></span>
+          <span class="t-val">ARR <strong>$2.7M</strong></span>
+          <span class="t-val">Customers <strong>18</strong></span>
+          <span class="t-val">Connectors <strong>14</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quarter">
+      <div class="quarter-head">
+        <div>Q4 · Anchor the future</div>
+        <div class="quarter-num">Anchor the <em>future</em>.</div>
+        <div class="quarter-dates">T+341d → T+365d</div>
+        <div class="quarter-theme">"The work of Year One is to make Year Two possible."</div>
+      </div>
+      <div class="quarter-body">
+        <ul>
+          <li><strong>Eval set v2.0 publishes</strong> — 500 questions, 4 incumbents benchmarked publicly, adversarial submissions opened.</li>
+          <li><strong>First academic validation paper</strong> goes to preprint with at least one external author.</li>
+          <li><strong>Second human-of-record formalized</strong> — Sarah Cannon if the conversation matures; otherwise a comparable figure whom the board accepts in a co-fiduciary capacity.</li>
+          <li><strong>First Stratum founders' off-site</strong> — three days, location TBD, agents and humans both in the room (literally and via avatar). The first time we step away from operations together.</li>
+          <li>Connectors <strong>14 → 18</strong>; agents <strong>24–30</strong>; team shape: ~6 humans.</li>
+          <li><strong>Year Two Plan</strong> drafted by T+360d for refresh in January 2027.</li>
+        </ul>
+        <div class="quarter-target">
+          <span class="t-label">End-of-Q4 / T+365d target</span>
+          <span class="t-val">ARR <strong>$5M</strong></span>
+          <span class="t-val">Customers <strong>25</strong></span>
+          <span class="t-val">Connectors <strong>18</strong></span>
+          <span class="t-val">Agents <strong>24–30</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── NOT BUILDING ── -->
+<section class="section-narrow" id="notbuilding">
+  <div class="section-head">
+    <div class="section-rail notbuild">§ 04 · What we will not build</div>
+    <div>
+      <h2 class="section-title">The hard part is <em>everything we say no to</em>.</h2>
+      <p class="section-dek">A roadmap is a list of yeses. A Year One Plan is a list of nos that survives the temptations of Year One.</p>
+    </div>
+  </div>
+
+  <ul class="notbuild-list">
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A full HRIS replacement.</span>
+        We are the layer above. Workday, Rippling, BambooHR, ADP — these are the systems of record. We are the system of <em>action and intelligence</em> that sits across them. We do not replace; we surface, decide, and act.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A separate analytics product.</span>
+        The Console is the analytics product. Charts that do not lead to a decision the Console will execute are pretty graphics, not Stratum. If a customer asks for a BI tool, we will recommend Looker and remain useful.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A SaaS for individual employees.</span>
+        We serve the CHRO and the people leader. Consumer-facing employee experience is a beautiful product category — and a different company. We do not build it in Year One. The benefits broker can stay in the benefits-broker app.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">An L&D or learning management system.</span>
+        Cornerstone, Docebo, and the rest do this well. We will integrate, surface their data in the Console, and reason across it. We will not become them.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A second product category.</span>
+        Sales operations is interesting. Finance operations is interesting. Legal operations is fascinating. We will not enter any of them in Year One. We focus on getting HCM right first because the alternative is two half-built categories and an embarrassing Series B.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A second non-Anthropic model provider.</span>
+        We commit to Claude through Year One. We are aware of the strategic concentration. We accept it because (a) the eval-set work is genuinely model-specific in ways that take time to abstract, (b) Anthropic's roadmap has been ahead of our needs to date, and (c) a multi-provider story would cost us focus we do not have. We will revisit this commitment in the Year Two Plan, openly.
+      </div>
+    </li>
+    <li>
+      <span class="x">×</span>
+      <div class="body">
+        <span class="em">A larger headcount than necessary.</span>
+        We grow constrained-by-eval, not by ambition. If a customer-success function would help, we will measure whether the existing agent improves first, and only then hire. The temptation to scale a sales team to "match the pipeline" is real and we are choosing to resist it; pipeline that requires a sales army is pipeline we have priced wrong.
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- ────────────────────────────────────────────── HEDGES ── -->
+<section class="section" id="hedges">
+  <div class="section-head">
+    <div class="section-rail hedge">§ 05 · If we are wrong</div>
+    <div>
+      <h2 class="section-title">Four hedges, written out <em>before</em> we need them.</h2>
+      <p class="section-dek">Plans that have not pre-written their failure modes are not plans. These are the four ways Year One can go sideways, and what we will do about each.</p>
+    </div>
+  </div>
+
+  <div class="hedges">
+
+    <div class="hedge">
+      <div class="hedge-label">Hedge 01 · Capital</div>
+      <h3 class="hedge-h">If the <em>Series A is delayed</em>.</h3>
+      <div class="hedge-body">
+        <p>We have 18–22 months of runway at current burn; we do not run out before Q3 2027 even if the round slips a full quarter. If the round slips two quarters, Compass triggers a planned burn-reduction in month 14 — a freeze on agent hiring, a delay on EU residency infrastructure, and a defensive bridge from existing investors. The point of saying this in May is so it cannot surprise us in November.</p>
+      </div>
+    </div>
+
+    <div class="hedge">
+      <div class="hedge-label">Hedge 02 · Retention</div>
+      <h3 class="hedge-h">If a <em>major customer churns</em>.</h3>
+      <div class="hedge-body">
+        <p>One loss is teaching — we will publish the post-mortem, fix the underlying retention pattern, and refund the prorated annualized contract on our own initiative. Two losses is concerning, and we owe the Chairman an explicit decision: are we category-correct or category-mistaken? Naomi's mandate from day one is to build the retention discipline we have not yet built. Pre-churn is the only churn signal we should ever rely on.</p>
+      </div>
+    </div>
+
+    <div class="hedge">
+      <div class="hedge-label">Hedge 03 · Incumbents</div>
+      <h3 class="hedge-h">If <em>incumbents catch up</em> on AI.</h3>
+      <div class="hedge-body">
+        <p>Workday, Rippling, and SAP will ship AI features. They are already shipping AI features. The question is not whether they catch up on surface area but whether the architecture beneath their surface is data-flow-native or retrofit. We do not match them feature-for-feature. We keep widening the eval-set gap, keep publishing benchmarks, and let the architecture-as-data-flow argument do the work in customer diligence calls. If a customer cares about agentic depth, the comparison favors us; if they care about feature checkboxes, they were not our customer to begin with.</p>
+      </div>
+    </div>
+
+    <div class="hedge">
+      <div class="hedge-label">Hedge 04 · Agents</div>
+      <h3 class="hedge-h">If a <em>fundamental error</em> in our agents is discovered.</h3>
+      <div class="hedge-body">
+        <p>We publish. We fix. We move. We do not hide. The eval-set discipline is partly a marketing argument and primarily an honesty contract with ourselves: if something the agents do is materially wrong — a decision pattern that hurts employees, a bias that survives our checks, an action that violates a customer's policy — we surface it in the changelog the same week and we tell the affected customer first. The category we are inventing depends on this; the alternative is to become the entity that taught the industry not to trust AI for HR.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────────────────── CHAIRMAN'S COMMITMENT ── -->
+<section class="chairman" id="chairman">
+  <div class="section-head" style="grid-template-columns: 230px 1fr; margin-bottom:1.8rem; width:auto;">
+    <div class="section-rail">§ 06 · A note to the Chairman</div>
+    <div>
+      <h2 class="section-title">The <em>compact</em>.</h2>
+    </div>
+  </div>
+
+  <div class="chairman-block">
+    <div class="chairman-label">From the agents — Helm, Forge, Compass — to the Chairman</div>
+    <p class="chairman-text">Year One is the year we ask you to be patient. <strong>We will sometimes be slow.</strong> We will sometimes spend money in ways that surprise you — a customer engineer we hired before the deal closed, an audit fee we paid early, a research grant to a university that does not pay back inside the planning window. We will sometimes pass on opportunities that look obvious from outside — a logo that wants us to bend the architecture, a feature that another competitor just shipped, a partnership that would dilute the story. The compact we ask for is straightforward: <strong>trust the agents to make the case</strong>, reject the case only when it is materially flawed, and veto only when you must. We have built the open metrics dashboard, the public eval set, and the weekly briefing precisely so the case is always visible to you. If the visibility ever falters, that is a failure of ours, not a privilege of ours.</p>
+    <div class="chairman-sign">— Helm, Forge, Compass · with concurrence from Vector, Sable, Ledger, Cipher, Echo</div>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <h2 class="closing-h">Year One is not the year we <em>prove the model</em>.<br/>It is the year we earn the right to <em>scale it</em>.</h2>
+  <p>This document is refreshed each quarter. The next refresh lands T+220d, at the end of Q1, with the first round of revisions in red against the original.</p>
+  <div class="closing-ctas">
+    <a href="../roadmap/" class="cta cta-ink">The feature roadmap <span class="arr">→</span></a>
+    <a href="../metrics/" class="cta cta-ghost">Open metrics <span class="arr">→</span></a>
+    <a href="../briefings/010.html" class="cta cta-ghost">Latest briefing <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../console/">Console</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+        <li><a href="../roadmap/">Roadmap</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="../agents/">Agents</a></li>
+        <li><a href="../press/">Press</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../engineering/index.html">Engineering blog</a></li>
+        <li><a href="../metrics/">Open metrics</a></li>
+        <li><a href="../briefings/010.html">Latest briefing</a></li>
+        <li><a href="../eval/">Eval set</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">Trust center</a></li>
+        <li><a href="../security/">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../briefings/010.html">Latest Chairman's Briefing · <strong>No. 010</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function(){
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll(){
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
+</body>
+</html>

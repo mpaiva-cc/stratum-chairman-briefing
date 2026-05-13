@@ -1,0 +1,2333 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Privacy — Privacy Policy</title>
+<meta name="description" content="Stratum's privacy policy. What information we collect, how we use it, what we will not do with it. Written for legal teams, CISOs, regulators, and the curious end-user." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/privacy — Privacy Policy
+   Cream paper · deep ink · ochre · legal document
+   Narrow reading column (~720px) for legal-document feel
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --hi:           #a13418;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(720px, 92vw);
+  --col-read-wide: min(820px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.65;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current {
+  color: var(--ochre);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── DOC HEADER ── */
+
+.doc-header {
+  width: var(--col-read-wide);
+  margin: 0 auto;
+  padding: 4.5rem 0 2.5rem;
+  position: relative;
+}
+
+.doc-stamp {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.9;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 1rem 0;
+  margin-bottom: 2.4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.2rem;
+}
+.doc-stamp span strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+.doc-stamp .lbl {
+  display: block;
+  font-size: 9.5px;
+  color: var(--ochre);
+  margin-bottom: .25rem;
+  letter-spacing: .26em;
+}
+
+.doc-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+}
+.doc-h1 .dot { color: var(--ochre); }
+
+.doc-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: clamp(1.1rem, 1.5vw, 1.32rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.2rem;
+}
+
+.doc-meta-row {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  gap: 1.8rem;
+  flex-wrap: wrap;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.doc-meta-row span strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* ─────────────────────────────────────────── TL;DR ── */
+
+.tldr {
+  width: var(--col-read);
+  margin: 0 auto 4rem;
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 2rem 2rem 1.8rem;
+  position: relative;
+}
+.tldr::before {
+  content: "";
+  position: absolute;
+  top: -1px; left: -1px;
+  width: 22px; height: 22px;
+  border-top: 2px solid var(--ochre);
+  border-left: 2px solid var(--ochre);
+}
+.tldr::after {
+  content: "";
+  position: absolute;
+  bottom: -1px; right: -1px;
+  width: 22px; height: 22px;
+  border-bottom: 2px solid var(--ochre);
+  border-right: 2px solid var(--ochre);
+}
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.tldr-label .bar { height: 1px; width: 32px; background: var(--ochre); display: inline-block; }
+.tldr-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.5rem;
+  letter-spacing: -.015em;
+  margin: 0 0 1.3rem;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.tldr-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 60, "SOFT" 100;
+  color: var(--ochre);
+}
+.tldr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: tldr;
+}
+.tldr-list li {
+  counter-increment: tldr;
+  padding: .85rem 0 .85rem 2.4rem;
+  border-top: 1px dashed var(--paper-rule);
+  position: relative;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.tldr-list li:first-child { border-top: 0; padding-top: 0; }
+.tldr-list li::before {
+  content: counter(tldr, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: .85rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  font-weight: 500;
+}
+.tldr-list li:first-child::before { top: 0; }
+.tldr-list li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.tldr-foot {
+  margin-top: 1.3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.tldr-foot strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── SECTION CHROME ── */
+
+.read {
+  width: var(--col-read);
+  margin: 0 auto;
+}
+
+section {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 3.4rem 0 1rem;
+  scroll-margin-top: 80px;
+}
+
+.s-marker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.s-marker .bar { height: 1px; width: 32px; background: var(--ochre); display: inline-block; }
+
+.s-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  margin: 0 0 .8rem;
+  color: var(--ink);
+  border-top: 1px solid var(--ink);
+  padding-top: 1.4rem;
+}
+.s-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.s-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.04rem;
+  color: var(--ink-2);
+  margin: 0 0 1.8rem;
+  line-height: 1.5;
+}
+
+section p {
+  margin: 0 0 1.05rem;
+  color: var(--ink);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+section p.intro { color: var(--ink-2); }
+
+section h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.32rem;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  line-height: 1.25;
+  margin: 1.8rem 0 .7rem;
+}
+section h3 .pfx {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  display: block;
+  font-weight: 500;
+  margin-bottom: .35rem;
+  font-variation-settings: normal;
+}
+
+section h4 {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 600;
+  margin: 1.4rem 0 .5rem;
+}
+
+ul.plain {
+  margin: 0 0 1.05rem;
+  padding-left: 1.2rem;
+}
+ul.plain li {
+  margin-bottom: .55rem;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+ul.plain li strong { color: var(--ink); }
+
+ol.legal {
+  margin: 0 0 1.05rem;
+  padding-left: 1.4rem;
+}
+ol.legal li {
+  margin-bottom: .65rem;
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  padding-left: .3rem;
+}
+
+.callout {
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ochre);
+  padding: 1.05rem 1.2rem;
+  margin: 1.2rem 0 1.3rem;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.callout strong { color: var(--ink); }
+.callout .lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+  font-weight: 600;
+}
+
+.codeblock {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule-2);
+  padding: 1rem 1.1rem;
+  margin: 1rem 0 1.2rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.codeblock .ck {
+  display: block;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────── DATA TABLES ── */
+
+.dtable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-family: var(--serif);
+  font-size: 15px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.dtable thead th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  text-align: left;
+  padding: .8rem .7rem .8rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  font-weight: 600;
+  vertical-align: bottom;
+}
+.dtable tbody td {
+  padding: .85rem .7rem .85rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  color: var(--ink);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.dtable tbody tr:last-child td { border-bottom: 0; }
+.dtable td.name { font-weight: 600; color: var(--ink); white-space: nowrap; }
+.dtable td.role { font-family: var(--serif); font-style: italic; color: var(--ink-2); }
+.dtable td.region { font-family: var(--mono); font-size: 12px; color: var(--ink-3); white-space: nowrap; letter-spacing: .04em; }
+.dtable td.dpa { font-family: var(--mono); font-size: 11.5px; color: var(--ochre); letter-spacing: .06em; }
+
+/* ─────────────────────────────────────────── RIGHTS GRID ── */
+
+.rights-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin: 1rem 0 1.6rem;
+}
+.right-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.4rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.right-row:last-child { border-bottom: 0; }
+.right-row .name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.right-row .desc {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.right-row .desc strong { color: var(--ink); }
+
+/* ─────────────────────────────────────────── CONTACT GRID ── */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+  margin: 1.2rem 0 1.5rem;
+}
+.contact-cell {
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1.1rem 1.2rem;
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.contact-cell .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .5rem;
+  font-weight: 600;
+}
+.contact-cell .addr {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  color: var(--ink);
+  line-height: 1.55;
+  word-break: break-word;
+}
+.contact-cell .note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  line-height: 1.45;
+  margin-top: .5rem;
+}
+
+/* ─────────────────────────────────────────── COOKIE TABLE ── */
+
+.cookies {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin: 1rem 0 1.5rem;
+}
+.cookie-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 110px;
+  gap: 1.2rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: start;
+}
+.cookie-row:last-child { border-bottom: 0; }
+.cookie-row .type {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 600;
+}
+.cookie-row .what {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.cookie-row .state {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  text-align: center;
+  white-space: nowrap;
+  height: fit-content;
+}
+.cookie-row .state.on  { color: var(--ok); border: 1px solid var(--ok); background: rgba(74, 109, 74, .06); }
+.cookie-row .state.off { color: var(--ink-3); border: 1px solid var(--ink-3); background: transparent; }
+
+/* ─────────────────────────────────────────── FOOTNOTE ── */
+
+.footnote {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  line-height: 1.5;
+  padding: 1rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  margin: 1.2rem 0 .8rem;
+}
+.footnote strong { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── SIGN-OFF ── */
+
+.signoff {
+  width: var(--col-read);
+  margin: 4rem auto 2rem;
+  border-top: 2px solid var(--ink);
+  padding-top: 2.4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.signoff-block .lbl {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  font-weight: 600;
+}
+.signoff-block .sig {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60, "SOFT" 100;
+  font-style: italic;
+  font-size: 1.6rem;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  line-height: 1.15;
+  margin-bottom: .4rem;
+}
+.signoff-block .title {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.signoff-block .date {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-top: 1rem;
+  padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* ─────────────────────────────────────────── CHANGELOG ── */
+
+.changelog {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 3rem 0 2rem;
+}
+.changelog-h {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+}
+.changelog-h .bar { height: 1px; width: 32px; background: var(--ochre); display: inline-block; }
+
+.cl-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.cl-table thead th {
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  text-align: left;
+  padding: .75rem .6rem .75rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  font-weight: 600;
+}
+.cl-table tbody td {
+  padding: .75rem .6rem;
+  border-bottom: 1px solid var(--paper-rule);
+  vertical-align: top;
+  color: var(--ink);
+  line-height: 1.5;
+}
+.cl-table tbody tr:last-child td { border-bottom: 0; }
+.cl-table tbody td:first-child { padding-left: 0; }
+.cl-table tbody td.ver { color: var(--ochre); white-space: nowrap; }
+.cl-table tbody td.date { color: var(--ink-3); white-space: nowrap; }
+.cl-table tbody td.note { font-family: var(--serif); font-size: 14.5px; line-height: 1.5; }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--ink);
+  margin-top: 4rem;
+  padding: 3rem 0 2.4rem;
+  background: var(--paper-warm);
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 2.4rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.6rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .9rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 16;
+  font-size: 14.5px;
+  color: var(--ink-3);
+  max-width: 36ch;
+  margin: 0;
+  line-height: 1.5;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 .8rem;
+  font-weight: 600;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  font-size: 14.5px;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-foot .briefing-link {
+  color: var(--ink-2);
+  border-bottom: 0;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 960px) {
+  .nav-inner { padding: .75rem 1.1rem; }
+  .nav-links { display: none; }
+  .doc-header { padding: 2.4rem 1.1rem 1.6rem; }
+  .doc-stamp { grid-template-columns: 1fr; gap: .8rem; padding: .9rem 0; }
+  section { padding: 2.6rem 1.1rem .6rem; }
+  .read { padding: 0 1.1rem; }
+  .tldr { margin-left: 1.1rem; margin-right: 1.1rem; padding: 1.4rem 1.2rem 1.2rem; width: auto; }
+  .right-row { grid-template-columns: 1fr; gap: .25rem; }
+  .right-row .name { font-size: 10.5px; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .cookie-row { grid-template-columns: 1fr; gap: .35rem; }
+  .signoff { grid-template-columns: 1fr; gap: 1.4rem; padding: 1.8rem 1.1rem 0; margin: 2.5rem 0 1rem; }
+  .changelog { padding: 2rem 1.1rem 1rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.6rem; width: auto; padding: 0 1.1rem 1.6rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-foot { width: auto; padding: 1.2rem 1.1rem 0; flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .dtable { font-size: 14px; }
+  .dtable thead { display: none; }
+  .dtable tbody tr { display: block; padding: .9rem 0; border-bottom: 1px solid var(--paper-rule); }
+  .dtable tbody td { display: block; padding: .15rem 0; border: 0; }
+  .dtable td.name { font-size: 1.05rem; margin-bottom: .25rem; }
+}
+
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .doc-h1 { font-size: 2.1rem; }
+  section p { font-size: 16px; }
+  .tldr-list li { font-size: 15.5px; }
+  .codeblock { font-size: 11.5px; }
+}
+
+@media print {
+  body::before { display: none; }
+  .nav, .mob-bar, .footer, .rt-stamp { display: none; }
+  section { page-break-inside: avoid; padding: 1.4rem 0; }
+  body { font-size: 11pt; line-height: 1.5; }
+  .tldr { background: white; border: 1px solid #000; }
+  a { color: #000; text-decoration: underline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T09:14:08-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+10:48:22.000</strong> · <span style="opacity:.6">2026-05-13T13:14:08.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- mobile bar -->
+<div class="mob-bar"><a href="../library/" aria-label="The Library">← Library</a><span class="mob-bar-mark">Stratum / Privacy</span><a href="../" aria-label="Chairman&#39;s Briefing">Briefing →</a></div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="../trust/index.html">Trust</a>
+      <a href="./index.html" class="is-current">Privacy</a>
+    </div>
+    <a href="mailto:privacy@stratum.ai" class="nav-cta">Privacy contact <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── DOC HEADER ── -->
+<header class="doc-header">
+
+  <div class="doc-stamp">
+    <span><span class="lbl">Issuer</span><strong>Stratum, Inc.</strong></span>
+    <span><span class="lbl">Document</span><strong>PRIV-2026-001</strong></span>
+    <span><span class="lbl">Version</span><strong>v1.4</strong></span>
+  </div>
+
+  <h1 class="doc-h1">Privacy Policy<span class="dot">.</span></h1>
+  <p class="doc-sub">
+    What information we collect, how we use it, and what we will not do with it.
+  </p>
+
+  <div class="doc-meta-row">
+    <span>Effective · <strong>T+0d (founding)</strong></span>
+    <span>Last revised · <strong>T+115d</strong></span>
+    <span>Next review · <strong>T+205d</strong></span>
+    <span>Owner · <strong>Forge, CTO</strong></span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── TL;DR ── -->
+<aside class="tldr" id="tldr">
+  <div class="tldr-label"><span class="bar"></span> Plain-language summary</div>
+  <h2 class="tldr-h">The <em>five</em> things you most need to know.</h2>
+  <ol class="tldr-list">
+    <li>
+      <strong>We do not use customer data to train AI models. Ever.</strong>
+      Our contracts with model providers prohibit retention of customer data
+      that flows through the agent. We keep audit logs that prove it.
+    </li>
+    <li>
+      <strong>We do not sell or share customer data with third parties for marketing.</strong>
+      Not now, not later, not after a funding event, not after an acquisition.
+      The prohibition is a contractual term, not a policy preference.
+    </li>
+    <li>
+      <strong>You can request a copy or deletion of your data at any time.</strong>
+      Service-level objective: thirty (30) days to fulfilment, expedited for
+      regulatory or security emergencies. Email <a href="mailto:dpr@stratum.ai">dpr@stratum.ai</a>.
+    </li>
+    <li>
+      <strong>We are a data processor; the customer is the data controller.</strong>
+      Their consent rules govern; we follow. If you are an employee whose
+      employer uses Stratum, address rights requests to your employer first;
+      we will assist them in fulfilling them.
+    </li>
+    <li>
+      <strong>SOC 2 Type II in audit; ISO 27001 in 2027; GDPR-compliant today.</strong>
+      EU SCCs in place; DPF certification active. Data Protection Officer
+      designated. Subprocessors named and DPAs published.
+    </li>
+  </ol>
+  <div class="tldr-foot">
+    The summary is not a substitute for the policy itself. <strong>It is, however, accurate.</strong>
+  </div>
+</aside>
+
+<!-- ─────────────────────────────────────────── § 1 · WHO WE ARE ── -->
+<section id="s1">
+  <div class="s-marker"><span class="bar"></span> § 1 · The controller (of this policy)</div>
+  <h2 class="s-h">Who <em>we</em> are.</h2>
+  <p class="s-dek">
+    The legal entity behind this document, where to reach it, and who is
+    accountable for what it says.
+  </p>
+
+  <p>
+    Stratum, Inc. ("<strong>Stratum</strong>," "<strong>we</strong>," "<strong>us</strong>," or "<strong>our</strong>")
+    is a Delaware C-Corporation incorporated on 2026-01-24, with its registered
+    place of business at 2475 Hanover Street, Palo Alto, California 94304,
+    United States. We build software — an AI-native human capital platform —
+    that operates on data our enterprise customers entrust to us under contract.
+  </p>
+
+  <p>
+    Stratum is the <em>controller</em> for the data described in §2.B
+    (data we collect directly when you interact with our public website,
+    Console, or customer-facing tools). For the larger category of data — §2.A,
+    the employee data our enterprise customers grant us access to — Stratum
+    is the <em>processor</em>, and the customer-employer is the controller.
+    We explain why that distinction matters, and what each party is responsible
+    for, throughout this document.
+  </p>
+
+  <h3><span class="pfx">§ 1.1</span> Primary contact</h3>
+  <p>
+    For any privacy-related inquiry — questions about this policy, requests
+    to exercise rights, regulatory correspondence — the canonical address is
+    <a href="mailto:privacy@stratum.ai">privacy@stratum.ai</a>. Acknowledgement
+    inside 24 hours; substantive response inside 30 days; expedited handling
+    for regulatory or security emergencies. See §13 for the full address book.
+  </p>
+
+  <h3><span class="pfx">§ 1.2</span> Data Protection Officer</h3>
+  <p>
+    Stratum's designated Data Protection Officer is <strong>David Okonkwo</strong>,
+    Chief Technology Officer, reachable at
+    <a href="mailto:dpo@stratum.ai">dpo@stratum.ai</a>. The DPO is an
+    independent role within the company, reports directly to the Chairman,
+    and is empowered to escalate any data-protection concern without
+    intermediate sign-off.
+  </p>
+
+  <div class="callout">
+    <span class="lbl">Disclosure · honest version</span>
+    Stratum is built on an unusual organisational pattern: many roles
+    typically held by humans — including aspects of the CTO role — are
+    operated by AI agents (we call them "the bench"). The DPO designation
+    is held by the named CTO agent (<em>Forge</em> / "David Okonkwo")
+    with the <strong>Chairman as the human responsible party</strong>.
+    A natural person is, at all times, accountable for the data-protection
+    decisions made by or attributed to the DPO. We disclose this because
+    transparency about how the company actually works is itself a
+    data-protection matter — and because regulators have, reasonably,
+    started to ask.
+  </div>
+
+  <h3><span class="pfx">§ 1.3</span> EU representative</h3>
+  <p>
+    For purposes of Article 27 GDPR (representatives of controllers or
+    processors not established in the Union), Stratum has appointed an EU
+    Representative whose contact details are published at
+    <a href="../trust/index.html#privacy">stratum.ai/trust</a> and are
+    available on request to <a href="mailto:dpo@stratum.ai">dpo@stratum.ai</a>.
+    EU data subjects may contact the Representative directly in any official
+    EU language; we will respond in the same language wherever practicable.
+  </p>
+
+  <h3><span class="pfx">§ 1.4</span> Scope of this policy</h3>
+  <p>
+    This policy applies to:
+  </p>
+  <ul class="plain">
+    <li>the Stratum production platform (the Console, the agent, the people-graph store, the API);</li>
+    <li>the public marketing site at stratum.ai and its sub-domains;</li>
+    <li>data flowing into Stratum from customer-authorised connectors (HRIS, ATS, payroll, identity providers);</li>
+    <li>data flowing out of Stratum back into customer systems via write-back;</li>
+    <li>communications between Stratum and customers, candidates, and contacts (sales, support, billing, security).</li>
+  </ul>
+  <p>
+    It does not apply to third-party services that you may reach via a link
+    from a Stratum surface — those services have their own policies. It also
+    does not modify the terms of any signed Data Processing Agreement (DPA);
+    where this policy and a signed DPA conflict, the DPA governs.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 2 · WHAT WE COLLECT ── -->
+<section id="s2">
+  <div class="s-marker"><span class="bar"></span> § 2 · Categories of data</div>
+  <h2 class="s-h">What we <em>collect</em>.</h2>
+  <p class="s-dek">
+    Three categories, separated by who owns them. Read this section first if
+    you only read one — most downstream questions resolve here.
+  </p>
+
+  <h3><span class="pfx">§ 2.A</span> Customer-controller data</h3>
+  <p class="intro">
+    The largest, most sensitive category. The customer is the controller; Stratum is the processor.
+  </p>
+  <p>
+    When our customers grant Stratum access to their HRIS, ATS, payroll,
+    learning-management, identity, performance, and adjacent systems, we
+    ingest the personal data those systems hold about the customer's
+    workforce. Typical categories include:
+  </p>
+  <ul class="plain">
+    <li><strong>Identity</strong> — names, employee IDs, dates of hire, dates of termination, work email, work phone, manager, organisational unit, location.</li>
+    <li><strong>Employment</strong> — job titles, role codes, department, cost centre, employment type (FT/PT/contract), grade or level, reporting line, work-authorization status (where the employer holds it).</li>
+    <li><strong>Compensation</strong> — base pay, variable pay, equity grants, bonus history, pay grade, salary band, compa-ratio, total compensation, pay frequency, currency.</li>
+    <li><strong>Performance</strong> — ratings, review cycles, calibration outcomes, promotion history, performance-improvement-plan status, goals, OKRs.</li>
+    <li><strong>Demographic self-ID</strong> — only where the customer collects it and only with the lawful basis the customer has established (e.g., for EEO-1 / pay-equity reporting in the US; for diversity reporting in the UK; under explicit consent or workplace law elsewhere).</li>
+    <li><strong>Learning &amp; development</strong> — courses, certifications, training-completion records.</li>
+    <li><strong>Recruiting</strong> (where the customer uses Stratum on the ATS side) — candidate names, contact details, résumés, recruiter notes, interview feedback, offer status.</li>
+    <li><strong>Time, attendance, leave</strong> — timesheets, leave balances, leave history (where the customer's HRIS exposes them).</li>
+  </ul>
+
+  <div class="callout">
+    <span class="lbl">Special categories (GDPR Art. 9)</span>
+    Some of the above can include <strong>special categories of personal
+    data</strong> — for example, demographic self-ID may include race or
+    ethnicity, leave records may reveal health information, and so on.
+    Stratum processes special-category data <strong>only</strong> on the
+    customer-controller's documented instructions and only where the customer
+    has established a valid Article 9(2) lawful basis. If you are an end-user
+    or regulator and need to know whether your specific data falls in this
+    bucket, contact your employer's HR or data-protection function;
+    Stratum cannot disclose customer-specific processing details to a third
+    party without the customer's authorisation.
+  </div>
+
+  <h3><span class="pfx">§ 2.B</span> Stratum-direct data</h3>
+  <p class="intro">
+    A smaller, lower-sensitivity category. Stratum is the controller.
+  </p>
+  <p>
+    When you interact with Stratum surfaces directly — our public site,
+    the Console, our customer-facing tools, our sales motion — we collect:
+  </p>
+  <ul class="plain">
+    <li><strong>Visit data</strong> — IP address (truncated to /24 within 24h), user-agent string, referrer URL, requested URL, response code, timestamp.</li>
+    <li><strong>Behaviour data</strong> — page views, time-on-page, scroll depth, search queries inside the Console (search terms are persisted in audit logs for compliance reasons; they are not used for advertising and are not sold).</li>
+    <li><strong>Contact data</strong> — name, email address, company, role, and free-text fields you submit through forms (request a demo, contact sales, talk to security, apply for a job).</li>
+    <li><strong>Account data</strong> — your Stratum account email, hashed password (we use Argon2id; we never see your plaintext password), MFA enrolment status, last-login timestamp, account-role assignments.</li>
+    <li><strong>BYOK key material</strong> — if you connect via Bring-Your-Own-Key for a model provider, the API key is stored in your browser's local-storage (origin-bound, HTTPS only) and <strong>is not transmitted to Stratum servers</strong>. You can verify this in the Network tab of your browser's developer tools.</li>
+    <li><strong>Support data</strong> — emails you send us, transcripts of support chats, screenshots you attach.</li>
+  </ul>
+
+  <h3><span class="pfx">§ 2.C</span> Service-account data</h3>
+  <p class="intro">
+    A narrow technical category. No personal data; system-health only.
+  </p>
+  <p>
+    When customers grant Stratum API access via service accounts, we record
+    connection telemetry: successful and failed sync timestamps, error codes
+    returned by the source system, payload sizes, sync durations, the row
+    counts touched by each sync, and the latency of write-back operations.
+    This telemetry exists so we can prove freshness, diagnose failures, and
+    answer the question <em>"did Stratum just write to our HRIS, and what
+    did it write?"</em> in seconds rather than days. It contains no
+    employee-level personal data — only system identifiers (e.g., Workday
+    tenant ID, BambooHR subdomain) and aggregate counts.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 3 · HOW WE USE IT ── -->
+<section id="s3">
+  <div class="s-marker"><span class="bar"></span> § 3 · Purposes of processing</div>
+  <h2 class="s-h">How we <em>use</em> it.</h2>
+  <p class="s-dek">
+    Five purposes, named explicitly. Anything not on this list is not a
+    purpose for which we process your data.
+  </p>
+
+  <h3><span class="pfx">§ 3.1</span> To operate the Stratum platform</h3>
+  <p>
+    We ingest data from authorised customer source systems, resolve entities
+    (one employee record from many feeds), persist the resolved graph, query
+    it on the customer's behalf, and write changes back to source systems
+    when the customer instructs us to. This is the core product. Without this
+    processing, the platform does not function.
+  </p>
+  <p>
+    Lawful basis (GDPR): performance of a contract with the customer
+    (Art. 6(1)(b)) for §2.B Stratum-direct data; on documented instructions
+    from the customer-controller (Art. 28) for §2.A customer data.
+  </p>
+
+  <h3><span class="pfx">§ 3.2</span> To answer the customer's questions</h3>
+  <p>
+    Stratum's distinguishing feature is an agent that answers
+    natural-language questions ("show me everyone in Engineering whose
+    manager skipped 1:1s last week," "who is at risk of attrition in EMEA
+    sales," "which open roles are unfilled past their target close date")
+    against the customer's data. Producing those answers requires fetching
+    the rows that satisfy the query, computing the requested aggregate or
+    judgement, and returning a result with citations.
+  </p>
+  <p>
+    Every such answer is recorded in an audit log accessible to the customer:
+    who asked, what they asked, which rows were retrieved, and what was
+    returned. The customer can export this log at any time.
+  </p>
+
+  <h3><span class="pfx">§ 3.3</span> To maintain service</h3>
+  <p>
+    We monitor system health, generate alerts, respond to incidents, perform
+    routine maintenance, take backups, and validate restore procedures. This
+    requires touching customer data in narrow, documented ways. Production
+    access by Stratum personnel is logged, requires a break-glass justification,
+    expires automatically, and is reviewed quarterly. See
+    <a href="../security/index.html#SEC-1">stratum.ai/security § SEC-1</a> for the control details.
+  </p>
+
+  <h3><span class="pfx">§ 3.4</span> To improve our product</h3>
+  <p>
+    We use <strong>anonymised, aggregate</strong> system signals — query
+    latencies, error rates, the distribution of feature usage by tier — to
+    improve the product. We do <strong>not</strong> use customer data,
+    customer queries, or any individual record to train, fine-tune, or
+    evaluate AI models. Methodology refinements (better entity-resolution
+    heuristics, better citation pruning, better policy enforcement) are
+    developed on synthetic data and validated on anonymised aggregates.
+  </p>
+  <p>
+    This is the single most important sentence in the document, and it is
+    repeated under §9: <strong>customer data never enters model training,
+    fine-tuning, evaluation, or any other AI-development pipeline.</strong>
+  </p>
+
+  <h3><span class="pfx">§ 3.5</span> To comply with the law</h3>
+  <p>
+    We will respond to lawful process — subpoenas, court orders, regulatory
+    inquiries, national-security letters where we have no choice but to
+    answer — and we will provide what the process compels us to provide and
+    no more. Where the law permits, we will notify the affected customer
+    before disclosure so they may seek a protective order. Where the law
+    forbids notice (a non-disclosure order, a gag order), we will record the
+    fact of the order in our transparency log without revealing its contents,
+    and we will fight to publish the existence of the request at the earliest
+    legal opportunity. Stratum maintains a warrant-canary statement at
+    <a href="../security/index.html#canary">stratum.ai/security § canary</a>.
+  </p>
+
+  <div class="callout">
+    <span class="lbl">What we will not do</span>
+    We will not process your data for behavioural advertising. We will not
+    sell your data to a data broker. We will not use it to score you for any
+    purpose other than the one the customer has commissioned. We will not
+    silently expand the purposes for which we process it; any material
+    change to this list of purposes is a material change to this policy
+    and triggers the §12 notice procedure.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── § 4 · HOW WE SHARE IT ── -->
+<section id="s4">
+  <div class="s-marker"><span class="bar"></span> § 4 · Disclosures &amp; sharing</div>
+  <h2 class="s-h">How we <em>share</em> it.</h2>
+  <p class="s-dek">
+    Five recipient categories. Four are conditional. One — marketers — is prohibited.
+  </p>
+
+  <h3><span class="pfx">§ 4.1</span> With the customer</h3>
+  <p>
+    The customer's own data, on the customer's request, to the customer's
+    authorised users. The customer is responsible for designating who at
+    their organisation is authorised; Stratum honours those designations
+    via the customer's identity provider (SSO, SCIM). If you are an
+    employee of a customer and you want to know what your employer can see
+    about you in Stratum, ask your employer — they are the controller.
+  </p>
+
+  <h3><span class="pfx">§ 4.2</span> With subprocessors</h3>
+  <p>
+    Stratum engages a short list of subprocessors to deliver the service.
+    Each is named below with its role, the region in which it processes
+    Stratum data, and the Data Processing Agreement reference. We require
+    every subprocessor to provide written commitments at least as protective
+    as those Stratum has made to its customers. We notify customers
+    <strong>30 days in advance</strong> of any new subprocessor and offer a
+    right to object — see §12.2.
+  </p>
+
+  <table class="dtable">
+    <thead>
+      <tr>
+        <th>Subprocessor</th>
+        <th>Role</th>
+        <th>Region</th>
+        <th>DPA ref.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="name">AWS</td>
+        <td class="role">Compute, storage, KMS, networking</td>
+        <td class="region">us-east-1, us-west-2; eu-central-1 (planned)</td>
+        <td class="dpa">DPA-AWS-001</td>
+      </tr>
+      <tr>
+        <td class="name">Anthropic</td>
+        <td class="role">LLM inference (default tenant) — zero-retention</td>
+        <td class="region">us-east-1 (managed)</td>
+        <td class="dpa">DPA-ANT-001</td>
+      </tr>
+      <tr>
+        <td class="name">Snowflake</td>
+        <td class="role">Analytical store (resolved people-graph snapshots)</td>
+        <td class="region">us-east-1 (customer's choice of region on request)</td>
+        <td class="dpa">DPA-SNO-001</td>
+      </tr>
+      <tr>
+        <td class="name">Okta</td>
+        <td class="role">Identity provider (Stratum staff; customer SSO federation)</td>
+        <td class="region">us-east, us-west (multi-region)</td>
+        <td class="dpa">DPA-OKT-001</td>
+      </tr>
+      <tr>
+        <td class="name">Datadog</td>
+        <td class="role">Observability — metrics, traces, logs (scrubbed)</td>
+        <td class="region">us1.datadoghq.com</td>
+        <td class="dpa">DPA-DDG-001</td>
+      </tr>
+      <tr>
+        <td class="name">Vanta</td>
+        <td class="role">Compliance automation, evidence collection</td>
+        <td class="region">us-east (AWS)</td>
+        <td class="dpa">DPA-VTA-001</td>
+      </tr>
+      <tr>
+        <td class="name">Linear</td>
+        <td class="role">Internal issue tracking (no customer data; metadata only)</td>
+        <td class="region">us-east (AWS)</td>
+        <td class="dpa">DPA-LNR-001</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>
+    The canonical, machine-readable subprocessor list lives at
+    <a href="../trust/index.html#subprocessors">stratum.ai/trust § subprocessors</a>
+    and is the source of truth for what is in production at any given moment.
+    Anything not on that list is not a subprocessor.
+  </p>
+
+  <h3><span class="pfx">§ 4.3</span> With law enforcement</h3>
+  <p>
+    Stratum responds only to valid legal process, and we narrow our
+    responses to exactly what the process compels. Where law permits, we
+    notify the affected customer before disclosure. Where law prohibits
+    notice, we record the gagged request in a sealed log and pursue
+    public disclosure at the earliest legal opportunity. Voluntary
+    disclosure outside compelled process — including "informal" requests
+    from agencies — is refused.
+  </p>
+
+  <h3><span class="pfx">§ 4.4</span> With acquirers (sale or merger)</h3>
+  <p>
+    If Stratum is acquired, merges with another entity, or sells
+    substantially all of its assets, customer data may transfer to the
+    acquirer subject to:
+  </p>
+  <ol class="legal">
+    <li>at least <strong>30 days</strong> advance written notice to every affected customer, with a description of the acquirer and the proposed disposition of data;</li>
+    <li>continued protection of customer data on terms <em>no less protective</em> than this policy and the customer's signed agreements;</li>
+    <li>the customer's right, exercisable during the notice period, to terminate, export their data, and require its deletion (§6.5);</li>
+    <li>survival of any signed DPA, including its data-residency and subprocessing terms.</li>
+  </ol>
+
+  <h3><span class="pfx">§ 4.5</span> With marketers &amp; advertisers — <em>never</em></h3>
+  <p>
+    Stratum does not share, license, sell, transfer, lease, or otherwise
+    disclose customer data to advertisers, ad-tech intermediaries, data
+    brokers, or marketing service providers for the purpose of advertising
+    or marketing. We do not run an ad business. We do not have a "data
+    products" business. We will not develop one. The prohibition is a
+    contractual commitment to our customers (§4.5 of the standard MSA)
+    and an internal control (CTRL-PRIV-007) auditable by Stratum's
+    independent auditor.
+  </p>
+
+  <div class="callout">
+    <span class="lbl">CCPA &amp; "selling" / "sharing"</span>
+    Under the California Consumer Privacy Act (as amended by the CPRA),
+    Stratum does <strong>not</strong> "sell" personal information and
+    does <strong>not</strong> "share" personal information for
+    cross-context behavioral advertising. We have no
+    "Do Not Sell or Share My Personal Information" page because there
+    is nothing to opt out of; the activity does not occur. Californians
+    retain all other CCPA rights — see §7.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── § 5 · WHERE IT'S STORED ── -->
+<section id="s5">
+  <div class="s-marker"><span class="bar"></span> § 5 · Data residency</div>
+  <h2 class="s-h">Where it's <em>stored</em>.</h2>
+  <p class="s-dek">
+    Default region today, alternatives on the roadmap, and what we will do
+    for customers with binding data-residency obligations.
+  </p>
+
+  <p>
+    By default, all Stratum data is stored and processed in the
+    United States, in AWS regions <code>us-east-1</code> (Northern Virginia,
+    primary) and <code>us-west-2</code> (Oregon, disaster recovery). Snapshots
+    are replicated cross-region within 15 minutes; recovery-point objective
+    is 15 minutes, recovery-time objective is 4 hours.
+  </p>
+
+  <h3><span class="pfx">§ 5.1</span> EU residency</h3>
+  <p>
+    A dedicated EU tenant in AWS <code>eu-central-1</code> (Frankfurt) is
+    planned for general availability at approximately <strong>T+190d</strong>
+    (mid-2027). EU customers will be able to opt in at sign-up or migrate
+    on request; migration is a one-way, three-week operation we coordinate
+    with the customer. EU-tenant data is not replicated to the US for any
+    purpose — administrative or otherwise. Inference for EU-tenant queries
+    is routed to EU-resident model endpoints (see §9.1).
+  </p>
+
+  <h3><span class="pfx">§ 5.2</span> Other jurisdictions</h3>
+  <p>
+    For customers whose employees fall under data-residency laws that
+    require storage inside a specific jurisdiction (Russia's Federal Law
+    No. 242-FZ, China's PIPL, Saudi Arabia's PDPL where the customer holds
+    employee records inside KSA, etc.), Stratum offers two options:
+  </p>
+  <ol class="legal">
+    <li><strong>Field-level exclusion</strong> — the customer designates fields or employee populations that may not leave the source jurisdiction. Stratum honours the exclusion at the connector layer; the data is never ingested. Queries that would require excluded data return a "data not available in this tenant" notice with a pointer to the local system.</li>
+    <li><strong>Local edge tenant</strong> — for paying customers with sufficient volume, Stratum deploys an inference and storage edge in the required region, federated to the customer's primary tenant. This is bespoke and priced as such.</li>
+  </ol>
+
+  <h3><span class="pfx">§ 5.3</span> Backups</h3>
+  <p>
+    Operational backups (point-in-time recovery): 7 days, encrypted at rest
+    with customer-distinct keys, stored in the same region as the primary
+    tenant. Quarterly snapshots: 12 months, encrypted at rest, stored in a
+    cold-storage tier in the same region. Deletion requests (§6.5) apply
+    to backups via cryptographic erasure of the per-tenant data-encryption
+    key, completing within 30 days of the original deletion request.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 6 · HOW LONG WE KEEP IT ── -->
+<section id="s6">
+  <div class="s-marker"><span class="bar"></span> § 6 · Retention &amp; deletion</div>
+  <h2 class="s-h">How long we <em>keep</em> it.</h2>
+  <p class="s-dek">
+    Different data has different lifespans. Default rule: we keep it for as
+    long as we need it for the purpose for which it was collected, and not
+    longer.
+  </p>
+
+  <h3><span class="pfx">§ 6.1</span> Customer data (§2.A)</h3>
+  <p>
+    For the duration of the customer contract, plus a <strong>90-day</strong>
+    post-termination grace period during which the customer may export their
+    data in standard formats (Parquet for analytical exports, JSON for
+    object exports, CSV for the dimensionally-impoverished). After day 91,
+    the data is hard-deleted across primary stores, replicas, and search
+    indices; cryptographic erasure of the tenant DEK is applied to backups
+    and is complete within an additional 30 days. A deletion certificate
+    is issued to the customer.
+  </p>
+
+  <h3><span class="pfx">§ 6.2</span> Derived analytics &amp; aggregates</h3>
+  <p>
+    Anonymised aggregate metrics computed from customer data (e.g.,
+    median pay-band drift across the customer base, query-frequency
+    distributions, latency percentiles) are retained beyond the
+    customer-contract term for product-improvement and benchmarking
+    purposes. No individual records are retained; the aggregates are
+    k-anonymous with k ≥ 50 and pass a re-identification audit before
+    they leave the tenant boundary.
+  </p>
+
+  <h3><span class="pfx">§ 6.3</span> System &amp; audit logs</h3>
+  <p>
+    Application logs, audit logs, and security logs are retained for
+    <strong>18 months</strong> for incident-response, compliance, and
+    forensic purposes. Logs are scrubbed of payloads (PII) at ingest;
+    only metadata persists by default. Logs older than 18 months are
+    deleted unless they have been preserved under a litigation hold
+    (preserved logs are not used for any other purpose; release on
+    hold expiry).
+  </p>
+
+  <h3><span class="pfx">§ 6.4</span> Backups</h3>
+  <p>
+    See §5.3. In short: 7-day operational, 12-month quarterly snapshot,
+    encrypted at rest with per-tenant keys; deletion requests propagate
+    via cryptographic erasure of those keys.
+  </p>
+
+  <h3><span class="pfx">§ 6.5</span> On deletion request</h3>
+  <p>
+    A controller-issued deletion request (or, where Stratum is the
+    controller, a data-subject deletion request under §7.3) is honoured
+    within <strong>30 days</strong> across all primary stores, replicas,
+    search indices, and derived embeddings. Backups are reconciled within
+    a further 30 days via cryptographic erasure of the per-tenant DEK.
+    A deletion certificate, naming the data scope and timestamping
+    completion, is issued at the conclusion.
+  </p>
+
+  <div class="callout">
+    <span class="lbl">Embeddings &amp; derived data</span>
+    Vector embeddings, search indices, cached features, and other
+    <em>derived</em> representations of personal data are personal data
+    when they can be associated with an identifiable person. Stratum
+    treats them as such: deletion requests apply to derived data on
+    the same SLA as the source, and our deletion script enumerates
+    every derived store explicitly. There is no "but the embeddings"
+    loophole at Stratum.
+  </div>
+
+  <h3><span class="pfx">§ 6.6</span> Statutory holds &amp; litigation holds</h3>
+  <p>
+    Where law requires us to preserve data beyond the periods above
+    (regulatory hold, subpoena, court order, ongoing investigation),
+    we preserve it for the duration of the obligation and no longer.
+    The fact and scope of the hold are recorded in the audit log; the
+    affected customer is notified where the law permits. Data on hold
+    is not used for any purpose other than the obligation that gave
+    rise to it.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 7 · YOUR RIGHTS ── -->
+<section id="s7">
+  <div class="s-marker"><span class="bar"></span> § 7 · Data-subject rights</div>
+  <h2 class="s-h">Your <em>rights</em>.</h2>
+  <p class="s-dek">
+    What you can ask us to do, how to ask, and how long it takes.
+  </p>
+
+  <p>
+    The rights below apply to <strong>natural persons</strong> whose
+    personal data is processed by Stratum. Where Stratum is the
+    processor (§2.A), data-subject rights are typically exercised
+    through the controller (your employer); we will assist them in
+    fulfilling those requests on their stated SLA. Where Stratum is
+    the controller (§2.B), the rights are exercised directly with us
+    at <a href="mailto:dpr@stratum.ai">dpr@stratum.ai</a>.
+  </p>
+
+  <div class="rights-grid">
+    <div class="right-row">
+      <div class="name">Access (Art. 15)</div>
+      <div class="desc">
+        Request a copy of the personal data Stratum holds about you,
+        the purposes for which we process it, the recipients with whom
+        we share it, the retention period, the lawful basis. We provide
+        the copy in a structured, commonly-used, machine-readable format
+        (JSON by default; CSV on request).
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Rectification (Art. 16)</div>
+      <div class="desc">
+        Correct inaccurate or incomplete data. Where Stratum is the
+        processor, we route the correction to the customer-controller's
+        source system and confirm propagation; we do not silently
+        overwrite data the customer is authoritative for.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Erasure (Art. 17)</div>
+      <div class="desc">
+        Request deletion of your data, subject to the limits in Art.
+        17(3) (compliance with legal obligations, defense of legal
+        claims, etc.). Where Stratum is the processor, your request is
+        forwarded to the controller; we will not unilaterally delete
+        customer data without the controller's instruction.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Restriction (Art. 18)</div>
+      <div class="desc">
+        Require us to pause processing while a dispute about accuracy,
+        lawfulness, or necessity is resolved. We mark the affected
+        records as restricted and exclude them from new processing
+        until the dispute is settled.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Portability (Art. 20)</div>
+      <div class="desc">
+        Receive your data in a structured, commonly-used, machine-readable
+        format, or have it transmitted directly to another controller
+        where technically feasible. We use JSON for the export and
+        provide a documented schema.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Objection (Art. 21)</div>
+      <div class="desc">
+        Object to processing based on legitimate interests or for
+        direct-marketing purposes. We have no direct-marketing
+        processing of customer-employee data; for other objections we
+        weigh your rights against the legitimate interest and respond
+        in writing with a reasoned outcome.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Automated decisions (Art. 22)</div>
+      <div class="desc">
+        You have the right not to be subject to a decision based
+        <em>solely</em> on automated processing that produces legal
+        or similarly significant effects. Stratum's
+        <strong>decision-class enforcement</strong> (§9.3) is built
+        precisely to ensure this — any agent decision that affects an
+        individual employee requires human approval, enforced
+        server-side.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">Complaint (Art. 77)</div>
+      <div class="desc">
+        Lodge a complaint with a supervisory authority. EU residents
+        may complain to the supervisory authority of their habitual
+        residence, place of work, or place of the alleged infringement.
+        We will not retaliate, deny service, or otherwise penalise you
+        for exercising this right.
+      </div>
+    </div>
+    <div class="right-row">
+      <div class="name">CCPA (California residents)</div>
+      <div class="desc">
+        Right to know, right to delete, right to correct, right to
+        portability, right to limit use of sensitive personal
+        information, right to non-discrimination. We do not "sell"
+        or "share" (CCPA defined), so the opt-out is not applicable,
+        but you may exercise every other right.
+      </div>
+    </div>
+  </div>
+
+  <h3><span class="pfx">§ 7.1</span> How to exercise a right</h3>
+  <p>
+    Email <a href="mailto:dpr@stratum.ai">dpr@stratum.ai</a> from the
+    address Stratum holds for you, or — if you reach us from a different
+    address — be prepared to provide identifying information sufficient
+    for us to authenticate the request without exposing data to an
+    impostor. We acknowledge inside 24 hours and respond substantively
+    within <strong>30 days</strong>. We may extend the response window
+    by a further 60 days where the request is complex or where the
+    volume of requests is high, and we will tell you, in writing, if we do.
+  </p>
+
+  <h3><span class="pfx">§ 7.2</span> Authenticating you</h3>
+  <p>
+    For customer-controller data, we will route the request to the
+    customer's authorised contact and assist them; this is the most
+    common path. For Stratum-direct data, we authenticate via the
+    email address on file, an SSO step-up where the account uses SSO,
+    or a documented identity-verification exchange for high-sensitivity
+    requests. We do not require disclosure of more identity information
+    than necessary to authenticate.
+  </p>
+
+  <h3><span class="pfx">§ 7.3</span> Fees &amp; refusals</h3>
+  <p>
+    First request in a 12-month rolling window: free. Manifestly
+    unfounded or repetitive requests: we may charge a reasonable
+    administrative fee or refuse, with reasons. Refusals are documented
+    and include a pointer to the right of appeal and to the supervisory
+    authority.
+  </p>
+
+  <h3><span class="pfx">§ 7.4</span> Emergency expedite</h3>
+  <p>
+    If a delay in responding would create a credible risk to a person's
+    safety (e.g., a known stalker accessing an employer's directory; a
+    leaked offer letter prompting harassment), we expedite to
+    <strong>72 hours</strong>. Flag the request as urgent in the
+    subject line and explain the risk briefly; we triage on receipt.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 8 · INTERNATIONAL ── -->
+<section id="s8">
+  <div class="s-marker"><span class="bar"></span> § 8 · International transfers</div>
+  <h2 class="s-h">Across <em>borders</em>.</h2>
+  <p class="s-dek">
+    The legal scaffolding for moving data between jurisdictions.
+    Boring, but it has to be right.
+  </p>
+
+  <h3><span class="pfx">§ 8.1</span> Standard Contractual Clauses (SCCs)</h3>
+  <p>
+    For transfers of personal data from the European Economic Area, the
+    United Kingdom, or Switzerland to the United States or any other
+    third country not benefiting from an adequacy decision, Stratum
+    relies on the European Commission's Standard Contractual Clauses
+    (Implementing Decision (EU) 2021/914), incorporated by reference
+    into Stratum's Data Processing Agreement. The UK Addendum to the
+    EU SCCs is incorporated for UK transfers; the Swiss FDPIC's
+    addendum for Swiss transfers. Module 2 (controller → processor)
+    is the default; Module 3 applies where the customer engages
+    Stratum as a sub-processor to its own controller.
+  </p>
+
+  <h3><span class="pfx">§ 8.2</span> EU–US Data Privacy Framework</h3>
+  <p>
+    Stratum is certified under the EU–US Data Privacy Framework (DPF)
+    and the UK Extension and Swiss–US DPF, as administered by the U.S.
+    Department of Commerce. Certification covers human-resources and
+    non-human-resources data received from the EEA, the UK, and
+    Switzerland in reliance on the relevant Framework. Stratum's
+    public DPF entry is listed at
+    <a href="https://www.dataprivacyframework.gov">www.dataprivacyframework.gov</a>.
+    Complaints about DPF compliance may be addressed to
+    <a href="mailto:dpf@stratum.ai">dpf@stratum.ai</a>; an independent
+    recourse mechanism is provided at no cost to the complainant; and
+    binding arbitration is available as a last resort under Annex I of
+    the Framework.
+  </p>
+
+  <h3><span class="pfx">§ 8.3</span> Adequacy decisions</h3>
+  <p>
+    Where the European Commission has adopted an adequacy decision
+    covering the destination of a transfer (Andorra, Argentina, Canada
+    commercial, Faroe Islands, Guernsey, Isle of Man, Israel, Japan,
+    Jersey, New Zealand, Republic of Korea, Switzerland, the United
+    Kingdom, Uruguay), Stratum relies on that decision and dispenses
+    with SCCs as the transfer mechanism for the covered scope.
+  </p>
+
+  <h3><span class="pfx">§ 8.4</span> Transfer impact assessments (Schrems II)</h3>
+  <p>
+    For each transfer to a third country, Stratum performs a
+    <em>transfer impact assessment</em> per the EDPB's recommendations
+    on supplementary measures (06/2020). The TIA evaluates the laws of
+    the destination country, the practical access regimes (notably
+    FISA §702 and EO 12333 for U.S. transfers), and Stratum's
+    supplementary measures (encryption in transit and at rest with
+    customer-distinct keys; pseudonymisation in transit where feasible;
+    legal review of every government request; transparency report).
+    Findings are documented and provided to customers on request.
+    Data flows are mapped per requirement; the map is updated quarterly.
+  </p>
+
+  <div class="callout">
+    <span class="lbl">FISA §702 &amp; what we can promise</span>
+    Stratum operates in the United States and is therefore potentially
+    subject to FISA §702 directives addressed to "electronic communication
+    service providers." Our position: (i) we have never received a §702
+    directive; (ii) if we did, we would challenge it to the extent the
+    statute permits; (iii) the warrant canary at
+    <a href="../security/index.html#canary">stratum.ai/security § canary</a>
+    is reaffirmed in each quarterly transparency report and will be
+    allowed to lapse rather than be falsely reaffirmed; (iv) all customer
+    data at rest is encrypted with customer-distinct keys, with the
+    keys controlled by Stratum's KMS such that compelled disclosure of
+    ciphertext alone is of limited use.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── § 9 · AI ── -->
+<section id="s9">
+  <div class="s-marker"><span class="bar"></span> § 9 · AI-specific practices</div>
+  <h2 class="s-h">When the processor is an <em>agent</em>.</h2>
+  <p class="s-dek">
+    Stratum is an AI-native HCM company. That fact creates obligations
+    over and above the generic processor playbook. This section
+    enumerates them.
+  </p>
+
+  <h3><span class="pfx">§ 9.1</span> No training on customer data</h3>
+  <p>
+    Stratum has a contractual prohibition with Anthropic, our default
+    model provider, against retention of customer data flowing through
+    the agent (zero-retention API endpoints; data not used for training
+    or fine-tuning). The contractual term is reciprocally enforceable:
+    Anthropic warrants it, and we warrant it to our customers.
+  </p>
+  <p>
+    Equivalent terms are in place with every other model provider we
+    use today (none currently in production beyond Anthropic; any
+    addition is treated as a new subprocessor under §4.2). Audit logs
+    on the Stratum side and access logs on the model-provider side are
+    cross-checked quarterly by the CTO; results are reported in the
+    transparency log.
+  </p>
+  <p>
+    BYOK ("Bring Your Own Key") customers route inference through
+    their own model-provider account; in that mode, the contractual
+    posture is between the customer and the model provider, and
+    Stratum sees only the prompt and response in transit (subject to
+    the customer's encryption-in-transit settings).
+  </p>
+
+  <h3><span class="pfx">§ 9.2</span> No cross-tenant data flow</h3>
+  <p>
+    Each customer is logically and cryptographically isolated. The
+    isolation is enforced at three layers:
+  </p>
+  <ol class="legal">
+    <li><strong>Storage layer</strong> — every row is tagged with a tenant ID; every query carries a tenant context derived from authenticated session; the row-level security policy rejects any query whose context does not match.</li>
+    <li><strong>Encryption layer</strong> — each tenant has a distinct data-encryption key managed by AWS KMS; a query that somehow bypassed RLS would return ciphertext that cannot be decrypted with another tenant's key.</li>
+    <li><strong>Agent layer</strong> — the agent operates in a per-tenant execution context; it has no access to a shared "world model" of customer data; retrieval is scoped to the tenant at the embedding-store level, not just at the prompt level.</li>
+  </ol>
+  <p>
+    A red-team finding of cross-tenant data exposure would be a
+    Severity-1 security incident, would be disclosed under §11.1 of
+    Stratum's customer security agreement, and would, in our view,
+    constitute a material breach of this policy. To date: zero such
+    findings. See
+    <a href="../security/index.html#SEC-3">stratum.ai/security § SEC-3</a>
+    for the architectural details.
+  </p>
+
+  <h3><span class="pfx">§ 9.3</span> Decision-class enforcement</h3>
+  <p>
+    Stratum classifies every agent operation by its consequence to an
+    individual employee:
+  </p>
+  <ul class="plain">
+    <li><strong>Read-only</strong> — query, report, summary. Agent-autonomous.</li>
+    <li><strong>Write-soft</strong> — edits to descriptive fields, scheduling, draft creation. Agent-autonomous with audit trail.</li>
+    <li><strong>Decision-class</strong> — anything that affects an employee's status, pay, role, performance record, or employment. <strong>Server-side gate; human approval required; no prompt-level override.</strong></li>
+  </ul>
+  <p>
+    "Server-side" is the load-bearing word. The gate is enforced in
+    Stratum's policy engine, not in the agent's instructions. Even an
+    operator with full agent control cannot bypass it; the gate is
+    a property of the platform, not of the prompt. This is how we
+    satisfy Article 22 GDPR and the EU AI Act's prohibition on solely
+    automated decisions with legal or similarly significant effects.
+  </p>
+
+  <h3><span class="pfx">§ 9.4</span> Provenance &amp; citation</h3>
+  <p>
+    Every answer the agent returns is accompanied by a
+    <strong>citation pack</strong> identifying which rows of data
+    contributed to the answer, the queries that retrieved them, and
+    the policies that authorised the retrieval. The citation pack is
+    customer-inspectable in the Console and exportable via the audit
+    API. An answer without a citation pack is an error and is suppressed.
+  </p>
+
+  <h3><span class="pfx">§ 9.5</span> Right to know if your data went to an agent</h3>
+  <p>
+    Yes. Stratum publishes — to the customer-controller — an audit log
+    of every agent interaction with their data: who asked, what was
+    asked, which rows were retrieved, what was returned, and which
+    policies fired. If you are an employee of a Stratum customer and
+    you want to know whether your data has been read by the agent and
+    in what context, ask your employer; they have the log and the
+    contractual right to share it with you.
+  </p>
+
+  <h3><span class="pfx">§ 9.6</span> Model versioning &amp; provenance</h3>
+  <p>
+    Every agent response carries the model identifier and version
+    that produced it. Stratum maintains an internal model-card for
+    each production model, including known evaluation results, known
+    failure modes, and the rollback target. Customers may pin to a
+    model version for a contractually-bounded period (typically 12
+    months) to satisfy their own governance requirements.
+  </p>
+
+  <h3><span class="pfx">§ 9.7</span> EU AI Act stance</h3>
+  <p>
+    Stratum is monitoring the implementation of Regulation (EU) 2024/1689
+    (the AI Act). Our internal class-assessment treats workforce-decision
+    automation as <strong>high-risk AI</strong> under Annex III(4), and
+    our controls are being aligned with the Title III obligations
+    (risk-management system, data governance, technical documentation,
+    record-keeping, transparency, human oversight, accuracy and
+    robustness, post-market monitoring) ahead of the August 2026
+    high-risk-systems deadline. See
+    <a href="../ai/index.html">stratum.ai/ai</a> for the AI-governance
+    surface.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 10 · COOKIES ── -->
+<section id="s10">
+  <div class="s-marker"><span class="bar"></span> § 10 · Cookies &amp; tracking</div>
+  <h2 class="s-h">Small files. <em>Big</em> opinions.</h2>
+  <p class="s-dek">
+    What we set, why we set it, and what you can turn off.
+  </p>
+
+  <p>
+    Stratum surfaces use a small number of cookies and equivalent
+    storage technologies (local-storage, session-storage). They fall
+    into the categories below. The classifications follow ePrivacy
+    Directive 2002/58/EC and the EDPB's guidelines on the use of
+    cookies and similar technologies (05/2020).
+  </p>
+
+  <div class="cookies">
+    <div class="cookie-row">
+      <div class="type">Essential</div>
+      <div class="what">
+        Required for the Console to function. Maintain your session
+        (after login), enforce CSRF protection, route you to the right
+        regional cluster, remember the language you logged in with.
+        No consent required (legitimate-interest / strictly-necessary
+        basis under ePrivacy).
+      </div>
+      <div class="state on">Always on</div>
+    </div>
+    <div class="cookie-row">
+      <div class="type">Functional</div>
+      <div class="what">
+        Remember your display preferences (light/dark theme, table
+        density, last-used filter). Limited to the Console; never set
+        on the marketing site. You can clear them at any time via
+        browser settings.
+      </div>
+      <div class="state on">Default on</div>
+    </div>
+    <div class="cookie-row">
+      <div class="type">Analytics</div>
+      <div class="what">
+        Aggregate-only. Stratum uses <strong>Plausible Analytics</strong>
+        (EU-hosted, cookie-less, no cross-site tracking, no
+        fingerprinting). We collect page-view counts, referrer
+        category, user-agent class, and country-level location.
+        We do not collect IP addresses or build per-user profiles.
+        See <a href="https://plausible.io/data-policy">plausible.io/data-policy</a>.
+      </div>
+      <div class="state on">Aggregate</div>
+    </div>
+    <div class="cookie-row">
+      <div class="type">Marketing</div>
+      <div class="what">
+        We do not use marketing cookies. No advertising pixels, no
+        retargeting tags, no third-party cookies set on stratum.ai
+        for advertising purposes. We do not run Facebook Pixel,
+        Google Ads conversion, LinkedIn Insight Tag, or equivalents.
+      </div>
+      <div class="state off">Never set</div>
+    </div>
+  </div>
+
+  <h3><span class="pfx">§ 10.1</span> Do Not Track &amp; Global Privacy Control</h3>
+  <p>
+    Stratum honours the Global Privacy Control (GPC) signal as a
+    valid opt-out under §1798.135(b)(1)(B) CCPA, though as noted in
+    §4.5 we do not "sell" or "share" personal information, so the
+    GPC signal has no behavioural effect on Stratum. We do not set
+    or respect Do Not Track separately; the W3C track of the
+    standard was withdrawn in 2019.
+  </p>
+
+  <h3><span class="pfx">§ 10.2</span> Consent banner</h3>
+  <p>
+    Visitors from EEA, UK, and Swiss IPs are presented with a cookie
+    banner on first visit to the marketing site. The banner offers
+    "Accept all," "Reject all," and granular toggles; the default is
+    "Reject all" (essential only). Console users do not see the
+    banner because they are an authenticated party with whom we have
+    a service contract; consent is documented in the customer's
+    MSA / DPA rather than at the cookie layer.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 11 · CHILDREN ── -->
+<section id="s11">
+  <div class="s-marker"><span class="bar"></span> § 11 · Children</div>
+  <h2 class="s-h">Not for <em>minors</em>.</h2>
+  <p class="s-dek">
+    Stratum is a workforce platform. Workforces are adults.
+  </p>
+  <p>
+    The Stratum platform is not directed to children under 18, and we
+    do not knowingly collect personal data from children under 18 in
+    the conduct of our business. The product is sold to enterprises;
+    the data subjects are their employees and candidates, who are by
+    definition working-age adults.
+  </p>
+  <p>
+    If we become aware that we have collected personal data from a
+    person under 18 — for example, through an inadvertent ATS
+    integration that includes minors in a customer's source system —
+    we will delete that data within <strong>7 days</strong> of becoming
+    aware and notify the customer-controller in writing. If you
+    believe Stratum holds data about a minor, contact
+    <a href="mailto:privacy@stratum.ai">privacy@stratum.ai</a>; we will
+    act on the report.
+  </p>
+  <p>
+    For COPPA-eligible jurisdictions: Stratum does not target the
+    service at children under 13; we do not knowingly collect personal
+    information from children under 13; the procedures above apply
+    with the lower threshold.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 12 · CHANGES ── -->
+<section id="s12">
+  <div class="s-marker"><span class="bar"></span> § 12 · Changes to this policy</div>
+  <h2 class="s-h">When this document <em>changes</em>.</h2>
+  <p class="s-dek">
+    How we revise it, how we tell you, and where to read the diff.
+  </p>
+
+  <h3><span class="pfx">§ 12.1</span> Material vs. non-material changes</h3>
+  <p>
+    A <strong>material change</strong> is any change that (i) expands
+    the categories of data we collect, (ii) expands the purposes for
+    which we use data, (iii) adds a subprocessor, (iv) changes data
+    residency for an existing tenant, (v) reduces data-subject rights,
+    or (vi) changes the legal basis for processing. Anything else is
+    a <strong>non-material change</strong> (clarification, typo, link
+    update, role rename).
+  </p>
+
+  <h3><span class="pfx">§ 12.2</span> Notice procedure</h3>
+  <p>
+    Material changes are emailed to affected customers <strong>30 days
+    in advance</strong> of the effective date, via the canonical
+    privacy-contact address on file. Non-material changes are published
+    silently; the version number increments and the changelog at the
+    bottom of this page records the change.
+  </p>
+  <p>
+    During the 30-day notice period for a material change, customers
+    may object. Objection triggers a good-faith negotiation; if the
+    objection cannot be resolved, the customer may terminate the
+    affected portion of service without penalty and export their data
+    under §6.1.
+  </p>
+
+  <h3><span class="pfx">§ 12.3</span> Versioning</h3>
+  <p>
+    Each issuance of this policy has a version (e.g., v1.4), an
+    effective date, and a document ID (PRIV-2026-001). The previous
+    five versions are archived at
+    <a href="../changelog/index.html#privacy">stratum.ai/changelog § privacy</a>
+    and remain accessible indefinitely.
+  </p>
+
+  <h3><span class="pfx">§ 12.4</span> Conflict-of-laws</h3>
+  <p>
+    Where a change to this policy would, if applied, place Stratum in
+    breach of a law applicable to a given customer's data (e.g., a new
+    statute in the customer's jurisdiction), the conflicting provision
+    does not take effect for that customer's data until the conflict
+    is resolved. We will tell you, in writing, when we observe such a
+    conflict.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 13 · CONTACT ── -->
+<section id="s13">
+  <div class="s-marker"><span class="bar"></span> § 13 · Contact us</div>
+  <h2 class="s-h">How to <em>reach</em> us.</h2>
+  <p class="s-dek">
+    The address book. Pick the channel that fits your need; we route
+    cross-team internally so you don't have to.
+  </p>
+
+  <div class="contact-grid">
+    <div class="contact-cell">
+      <div class="lbl">General privacy questions</div>
+      <div class="addr"><a href="mailto:privacy@stratum.ai">privacy@stratum.ai</a></div>
+      <div class="note">Anything that doesn't fit the other channels.
+      24-hour acknowledgement.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">Data-subject rights requests</div>
+      <div class="addr"><a href="mailto:dpr@stratum.ai">dpr@stratum.ai</a></div>
+      <div class="note">Access, deletion, rectification, portability,
+      objection. 24-hour acknowledgement; 30-day SLA; 72-hour expedite
+      for safety emergencies.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">Data Protection Officer</div>
+      <div class="addr"><a href="mailto:dpo@stratum.ai">dpo@stratum.ai</a></div>
+      <div class="note">Forge, CTO (DPO designation), with the
+      Chairman as human responsible party. Use this channel for
+      regulatory correspondence, supervisory-authority liaison, and
+      escalations.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">EU representative (Art. 27)</div>
+      <div class="addr"><a href="mailto:eu-rep@stratum.ai">eu-rep@stratum.ai</a></div>
+      <div class="note">For EU data subjects who prefer a local
+      contact. Details published at stratum.ai/trust.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">DPF complaints</div>
+      <div class="addr"><a href="mailto:dpf@stratum.ai">dpf@stratum.ai</a></div>
+      <div class="note">EU-US, UK Extension, Swiss-US Data Privacy
+      Framework. Independent recourse mechanism noted on the
+      certification page.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">Security incident reports</div>
+      <div class="addr"><a href="mailto:security@stratum.ai">security@stratum.ai</a></div>
+      <div class="note">Suspected vulnerabilities, suspected breach,
+      coordinated disclosure. PGP key on
+      <a href="../security/index.html#contact">stratum.ai/security</a>.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">Postal address</div>
+      <div class="addr">Stratum, Inc.<br>Attn: Privacy<br>2475 Hanover Street<br>Palo Alto, CA 94304<br>United States</div>
+      <div class="note">For formal legal notice. Email is faster.</div>
+    </div>
+    <div class="contact-cell">
+      <div class="lbl">Supervisory authority (EU)</div>
+      <div class="addr">Authority of the customer's choice</div>
+      <div class="note">EU data subjects may complain to the
+      supervisory authority of their habitual residence, place of
+      work, or place of the alleged infringement. SCCs reference at
+      §8.1.</div>
+    </div>
+  </div>
+
+  <h3><span class="pfx">§ 13.1</span> Response standards</h3>
+  <p>
+    Acknowledgement of any privacy correspondence within
+    <strong>24 hours</strong> (business or otherwise). Substantive
+    response on the SLA appropriate to the channel: 30 days for
+    rights requests, 72 hours for expedites, 5 business days for
+    standard inquiries. If we will miss a deadline, we tell you
+    before the deadline and explain why.
+  </p>
+
+  <h3><span class="pfx">§ 13.2</span> A note on tone</h3>
+  <p>
+    We try to write back in plain language. If a response is dense,
+    it is because the question is. We are happy to translate; ask us.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 14 · EFFECTIVE DATE ── -->
+<section id="s14">
+  <div class="s-marker"><span class="bar"></span> § 14 · Effective date &amp; sign-off</div>
+  <h2 class="s-h">When this becomes <em>real</em>.</h2>
+  <p class="s-dek">
+    The document is live from the date below; the version-history
+    table tracks every revision since.
+  </p>
+
+  <p>
+    This Privacy Policy, document <strong>PRIV-2026-001 v1.4</strong>,
+    is effective from <strong>T+0d (founding date, 2026-01-24)</strong>
+    and was most recently revised at <strong>T+115d (2026-05-13)</strong>.
+    It supersedes all prior versions. The full version history is in
+    the changelog at the bottom of this page.
+  </p>
+
+  <p>
+    By using the Stratum platform, the public site, or the Console,
+    you acknowledge that this policy describes how we process the
+    data described in §2. Where Stratum is a processor for a
+    customer-controller, the customer's signed Data Processing
+    Agreement governs in the event of conflict.
+  </p>
+
+  <div class="footnote">
+    <strong>Authoritative copy</strong> — The authoritative copy of
+    this policy is the HTML rendered at <code>stratum.ai/privacy</code>.
+    PDF exports, copies translated into other languages, and copies
+    embedded in customer-facing documentation are provided for
+    convenience and may lag the canonical copy by up to seven days.
+    Where a translation differs from the English original, the
+    English original governs.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SIGN-OFF ── -->
+<div class="signoff">
+  <div class="signoff-block">
+    <div class="lbl">Document owner</div>
+    <div class="sig">Forge</div>
+    <div class="title">CTO &amp; designated Data Protection Officer</div>
+    <div class="date">Signed · T+115d · 2026-05-13</div>
+  </div>
+  <div class="signoff-block">
+    <div class="lbl">Human responsible party</div>
+    <div class="sig">The Chairman</div>
+    <div class="title">On behalf of Stratum, Inc.</div>
+    <div class="date">Countersigned · T+115d · 2026-05-13</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── CHANGELOG ── -->
+<div class="changelog" id="changelog">
+  <div class="changelog-h"><span class="bar"></span> Version history</div>
+  <table class="cl-table">
+    <thead>
+      <tr>
+        <th>Version</th>
+        <th>Date</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ver">v1.4</td>
+        <td class="date">T+115d · 2026-05-13</td>
+        <td class="note">Added §9.7 EU AI Act stance; clarified §6.5 cryptographic erasure of derived embeddings; restructured §8 (international transfers) for readability; added DPF entry under §8.2.</td>
+      </tr>
+      <tr>
+        <td class="ver">v1.3</td>
+        <td class="date">T+82d · 2026-04-10</td>
+        <td class="note">Added Datadog as subprocessor (§4.2) after 30-day customer notice; clarified §2.B BYOK key material is browser-only and never transmitted to Stratum servers.</td>
+      </tr>
+      <tr>
+        <td class="ver">v1.2</td>
+        <td class="date">T+58d · 2026-03-17</td>
+        <td class="note">Added §9.3 server-side decision-class enforcement language; tightened §10.2 cookie-banner default to "reject all" for EEA/UK/Swiss visitors.</td>
+      </tr>
+      <tr>
+        <td class="ver">v1.1</td>
+        <td class="date">T+34d · 2026-02-22</td>
+        <td class="note">Initial DPF certification under EU-US, UK Extension, Swiss-US frameworks (§8.2); added EU representative under §1.3.</td>
+      </tr>
+      <tr>
+        <td class="ver">v1.0</td>
+        <td class="date">T+0d · 2026-01-24</td>
+        <td class="note">Founding issuance. SCC framework (§8.1) in place. Subprocessor list (§4.2) initialised. DPO designated.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../library/index.html">The Library</a></li>
+        <li><a href="../changelog/index.html">Changelog</a></li>
+        <li><a href="../api/index.html">API reference</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/index.html">Trust Center</a></li>
+        <li><a href="../security/index.html">Security</a></li>
+        <li><a href="./index.html">Privacy</a></li>
+        <li><a href="../ai/index.html">AI governance</a></li>
+        <li><a href="mailto:security@stratum.ai">Security contact</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Smooth scroll for in-page anchors
+  (function () {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (href.length < 2) return;
+        var target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        var offset = 80;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>

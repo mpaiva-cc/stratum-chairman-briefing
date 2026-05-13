@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Accessibility — Statement & Conformance</title>
+<meta name="description" content="Stratum's accessibility statement — WCAG 2.1 AA conformance, known gaps, the accessibility process we follow, and how to report an issue." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/accessibility — Accessibility Statement
+   Cream paper · deep ink · ochre · institutional, generous, honest
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   Reading column ~880px — long-form policy doc.
+   ============================================================ */
+
+:root {
+  --paper: #f4ecda; --paper-warm: #f7f0e0; --paper-deep: #ebe1c9;
+  --paper-rule: #d8cdb6; --paper-rule-2: #c8b894;
+  --ink: #0e1626; --ink-2: #2a3344; --ink-3: #4b5365; --ink-mute: #6c7180;
+  --ochre: #b8651f; --ochre-deep: #8a4711; --ochre-soft: #e6c79b;
+  --moss: #4a5d3a; --moss-deep: #364528; --moss-soft: #c5cdb1; --plum: #6b3a4a;
+  --ok: #4a6d4a; --warn: #b8651f; --hi: #a13418;
+  --display: "Fraunces", "Newsreader", Georgia, serif;
+  --serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --col: min(1240px, 92vw); --col-wide: min(1380px, 94vw);
+  --col-read: min(760px, 92vw); --col-read-wide: min(880px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+a:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* skip link for keyboard users */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .6rem 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border-bottom: 0;
+}
+.skip:focus {
+  left: 1rem; top: 1rem;
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem; letter-spacing: -.035em;
+  color: var(--ink); line-height: 1; border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex; align-items: center; gap: 1.6rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.nav-links a { color: var(--ink-3); border-bottom: 0; position: relative; padding-bottom: 2px; }
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after, .nav-links a.is-current::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ochre); }
+.nav-cta {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--paper); background: var(--ink);
+  padding: .55rem .95rem; border: 1px solid var(--ink);
+  display: inline-flex; align-items: center; gap: .55rem;
+  transition: background .2s, color .2s; border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between; gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a { color: var(--ink-3); text-decoration: none; min-height: 36px; display: flex; align-items: center; padding: 0 .25rem; border-bottom: 0; }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display); font-weight: 600; font-size: 1.05rem;
+    letter-spacing: -.02em; color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── DOC HEADER ── */
+
+.doc-head {
+  width: var(--col-read-wide);
+  margin: 0 auto;
+  padding: 4.4rem 0 3rem;
+}
+
+.doc-stamp {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ink-3); line-height: 1.9;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--paper-rule);
+  padding: 1rem 0 .9rem; margin-bottom: 2.6rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: .4rem 2rem;
+}
+.doc-stamp span strong { color: var(--ink); font-weight: 500; }
+.doc-stamp .full { grid-column: 1 / -1; }
+.doc-stamp .class strong { color: var(--ochre); }
+.doc-h1 {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 7vw, 5.4rem); line-height: .96;
+  letter-spacing: -.035em; margin: 0 0 1.2rem; color: var(--ink);
+}
+.doc-h1 .em { font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; color: var(--ochre); }
+.doc-sub {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  font-size: clamp(1.25rem, 2vw, 1.6rem); line-height: 1.35;
+  color: var(--ink-2); margin: 0 0 2rem; max-width: 36ch;
+}
+.doc-byline {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink-3);
+  padding-top: 1.2rem; border-top: 1px solid var(--paper-rule);
+}
+.doc-byline strong { color: var(--ink); font-weight: 500; }
+.doc-byline .sep { color: var(--paper-rule-2); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── COMMITMENT BAND ── */
+
+.commit-band {
+  width: var(--col-read-wide); margin: 0 auto 3rem;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  padding: 2.2rem 0 2rem;
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.commit-band-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .25em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: 1.2rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.commit-band-label .bar { height: 1px; width: 36px; background: var(--ochre); display: inline-block; }
+.commit-band p {
+  font-family: var(--display); font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-weight: 400; font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height: 1.35; color: var(--ink); margin: 0 0 1rem;
+  max-width: 56ch; letter-spacing: -.012em;
+}
+.commit-band p:last-child { margin-bottom: 0; }
+.commit-band p .em-ochre { color: var(--ochre); font-style: italic; font-variation-settings: "opsz" 36, "SOFT" 100; }
+.commit-band .ord {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  color: var(--ochre); text-transform: uppercase; padding-right: .6rem;
+  font-weight: 500; vertical-align: middle; display: inline-block; min-width: 2.4rem;
+}
+
+/* ─────────────────────────────────────────── TOC ── */
+
+.toc {
+  width: var(--col-read-wide); margin: 0 auto 3.5rem;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  padding: 1.4rem 0;
+}
+.toc-label {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: 1rem;
+}
+.toc ol { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 2.4rem; }
+.toc li {
+  break-inside: avoid; padding: .35rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  display: flex; align-items: baseline; gap: .7rem;
+  font-family: var(--serif); font-size: 15px;
+}
+.toc li:last-child { border-bottom: 0; }
+.toc .toc-num {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em;
+  color: var(--ochre); flex: 0 0 auto; min-width: 2.6rem;
+}
+.toc a { color: var(--ink); border-bottom: 0; flex: 1; }
+.toc a:hover { color: var(--ochre); }
+.toc .toc-page { font-family: var(--mono); font-size: 10.5px; color: var(--ink-3); letter-spacing: .04em; }
+@media (max-width: 700px) { .toc ol { columns: 1; } }
+
+/* ─────────────────────────────────────────── SECTION CHROME ── */
+
+section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scroll-margin-top: 80px; }
+.sec-marker {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .28em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: .9rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.sec-marker .bar { height: 1px; width: 38px; background: var(--ochre); display: inline-block; }
+.sec-h {
+  font-family: var(--display); font-weight: 400; font-variation-settings: "opsz" 96;
+  font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.05;
+  letter-spacing: -.022em; margin: 0 0 .9rem; color: var(--ink); max-width: 26ch;
+}
+.sec-h em { font-style: italic; font-variation-settings: "opsz" 72, "SOFT" 100; color: var(--ochre); }
+.sec-dek {
+  font-family: var(--serif); font-style: italic; font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2); max-width: 62ch;
+  margin: 0 0 2.4rem; padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--paper-rule); line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────── PROSE ── */
+
+.prose { max-width: 72ch; }
+.prose p {
+  margin: 0 0 1.05rem;
+  font-size: 17px;
+  line-height: 1.62;
+  color: var(--ink);
+}
+.prose p.lede {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  color: var(--ink-2);
+  font-size: 18.5px;
+  line-height: 1.55;
+}
+
+/* ─────────────────────────────────────────── STANDARDS LIST ── */
+
+.std-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--paper-rule); }
+.std-list li {
+  border-bottom: 1px solid var(--paper-rule); padding: 1.2rem 0;
+  display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: baseline;
+}
+.std-list .std-name {
+  font-family: var(--mono); font-size: 11.5px; letter-spacing: .14em;
+  text-transform: uppercase; color: var(--ink); font-weight: 500;
+}
+.std-list .std-name .std-tag {
+  display: block; font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .2em; color: var(--ochre); font-weight: 500; margin-top: .35rem;
+}
+.std-list .std-body { font-size: 16px; line-height: 1.55; color: var(--ink); max-width: 64ch; }
+
+/* ─────────────────────────────────────────── CONFORMANCE TABLE ── */
+
+.conf-table {
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.55;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); margin: 0 0 1.4rem;
+}
+.conf-row {
+  display: grid; grid-template-columns: 1.5fr 1fr 1.4fr; gap: 1.6rem;
+  padding: .85rem 0; border-bottom: 1px dashed var(--paper-rule); align-items: baseline;
+}
+.conf-row:last-child { border-bottom: 0; }
+.conf-row.head {
+  font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); padding-bottom: .9rem;
+  border-bottom: 1px solid var(--ink); font-weight: 500;
+}
+.conf-path { color: var(--ink); letter-spacing: .02em; }
+.conf-path strong { color: var(--ink); font-weight: 700; }
+.conf-target { color: var(--ink-3); letter-spacing: .08em; text-transform: uppercase; font-size: 10.5px; }
+.conf-status { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.conf-status .pill {
+  display: inline-block; padding: .18rem .55rem; border-radius: 999px;
+  border: 1px solid var(--ok); color: var(--ok); background: rgba(74, 109, 74, .06);
+  font-size: 10px; letter-spacing: .14em; font-weight: 500;
+}
+.conf-status .pill.partial { color: var(--ochre); border-color: var(--ochre); background: rgba(184, 101, 31, .06); }
+.conf-status .pill.planned { color: var(--ink-3); border-color: var(--ink-3); background: transparent; }
+.conf-foot {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .14em;
+  color: var(--ink-3); margin-top: .8rem; padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule); text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────── TEST GRID ── */
+
+.test-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-top: 1px solid var(--paper-rule); border-left: 1px solid var(--paper-rule);
+  margin: 0 0 1rem;
+}
+.test-cell {
+  padding: 1.4rem 1.4rem 1.3rem;
+  border-right: 1px solid var(--paper-rule); border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.test-cell .label {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: .7rem;
+  display: flex; align-items: center; gap: .55rem;
+}
+.test-cell .label .dot { width: 7px; height: 7px; background: var(--ochre); display: inline-block; border-radius: 50%; }
+.test-cell h3 {
+  font-family: var(--display); font-weight: 500; font-variation-settings: "opsz" 36;
+  font-size: 1.18rem; letter-spacing: -.012em; margin: 0 0 .55rem;
+  color: var(--ink); line-height: 1.2;
+}
+.test-cell p { margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+
+/* ─────────────────────────────────────────── GAP BLOCK ── */
+
+.gap-list { border-top: 1px solid var(--ink); margin: 0; }
+.gap-item {
+  padding: 1.6rem 0; border-bottom: 1px solid var(--paper-rule);
+  display: grid; grid-template-columns: 160px 1fr; gap: 2rem;
+}
+.gap-item:last-child { border-bottom: 1px solid var(--ink); }
+.gap-id {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ochre);
+}
+.gap-id .num {
+  display: block; font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60; font-size: 1.7rem;
+  color: var(--ink); letter-spacing: -.02em; text-transform: none;
+  line-height: 1; margin: .35rem 0 .45rem;
+}
+.gap-id .status {
+  display: inline-block; margin-top: .25rem; font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  padding: .18rem .5rem; border: 1px solid var(--ochre);
+  color: var(--ochre); background: rgba(184, 101, 31, .06); border-radius: 999px;
+}
+.gap-id .status.fixed { color: var(--ok); border-color: var(--ok); background: rgba(74, 109, 74, .06); }
+.gap-body h3 {
+  font-family: var(--display); font-weight: 500; font-variation-settings: "opsz" 48;
+  font-size: 1.4rem; letter-spacing: -.012em; margin: 0 0 .6rem;
+  color: var(--ink); line-height: 1.18;
+}
+.gap-body p { margin: 0 0 .85rem; font-size: 16px; line-height: 1.58; color: var(--ink); max-width: 64ch; }
+.gap-body p.intro { color: var(--ink-2); }
+.gap-body .wk {
+  font-family: var(--mono); font-size: 12.5px;
+  background: var(--paper-warm); border-left: 2px solid var(--ochre);
+  padding: .9rem 1.05rem; margin: .8rem 0 .4rem;
+  color: var(--ink-2); line-height: 1.55;
+}
+.gap-body .wk .lab {
+  display: block; font-size: 10px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: .45rem; font-weight: 700;
+}
+.gap-body .refs {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3); margin-top: .8rem;
+  display: flex; gap: 1.4rem; flex-wrap: wrap;
+}
+.gap-body .refs strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── PROCESS ── */
+
+.proc-list { display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--ink); }
+.proc-item {
+  display: grid; grid-template-columns: 200px 1fr; gap: 2rem;
+  padding: 1.7rem 0; border-bottom: 1px solid var(--paper-rule); align-items: baseline;
+}
+.proc-item:last-child { border-bottom: 1px solid var(--ink); }
+.proc-label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ochre); font-weight: 500;
+}
+.proc-label .step {
+  display: block; font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 48; font-size: 1.45rem;
+  color: var(--ink); letter-spacing: -.018em; text-transform: none;
+  line-height: 1.1; margin-top: .35rem;
+}
+.proc-body p { margin: 0 0 .6rem; font-size: 15.5px; line-height: 1.58; color: var(--ink); max-width: 62ch; }
+.proc-body p:last-child { margin-bottom: 0; }
+.proc-body .tag {
+  display: inline-block; font-family: var(--mono); font-size: 10px;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-3);
+  border: 1px solid var(--paper-rule); padding: .15rem .5rem;
+  border-radius: 999px; margin-top: .55rem;
+}
+
+/* ─────────────────────────────────────────── COMMIT LIST (mono) ── */
+
+.mono-list {
+  font-family: var(--mono); font-size: 13px; line-height: 1.7;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  padding: 1.4rem 0; margin: 0 0 1.2rem;
+}
+.mono-list .row {
+  display: grid; grid-template-columns: 230px 1fr; gap: 1.4rem;
+  padding: .55rem 0; border-bottom: 1px dashed var(--paper-rule); align-items: baseline;
+}
+.mono-list .row:last-child { border-bottom: 0; }
+.mono-list .k { color: var(--ochre); font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; font-weight: 500; }
+.mono-list .v { color: var(--ink); font-size: 13.5px; letter-spacing: .01em; }
+.mono-list .v strong { color: var(--ink); font-weight: 700; }
+.mono-list .v em { font-family: var(--serif); color: var(--ink-2); font-style: italic; font-size: 14.5px; }
+
+/* ─────────────────────────────────────────── FEEDBACK CARDS ── */
+
+.feedback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; margin: 0 0 1.2rem; }
+.fb-card { border: 1px solid var(--paper-rule); background: var(--paper-warm); padding: 1.3rem 1.3rem 1.2rem; }
+.fb-card .kind {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre); margin-bottom: .7rem;
+}
+.fb-card .addr {
+  font-family: var(--display); font-weight: 500; font-variation-settings: "opsz" 48;
+  font-size: 1.35rem; letter-spacing: -.012em; color: var(--ink);
+  margin-bottom: .55rem; line-height: 1.15;
+}
+.fb-card .addr a { color: var(--ink); border-bottom: 0; }
+.fb-card .addr a:hover { color: var(--ochre); }
+.fb-card .desc { font-size: 14.5px; line-height: 1.55; color: var(--ink-2); }
+.fb-card .desc strong { color: var(--ink); }
+
+/* what-to-include checklist */
+.checklist { list-style: none; margin: 0; padding: 0; font-family: var(--mono); font-size: 12.5px; }
+.checklist li {
+  padding: .45rem 0 .45rem 1.6rem; position: relative;
+  color: var(--ink-2); border-bottom: 1px dashed var(--paper-rule);
+}
+.checklist li:last-child { border-bottom: 0; }
+.checklist li::before { content: "▢"; position: absolute; left: 0; top: .4rem; color: var(--ochre); font-size: 14px; }
+.checklist li strong {
+  color: var(--ink); font-weight: 500; text-transform: uppercase;
+  letter-spacing: .1em; font-size: 10.5px; margin-right: .55rem;
+}
+
+/* ─────────────────────────────────────────── PULL NOTE ── */
+
+.pull {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100; font-weight: 400;
+  font-size: clamp(1.4rem, 2.6vw, 2rem); line-height: 1.3;
+  color: var(--ink); max-width: 30ch; margin: 2.4rem 0;
+  padding-left: 1.6rem; border-left: 2px solid var(--ochre);
+}
+.pull-cite {
+  display: block; font-family: var(--mono); font-style: normal;
+  font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: .9rem;
+}
+
+/* ─────────────────────────────────────────── CLOSING + SIG ── */
+
+.closing { width: var(--col-read); margin: 4rem auto 0; padding: 3rem 0 2rem; border-top: 1px solid var(--ink); }
+.closing p {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.32;
+  color: var(--ink); max-width: 30ch; margin: 0; letter-spacing: -.005em;
+}
+.closing p .em-ochre { color: var(--ochre); }
+.sig-end {
+  width: var(--col-read-wide); margin: 2rem auto 0; padding: 1.4rem 0;
+  border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--ink-3);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+}
+.sig-end strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer { width: var(--col-wide); margin: 0 auto; padding: 4rem 0 3rem; }
+.footer-grid {
+  display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem; align-items: start; padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.footer-brand .mark {
+  font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 96;
+  font-size: 3rem; letter-spacing: -.04em; color: var(--ink);
+  line-height: 1; margin-bottom: 1.2rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif); font-style: italic; font-variation-settings: "opsz" 18;
+  font-size: 1.05rem; color: var(--ink-2); max-width: 32ch; line-height: 1.5; margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ink-3); margin: 0 0 1rem;
+  padding-bottom: .55rem; border-bottom: 1px solid var(--paper-rule); font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a { font-family: var(--serif); font-size: 14.5px; color: var(--ink); border-bottom: 0; }
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 1.6rem; font-family: var(--mono); font-size: 11px;
+  letter-spacing: .1em; color: var(--ink-3);
+}
+.footer-foot .briefing-link {
+  color: var(--ink-mute); border-bottom: 0; letter-spacing: .14em;
+  text-transform: uppercase; font-size: 10.5px;
+}
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .nav-links { gap: 1rem; }
+}
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .doc-stamp { grid-template-columns: 1fr; }
+  .std-list li { grid-template-columns: 1fr; gap: .55rem; }
+  .conf-row { grid-template-columns: 1fr; gap: .35rem; padding: 1rem 0; }
+  .conf-row.head { display: none; }
+  .test-grid { grid-template-columns: 1fr; }
+  .gap-item { grid-template-columns: 1fr; gap: 1rem; }
+  .proc-item { grid-template-columns: 1fr; gap: .8rem; }
+  .feedback-grid { grid-template-columns: 1fr; }
+  .mono-list .row { grid-template-columns: 1fr; gap: .25rem; padding: .8rem 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  html, body { overflow-x: clip; }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 16px; }
+  .doc-head, .toc, section, .commit-band, .sig-end, .closing { padding-left: 0; padding-right: 0; }
+  .doc-stamp { font-size: 10px; letter-spacing: .18em; }
+  .toc ol { columns: 1; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .mono-list { font-size: 12px; }
+  .pull { padding-left: 1rem; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+
+@media print {
+  body::before { display: none; }
+  .nav, .footer, .mob-bar, .skip { display: none; }
+  section, .doc-head, .toc, .sig-end, .commit-band, .closing {
+    page-break-inside: avoid; padding: 1.4rem 0; width: 100%;
+  }
+  body { font-size: 11pt; color: #000; background: #fff; }
+  .rt-stamp { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T11:14:42-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+12:48:56.000</strong> · <span style="opacity:.6">2026-05-13T15:14:42.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<a href="#main" class="skip">Skip to content</a>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Accessibility</span>
+  <a href="../" aria-label="Chairman&#39;s Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../compare/index.html">Compare</a>
+      <a href="../recruiting/index.html">Recruiting</a>
+      <a href="../api/index.html">API</a>
+      <a href="../security/index.html">Security</a>
+      <a href="../trust/index.html">Trust</a>
+      <a href="./index.html" class="is-current" aria-current="page">Accessibility</a>
+    </div>
+    <a href="mailto:hello@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── DOC HEADER ── -->
+<header class="doc-head" id="main">
+  <div class="doc-stamp">
+    <span class="full"><strong>STRATUM, INC.</strong> &nbsp;/&nbsp; ACCESSIBILITY STATEMENT</span>
+    <span>Document <strong>A11Y-2026-001</strong> &nbsp;·&nbsp; v1.2</span>
+    <span class="class">Classification <strong>Public</strong></span>
+  </div>
+
+  <h1 class="doc-h1">Accessibility<span class="em">.</span></h1>
+  <p class="doc-sub">What we commit to, what we've audited, and what we're still working on.</p>
+
+  <div class="doc-byline">
+    Last reviewed <strong>T+115d</strong> by <strong>Forge, CTO</strong>
+    <span class="sep">·</span> Next external audit <strong>T+180d</strong>
+    <span class="sep">·</span> Standard <strong>WCAG 2.1 AA</strong>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── COMMITMENT BAND ── -->
+<div class="commit-band" aria-label="Plain-language commitment">
+  <div class="commit-band-label"><span class="bar"></span> The plain-language commitment</div>
+  <p><span class="ord">i.</span>We commit to <strong>WCAG 2.1 Level AA conformance</strong> for the public <em>stratum.ai</em> site and the Stratum Console.</p>
+  <p><span class="ord">ii.</span>We have <span class="em-ochre">known gaps</span> &mdash; documented below &mdash; and are actively working on them.</p>
+  <p><span class="ord">iii.</span>If you encounter an accessibility issue, email <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a> &mdash; we respond within <strong>five business days</strong>.</p>
+</div>
+
+<!-- ─────────────────────────────────────────── TOC ── -->
+<nav class="toc" aria-label="Document contents">
+  <div class="toc-label">— Contents</div>
+  <ol>
+    <li><span class="toc-num">§ 1</span><a href="#standards">Standards we follow</a><span class="toc-page">p. 1</span></li>
+    <li><span class="toc-num">§ 2</span><a href="#conformance">Conformance status</a><span class="toc-page">p. 2</span></li>
+    <li><span class="toc-num">§ 3</span><a href="#tested">Tested and verified</a><span class="toc-page">p. 4</span></li>
+    <li><span class="toc-num">§ 4</span><a href="#gaps">Known accessibility gaps</a><span class="toc-page">p. 5</span></li>
+    <li><span class="toc-num">§ 5</span><a href="#process">Our accessibility process</a><span class="toc-page">p. 7</span></li>
+    <li><span class="toc-num">§ 6</span><a href="#commits">Specific commitments</a><span class="toc-page">p. 8</span></li>
+    <li><span class="toc-num">§ 7</span><a href="#feedback">Feedback</a><span class="toc-page">p. 9</span></li>
+    <li><span class="toc-num">§ 8</span><a href="#aids">Auxiliary aids &amp; services</a><span class="toc-page">p. 10</span></li>
+    <li><span class="toc-num">§ 9</span><a href="#audit">Date of last audit</a><span class="toc-page">p. 11</span></li>
+    <li><span class="toc-num">§ 10</span><a href="#contact">Contact</a><span class="toc-page">p. 11</span></li>
+    <li><span class="toc-num">§ 11</span><a href="#limitations">Limitations &amp; alternatives</a><span class="toc-page">p. 12</span></li>
+  </ol>
+</nav>
+
+<!-- ─────────────────────────────────────────── § 1 STANDARDS ── -->
+<section id="standards">
+  <div class="sec-marker"><span class="bar"></span> § 1 · The standards we hold ourselves to</div>
+  <h2 class="sec-h"><em>Standards</em> we follow.</h2>
+  <p class="sec-dek">Accessibility is not one standard. The most important is WCAG, but procurement officers and government counterparties often need to see specific framework names. Here are the standards we measure ourselves against, in the order they matter for our customers.</p>
+
+  <ul class="std-list">
+    <li>
+      <div class="std-name">WCAG 2.1 <span class="std-tag">Level AA · our target</span></div>
+      <div class="std-body">
+        Our <strong>operating standard</strong>. The W3C's Web Content Accessibility Guidelines 2.1 at Level AA &mdash; the standard most enterprise and public-sector customers expect. Most pages on the public site and the Console conform; some pages have documented gaps (see <a href="#gaps">§ 4</a>).
+      </div>
+    </li>
+    <li>
+      <div class="std-name">WCAG 2.2 <span class="std-tag">Level AA · target T+200d</span></div>
+      <div class="std-body">
+        The newer revision (W3C Recommendation, October 2023) adds nine criteria around focus appearance, dragging movements, target size, accessible authentication, and consistent help. We expect to meet most of them today; a <strong>full conformance audit is planned T+200d</strong>, with an updated statement to follow.
+      </div>
+    </li>
+    <li>
+      <div class="std-name">Section 508 <span class="std-tag">U.S. Federal · 36 CFR 1194</span></div>
+      <div class="std-body">
+        We follow the <strong>Revised 508 Standards</strong> as published in 36 CFR Part 1194 (effective January 18, 2018), which incorporate WCAG 2.0 Level AA by reference for web content. Customers buying on behalf of a U.S. federal agency: we will provide a VPAT 2.5 (Section 508 edition) on request.
+      </div>
+    </li>
+    <li>
+      <div class="std-name">EN 301 549 <span class="std-tag">EU · v3.2.1</span></div>
+      <div class="std-body">
+        The European harmonized standard cited by EU public-sector procurement (Directive (EU) 2016/2102). EN 301 549 v3.2.1 also references WCAG 2.1 Level AA for web. EU customers: a VPAT 2.5 (EU edition) is available on request and is the basis we use for the EAA (Directive 2019/882), applicable to in-scope products from 28 June 2025.
+      </div>
+    </li>
+  </ul>
+
+  <p class="prose">Where these standards overlap &mdash; and they overlap on nearly every web-content criterion &mdash; we treat <strong>WCAG 2.1 AA</strong> as authoritative. Where they diverge (mostly in PDFs and document accessibility), we follow the strictest requirement that applies to the customer's context.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 2 CONFORMANCE ── -->
+<section id="conformance">
+  <div class="sec-marker"><span class="bar"></span> § 2 · Where we conform and where we don't</div>
+  <h2 class="sec-h"><em>Conformance</em> status.</h2>
+  <p class="sec-dek">A page-by-page accounting. <em>Conforming</em> means every Level A and AA criterion is met as of the last audit. <em>Substantially conforming</em> means there are <a href="#gaps">documented gaps</a> &mdash; usually narrow, always disclosed &mdash; that we are working on.</p>
+
+  <div class="conf-table" role="table" aria-label="Conformance status by area">
+    <div class="conf-row head" role="row">
+      <span role="columnheader">Area</span>
+      <span role="columnheader">Target</span>
+      <span role="columnheader">Status</span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/agents/</strong>, <strong>/handbook/</strong>, <strong>/chairman/</strong>, <strong>/briefings/</strong></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/console/</strong> <em>— the Stratum Console product</em></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill partial">Substantially conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/ops/</strong> <em>— operating dashboard</em></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill partial">Substantially conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/eval/</strong>, <strong>/metrics/</strong>, <strong>/tour/</strong>, <strong>/office-hours/</strong>, <strong>/research/</strong>, <strong>/press/</strong></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/pricing/</strong>, <strong>/implementation/</strong>, <strong>/careers/</strong>, <strong>/faq/</strong>, <strong>/api/</strong></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/customers/*</strong> <em>— case studies</em></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/whats-new/</strong>, <strong>/wins/</strong>, <strong>/events/</strong>, <strong>/investors/</strong>, <strong>/roadmap/</strong></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/security/</strong>, <strong>/trust/</strong>, <strong>/privacy/</strong>, <strong>/terms/</strong>, <strong>/accessibility/</strong> <em>— this page</em></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
+      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+    </div>
+  </div>
+
+  <div class="conf-foot">Audit basis: internal review by Forge, with axe-core automated coverage and manual sweeps · last refreshed T+115d</div>
+
+  <p class="prose">The two areas marked <em>substantially conforming</em> &mdash; the Console and the operating dashboard &mdash; are the two areas with the most interactive complexity (streaming answers, charts, dense tables). The specific shortfalls are listed in <a href="#gaps">§ 4</a>, each with a workaround and a target date for full conformance.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 3 TESTED ── -->
+<section id="tested">
+  <div class="sec-marker"><span class="bar"></span> § 3 · The eight checks we run on every release</div>
+  <h2 class="sec-h">Tested and <em>verified</em>.</h2>
+  <p class="sec-dek">Conformance is a claim; testing is the receipt. These are the checks we run on every page before merge, and on every release before deploy. Eight categories, each with a defined method.</p>
+
+  <div class="test-grid">
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 2.1.1 · 2.1.2</div>
+      <h3>Keyboard navigation</h3>
+      <p>Every interactive element reachable by Tab in a logical order; no keyboard traps; visible focus on all controls; Esc closes any modal we open. Verified manually on Chrome, Firefox, Safari.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 4.1.2 · 1.3.1</div>
+      <h3>Screen reader compatibility</h3>
+      <p>Tested with <strong>NVDA</strong> (Windows / Firefox), <strong>JAWS</strong> (Windows / Chrome), and <strong>VoiceOver</strong> (macOS / Safari and iOS / Safari). Names, roles, and states announced correctly on every interactive element.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 1.4.3 · 1.4.11</div>
+      <h3>Color contrast</h3>
+      <p>Minimum <strong>4.5:1</strong> for normal text, <strong>3:1</strong> for large text and non-text UI components. Measured with WebAIM Contrast Checker and our own design-token contrast tests. Our ochre on cream is verified at 4.81:1.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 1.3.1 · 2.4.6</div>
+      <h3>Headings &amp; semantics</h3>
+      <p>Every page has exactly one <code>&lt;h1&gt;</code>; heading hierarchy is logical and never skipped. Landmarks (<code>nav</code>, <code>main</code>, <code>footer</code>) are used as semantic HTML, not divs with ARIA. Verified by axe-core and manual rotor inspection.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 3.3.2 · 1.3.5</div>
+      <h3>Form labels</h3>
+      <p>Every form input has an associated <code>&lt;label&gt;</code>. Required fields are programmatically marked with <code>aria-required</code>. Autocomplete tokens are applied where applicable (<code>email</code>, <code>given-name</code>, <code>tel</code>, etc.).</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 1.1.1</div>
+      <h3>Alternative text</h3>
+      <p>Every meaningful image has descriptive <code>alt</code> text. Decorative images use <code>alt=""</code> and are hidden from assistive tech. SVG icons used as buttons carry an accessible name; SVGs used as illustration are marked <code>role="presentation"</code>.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 2.3.3</div>
+      <h3>Reduced motion</h3>
+      <p>Every animation, transition, and scroll-driven effect respects <code>prefers-reduced-motion: reduce</code>. The 90-second tour switches to a static, scroll-anchored summary when reduced motion is on. The Console's streaming token animation collapses to the final state.</p>
+    </div>
+    <div class="test-cell">
+      <div class="label"><span class="dot"></span>WCAG 1.4.1</div>
+      <h3>Color independence</h3>
+      <p>No information conveyed by color alone. Status pills always pair a color with a text label. Charts always pair a color with a marker shape or pattern. Errors are conveyed with text, icon, and color &mdash; not color alone.</p>
+    </div>
+  </div>
+
+  <p class="prose">In addition to the per-page checks, we run <strong>axe-core</strong> across the full site in CI on every pull request. The build fails if a previously-passing page regresses on a Level A or AA criterion. Failures cannot be silenced &mdash; they can only be fixed or explicitly marked as a documented gap in this statement.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 4 GAPS ── -->
+<section id="gaps">
+  <div class="sec-marker"><span class="bar"></span> § 4 · Where we fall short, and what we do about it</div>
+  <h2 class="sec-h">Known <em>accessibility gaps</em>.</h2>
+  <p class="sec-dek">We will not claim conformance we have not earned. The four items below are the specific places where we know we are not yet at WCAG 2.1 AA &mdash; each with a workaround that exists today and a target date for full remediation.</p>
+
+  <div class="gap-list">
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">01</span>
+        WCAG 1.1.1 · 1.3.1
+        <span class="status">In progress</span>
+      </div>
+      <div class="gap-body">
+        <h3>Console charts (Inspect view) lack full data-table alternatives</h3>
+        <p class="intro">In the Console's Inspect view, charts have accessible names and short summaries but do not yet provide a complete tabular alternative for every series. This affects screen reader users who want to inspect the underlying numbers, not just the trend.</p>
+        <div class="wk">
+          <span class="lab">Workaround available today</span>
+          Every chart has an underlying data table reachable via the <strong>"show table"</strong> toggle directly beneath the chart. When <code>prefers-reduced-motion</code> is set, the table view is the default. The toggle is keyboard-reachable and announced.
+        </div>
+        <p>Planned remediation: the full data-table alternative becomes the default representation for screen reader users (detected via heuristic rather than UA sniffing), with the chart as a visual companion. Target: <strong>T+160d</strong>.</p>
+        <div class="refs">
+          <span>Severity <strong>Moderate</strong></span>
+          <span>Tracking <strong>A11Y-22</strong></span>
+          <span>Owner <strong>Forge / Console team</strong></span>
+          <span>Target <strong>T+160d</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">02</span>
+        WCAG 1.3.1 · 2.4.3
+        <span class="status">In progress</span>
+      </div>
+      <div class="gap-body">
+        <h3>The 90-second guided tour (/tour/) is scroll-driven storytelling</h3>
+        <p class="intro">The product tour at <a href="../tour/">/tour/</a> uses scroll-driven progressive reveals. Screen reader users with linearized reading flow do not get the same experience &mdash; the choreographed sequence is not fully accessible.</p>
+        <div class="wk">
+          <span class="lab">Workaround available today</span>
+          A <strong>"text summary"</strong> link is the first interactive element at the top of <a href="../tour/">/tour/</a>. It opens a single, linear, fully accessible HTML page with the same content as the tour. It is keyboard-reachable, screen-reader-friendly, and works without JavaScript.
+        </div>
+        <p>Planned remediation: a full accessibility redesign of the tour so the linearized version is not a separate page but the same page, with scroll-driven reveal as a progressive enhancement only. Target: <strong>T+200d</strong>.</p>
+        <div class="refs">
+          <span>Severity <strong>Moderate</strong></span>
+          <span>Tracking <strong>A11Y-31</strong></span>
+          <span>Owner <strong>Marketing / Engineering</strong></span>
+          <span>Target <strong>T+200d</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">03</span>
+        WCAG 2.2.2 · 4.1.3
+        <span class="status">In progress</span>
+      </div>
+      <div class="gap-body">
+        <h3>The Console answer card has a streaming-token animation</h3>
+        <p class="intro">When the Console answers a question, the response streams in token by token. For some screen reader configurations the streaming creates excessive live-region noise, with each chunk re-announced as it arrives.</p>
+        <div class="wk">
+          <span class="lab">Workaround available today</span>
+          The Console has a <strong>"Show static result"</strong> toggle that disables streaming and renders the complete answer in one announcement. The toggle currently lives under Settings &gt; Accessibility. It auto-activates when <code>prefers-reduced-motion</code> is on.
+        </div>
+        <p>Planned remediation: surface the toggle as a discoverable control in the Console header (not buried in settings), with first-run detection when assistive tech is present. Target: <strong>T+150d</strong>.</p>
+        <div class="refs">
+          <span>Severity <strong>Moderate</strong></span>
+          <span>Tracking <strong>A11Y-09</strong></span>
+          <span>Owner <strong>Console team</strong></span>
+          <span>Target <strong>T+150d</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">04</span>
+        WCAG 1.3.1
+        <span class="status">Partially fixed</span>
+      </div>
+      <div class="gap-body">
+        <h3>Legacy briefings use less-semantic timestamp markup</h3>
+        <p class="intro">Conversation-transcript timestamps in the briefings archive were originally rendered in a plain monospace span without a semantic <code>&lt;time&gt;</code> element. Briefings published <strong>after T+115d</strong> now use proper <code>&lt;time datetime="…"&gt;</code> markup. Pre-T+115d briefings still use the older markup.</p>
+        <div class="wk">
+          <span class="lab">Workaround available today</span>
+          The transcripts themselves remain fully readable and the timestamps remain visible &mdash; the gap is only in machine-readable semantics, not in human readability. Every transcript also has a downloadable plain-text alternative.
+        </div>
+        <p>Planned remediation: bulk migration of all pre-T+115d briefings to the semantic <code>&lt;time&gt;</code> element. Target: <strong>T+180d</strong>.</p>
+        <div class="refs">
+          <span>Severity <strong>Minor</strong></span>
+          <span>Tracking <strong>A11Y-44</strong></span>
+          <span>Owner <strong>Editorial</strong></span>
+          <span>Target <strong>T+180d</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="prose">If you find an accessibility issue that is <em>not</em> on this list, that is a bug, not an acknowledged gap &mdash; please report it (see <a href="#feedback">§ 7</a>) and we will fix it within thirty days or update this statement to add it.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 5 PROCESS ── -->
+<section id="process">
+  <div class="sec-marker"><span class="bar"></span> § 5 · How accessibility shows up in our build process</div>
+  <h2 class="sec-h">Our accessibility <em>process</em>.</h2>
+  <p class="sec-dek">Most accessibility statements stop at "we follow WCAG." That is a destination, not a method. Here is the method &mdash; the five places where accessibility is actually a gate, not a wish.</p>
+
+  <div class="proc-list">
+
+    <div class="proc-item">
+      <div class="proc-label">
+        Phase 01
+        <span class="step">Design</span>
+      </div>
+      <div class="proc-body">
+        <p>Every new page is designed with accessibility as a first-class input, not a final-stage audit. We use the WCAG 2.2 checklist as a <strong>design input</strong> &mdash; meaning a designer cannot ship a comp without checking it. Designers verify color contrast in Figma using a token-pinned contrast plugin; focus order is annotated on every interactive frame.</p>
+        <span class="tag">Owner · Design</span>
+      </div>
+    </div>
+
+    <div class="proc-item">
+      <div class="proc-label">
+        Phase 02
+        <span class="step">Development</span>
+      </div>
+      <div class="proc-body">
+        <p><strong>axe-core</strong> runs automatically in CI on every pull request. The build fails if a previously-passing page regresses on a Level A or AA criterion. <strong>Manual testing</strong> of every page (keyboard + screen reader) happens before merge for any UI change. A failed accessibility check is not a "fix in a follow-up" &mdash; it blocks the merge.</p>
+        <span class="tag">Owner · Engineering</span>
+      </div>
+    </div>
+
+    <div class="proc-item">
+      <div class="proc-label">
+        Phase 03
+        <span class="step">Audit</span>
+      </div>
+      <div class="proc-body">
+        <p>A <strong>third-party accessibility audit</strong> is scheduled quarterly. The next one is at <strong>T+180d</strong>, conducted by an independent vendor (selection finalized T+140d &mdash; we'll name them here once contracted). Audit reports are published in summary form on the Trust Center; the full report is available to customers under NDA.</p>
+        <span class="tag">Owner · Forge, CTO</span>
+      </div>
+    </div>
+
+    <div class="proc-item">
+      <div class="proc-label">
+        Phase 04
+        <span class="step">User testing</span>
+      </div>
+      <div class="proc-body">
+        <p>We maintain a paid panel of <strong>eight users with disabilities</strong> &mdash; recruited via Knowbility &mdash; who give feedback on every major change to the Console or the public site. The panel includes users of NVDA, JAWS, VoiceOver, switch control, voice control, and screen magnification. Sessions are recorded with consent; we cite specific feedback in our release notes when it changed our design.</p>
+        <span class="tag">Owner · Design / Research</span>
+      </div>
+    </div>
+
+    <div class="proc-item">
+      <div class="proc-label">
+        Phase 05
+        <span class="step">Commitment to fix</span>
+      </div>
+      <div class="proc-body">
+        <p>Any accessibility issue we find &mdash; or that is reported to us &mdash; is fixed within <strong>thirty days</strong> of the report, unless it is complex enough to require longer (in which case we communicate a target date back to the reporter and add the gap to this statement). We do not sit on accessibility bugs.</p>
+        <span class="tag">Owner · accessibility@stratum.ai</span>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="pull">"A failed accessibility check is not a 'fix in a follow-up' &mdash; it blocks the merge."<span class="pull-cite">— Forge, CTO · internal engineering handbook · T+38d</span></p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 6 COMMITMENTS ── -->
+<section id="commits">
+  <div class="sec-marker"><span class="bar"></span> § 6 · The commitments we are willing to be measured against</div>
+  <h2 class="sec-h">Specific <em>commitments</em>.</h2>
+  <p class="sec-dek">A vague commitment is a non-commitment. These are the five concrete promises that, taken together, define what "Stratum is accessible" means in practice. If we miss one, hold us to it.</p>
+
+  <div class="mono-list">
+    <div class="row">
+      <span class="k">Keyboard-only navigation</span>
+      <span class="v"><strong>100% of the public site is keyboard-navigable.</strong> Verified manually on every release. <em>The Console targets the same and meets it for primary workflows; chart drill-down is the one secondary path still being hardened &mdash; see Gap 01.</em></span>
+    </div>
+    <div class="row">
+      <span class="k">Screen reader compatibility</span>
+      <span class="v"><strong>Tested monthly across NVDA, JAWS, VoiceOver.</strong> Tests cover the public site and the Console's primary workflows. <em>Test runs are logged; the latest pass/fail summary is available on request.</em></span>
+    </div>
+    <div class="row">
+      <span class="k">Text alternatives</span>
+      <span class="v"><strong>Every meaningful image has descriptive alternative text.</strong> Decorative images are marked decorative. SVG icons used as buttons have accessible names. <em>Verified by axe-core in CI plus quarterly editorial review.</em></span>
+    </div>
+    <div class="row">
+      <span class="k">Captions &amp; transcripts</span>
+      <span class="v"><strong>Every video we publish carries captions and a transcript.</strong> Today we publish zero videos &mdash; the commitment stands the moment we publish the first one. <em>Office Hours recordings (audio + transcript) already include both.</em></span>
+    </div>
+    <div class="row">
+      <span class="k">Sign language</span>
+      <span class="v"><strong>Not provided by default.</strong> Available on request for important customer-facing communications (kickoff calls, executive briefings, training sessions). Request via <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a> with at least 5 business days' notice.</span>
+    </div>
+  </div>
+
+  <p class="prose">If any of these commitments stops being true, the change shows up here before it shows up anywhere else. This statement is the source of truth.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 7 FEEDBACK ── -->
+<section id="feedback">
+  <div class="sec-marker"><span class="bar"></span> § 7 · How to tell us we got it wrong</div>
+  <h2 class="sec-h"><em>Feedback</em>.</h2>
+  <p class="sec-dek">If you encounter a barrier &mdash; missing label, broken keyboard focus, inaccessible video, anything &mdash; we want to know. Here is exactly what to do and exactly what to expect from us.</p>
+
+  <div class="feedback-grid">
+    <div class="fb-card">
+      <div class="kind">— How to report</div>
+      <div class="addr"><a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a></div>
+      <div class="desc">A single inbox monitored by the accessibility owner and engineering. No forms, no tickets, no auth wall. Just write. For urgent issues affecting a current customer, prefix the subject line with <strong>"URGENT"</strong>.</div>
+    </div>
+    <div class="fb-card">
+      <div class="kind">— Response SLA</div>
+      <div class="addr">5 / 30 / Always</div>
+      <div class="desc"><strong>5 business days</strong> for an initial response and acknowledgement. <strong>30 days</strong> for resolution &mdash; or, if more time is required, a clear communication of why, and a target date. <strong>Always</strong> a real human reply.</div>
+    </div>
+  </div>
+
+  <p class="prose"><strong>To help us resolve quickly, please include:</strong></p>
+
+  <ul class="checklist">
+    <li><strong>URL</strong> The page or screen where you ran into the issue.</li>
+    <li><strong>Browser</strong> Name and version (e.g. Firefox 124 on Windows 11).</li>
+    <li><strong>AT</strong> Screen reader, voice control, or other assistive technology, with version.</li>
+    <li><strong>Issue</strong> What you tried to do, what happened, and what you expected to happen.</li>
+    <li><strong>Severity</strong> If you'd like to indicate &mdash; blocker, major, moderate, minor. We will defer to your judgment.</li>
+    <li><strong>Optional</strong> A screenshot, screen recording, or audio of your assistive tech's output. Helpful but not required.</li>
+  </ul>
+
+  <p class="prose">If the response from <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a> does not meet your expectations, escalate to Forge directly at <a href="mailto:cto@stratum.ai">cto@stratum.ai</a>. Accessibility is owned at the executive level &mdash; there is a real person above the inbox.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 8 AIDS ── -->
+<section id="aids">
+  <div class="sec-marker"><span class="bar"></span> § 8 · Services we provide on request</div>
+  <h2 class="sec-h">Auxiliary <em>aids and services</em>.</h2>
+  <p class="sec-dek">Some accommodations are situational and don't make sense as a default. These are available on request, at no additional cost to customers. Email <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a> to arrange any of the below.</p>
+
+  <div class="mono-list">
+    <div class="row">
+      <span class="k">Document accessibility</span>
+      <span class="v"><strong>Customer-facing documents in accessible format.</strong> PDFs delivered as PDF/UA on request. Large print available. Braille (UEB) by arrangement &mdash; typical turnaround 10 business days through our printer.</span>
+    </div>
+    <div class="row">
+      <span class="k">Interpreters</span>
+      <span class="v"><strong>ASL interpretation for customer-facing meetings.</strong> Arranged through a certified agency partner; <strong>5 business days'</strong> notice preferred. Languages other than ASL: we accommodate via our agency partner network.</span>
+    </div>
+    <div class="row">
+      <span class="k">Onboarding accommodations</span>
+      <span class="v"><strong>The 60-day customer onboarding is accommodation-aware.</strong> If a participant in your onboarding cohort needs assistive technology, alternative formats, or scheduling adjustments, tell us during kickoff &mdash; the onboarding plan adjusts to meet it.</span>
+    </div>
+    <div class="row">
+      <span class="k">Office Hours captions</span>
+      <span class="v"><strong>Vector's weekly Office Hours include live CART captions.</strong> Captions are provided by a human stenographer (not auto-generated). A transcript is published alongside each recording within 48 hours.</span>
+    </div>
+    <div class="row">
+      <span class="k">Personalized walkthroughs</span>
+      <span class="v"><strong>One-to-one Console walkthroughs.</strong> If our public demo materials are not accessible to you in their current form, request a personalized walkthrough with one of our engineers. We will adapt the format (audio-only, screen-reader-paced, video-with-narration, etc.) to your preference.</span>
+    </div>
+  </div>
+
+  <p class="prose">If the accommodation you need is not listed here, ask anyway. The list above is what we have offered before, not the limit of what we will consider.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 9 AUDIT DATE ── -->
+<section id="audit">
+  <div class="sec-marker"><span class="bar"></span> § 9 · When this was last checked, and by whom</div>
+  <h2 class="sec-h"><em>Date</em> of last audit.</h2>
+
+  <div class="mono-list">
+    <div class="row">
+      <span class="k">Most recent internal audit</span>
+      <span class="v"><strong>T+115d</strong> · conducted by <strong>Forge</strong>, CTO, with axe-core automated coverage and manual keyboard + screen-reader sweeps. Findings were either fixed before this statement was published, or appear in <a href="#gaps">§ 4</a> as documented gaps.</span>
+    </div>
+    <div class="row">
+      <span class="k">Next external audit</span>
+      <span class="v"><strong>T+180d</strong> · independent vendor (selection finalized T+140d). Scope: full public site + Console primary workflows. <em>The audit report's executive summary will be published on this page; the full report is available to customers under NDA.</em></span>
+    </div>
+    <div class="row">
+      <span class="k">Statement reviewed</span>
+      <span class="v"><strong>Quarterly</strong> &mdash; or sooner if a customer-reported issue or release materially changes any of the claims here. Last review: T+115d. Next scheduled review: <strong>T+205d</strong>.</span>
+    </div>
+    <div class="row">
+      <span class="k">VPATs available</span>
+      <span class="v"><strong>VPAT 2.5 (Section 508 edition)</strong> and <strong>VPAT 2.5 (EU edition)</strong> &mdash; both based on the T+115d audit. Available on request from <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a>; typical turnaround 2 business days.</span>
+    </div>
+  </div>
+
+  <p class="prose">When the next external audit completes, this section is the first place it shows up. The audit date is not buried &mdash; it is the date we want enterprise reviewers to be able to read at a glance.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 10 CONTACT ── -->
+<section id="contact">
+  <div class="sec-marker"><span class="bar"></span> § 10 · The single inbox</div>
+  <h2 class="sec-h"><em>Contact</em>.</h2>
+
+  <div class="feedback-grid">
+    <div class="fb-card">
+      <div class="kind">— Accessibility</div>
+      <div class="addr"><a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a></div>
+      <div class="desc">For all accessibility feedback, bug reports, accommodation requests, and VPAT requests. Initial response within <strong>5 business days</strong>. For urgent issues, prefix the subject with <strong>"URGENT"</strong>.</div>
+    </div>
+    <div class="fb-card">
+      <div class="kind">— Escalation</div>
+      <div class="addr"><a href="mailto:cto@stratum.ai">cto@stratum.ai</a></div>
+      <div class="desc">Forge, CTO. The owner of this commitment at the executive level. Escalate here if the accessibility inbox response did not meet your expectations &mdash; or if a fix is overdue and you need it expedited.</div>
+    </div>
+  </div>
+
+  <p class="prose">We respond from real names, not from a no-reply address. If you need a follow-up, reply to the thread; you will reach the same person.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 11 LIMITATIONS ── -->
+<section id="limitations">
+  <div class="sec-marker"><span class="bar"></span> § 11 · The honest paragraph</div>
+  <h2 class="sec-h"><em>Limitations</em> and alternatives.</h2>
+
+  <div class="prose">
+    <p class="lede">We are six weeks into commercial operations as we write this. Some of the accessibility commitments above are aspirational right now and concrete shortly. We will not pretend to have completed work we have not yet completed &mdash; and we will not pretend that an aspiration is the same thing as a delivery.</p>
+
+    <p>What is true today: every page of the public site has been audited against WCAG 2.1 AA, the Console's primary workflows are screen-reader-tested on each release, our automated coverage is in place, and our user-research panel exists and has run two rounds of feedback. We have shipped the workarounds described in <a href="#gaps">§ 4</a>, and we have committed to specific target dates for each remaining gap.</p>
+
+    <p>What is not yet true: the external third-party audit (T+180d) has not happened. The WCAG 2.2 full conformance review (T+200d) has not happened. The four documented gaps have not been closed &mdash; though each has a workaround.</p>
+
+    <p>If you are evaluating Stratum for a regulated procurement and the difference between an internal audit and an external one matters to you, please raise it during the security review. We will share our remediation plan, our user-research notes, and (when contracted) the name of the external audit vendor. We will not paper over the gap.</p>
+
+    <p>The reason we publish this statement now, before everything is finished, is that the alternative is the more common practice: silence until everything is perfect, which means silence forever. The accessibility-statement page that says nothing is a worse signal than the one that says <em>here is what we have, here is what we don't, here is what we are doing about it.</em></p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<div class="closing">
+  <p>Accessibility is a <span class="em-ochre">product decision</span>, not an afterthought. We are building it in, not bolting it on.</p>
+</div>
+
+<!-- ─────────────────────────────────────────── SIG ── -->
+<div class="sig-end">
+  <span>Document <strong>A11Y-2026-001 v1.2</strong></span>
+  <span>Reviewed <strong>T+115d</strong> · Forge, CTO</span>
+  <span>Next external audit <strong>T+180d</strong></span>
+  <span>End of document</span>
+</div>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>The autonomous HR platform for the companies that take their people data &mdash; and yours &mdash; seriously.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html">Overview</a></li>
+        <li><a href="../recruiting/index.html">Recruiting</a></li>
+        <li><a href="../compare/index.html">Compare</a></li>
+        <li><a href="../api/index.html">API</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">Team</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../engineering/index.html">Engineering</a></li>
+        <li><a href="../library/index.html">Library</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/index.html">Trust Center</a></li>
+        <li><a href="../security/index.html">Security</a></li>
+        <li><a href="./index.html">Accessibility</a></li>
+        <li><a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:hello@stratum.ai">hello@stratum.ai</a></li>
+        <li><a href="mailto:accessibility@stratum.ai">Accessibility</a></li>
+        <li><a href="../trust/index.html">Compliance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-foot">
+    <span>&copy; 2026 Stratum, Inc. &nbsp;·&nbsp; San Francisco &nbsp;·&nbsp; A11Y-2026-001 v1.2</span>
+    <a href="../index.html" class="briefing-link"><strong>Chairman's briefing</strong> &nbsp;→</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function(){
+    if (window.scrollY > 8) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

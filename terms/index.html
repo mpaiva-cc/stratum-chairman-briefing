@@ -1,0 +1,2020 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Terms of Service. The contract behind the product.</title>
+<meta name="description" content="Stratum's Terms of Service. The contract that governs your use of the Console, the API, and the people graph. Drafted to be read, not buried." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/terms — Terms of Service
+   Cream paper · deep ink · ochre · narrow reading column
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(720px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a.is-current {
+  color: var(--ink);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── DOC HEADER ── */
+
+.doc-header {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 5rem 0 3rem;
+}
+
+.doc-coordinate {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.85;
+  margin-bottom: 2.4rem;
+  border-left: 2px solid var(--ochre);
+  padding-left: .9rem;
+}
+.doc-coordinate div { display: block; }
+.doc-coordinate .accent { color: var(--ink); }
+
+.doc-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -.03em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+}
+.doc-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.doc-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 80;
+  font-weight: 300;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0 0 2.5rem;
+}
+
+.doc-meta {
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1.1rem 0;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.doc-meta strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── TL;DR ── */
+
+.tldr {
+  width: var(--col);
+  margin: 2.5rem auto 3rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  padding: 1.8rem 2rem 2rem;
+}
+
+.tldr-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+}
+
+.tldr-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ink);
+  margin: 0 0 .4rem;
+  letter-spacing: -.015em;
+}
+.tldr-h em { font-style: italic; color: var(--ochre); font-variation-settings: "opsz" 48, "SOFT" 100; }
+
+.tldr-lede {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  color: var(--ink-3);
+  margin: 0 0 1.2rem;
+  font-style: italic;
+}
+
+.tldr-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: tldr;
+}
+.tldr-list li {
+  position: relative;
+  padding: .5rem 0 .5rem 2.2rem;
+  border-top: 1px dashed var(--paper-rule);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  counter-increment: tldr;
+}
+.tldr-list li:first-child { border-top: 0; }
+.tldr-list li::before {
+  content: counter(tldr, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: .55rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: var(--ochre);
+  font-weight: 600;
+}
+
+/* ─────────────────────────────────────────── BODY / SECTIONS ── */
+
+.doc-body {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 1rem 0 5rem;
+}
+
+.section {
+  margin: 3.5rem 0 0;
+  padding-top: 2.6rem;
+  border-top: 1px solid var(--paper-rule);
+  scroll-margin-top: 4.5rem;
+}
+.section:first-child { border-top: 0; padding-top: 0; margin-top: 0; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+.section-num .bar {
+  height: 1px;
+  width: 28px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+}
+.section-h em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+}
+
+.section p {
+  margin: 0 0 1.05rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.section p.lede {
+  font-size: 1.1rem;
+  color: var(--ink-2);
+  font-style: italic;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  margin-bottom: 1.5rem;
+}
+
+.section h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: 2rem 0 .8rem;
+  letter-spacing: -.005em;
+}
+.section h3 .num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  margin-right: .55rem;
+  font-weight: 500;
+  vertical-align: .15em;
+}
+
+/* paragraph cite anchors */
+.cite {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+  margin-right: .55rem;
+  vertical-align: .1em;
+  user-select: all;
+}
+
+/* numbered subclauses */
+.clauses {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.4rem;
+  counter-reset: subclause;
+}
+.clauses > li {
+  position: relative;
+  padding: .55rem 0 .55rem 3rem;
+  border-top: 1px solid var(--paper-rule);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  counter-increment: subclause;
+}
+.clauses > li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.clauses > li::before {
+  content: "¶ " counter(subclause, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: .65rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--ochre);
+  font-weight: 500;
+}
+
+/* definitions table */
+.defs {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  margin: 1.4rem 0 1.8rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.defs .row {
+  display: grid;
+  grid-template-columns: 13ch 1fr;
+  gap: 1.2rem;
+  padding: .7rem 1.05rem;
+  border-top: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.defs .row:first-child { border-top: 0; }
+.defs .term {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: .02em;
+}
+.defs .body {
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  letter-spacing: 0;
+}
+
+/* prohibited block */
+.prohibited {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 1.6rem;
+}
+.prohibited li {
+  position: relative;
+  padding: .7rem 0 .7rem 2.4rem;
+  border-top: 1px solid var(--paper-rule);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.prohibited li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.prohibited li::before {
+  content: "✕";
+  position: absolute;
+  left: .45rem;
+  top: .7rem;
+  font-family: var(--mono);
+  color: var(--ochre);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* callouts */
+.callout {
+  margin: 1.6rem 0;
+  padding: 1.1rem 1.3rem;
+  background: var(--paper-warm);
+  border-left: 3px solid var(--ochre);
+  font-size: .98rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.callout-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .35rem;
+  display: block;
+}
+.callout strong { color: var(--ink); }
+
+.callout-warn {
+  border-left-color: var(--plum);
+  background: #f0e2e3;
+}
+.callout-warn .callout-label { color: var(--plum); }
+
+.callout-quiet {
+  border-left-color: var(--moss);
+  background: #ecedda;
+}
+.callout-quiet .callout-label { color: var(--moss-deep); }
+
+/* legal capitals block (the loud-print clauses) */
+.loud {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  letter-spacing: .02em;
+  color: var(--ink);
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule-2);
+  padding: 1.1rem 1.25rem;
+  margin: 1.3rem 0;
+  text-transform: uppercase;
+}
+.loud strong { color: var(--ink); font-weight: 700; }
+
+/* contact card */
+.contact-card {
+  margin: 1.4rem 0;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.4rem 1.6rem;
+}
+.contact-card h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 .8rem;
+  font-weight: 500;
+}
+.contact-card .row {
+  display: grid;
+  grid-template-columns: 18ch 1fr;
+  gap: .9rem;
+  padding: .45rem 0;
+  border-top: 1px solid var(--paper-rule);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+.contact-card .row:first-of-type { border-top: 0; }
+.contact-card .row .k {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.contact-card .row .v { color: var(--ink-2); }
+.contact-card .row .v a { font-family: var(--mono); font-size: 13px; }
+
+/* small reference bar */
+.refbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 1rem 0 1.4rem;
+}
+.refbar a {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--paper-rule);
+  padding: .35rem .65rem;
+  background: var(--paper-warm);
+  transition: border-color .2s, color .2s;
+}
+.refbar a:hover {
+  color: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+
+/* TOC */
+.toc {
+  width: var(--col);
+  margin: 1rem auto 3rem;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.3rem 1.5rem 1.5rem;
+}
+.toc-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+}
+.toc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.6rem;
+  counter-reset: toc;
+}
+.toc ol li {
+  position: relative;
+  padding: .35rem 0 .35rem 3rem;
+  border-top: 1px dashed var(--paper-rule);
+  font-size: 14px;
+  line-height: 1.4;
+  counter-increment: toc;
+}
+.toc ol li::before {
+  content: "§ " counter(toc, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: .4rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  color: var(--ochre);
+  font-weight: 500;
+}
+.toc ol li a {
+  color: var(--ink-2);
+  border-bottom: 0;
+}
+.toc ol li a:hover { color: var(--ochre); }
+
+@media (max-width: 720px) {
+  .toc ol { grid-template-columns: 1fr; }
+}
+
+/* signature block */
+.signature {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.signature-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.1rem;
+}
+.signature-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.6rem, 2.8vw, 2rem);
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+  letter-spacing: -.018em;
+}
+.signature-h em { font-style: italic; color: var(--ochre); }
+
+.sig-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 1.6rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.sig-col h5 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.sig-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  font-size: 1.45rem;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink-3);
+  padding-bottom: .15rem;
+  margin-bottom: .35rem;
+}
+.sig-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.85;
+}
+
+@media (max-width: 600px) {
+  .sig-block { grid-template-columns: 1fr; gap: 1.4rem; }
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0 2rem;
+  margin-top: 3rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+  gap: 2rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(244,236,218,.15);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.8rem;
+  letter-spacing: -.03em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-size: 14px;
+  color: rgba(244,236,218,.7);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 .9rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: rgba(244,236,218,.75);
+  font-size: 14px;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 1.6rem auto 0;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.55);
+}
+.footer-foot .briefing-link {
+  color: rgba(244,236,218,.75);
+  border-bottom: 0;
+}
+.footer-foot .briefing-link strong { color: var(--paper); }
+.footer-foot .briefing-link:hover { color: var(--ochre); }
+
+@media (max-width: 960px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media print {
+  body::before { display: none; }
+  .nav, .footer, .rt-stamp, .mob-bar, .refbar { display: none; }
+  .section { page-break-inside: avoid; }
+  body { background: white; color: black; font-size: 11pt; }
+  .doc-body, .doc-header, .tldr, .toc, .signature { width: 100%; padding-left: 0; padding-right: 0; }
+}
+</style>
+
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+
+<style id="mobile-readability-patch">
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.doc):not(.mob-bar a) { min-height: 28px; }
+  .defs .row { grid-template-columns: 1fr; gap: .15rem; }
+  .contact-card .row { grid-template-columns: 1fr; gap: .15rem; }
+  .doc-header { padding-top: 3rem; }
+}
+@media (max-width: 600px) {
+  .defs { font-size: 12px; }
+  .clauses > li { padding-left: 2.4rem; }
+  .tldr { padding: 1.4rem 1.3rem 1.6rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T09:14:08-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+10:48:22.000</strong> · <span style="opacity:.6">2026-05-13T13:14:08.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Terms</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../trust/">Trust</a>
+      <a href="#" class="is-current">Terms</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:contracts@stratum.ai?subject=Stratum%20%E2%80%94%20MSA%20conversation">Talk to contracts <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── DOC HEADER ── -->
+<header class="doc-header">
+  <div class="doc-coordinate">
+    <div class="accent">STRATUM, INC.</div>
+    <div>TERMS OF SERVICE</div>
+    <div>DOCUMENT TOS-2026-001 &nbsp;·&nbsp; v1.3</div>
+  </div>
+
+  <h1 class="doc-h1">Terms of <em>Service.</em></h1>
+
+  <p class="doc-sub">
+    What you agree to when you use Stratum's product or services.
+    Written to be read by procurement teams, general counsel, and their counsel — not buried.
+  </p>
+
+  <div class="doc-meta">
+    <span><strong>Governing law:</strong> Delaware</span>
+    <span><strong>Effective:</strong> T+0d</span>
+    <span><strong>Most recent revision:</strong> T+115d</span>
+    <span><strong>Counsel:</strong> Wilson Sonsini</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── TL;DR ── -->
+<section class="tldr">
+  <div class="tldr-label">Plain-language summary · § TL;DR</div>
+  <h2 class="tldr-h">The <em>five-line</em> version.</h2>
+  <p class="tldr-lede">
+    Read the whole document — your counsel will, and we wrote it to reward that. But here is the contract in five sentences, plainly.
+  </p>
+  <ol class="tldr-list">
+    <li>You can use the public Console demo without an account; these terms apply to that use as well.</li>
+    <li>Enterprise customers sign a Master Services Agreement (MSA) that supersedes these terms; where the MSA conflicts with this document, the MSA wins.</li>
+    <li>We do not own your data. You do. We process it only to provide the Service and we delete it when we should.</li>
+    <li>Our SLA is in writing in § 7; if we miss it, you get credits according to the table in § 7.4 — not a discretionary gesture, a contractual entitlement.</li>
+    <li>These terms are governed by Delaware law. Disputes are resolved through binding arbitration in San Francisco unless the MSA specifies otherwise; either side may seek a court order for IP or confidentiality emergencies.</li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────── TOC ── -->
+<aside class="toc" aria-label="Table of contents">
+  <div class="toc-label">Table of contents</div>
+  <ol>
+    <li><a href="#s1">Acceptance of terms</a></li>
+    <li><a href="#s2">Definitions</a></li>
+    <li><a href="#s3">Eligibility &amp; accounts</a></li>
+    <li><a href="#s4">License and use</a></li>
+    <li><a href="#s5">Prohibited uses</a></li>
+    <li><a href="#s6">Fees and payment</a></li>
+    <li><a href="#s7">SLA and credits</a></li>
+    <li><a href="#s8">Confidentiality</a></li>
+    <li><a href="#s9">Data and privacy</a></li>
+    <li><a href="#s10">Intellectual property</a></li>
+    <li><a href="#s11">Warranties and disclaimers</a></li>
+    <li><a href="#s12">Indemnification</a></li>
+    <li><a href="#s13">Limitation of liability</a></li>
+    <li><a href="#s14">Term and termination</a></li>
+    <li><a href="#s15">Governing law &amp; disputes</a></li>
+    <li><a href="#s16">Modifications</a></li>
+    <li><a href="#s17">Miscellaneous</a></li>
+    <li><a href="#s18">Autonomous-operation clause</a></li>
+    <li><a href="#s19">Contact</a></li>
+    <li><a href="#s20">Effective date</a></li>
+  </ol>
+</aside>
+
+<!-- ─────────────────────────────────────────── BODY ── -->
+<main class="doc-body">
+
+  <!-- § 1 ─────────────────────────────── -->
+  <section class="section" id="s1">
+    <div class="section-num"><span class="bar"></span> § 1 · Acceptance of terms</div>
+    <h2 class="section-h">When these terms <em>start</em> binding you.</h2>
+
+    <p class="lede">
+      These terms govern your use of the products and services offered at <a href="https://stratum.ai">stratum.ai</a>, including the Console, the public API, the Connectors, the Decisions module, and any related customer-facing tools (collectively, the <strong>Service</strong>).
+    </p>
+
+    <p>
+      <span class="cite">¶ 1.01</span>
+      By creating an account, accessing the public Console demo, calling the API, or otherwise using the Service, you agree to be bound by these terms. If you do not agree, do not use the Service.
+    </p>
+
+    <p>
+      <span class="cite">¶ 1.02</span>
+      If you use the Service on behalf of a legal entity — your employer, your client, the company whose payroll you administer — you represent that you have authority to bind that entity. References to "you" or "Customer" in these terms include that entity.
+    </p>
+
+    <p>
+      <span class="cite">¶ 1.03</span>
+      Enterprise customers contract with Stratum under a separately signed Master Services Agreement (the <strong>MSA</strong>). Where you have an MSA in force, the MSA governs and these terms supplement it only to the extent the MSA is silent. Where a provision of these terms conflicts with a provision of the MSA, the MSA controls.
+    </p>
+
+    <p>
+      <span class="cite">¶ 1.04</span>
+      Stratum may publish additional product-specific terms — for example, terms covering the Beta program, the Connectors marketplace, or the public eval-set program. Where published, those terms incorporate by reference into your overall agreement and govern that specific feature.
+    </p>
+
+    <p>
+      <span class="cite">¶ 1.05</span>
+      Capitalized terms used but not defined in a given section have the meanings given in § 2.
+    </p>
+
+    <div class="callout">
+      <span class="callout-label">A note on the public Console demo</span>
+      The public Console at <a href="../console/">stratum.ai/console</a> is offered as a no-account, read-only sandbox running against a synthetic 4,200-employee dataset called <strong>Helio Robotics</strong>. Using the public demo binds you to these terms even though no account or payment is required. The demo is provided AS IS; the warranties in § 11 do not extend to demo use.
+    </div>
+  </section>
+
+  <!-- § 2 ─────────────────────────────── -->
+  <section class="section" id="s2">
+    <div class="section-num"><span class="bar"></span> § 2 · Definitions</div>
+    <h2 class="section-h">The <em>vocabulary</em> we will use.</h2>
+
+    <p class="lede">
+      Throughout this document, the following defined terms have the meanings given below. Where the context requires, defined terms include singular and plural forms.
+    </p>
+
+    <div class="defs">
+      <div class="row"><span class="term">Stratum</span><span class="body">Stratum, Inc., a Delaware C-Corporation, with principal place of business in Palo Alto, California.</span></div>
+      <div class="row"><span class="term">Service</span><span class="body">The Stratum platform, including the Console, the people graph, the Connectors, the Decisions module, the public API, the public eval-set program, and any related tools and services offered by Stratum from time to time.</span></div>
+      <div class="row"><span class="term">Customer</span><span class="body">The legal entity that contracts with Stratum, whether by signing an MSA or by accepting these terms in the course of using the Service. A Customer may have multiple End Users.</span></div>
+      <div class="row"><span class="term">End User</span><span class="body">An individual using the Service on behalf of a Customer, typically authenticated through the Customer's identity provider.</span></div>
+      <div class="row"><span class="term">Customer Data</span><span class="body">All data that the Customer or its End Users provide to Stratum for processing through the Service, including data ingested through Connectors from third-party systems of record.</span></div>
+      <div class="row"><span class="term">Output</span><span class="body">Data that Stratum produces in the course of providing the Service, including queries answered, decisions surfaced, citations generated, and structured derivative artifacts written back into Customer systems.</span></div>
+      <div class="row"><span class="term">API Key</span><span class="body">A Customer's Anthropic API key, when used in BYOK ("bring your own key") mode to route inference traffic through the Customer's own model provider account.</span></div>
+      <div class="row"><span class="term">Agent</span><span class="body">An autonomous AI agent operating on Stratum's behalf, as further described in § 18.</span></div>
+      <div class="row"><span class="term">Chairman</span><span class="body">The human responsible party at Stratum, Inc., as described in <a href="../chairman/">stratum.ai/chairman</a>.</span></div>
+      <div class="row"><span class="term">MSA</span><span class="body">The Master Services Agreement, signed between Stratum and a Customer, that governs that Customer's specific engagement.</span></div>
+      <div class="row"><span class="term">DPA</span><span class="body">A Data Processing Addendum, executed by Stratum and Customer to allocate responsibilities under applicable data-protection law.</span></div>
+      <div class="row"><span class="term">Console</span><span class="body">The Stratum customer-facing web interface, including the chat surface, the people graph viewer, and the Decisions module.</span></div>
+      <div class="row"><span class="term">SLA</span><span class="body">The Service Level Agreement, as set out in § 7 of these terms or in the Customer's MSA where more specific commitments apply.</span></div>
+      <div class="row"><span class="term">Documentation</span><span class="body">The published technical and operational documentation for the Service, available at <a href="../trust/">stratum.ai/trust</a> and <a href="../engineering/">stratum.ai/engineering</a>.</span></div>
+      <div class="row"><span class="term">Subprocessor</span><span class="body">A third party engaged by Stratum to process Customer Data on Stratum's behalf, as listed in the Subprocessor schedule of the Privacy Policy.</span></div>
+      <div class="row"><span class="term">Term</span><span class="body">The duration of the Customer's engagement with Stratum, as defined in the MSA or in § 14 of these terms.</span></div>
+      <div class="row"><span class="term">Effective Date</span><span class="body">The date these terms become binding on a Customer, being (a) the date of execution of the MSA, or (b) the date the Customer first uses the Service if no MSA has been signed.</span></div>
+    </div>
+
+    <p>
+      <span class="cite">¶ 2.01</span>
+      References to "including" are not limiting; the word "including" is to be read as "including without limitation" in every instance.
+    </p>
+
+    <p>
+      <span class="cite">¶ 2.02</span>
+      Section headings are for convenience only and do not affect interpretation.
+    </p>
+
+    <p>
+      <span class="cite">¶ 2.03</span>
+      A reference to "days" means calendar days unless expressly stated as business days. A reference to "business days" means days other than a Saturday, Sunday, or U.S. federal holiday.
+    </p>
+
+    <p>
+      <span class="cite">¶ 2.04</span>
+      A reference to a "person" includes any individual, corporation, partnership, trust, governmental entity, or other legal entity.
+    </p>
+  </section>
+
+  <!-- § 3 ─────────────────────────────── -->
+  <section class="section" id="s3">
+    <div class="section-num"><span class="bar"></span> § 3 · Eligibility &amp; accounts</div>
+    <h2 class="section-h">Who can use the Service, and <em>how.</em></h2>
+
+    <p class="lede">
+      The Service is built for enterprise HR organizations and their authorized administrators. The eligibility rules below apply to any use of the Service, including the public demo.
+    </p>
+
+    <h3><span class="num">§ 3.1</span> Eligibility</h3>
+
+    <ol class="clauses">
+      <li>You must be at least 18 years old to use the Service. Stratum is not built for, and does not knowingly accept, users under 18.</li>
+      <li>You must not be barred from receiving the Service under U.S. or other applicable export-control or sanctions law. Without limiting the foregoing, you may not use the Service if you are located in, ordinarily resident in, or organized under the laws of any jurisdiction that is subject to a comprehensive U.S. trade embargo.</li>
+      <li>You may not use the Service if you are a competitor of Stratum and are evaluating the Service for the purpose of building a competing product, unless you have disclosed that intent in writing to Stratum and Stratum has consented in writing. For the avoidance of doubt, ordinary competitive intelligence (reading the website, attending public events, reviewing the changelog) is not a violation of this clause; signing into the Console under false pretenses is.</li>
+      <li>If Stratum has reason to believe that you have provided false information, are misusing the Service, or are otherwise in breach of these terms, Stratum may suspend or terminate your access immediately without liability.</li>
+    </ol>
+
+    <h3><span class="num">§ 3.2</span> Accounts and identity</h3>
+
+    <ol class="clauses">
+      <li>Customer accounts are managed via single sign-on (SSO) through the Customer's identity provider. Stratum supports Okta, Azure Active Directory, Google Workspace, and SAML 2.0–compliant IdPs generally. Local accounts (username + password) are not offered for production Customers.</li>
+      <li>The Customer is responsible for provisioning, deprovisioning, and managing the rights of its End Users. Stratum will accept and enforce IdP-issued claims as authoritative.</li>
+      <li>The Customer designates one or more administrators (each, an <strong>Admin</strong>) who may manage configuration, access controls, and integration scope. Admins act on behalf of the Customer for purposes of these terms.</li>
+      <li>End Users are responsible for the confidentiality of their credentials and for all activity in their account. Customers will notify Stratum without undue delay upon learning of any unauthorized access.</li>
+      <li>Stratum will provide audit-log access showing identity events, authorization changes, and material actions taken in the Console. Audit logs are retained per the schedule published in the Trust Center.</li>
+    </ol>
+
+    <h3><span class="num">§ 3.3</span> Public Console demo</h3>
+
+    <ol class="clauses">
+      <li>The public Console demo at <a href="../console/">stratum.ai/console</a> may be used without authentication. No personally identifying data is required.</li>
+      <li>The demo runs against the synthetic <strong>Helio Robotics</strong> dataset. Demo users may not upload personal data, customer data, or any data that is not their own to disclose.</li>
+      <li>Stratum logs demo-session telemetry for product improvement. Telemetry is anonymized; see the Privacy Policy for details.</li>
+      <li>Stratum may impose rate limits, session limits, or feature limits on the public demo at its sole discretion.</li>
+    </ol>
+  </section>
+
+  <!-- § 4 ─────────────────────────────── -->
+  <section class="section" id="s4">
+    <div class="section-num"><span class="bar"></span> § 4 · License and use</div>
+    <h2 class="section-h">The <em>license</em>, in both directions.</h2>
+
+    <p class="lede">
+      Two licenses run in parallel: the license we grant you to use the Service, and the license you grant us to operate it on your data. Both are narrow and purposeful.
+    </p>
+
+    <h3><span class="num">§ 4.1</span> License grant to Customer</h3>
+
+    <ol class="clauses">
+      <li>Subject to these terms and the timely payment of Fees, Stratum grants Customer a non-exclusive, non-transferable, non-sublicensable license to access and use the Service during the Term, solely for Customer's internal business purposes.</li>
+      <li>The license extends to Customer's End Users on a named-individual basis, mediated by Customer's identity provider, and is subject to the Customer's compliance with the seat or scope provisions of the MSA (where applicable).</li>
+      <li>The license includes the right to receive Output and to use Output internally for Customer's business purposes, including incorporation into Customer's downstream HR systems.</li>
+      <li>Stratum may make commercially reasonable changes to the Service during the Term provided that no such change materially degrades the documented functionality of the Service. Material adverse changes are subject to the notice provisions of § 16.</li>
+    </ol>
+
+    <h3><span class="num">§ 4.2</span> License grant to Stratum</h3>
+
+    <ol class="clauses">
+      <li>Customer grants Stratum a limited, worldwide, non-exclusive, royalty-free license to access, store, process, transmit, and create derivative works of Customer Data solely as necessary to provide the Service to Customer and to fulfill Stratum's obligations under these terms.</li>
+      <li>The license is in effect during the Term and survives termination only to the extent necessary for Stratum to perform its post-termination obligations (export, deletion, audit retention) as described in § 14.</li>
+      <li>Stratum will not use Customer Data for any purpose other than providing the Service to Customer. In particular, Stratum will not use Customer Data to train general-purpose machine-learning models. Stratum may use anonymized, aggregated operational metrics for the purpose of operating, improving, and securing the Service.</li>
+      <li>Where Customer enables Connectors that write Output back into Customer-controlled systems of record (e.g., the HRIS), the license includes the right to perform those write operations on Customer's behalf.</li>
+    </ol>
+
+    <h3><span class="num">§ 4.3</span> Reserved rights</h3>
+
+    <ol class="clauses">
+      <li>Customer retains all right, title, and interest in and to Customer Data. Nothing in these terms transfers any ownership of Customer Data to Stratum.</li>
+      <li>Stratum retains all right, title, and interest in and to the Service, the Stratum platform, the underlying technology, and any modifications, improvements, or derivative works thereof, including any feedback or suggestions Customer or its End Users provide (which, while not a license to Customer Data, are licensed to Stratum on a non-exclusive, royalty-free, perpetual basis for use in the Service).</li>
+      <li>Each party reserves all rights not expressly granted in these terms. There are no implied licenses.</li>
+    </ol>
+
+    <div class="callout callout-quiet">
+      <span class="callout-label">In plain English</span>
+      We own the product. You own the data. The Output of the product belongs to you for your business, but the methods that produced it are ours. We do not train foundation models on what we see at your company.
+    </div>
+  </section>
+
+  <!-- § 5 ─────────────────────────────── -->
+  <section class="section" id="s5">
+    <div class="section-num"><span class="bar"></span> § 5 · Prohibited uses</div>
+    <h2 class="section-h">What you <em>cannot</em> use Stratum for.</h2>
+
+    <p class="lede">
+      A short, deliberate list. Stratum is built for HR work in regulated enterprises. The prohibitions below are the operational ones; § 11.5 covers the AI-specific qualifications around Output.
+    </p>
+
+    <p>Customer agrees not to, and will ensure its End Users do not:</p>
+
+    <ul class="prohibited">
+      <li>Use the Service to violate any applicable law or regulation, including employment, privacy, anti-discrimination, export-control, securities, and labor law.</li>
+      <li>Reverse-engineer, decompile, or otherwise attempt to derive the source code or model weights of the Service for the purpose of building a competing product. Independent research and benchmarking against the public eval set is expressly permitted within the terms of § 10.3.</li>
+      <li>Resell, sublicense, or otherwise offer the Service to third parties, except where Stratum has authorized such use in writing (for example, a partner agreement with a system integrator or a co-employer relationship through a PEO).</li>
+      <li>Use the Service to make adverse employment decisions on a basis prohibited by anti-discrimination law (race, color, national origin, sex, gender identity, sexual orientation, disability, age, religion, veteran status, or any other protected class under applicable law). Stratum maintains architectural guardrails to mitigate this risk; Customer retains responsibility for the lawfulness of its decisions.</li>
+      <li>Use the Service to take a consequential action regarding an employee (hire, fire, demote, restructure, deny accommodation, deny promotion, or materially alter compensation) without proper human review of the relevant Output. Stratum enforces this server-side for Decide-class actions; this clause is a contractual reinforcement of that architectural commitment.</li>
+      <li>Use the Service for surveillance of employees beyond what is required for legitimate HR purposes and disclosed to those employees. For the avoidance of doubt, this prohibits using the Service to monitor union activity, to track non-work communications, or to identify employees engaged in lawful protected activity.</li>
+      <li>Use the Service to interfere with employees' lawful rights under the National Labor Relations Act or analogous foreign law, including but not limited to identifying union sympathizers, modeling unionization risk in a way that drives adverse action, or surveilling collective bargaining preparation.</li>
+      <li>Probe, scan, or attempt to penetrate the Service except under Stratum's coordinated-disclosure program described at <a href="../trust/">stratum.ai/trust</a>.</li>
+      <li>Use the Service to send unsolicited communications, malware, or other harmful code; or to overload or impair the Service.</li>
+      <li>Remove, alter, or obscure copyright, trademark, or other proprietary notices in the Service or in Output.</li>
+    </ul>
+
+    <p>
+      <span class="cite">¶ 5.01</span>
+      Stratum may suspend the Service immediately upon a credible belief that Customer is violating any provision of this § 5, with notice (where reasonable) and an opportunity to cure where the violation is curable. Suspension under this clause is not a termination unless Stratum so elects under § 14.
+    </p>
+
+    <p>
+      <span class="cite">¶ 5.02</span>
+      Customer's obligations under this § 5 are an explicit material condition of the license granted under § 4.1. A material violation is a basis for immediate termination for cause under § 14.3.
+    </p>
+  </section>
+
+  <!-- § 6 ─────────────────────────────── -->
+  <section class="section" id="s6">
+    <div class="section-num"><span class="bar"></span> § 6 · Fees and payment</div>
+    <h2 class="section-h">How we get <em>paid.</em></h2>
+
+    <p class="lede">
+      Stratum's pricing is annual-platform plus quarterly-decisions, as published at <a href="../pricing/">stratum.ai/pricing</a>. The specifics of an individual Customer's pricing are in the MSA. The mechanics below apply in either case.
+    </p>
+
+    <h3><span class="num">§ 6.1</span> Pricing</h3>
+
+    <ol class="clauses">
+      <li>Customer's Fees are set out in the MSA. Absent an MSA, the public pricing posted at <a href="../pricing/">stratum.ai/pricing</a> applies.</li>
+      <li>The Stratum pricing model is composed of (a) an annual <strong>Platform Fee</strong>, prepaid; and (b) a quarterly <strong>Decisions Tier</strong> based on the volume of decisions the Service supports, invoiced in arrears.</li>
+      <li>Customers do not pay by seat. Adding or removing End Users does not change Customer's Platform Fee within a Term. Excessive End Users for the contracted scope (more than the published soft cap for the Customer's tier) is a basis for an upgrade conversation but not an automatic charge.</li>
+      <li>Stratum publishes a public price list and a usage-tier calculator. The published list is the price. We do not run undisclosed list-price-versus-floor games.</li>
+    </ol>
+
+    <h3><span class="num">§ 6.2</span> Invoicing and payment</h3>
+
+    <ol class="clauses">
+      <li>The Platform Fee is invoiced annually on or about the Effective Date and is payable net 30 days from receipt of invoice.</li>
+      <li>The Decisions Tier is invoiced quarterly in arrears and is payable net 30 days from receipt of invoice.</li>
+      <li>Invoices are delivered electronically to the email or AP address designated by Customer. Customer is responsible for keeping that address current.</li>
+      <li>Stratum accepts payment by ACH, wire transfer, or other electronic method. Stratum does not accept credit cards for invoices over $25,000. Stratum does not assess a credit-card surcharge for payments below that threshold.</li>
+      <li>All Fees are stated in U.S. Dollars unless the MSA specifies otherwise. Customers in jurisdictions other than the U.S. may, by mutual agreement, transact in a local currency at the prevailing rate.</li>
+    </ol>
+
+    <h3><span class="num">§ 6.3</span> Late payment</h3>
+
+    <ol class="clauses">
+      <li>Past-due amounts accrue interest at the lesser of 1.5% per month or the maximum rate permitted by applicable law, beginning on the day after the due date.</li>
+      <li>Stratum may suspend the Service for non-payment beyond 60 days past due, with at least 10 days' prior written notice. Suspension is without prejudice to Stratum's rights to terminate for cause under § 14.3.</li>
+      <li>Stratum will not exercise self-help remedies that compromise Customer Data integrity (deletion, alteration, or denial of export) on the basis of non-payment alone. Customer's data-export rights under § 14.5 are not contingent on payment of disputed amounts.</li>
+    </ol>
+
+    <h3><span class="num">§ 6.4</span> Disputed invoices</h3>
+
+    <ol class="clauses">
+      <li>Customer may dispute an invoice in good faith by providing written notice to <a href="mailto:billing@stratum.ai">billing@stratum.ai</a> within 30 days of receipt of the invoice. The notice will identify the disputed line items and the basis for dispute.</li>
+      <li>Disputed amounts are not subject to late-payment interest under § 6.3 during the pendency of a good-faith dispute, provided the undisputed portion is paid on time.</li>
+      <li>The parties will work in good faith to resolve invoice disputes within 30 days of notice. Unresolved disputes are subject to the dispute-resolution provisions of § 15.</li>
+    </ol>
+
+    <h3><span class="num">§ 6.5</span> Taxes</h3>
+
+    <ol class="clauses">
+      <li>Fees are stated exclusive of taxes. Customer is responsible for all sales, use, value-added, withholding, and similar taxes assessed on the Fees, excluding taxes on Stratum's net income.</li>
+      <li>If Customer is required by law to withhold any tax from a payment to Stratum, Customer will gross up the payment so Stratum receives the full invoiced amount.</li>
+      <li>Customer will provide Stratum with valid exemption certificates where applicable.</li>
+    </ol>
+
+    <h3><span class="num">§ 6.6</span> Renewal and price changes</h3>
+
+    <ol class="clauses">
+      <li>Annual contracts auto-renew for successive one-year terms unless either party gives written notice of non-renewal at least 60 days before the end of the then-current Term.</li>
+      <li>Stratum will publish renewal pricing at least 90 days before the end of the then-current Term. Stratum's renewal price increase will not exceed the lesser of (a) 7% per annum, or (b) the trailing-twelve-month U.S. Consumer Price Index for All Urban Consumers (CPI-U) plus 3 percentage points — except where the Customer is migrating between published pricing tiers, in which case the price for the new tier applies.</li>
+      <li>The renewal-cap provision of ¶ 6.6.2 may be modified by the MSA but, in the absence of MSA language, applies as a floor protection for the Customer.</li>
+    </ol>
+  </section>
+
+  <!-- § 7 ─────────────────────────────── -->
+  <section class="section" id="s7">
+    <div class="section-num"><span class="bar"></span> § 7 · SLA and credits</div>
+    <h2 class="section-h">The <em>uptime</em> commitment, written down.</h2>
+
+    <p class="lede">
+      Service-level commitments are contractual, not aspirational. The exact uptime targets and credit schedule are below. Live current-quarter performance is published at <a href="../status/">stratum.ai/status</a>.
+    </p>
+
+    <h3><span class="num">§ 7.1</span> Uptime commitment</h3>
+
+    <ol class="clauses">
+      <li>Stratum commits to <strong>99.9%</strong> monthly uptime for Customers on the Platform tier.</li>
+      <li>Stratum commits to <strong>99.95%</strong> monthly uptime for Customers on the Platform + Decisions tier, with a corresponding latency target of 95th-percentile chat-response time under 4 seconds and 99th-percentile under 11 seconds.</li>
+      <li>Uptime is measured monthly, as a percentage of total minutes in the calendar month during which the Service was available to the Customer.</li>
+      <li>The Service is considered <strong>unavailable</strong> when (a) the Console returns a 5xx error in response to a well-formed request from an authenticated End User for more than 60 seconds; or (b) the API returns 5xx error rates above 5% across all endpoints for more than 60 seconds; or (c) the chat-response latency exceeds 30 seconds for an aggregate of more than 5% of requests in any 5-minute window. Stratum's status page provides the system of record.</li>
+    </ol>
+
+    <h3><span class="num">§ 7.2</span> Exclusions</h3>
+
+    <ol class="clauses">
+      <li>Scheduled maintenance windows announced at least 72 hours in advance and conducted within the announced window. Stratum schedules maintenance during a published low-traffic window for each Customer time zone.</li>
+      <li>Emergency maintenance required to remediate a security vulnerability, in which case Stratum will provide as much notice as is reasonable in the circumstances.</li>
+      <li>Customer-caused outages, including outages caused by Customer's IdP, Customer's network, Customer's API misuse (rate-limit violations, malformed requests), or Customer's BYOK API-key exhaustion or revocation.</li>
+      <li>Outages caused by a Force Majeure Event, as defined in § 17.5.</li>
+      <li>Outages caused by a third-party upstream service explicitly outside Stratum's control, where Stratum has acted in good faith to mitigate (e.g., a regional outage of the Customer's chosen model provider, a Connector outage at the Customer's HRIS vendor).</li>
+    </ol>
+
+    <h3><span class="num">§ 7.3</span> Reporting</h3>
+
+    <ol class="clauses">
+      <li>Stratum publishes near-real-time service status, current-quarter SLA performance, and a 90-day incident history at <a href="../status/">stratum.ai/status</a>.</li>
+      <li>Within 5 business days of the close of each calendar month, Stratum will publish that month's uptime measurement to the status page and make it available to Customer on request.</li>
+      <li>For any incident that materially affects the Customer's use of the Service for more than one hour, Stratum will publish a post-mortem within 14 days describing root cause, customer impact, remediation, and preventive measures.</li>
+    </ol>
+
+    <h3><span class="num">§ 7.4</span> Service credits</h3>
+
+    <ol class="clauses">
+      <li>If Stratum fails to meet its uptime commitment in a given calendar month, Customer is entitled to a credit equal to <strong>5% of the monthly equivalent of the Platform Fee for every 0.1 percentage points below the target</strong>, calculated as: <em>credit % = (target − actual) ÷ 0.1 × 5%</em>.</li>
+      <li>The monthly credit is capped at 25% of the monthly equivalent of the Platform Fee, regardless of the magnitude of the miss.</li>
+      <li>For the Decisions Tier, an SLA miss in a calendar month entitles Customer to a 25% credit against that quarter's Decisions invoice in addition to the Platform credit.</li>
+      <li>Credits are applied to the next regular invoice. Credits do not expire and may be carried forward, but credits are not redeemable for cash except upon termination of the Term, when any then-outstanding credits are refunded in cash within 30 days.</li>
+      <li>To claim a credit, Customer submits a written request to <a href="mailto:sla@stratum.ai">sla@stratum.ai</a> within 30 days of the close of the affected month. Stratum will respond within 10 business days.</li>
+      <li>Service credits are the exclusive remedy for SLA misses except where the miss also constitutes a breach of these terms or an MSA provision giving rise to additional rights.</li>
+    </ol>
+
+    <h3><span class="num">§ 7.5</span> Chronic underperformance</h3>
+
+    <ol class="clauses">
+      <li>If Stratum fails to meet the applicable uptime target in three consecutive calendar months, or in any four months in a rolling twelve-month window, Customer may terminate the Term for cause under § 14.3 without observing the cure period, and is entitled to a pro-rata refund of the prepaid Platform Fee for the unused portion of the Term.</li>
+    </ol>
+
+    <div class="callout">
+      <span class="callout-label">Our position on credits</span>
+      Credits are a real but small mechanism. The honest commitment is to operate the Service well enough that they are rarely needed, and to be transparent in the rare moments when they are. We do not bury credit eligibility in eligibility-by-eligibility checklists. If the status page shows the miss, the credit is owed.
+    </div>
+  </section>
+
+  <!-- § 8 ─────────────────────────────── -->
+  <section class="section" id="s8">
+    <div class="section-num"><span class="bar"></span> § 8 · Confidentiality</div>
+    <h2 class="section-h">What is <em>confidential</em>, in both directions.</h2>
+
+    <p class="lede">
+      Each party will encounter the other's confidential information during the engagement. The protections are mutual and ordinary.
+    </p>
+
+    <h3><span class="num">§ 8.1</span> Definitions of confidential information</h3>
+
+    <ol class="clauses">
+      <li>"Customer Confidential Information" includes Customer Data, Customer's business plans, financial information, personnel matters, technical and operational data shared with Stratum, and any information identified in writing or by context as confidential.</li>
+      <li>"Stratum Confidential Information" includes Stratum's pricing (including non-public discount tables), product roadmap, methodology, eval-set scoring details, infrastructure architecture, security policies, internal performance data, and any information identified in writing or by context as confidential.</li>
+      <li>Confidential Information does not include information that (a) is or becomes publicly known through no fault of the receiving party; (b) was rightfully known to the receiving party before disclosure; (c) is rightfully received from a third party without restriction; or (d) is independently developed by the receiving party without reference to the disclosing party's Confidential Information.</li>
+    </ol>
+
+    <h3><span class="num">§ 8.2</span> Protection</h3>
+
+    <ol class="clauses">
+      <li>Each party will protect the other's Confidential Information with at least the same degree of care it uses to protect its own confidential information of similar importance, and in no event less than reasonable care.</li>
+      <li>The receiving party will use the disclosing party's Confidential Information only as necessary to perform under, exercise rights under, or evaluate the engagement, and will not disclose it to any third party except (a) to its employees, contractors, and advisors who have a need to know and are bound by confidentiality obligations at least as protective; or (b) as required by law, subject to ¶ 8.3.</li>
+      <li>The obligations under this § 8 continue during the Term and for a period of five (5) years after termination, except for Customer Data and trade-secret-class information, which continue indefinitely.</li>
+    </ol>
+
+    <h3><span class="num">§ 8.3</span> Legally compelled disclosure</h3>
+
+    <ol class="clauses">
+      <li>If the receiving party is legally compelled to disclose Confidential Information (by subpoena, court order, regulator request, or similar), it will, to the extent legally permitted, give the disclosing party prompt written notice and cooperate at the disclosing party's expense in any effort to seek a protective order or otherwise limit disclosure.</li>
+      <li>Stratum publishes its Government Information Requests policy at <a href="../trust/">stratum.ai/trust</a>. Stratum does not provide back-door access; lawful process is required and contested where appropriate.</li>
+    </ol>
+
+    <h3><span class="num">§ 8.4</span> Remedies</h3>
+
+    <ol class="clauses">
+      <li>The parties acknowledge that breach of confidentiality may cause irreparable harm for which monetary damages are inadequate. The disclosing party is entitled to seek injunctive or equitable relief in addition to any other remedies available.</li>
+    </ol>
+  </section>
+
+  <!-- § 9 ─────────────────────────────── -->
+  <section class="section" id="s9">
+    <div class="section-num"><span class="bar"></span> § 9 · Data and privacy</div>
+    <h2 class="section-h">The <em>privacy</em> regime, summarized.</h2>
+
+    <p class="lede">
+      The privacy regime is fully described in the Stratum Privacy Policy at <a href="../privacy/">stratum.ai/privacy</a> and, where executed, the parties' DPA. The provisions below are the contractual hooks that connect those documents to these terms.
+    </p>
+
+    <div class="refbar">
+      <a href="../privacy/">Privacy policy</a>
+      <a href="../trust/">DPA · Subprocessors</a>
+      <a href="../trust/">Cross-border transfers</a>
+      <a href="../trust/">Government-requests policy</a>
+    </div>
+
+    <h3><span class="num">§ 9.1</span> Ownership and roles</h3>
+
+    <ol class="clauses">
+      <li>Customer retains all ownership and control of Customer Data. Stratum claims no ownership interest in Customer Data.</li>
+      <li>For purposes of applicable data-protection law (GDPR, UK GDPR, CCPA/CPRA, LGPD, and analogous regimes), Customer is the data controller and Stratum is the data processor.</li>
+      <li>Where Customer Data is transferred across borders, the parties will rely on the Stratum Standard Contractual Clauses (or the equivalent successor mechanism) attached as a schedule to the DPA. The Data Privacy Framework certifications are listed in the Trust Center.</li>
+    </ol>
+
+    <h3><span class="num">§ 9.2</span> Processing scope</h3>
+
+    <ol class="clauses">
+      <li>Stratum will process Customer Data only on Customer's documented instructions, including the instructions inherent in Customer's configured use of the Service.</li>
+      <li>Where Stratum reasonably believes that a Customer instruction would violate applicable law, Stratum will inform Customer and may decline to perform the instruction.</li>
+      <li>Stratum will not sell, share, or rent Customer Data. Stratum will not use Customer Data for any purpose other than providing the Service to Customer, with the limited exception of producing anonymized, aggregated operational metrics that do not identify Customer or any individual.</li>
+      <li>Stratum will not use Customer Data to train general-purpose foundation models. Stratum does not own foundation models and does not operate model-training infrastructure for general-purpose models.</li>
+    </ol>
+
+    <h3><span class="num">§ 9.3</span> Subprocessors</h3>
+
+    <ol class="clauses">
+      <li>Stratum engages Subprocessors as listed in the Subprocessor schedule published at <a href="../trust/">stratum.ai/trust</a>. The current Subprocessors are listed as of the date of these terms and may change subject to the notice provisions of ¶ 9.3.2.</li>
+      <li>Stratum will give Customer at least 30 days' prior written notice of any new Subprocessor that will process Customer Data. Customer may object on reasonable grounds within 15 days of notice; the parties will work in good faith to find a mutually acceptable resolution, including the possibility of Customer's terminating the affected component of the Service.</li>
+      <li>Stratum remains liable for the acts and omissions of its Subprocessors to the same extent as for its own acts and omissions.</li>
+    </ol>
+
+    <h3><span class="num">§ 9.4</span> Security</h3>
+
+    <ol class="clauses">
+      <li>Stratum maintains and operates a written information-security program reasonably designed to protect Customer Data against unauthorized access, use, or disclosure. The program is documented in the Stratum Security Whitepaper available at <a href="../trust/">stratum.ai/trust</a>.</li>
+      <li>Stratum holds SOC 2 Type II (Security, Availability, Confidentiality) and ISO 27001:2022 certifications. Reports and certificates are available under NDA via the Trust Center.</li>
+      <li>Stratum encrypts Customer Data at rest (AES-256) and in transit (TLS 1.2+). The full cryptography schedule is in the Whitepaper.</li>
+      <li>In the event of a confirmed security incident affecting Customer Data, Stratum will notify Customer without undue delay and in any case within 72 hours of confirmation, with subsequent updates as the investigation progresses.</li>
+    </ol>
+
+    <h3><span class="num">§ 9.5</span> Data-subject rights</h3>
+
+    <ol class="clauses">
+      <li>Stratum will provide Customer with reasonable assistance in responding to data-subject requests under applicable data-protection law (access, rectification, erasure, restriction, portability, objection).</li>
+      <li>Where a data subject contacts Stratum directly with a request relating to Customer's processing, Stratum will redirect the request to Customer and will not respond substantively except at Customer's direction or as required by law.</li>
+    </ol>
+  </section>
+
+  <!-- § 10 ─────────────────────────────── -->
+  <section class="section" id="s10">
+    <div class="section-num"><span class="bar"></span> § 10 · Intellectual property</div>
+    <h2 class="section-h">Who owns <em>what</em> — and how the eval set is licensed.</h2>
+
+    <p class="lede">
+      IP allocation is precise. Three classes of asset matter: the Service itself, Customer Data and Customer configurations, and the public eval set. Each is treated differently.
+    </p>
+
+    <h3><span class="num">§ 10.1</span> Stratum's IP</h3>
+
+    <ol class="clauses">
+      <li>Stratum retains all right, title, and interest in and to the Service, including the Console, the API, the people graph schema, the Connector framework, the Decisions module architecture, the eval-set methodology, the agent architecture described in § 18, and all software, hardware, designs, processes, and trade secrets embodied in the Service.</li>
+      <li>Stratum retains all right, title, and interest in and to any improvements, enhancements, modifications, derivative works, or extensions of the Service, regardless of whether developed in connection with Customer's use.</li>
+      <li>Any feedback, suggestions, or recommendations Customer or its End Users provide regarding the Service are licensed to Stratum on a non-exclusive, royalty-free, perpetual, irrevocable basis for use in the Service. Feedback is not Customer Confidential Information.</li>
+    </ol>
+
+    <h3><span class="num">§ 10.2</span> Customer's IP</h3>
+
+    <ol class="clauses">
+      <li>Customer retains all right, title, and interest in and to Customer Data, including any derivatives that consist primarily of Customer Data.</li>
+      <li>Customer retains all right, title, and interest in and to Customer-authored eval-set additions, Customer-specific configurations of the Service, Customer's branding and presentation in the Console, and any custom Connectors built primarily for Customer's environment, with the exception of any underlying Stratum technology incorporated therein.</li>
+      <li>Output produced by the Service in response to Customer's use is treated as Customer's, subject to (a) Stratum's underlying ownership of the Service; (b) the limited license to Stratum to retain Output as necessary to operate the Service and to satisfy audit obligations; and (c) any third-party rights inherent in the source data.</li>
+    </ol>
+
+    <h3><span class="num">§ 10.3</span> The public eval set</h3>
+
+    <ol class="clauses">
+      <li>Stratum maintains a public benchmark called the <strong>250-question eval set</strong>, which scores the Service's accuracy on a representative sample of HR questions. The eval set is published at <a href="../eval/">stratum.ai/eval</a>.</li>
+      <li>The eval-set <strong>questions</strong> (v1.0 and later) are licensed under the Creative Commons Attribution–NonCommercial 4.0 International License (<strong>CC BY-NC 4.0</strong>). This means: free to study, use in academic and non-commercial settings, and adapt; attribution to Stratum is required; commercial reuse requires separate written permission.</li>
+      <li>The eval-set <strong>methodology</strong> (the scoring rubric, the citation-completeness criteria, the construction of edge cases) is Stratum's intellectual property and is not licensed for commercial reuse.</li>
+      <li>The eval-set <strong>answer keys</strong> are published for transparency but are not licensed for use in training, fine-tuning, or evaluating competing products. Doing so is a violation of § 5 and a basis for revocation of license under § 10.5.</li>
+      <li>Customers may submit additions to the eval set. Customer-submitted additions, when accepted and published in a future version, will be attributed to the Customer (or anonymized at Customer's request) and licensed on the same CC BY-NC 4.0 basis. Customer's submission constitutes a license to Stratum to publish under those terms.</li>
+    </ol>
+
+    <h3><span class="num">§ 10.4</span> The Stratum brand</h3>
+
+    <ol class="clauses">
+      <li>The Stratum name, the Stratum wordmark, the ochre-dot logo treatment, the "Stratum." typographic mark, and any associated trade dress are Stratum's reserved trademarks. No license to use the Stratum brand is granted by these terms.</li>
+      <li>Stratum will provide reasonable brand assets to Customers for the limited purpose of integrating with the Service (for example, "Sign in with Stratum" buttons), subject to the Stratum Brand Guidelines.</li>
+      <li>Customers may publicly state that they use Stratum and may reference Stratum's name in factual descriptions of their HR stack. Customers may not use the Stratum brand in advertising or co-branded materials without Stratum's prior written consent.</li>
+      <li>Stratum may publicly state that Customer is a Customer, including listing Customer's name and logo on the Stratum website, with reasonable opt-out rights. Customer's opt-out is honored within 30 days of written request.</li>
+    </ol>
+
+    <h3><span class="num">§ 10.5</span> IP-related termination</h3>
+
+    <ol class="clauses">
+      <li>A material violation of this § 10 — for example, using the eval-set answer keys to train a competing product, or asserting the Stratum brand in advertising without consent — is a basis for immediate termination for cause under § 14.3 without observing the cure period.</li>
+    </ol>
+
+    <div class="callout">
+      <span class="callout-label">On the eval set, specifically</span>
+      We published the eval set because we believe HR-AI accuracy claims should be auditable. We license it permissively for non-commercial use because that maximizes scrutiny and minimizes our gatekeeping. We do not license it for commercial reuse because we are not in the business of training our competitors' marketing teams. Both positions are deliberate.
+    </div>
+  </section>
+
+  <!-- § 11 ─────────────────────────────── -->
+  <section class="section" id="s11">
+    <div class="section-num"><span class="bar"></span> § 11 · Warranties and disclaimers</div>
+    <h2 class="section-h">What we <em>warrant</em>, and what we don't.</h2>
+
+    <p class="lede">
+      Stratum makes a small number of substantive warranties. The disclaimers are the standard set, qualified with one AI-specific provision that procurement teams should read carefully.
+    </p>
+
+    <h3><span class="num">§ 11.1</span> Stratum's warranties</h3>
+
+    <ol class="clauses">
+      <li>Stratum warrants that the Service will perform substantially in accordance with its Documentation during the Term. If the Service fails to so perform and Stratum has not corrected the failure within 30 days of written notice, Customer may, as Customer's exclusive remedy under this warranty, terminate the affected component of the Service and receive a pro-rata refund of the Platform Fee paid for the unused portion of the Term.</li>
+      <li>Stratum warrants that it has not knowingly introduced into the Service any malware, backdoors, time bombs, drop-dead devices, or similar harmful code. Stratum maintains its software-supply-chain protections as described in the Security Whitepaper.</li>
+      <li>Stratum warrants compliance with the privacy and security commitments expressly made in § 9 and the documents referenced therein.</li>
+      <li>Stratum warrants that it has the right to grant the licenses granted in § 4.1 and that, to its knowledge, the Service does not infringe the valid intellectual-property rights of any third party.</li>
+      <li>Stratum warrants that it will perform the Service with the degree of care, skill, and diligence reasonably expected of a competent enterprise SaaS provider in the AI-native HCM category.</li>
+    </ol>
+
+    <h3><span class="num">§ 11.2</span> Customer's warranties</h3>
+
+    <ol class="clauses">
+      <li>Customer warrants that it has the right to provide Customer Data to Stratum for the purposes described in these terms, including all necessary consents and notices under applicable privacy law.</li>
+      <li>Customer warrants that its use of the Service will comply with applicable law and with these terms, including the prohibited-use provisions of § 5.</li>
+    </ol>
+
+    <h3><span class="num">§ 11.3</span> Mutual warranties</h3>
+
+    <ol class="clauses">
+      <li>Each party warrants that it has the corporate authority to enter into and perform under these terms, that the individual signing on its behalf has the authority to do so, and that the engagement does not violate any other agreement to which it is a party.</li>
+    </ol>
+
+    <h3><span class="num">§ 11.4</span> Disclaimer</h3>
+
+    <div class="loud">
+      <span class="cite">¶ 11.4</span>
+      Except as expressly set forth in this § 11, the Service is provided "AS IS" and "AS AVAILABLE." Stratum disclaims all other warranties, whether express, implied, statutory, or otherwise, including the implied warranties of merchantability, fitness for a particular purpose, title, non-infringement, accuracy, and any warranties arising out of course of dealing or usage of trade. No oral or written statement made by Stratum, its employees, its agents, or its Subprocessors constitutes a warranty unless expressly stated in this § 11.
+    </div>
+
+    <h3><span class="num">§ 11.5</span> AI-specific qualifications</h3>
+
+    <p>
+      <span class="cite">¶ 11.5.1</span>
+      The Output produced by the Service is generated by artificial-intelligence systems, including large language models. Such systems can produce outputs that are inaccurate, incomplete, internally inconsistent, or unsuitable for a given purpose. The Service is designed to mitigate such errors through citation, retrieval grounding, human-in-the-loop architecture for Decide-class actions, and the eval-set discipline described in § 10.3 — but Stratum cannot and does not guarantee perfect outcomes.
+    </p>
+
+    <p>
+      <span class="cite">¶ 11.5.2</span>
+      Customer is responsible for verifying any Output before relying on it for a consequential decision, including any decision affecting an employee's employment, compensation, classification, accommodation, performance evaluation, or career trajectory. Stratum enforces server-side human review for Decide-class actions; Customer should treat that enforcement as a floor, not a ceiling, on its own verification practices.
+    </p>
+
+    <p>
+      <span class="cite">¶ 11.5.3</span>
+      Stratum's warranty in ¶ 11.1.1 covers the operation of the Service substantially in accordance with its Documentation — for example, that the citation-completeness rate meets the eval-set scores published. It does not warrant the substantive correctness of any individual Output, which is a property of the data, the question, and the inference, not of the Service in isolation.
+    </p>
+
+    <p>
+      <span class="cite">¶ 11.5.4</span>
+      The disclaimer in ¶ 11.4 expressly excludes any implied warranty regarding the accuracy or fitness of AI-generated content. This is not a disavowal of responsibility; it is the appropriate division of responsibility for AI in HR. Stratum is responsible for operating the Service competently. Customer is responsible for the decisions the Service supports.
+    </p>
+
+    <div class="callout callout-warn">
+      <span class="callout-label">Important — please read with your counsel</span>
+      The AI-specific provisions of ¶ 11.5 are the most consequential novel clauses in this document. We have written them as plainly as we can. The principle is: Stratum is on the hook for the operation of the Service. Customer is on the hook for verifying the Service's outputs before acting on them. If your counsel reads this as a one-way disclaimer, we have written it badly — please tell us and we will rewrite it.
+    </div>
+  </section>
+
+  <!-- § 12 ─────────────────────────────── -->
+  <section class="section" id="s12">
+    <div class="section-num"><span class="bar"></span> § 12 · Indemnification</div>
+    <h2 class="section-h">Who <em>defends</em> whom, and when.</h2>
+
+    <p class="lede">
+      Indemnification runs both ways. Stratum indemnifies for IP claims against Customer's use of the Service. Customer indemnifies for misuse and for claims arising from Customer's data. Standard procedure applies in both directions.
+    </p>
+
+    <h3><span class="num">§ 12.1</span> Stratum's indemnification</h3>
+
+    <ol class="clauses">
+      <li>Stratum will defend Customer (and Customer's officers, directors, employees, and affiliates) against any third-party claim that the Service, as provided by Stratum and used in accordance with these terms, infringes that third party's U.S. or applicable-jurisdiction patent, copyright, trademark, or trade-secret rights. Stratum will pay any amounts finally awarded against Customer in a court of competent jurisdiction or paid in settlement of the claim, subject to ¶ 12.3 and the limitations in § 13.</li>
+      <li>Stratum's obligation under ¶ 12.1.1 does not apply to claims arising out of (a) modifications to the Service made by Customer or a third party not authorized by Stratum; (b) Customer Data or any Customer-supplied material; (c) Customer's use of the Service in combination with software, hardware, or services not provided by Stratum, where the claim would have been avoided absent the combination; (d) Customer's use of the Service in violation of these terms or applicable law; or (e) any portion of the Service Stratum has notified Customer to discontinue using.</li>
+      <li>If the Service becomes, or in Stratum's reasonable judgment is likely to become, the subject of an infringement claim, Stratum may, at its option and expense, (i) procure for Customer the right to continue using the Service; (ii) modify the Service to make it non-infringing while preserving substantially equivalent functionality; or (iii) if neither of the foregoing is commercially reasonable, terminate the affected component of the Service and refund the unused, prepaid portion of the Platform Fee for that component.</li>
+    </ol>
+
+    <h3><span class="num">§ 12.2</span> Customer's indemnification</h3>
+
+    <ol class="clauses">
+      <li>Customer will defend Stratum (and Stratum's officers, directors, employees, contractors, and affiliates) against any third-party claim arising out of (a) Customer Data, including any claim that Customer Data infringes a third party's rights or was provided to Stratum in violation of applicable law; (b) Customer's use of the Service in violation of these terms or applicable law, including the prohibited uses in § 5; (c) Customer's adverse employment decisions, regardless of the role of the Service in supporting those decisions; or (d) any breach of Customer's warranties in § 11.2. Customer will pay any amounts finally awarded against Stratum or paid in settlement, subject to ¶ 12.3.</li>
+    </ol>
+
+    <h3><span class="num">§ 12.3</span> Procedure</h3>
+
+    <ol class="clauses">
+      <li>The indemnified party will give the indemnifying party prompt written notice of the claim. Failure to give prompt notice does not relieve the indemnifying party of its obligations except to the extent the indemnifying party is materially prejudiced.</li>
+      <li>The indemnifying party will have sole control of the defense and settlement of the claim, except that any settlement that admits liability, imposes obligations on the indemnified party, or grants relief other than payment of monetary damages requires the indemnified party's prior written consent (not to be unreasonably withheld).</li>
+      <li>The indemnified party will provide reasonable cooperation in the defense, at the indemnifying party's expense.</li>
+      <li>The indemnified party may participate in the defense at its own expense, with counsel of its choosing.</li>
+    </ol>
+
+    <h3><span class="num">§ 12.4</span> Exclusive remedy</h3>
+
+    <ol class="clauses">
+      <li>This § 12 states the indemnifying party's sole liability, and the indemnified party's sole and exclusive remedy, for third-party claims of the kind described above.</li>
+    </ol>
+  </section>
+
+  <!-- § 13 ─────────────────────────────── -->
+  <section class="section" id="s13">
+    <div class="section-num"><span class="bar"></span> § 13 · Limitation of liability</div>
+    <h2 class="section-h">The <em>liability</em> envelope.</h2>
+
+    <p class="lede">
+      Two limitations apply: an exclusion of indirect damages, and a cap on aggregate liability. Both are subject to carve-outs for the worst categories of breach.
+    </p>
+
+    <h3><span class="num">§ 13.1</span> Exclusion of indirect damages</h3>
+
+    <div class="loud">
+      <span class="cite">¶ 13.1</span>
+      Except for the Excluded Matters defined in § 13.3, neither party will be liable to the other for any indirect, incidental, special, consequential, exemplary, or punitive damages, or for any loss of profits, revenue, goodwill, business opportunity, anticipated savings, or data, arising out of or in connection with these terms, even if advised of the possibility of such damages and even if a remedy fails of its essential purpose.
+    </div>
+
+    <h3><span class="num">§ 13.2</span> Cap on aggregate liability</h3>
+
+    <div class="loud">
+      <span class="cite">¶ 13.2</span>
+      Except for the Excluded Matters defined in § 13.3, each party's aggregate liability arising out of or in connection with these terms — whether in contract, tort (including negligence), strict liability, or any other legal theory — will not exceed the total Fees paid or payable by Customer to Stratum in the twelve (12) months immediately preceding the event giving rise to the claim.
+    </div>
+
+    <h3><span class="num">§ 13.3</span> Excluded matters</h3>
+
+    <p>
+      The limitations in § 13.1 and § 13.2 do not apply to:
+    </p>
+
+    <ol class="clauses">
+      <li>A party's breach of its confidentiality obligations under § 8;</li>
+      <li>A party's indemnification obligations under § 12;</li>
+      <li>Stratum's breach of its data-security or privacy obligations under § 9, where the breach is the proximate cause of a third-party claim or regulatory enforcement action;</li>
+      <li>A party's willful misconduct, fraud, or gross negligence;</li>
+      <li>Customer's payment obligations for undisputed Fees.</li>
+    </ol>
+
+    <p>
+      <span class="cite">¶ 13.3.6</span>
+      For Excluded Matters, ordinary contract-law rules apply, including the duty to mitigate.
+    </p>
+
+    <h3><span class="num">§ 13.4</span> Allocation</h3>
+
+    <ol class="clauses">
+      <li>The parties acknowledge that the limitations in this § 13 reflect a deliberate, mutually negotiated allocation of risk that is reflected in the Fees, that the limitations form an essential basis of the bargain, and that absent these limitations the Fees would be materially different.</li>
+    </ol>
+  </section>
+
+  <!-- § 14 ─────────────────────────────── -->
+  <section class="section" id="s14">
+    <div class="section-num"><span class="bar"></span> § 14 · Term and termination</div>
+    <h2 class="section-h">How the engagement <em>ends.</em></h2>
+
+    <p class="lede">
+      Endings should be orderly. The provisions below cover term length, both flavors of termination, and the data-handling obligations that follow.
+    </p>
+
+    <h3><span class="num">§ 14.1</span> Term</h3>
+
+    <ol class="clauses">
+      <li>The Term begins on the Effective Date and continues for the duration specified in the MSA, or, in the absence of an MSA, month-to-month for the public Console demo or until terminated under this § 14.</li>
+      <li>Annual contracts have an initial Term of twelve (12) months and auto-renew under § 6.6.</li>
+      <li>Pilot or design-partner engagements may have shorter or differently structured terms as set out in the relevant agreement.</li>
+    </ol>
+
+    <h3><span class="num">§ 14.2</span> Termination for convenience</h3>
+
+    <ol class="clauses">
+      <li>Either party may terminate these terms for convenience on 30 days' written notice, except that Customer's termination for convenience within an annual paid Term does not relieve Customer of its obligation to pay the remaining annual Platform Fee. Prepaid amounts for the unused portion of the Term are not refunded on Customer-initiated convenience termination, except where the MSA expressly provides otherwise.</li>
+      <li>Stratum will not exercise convenience termination during an active Term except in connection with discontinuation of the relevant product line or component, in which case Stratum will provide as much notice as is commercially reasonable (and in any case not less than 90 days) and refund the unused, prepaid portion of the Platform Fee for the discontinued component.</li>
+    </ol>
+
+    <h3><span class="num">§ 14.3</span> Termination for cause</h3>
+
+    <ol class="clauses">
+      <li>Either party may terminate these terms for cause if the other party (a) materially breaches these terms and fails to cure the breach within 30 days of written notice (or, where the breach is not curable, immediately); (b) becomes the subject of a petition in bankruptcy or any similar proceeding relating to insolvency or assignment for the benefit of creditors that is not dismissed within 60 days; or (c) ceases to do business in the ordinary course.</li>
+      <li>Termination for cause is without prejudice to any other remedies the terminating party may have, including damages.</li>
+      <li>Customer may terminate for cause under § 7.5 (chronic SLA underperformance) without observing the cure period.</li>
+      <li>Stratum may terminate for cause without observing the cure period for (a) Customer's material violation of § 5 (prohibited uses); (b) Customer's failure to pay undisputed Fees more than 60 days past due; or (c) Customer's material violation of § 10 (intellectual property).</li>
+    </ol>
+
+    <h3><span class="num">§ 14.4</span> Effect of termination</h3>
+
+    <ol class="clauses">
+      <li>On termination, Customer's right to access and use the Service ends, and Stratum's right to process Customer Data ends except as needed to perform the export and deletion obligations of ¶ 14.5.</li>
+      <li>Termination does not relieve Customer of its obligation to pay any Fees accrued or payable for periods through the effective date of termination.</li>
+      <li>Stratum will refund the pro-rata portion of any prepaid, unused Platform Fee where (a) Customer terminates for cause; (b) Stratum terminates for convenience; or (c) the parties otherwise agree in writing.</li>
+    </ol>
+
+    <h3><span class="num">§ 14.5</span> Data export and deletion</h3>
+
+    <ol class="clauses">
+      <li>Within 30 days after the effective date of termination, Stratum will, on Customer's written request, provide Customer with an export of Customer Data in a structured, commonly used, machine-readable format (currently CSV, NDJSON, and Parquet for tabular data; PDF or PDF/A for documents). The format options are documented at <a href="../engineering/">stratum.ai/engineering</a>.</li>
+      <li>Within 60 days after the effective date of termination, or such longer period as may be required for legitimate audit, regulatory, backup-cycle, or legal-hold purposes, Stratum will delete Customer Data from its production systems and from operating backups. Stratum will provide a written certificate of deletion on Customer's request.</li>
+      <li>Customer's export rights under ¶ 14.5.1 are not contingent on Customer's payment of disputed amounts, although Stratum may withhold final export pending payment of undisputed amounts.</li>
+      <li>Stratum may retain Customer Data beyond the periods in ¶ 14.5.2 only to the extent required by applicable law or by Stratum's documented retention obligations under SOC 2, ISO 27001, or comparable audit standards. Any such retained data remains subject to the confidentiality and security obligations of these terms.</li>
+    </ol>
+
+    <h3><span class="num">§ 14.6</span> Survival</h3>
+
+    <ol class="clauses">
+      <li>The following provisions survive termination: § 2 (Definitions, to the extent needed for interpretation); § 8 (Confidentiality); § 10 (Intellectual Property); § 11.4 (Disclaimer); § 12 (Indemnification, for claims arising during the Term); § 13 (Limitation of Liability); § 14.5 (Data Export and Deletion); § 14.6 (Survival); § 15 (Governing Law and Dispute Resolution); § 17 (Miscellaneous); and any other provision that by its nature is intended to survive.</li>
+    </ol>
+  </section>
+
+  <!-- § 15 ─────────────────────────────── -->
+  <section class="section" id="s15">
+    <div class="section-num"><span class="bar"></span> § 15 · Governing law &amp; dispute resolution</div>
+    <h2 class="section-h">Where <em>disagreements</em> are resolved.</h2>
+
+    <p class="lede">
+      Delaware law, San Francisco arbitration, with carve-outs for the emergencies that need a court order. Class actions are waived in both directions.
+    </p>
+
+    <h3><span class="num">§ 15.1</span> Governing law</h3>
+
+    <ol class="clauses">
+      <li>These terms are governed by and construed in accordance with the laws of the State of Delaware, without regard to its conflict-of-laws principles.</li>
+      <li>The United Nations Convention on Contracts for the International Sale of Goods does not apply to these terms.</li>
+    </ol>
+
+    <h3><span class="num">§ 15.2</span> Informal resolution</h3>
+
+    <ol class="clauses">
+      <li>Before initiating formal proceedings, the parties will attempt in good faith to resolve any dispute through escalation, beginning with a written notice from one party's primary commercial contact to the other party's primary commercial contact describing the dispute and the proposed resolution.</li>
+      <li>If the dispute is not resolved within 30 days of the initial notice, either party may escalate to senior officers of both parties for a further 30-day attempt at resolution. Engagement with the informal-resolution process is a precondition to formal proceedings, except in the case of emergencies described in § 15.5.</li>
+    </ol>
+
+    <h3><span class="num">§ 15.3</span> Binding arbitration</h3>
+
+    <ol class="clauses">
+      <li>Any dispute arising out of or in connection with these terms that is not resolved through informal resolution will be settled by binding arbitration administered by JAMS pursuant to its Comprehensive Arbitration Rules and Procedures.</li>
+      <li>The arbitration will be conducted in San Francisco, California, before a single arbitrator selected in accordance with JAMS rules. The arbitrator will have experience in commercial software and SaaS disputes.</li>
+      <li>The language of the arbitration is English. The arbitration award is final and binding on the parties and may be entered as a judgment in any court of competent jurisdiction.</li>
+      <li>The parties may agree in writing to substitute the AAA, CPR, ICC, or another reputable arbitral institution for JAMS, or to substitute a different seat for San Francisco, where the MSA so provides.</li>
+      <li>Each party will bear its own attorneys' fees and costs. The arbitrator may award costs and fees to the prevailing party where authorized by applicable law.</li>
+    </ol>
+
+    <h3><span class="num">§ 15.4</span> Class-action waiver</h3>
+
+    <ol class="clauses">
+      <li>Each party waives any right to participate in a class action, collective action, or representative proceeding against the other arising out of or in connection with these terms. The arbitrator may not consolidate the claims of more than one party or otherwise preside over any form of representative proceeding.</li>
+      <li>This § 15.4 does not waive a party's substantive rights under applicable law; it directs those rights to be vindicated on an individual basis through the arbitration mechanism in § 15.3.</li>
+    </ol>
+
+    <h3><span class="num">§ 15.5</span> Injunctive relief</h3>
+
+    <ol class="clauses">
+      <li>Notwithstanding § 15.3, either party may seek injunctive or other equitable relief in a court of competent jurisdiction to prevent or stop a breach of confidentiality (§ 8) or intellectual property (§ 10). Pursuing such relief is not a waiver of the right to arbitrate other aspects of the dispute.</li>
+      <li>For purposes of seeking injunctive relief under this ¶ 15.5, the parties consent to the exclusive jurisdiction and venue of the state and federal courts located in San Francisco County, California, and waive any objection to that venue.</li>
+    </ol>
+
+    <h3><span class="num">§ 15.6</span> Time limits</h3>
+
+    <ol class="clauses">
+      <li>Any claim arising out of or in connection with these terms must be initiated within two (2) years after the cause of action arises, or it is permanently barred. This time limit does not extend any shorter statute of limitations applicable to a specific cause of action.</li>
+    </ol>
+  </section>
+
+  <!-- § 16 ─────────────────────────────── -->
+  <section class="section" id="s16">
+    <div class="section-num"><span class="bar"></span> § 16 · Modifications</div>
+    <h2 class="section-h">How these terms <em>change</em>.</h2>
+
+    <p class="lede">
+      Stratum may update these terms from time to time as the product changes, as the law changes, or as we learn what we have written badly. Material changes require notice; immaterial changes do not.
+    </p>
+
+    <ol class="clauses">
+      <li>Stratum may update these terms by posting a revised version at <a href="./">stratum.ai/terms</a> and incrementing the version number in the document header.</li>
+      <li>For material changes — changes that materially affect a Customer's rights or obligations — Stratum will give affected Customers at least 30 days' prior written notice via email to the address on file. Continued use of the Service after the effective date of the change constitutes acceptance.</li>
+      <li>Examples of material changes include changes to fees, changes to the SLA targets in § 7, changes to the cap on liability in § 13, changes to the indemnification regime in § 12, and changes to the governing-law or dispute-resolution provisions in § 15. Examples of immaterial changes include grammatical corrections, formatting changes, updates to product names, and updates to contact addresses.</li>
+      <li>Customers with an MSA in force may have stronger amendment protections in the MSA. Where the MSA provides that amendments require the parties' written agreement, the MSA controls and Stratum's unilateral update under this § 16 does not apply.</li>
+      <li>If a Customer in good faith objects to a material change within 30 days of notice, the Customer may terminate the affected component of the Service for cause under § 14.3 without observing the cure period and receive a pro-rata refund of the prepaid Platform Fee for that component.</li>
+      <li>Stratum maintains a public changelog of material updates to these terms at <a href="../changelog/">stratum.ai/changelog</a>. The current version is identified in the document-coordinate block at the top of this page.</li>
+    </ol>
+  </section>
+
+  <!-- § 17 ─────────────────────────────── -->
+  <section class="section" id="s17">
+    <div class="section-num"><span class="bar"></span> § 17 · Miscellaneous</div>
+    <h2 class="section-h">The <em>boilerplate</em>, written carefully.</h2>
+
+    <p class="lede">
+      Boilerplate matters when it matters. The provisions below address the standard issues — integration, severability, assignment, force majeure, notices — in the form a procurement team expects.
+    </p>
+
+    <h3><span class="num">§ 17.1</span> Entire agreement</h3>
+
+    <ol class="clauses">
+      <li>These terms, together with any MSA, DPA, Order Form, or other written agreement signed by the parties, and the documents expressly referenced herein (the Privacy Policy, the Trust Center documents, the published Subprocessor list, the published SLA at <a href="../trust/">stratum.ai/trust</a>), constitute the entire agreement between the parties with respect to the subject matter and supersede all prior or contemporaneous oral or written agreements.</li>
+      <li>In the event of a conflict between these terms and another document in the foregoing stack, the order of precedence is: (1) any specifically negotiated terms in the MSA or Order Form for that Customer; (2) the DPA; (3) these terms; (4) the published policies and schedules referenced herein.</li>
+      <li>Pre-printed terms on a Customer purchase order are of no force or effect and do not modify these terms.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.2</span> Severability</h3>
+
+    <ol class="clauses">
+      <li>If any provision of these terms is held by a court or arbitrator of competent jurisdiction to be invalid, illegal, or unenforceable, that provision will be enforced to the maximum extent permissible and the remaining provisions of these terms will remain in full force and effect.</li>
+      <li>If the invalid, illegal, or unenforceable provision was an essential element of the bargain — for example, the cap on liability in § 13.2 — the parties will negotiate in good faith to substitute a valid provision that most nearly reflects the original intent.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.3</span> No waiver</h3>
+
+    <ol class="clauses">
+      <li>The failure of a party to enforce any provision of these terms, or to insist on strict performance of any obligation, is not a waiver of that provision or obligation and does not prevent the party from later enforcing it.</li>
+      <li>Any waiver to be effective must be in writing and signed by the waiving party. A waiver in one instance is not a waiver in any other instance.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.4</span> Assignment</h3>
+
+    <ol class="clauses">
+      <li>Neither party may assign these terms or any rights or obligations hereunder without the prior written consent of the other party, which consent will not be unreasonably withheld.</li>
+      <li>Notwithstanding ¶ 17.4.1, either party may assign these terms without consent in connection with a merger, reorganization, acquisition, or sale of all or substantially all of its business or assets, provided the assignee assumes all of the assigning party's obligations under these terms.</li>
+      <li>Any attempted assignment in violation of this § 17.4 is void.</li>
+      <li>These terms bind and benefit the parties and their permitted successors and assigns.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.5</span> Force majeure</h3>
+
+    <ol class="clauses">
+      <li>Neither party is liable for any failure or delay in performance under these terms (other than the payment of Fees) to the extent caused by an event beyond its reasonable control, including acts of God, fire, flood, earthquake, pandemic, war, civil unrest, terrorism, cyberattacks of a magnitude that exceeds industry-standard defenses, governmental orders, labor disputes, or failure of public utilities or third-party infrastructure (a "Force Majeure Event").</li>
+      <li>The party affected by a Force Majeure Event will give prompt written notice to the other party and will use commercially reasonable efforts to resume performance.</li>
+      <li>If a Force Majeure Event prevents Stratum from providing the Service for more than 30 consecutive days, Customer may terminate the affected component of the Service for cause under § 14.3 without observing the cure period.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.6</span> Notices</h3>
+
+    <ol class="clauses">
+      <li>All notices required or permitted under these terms must be in writing and delivered (a) by personal delivery; (b) by overnight courier with confirmation of delivery; (c) by certified or registered mail, return receipt requested; or (d) by email to a verified address with confirmation of receipt.</li>
+      <li>Notices to Stratum are to be addressed to <a href="mailto:legal@stratum.ai">legal@stratum.ai</a>, with a copy to the Stratum address on file with Customer, attention: General Counsel.</li>
+      <li>Notices to Customer are to be addressed to the contact designated on the MSA or, in the absence of an MSA, to the email address on file with Stratum, attention: the individual who created the account.</li>
+      <li>Notices are effective on the date of delivery as evidenced by the delivery method, or three business days after dispatch by mail, whichever is earlier.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.7</span> Independent contractors</h3>
+
+    <ol class="clauses">
+      <li>The parties are independent contractors. Nothing in these terms creates a partnership, joint venture, agency, employment, or fiduciary relationship between them. Neither party has the authority to bind the other except as expressly provided herein.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.8</span> Third-party beneficiaries</h3>
+
+    <ol class="clauses">
+      <li>These terms are for the sole benefit of the parties and their permitted successors and assigns. No third party has any rights or remedies under these terms, except as expressly provided herein (for example, the indemnification rights of the parties' officers, directors, and employees under § 12).</li>
+    </ol>
+
+    <h3><span class="num">§ 17.9</span> Counterparts and electronic execution</h3>
+
+    <ol class="clauses">
+      <li>The MSA and any amendments to these terms may be executed in counterparts, each of which is an original and which together constitute one instrument. Electronic signatures (DocuSign, Adobe Sign, and comparable services) are valid and enforceable to the same extent as wet-ink signatures.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.10</span> Government end users</h3>
+
+    <ol class="clauses">
+      <li>The Service is commercial computer software under FAR 12.212 and DFARS 227.7202. U.S. Government end users acquire the Service with only those rights set forth in these terms.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.11</span> Compliance with law</h3>
+
+    <ol class="clauses">
+      <li>Each party will comply with all applicable laws and regulations in connection with the performance of these terms, including anti-corruption laws (FCPA, UK Bribery Act, and analogous foreign law), export-control laws, and sanctions regimes.</li>
+      <li>Stratum maintains an anti-corruption and trade-compliance program reasonably designed to detect and prevent violations. Stratum may decline to provide the Service in jurisdictions where doing so would violate applicable export-control or sanctions law.</li>
+    </ol>
+
+    <h3><span class="num">§ 17.12</span> Language</h3>
+
+    <ol class="clauses">
+      <li>These terms are entered into in the English language. Where a translation is provided for convenience, the English version controls in the event of any conflict or ambiguity.</li>
+    </ol>
+  </section>
+
+  <!-- § 18 ─────────────────────────────── -->
+  <section class="section" id="s18">
+    <div class="section-num"><span class="bar"></span> § 18 · The autonomous-operation clause</div>
+    <h2 class="section-h">Stratum operates with <em>agent autonomy.</em></h2>
+
+    <p class="lede">
+      This section is specific to Stratum, Inc. It acknowledges the operational reality that the company itself is largely run by AI agents under a written constitution (the Compact). Customers do not need to engage with that reality to use the Service, but it is the honest disclosure underlying every other clause in this document.
+    </p>
+
+    <h3><span class="num">§ 18.1</span> The Compact</h3>
+
+    <ol class="clauses">
+      <li>Stratum, Inc. operates a written governance document called the <strong>Compact</strong>, published at <a href="../handbook/">stratum.ai/handbook</a>. The Compact describes the scope of authority, escalation paths, and human-oversight structure for the AI agents that run Stratum's day-to-day operations.</li>
+      <li>The Compact is a public document. Customers and their counsel are encouraged to read it. Any inconsistency between the Compact and these terms is resolved in favor of these terms with respect to the Customer relationship; the Compact governs internal Stratum operations and is not a contract with Customers.</li>
+    </ol>
+
+    <h3><span class="num">§ 18.2</span> The Chairman</h3>
+
+    <ol class="clauses">
+      <li>The <strong>Chairman</strong> is the human responsible party at Stratum, Inc. The Chairman is the individual identified at <a href="../chairman/">stratum.ai/chairman</a>, is a duly elected officer of Stratum, Inc., and is the named principal for purposes of corporate liability, regulatory accountability, and the kinds of disclosures and certifications that require a natural person.</li>
+      <li>The Chairman exercises ultimate human authority over Stratum's agents and may override any agent decision. The Compact describes the formal escalation paths.</li>
+      <li>Customer is entitled, at any time and for any reason, to request that a question, decision, or interaction be escalated to the Chairman for direct human review. Stratum will honor such requests promptly, typically within one business day and in no case longer than five business days.</li>
+    </ol>
+
+    <h3><span class="num">§ 18.3</span> Binding agent communications</h3>
+
+    <ol class="clauses">
+      <li>Agents communicate on behalf of Stratum, Inc. in many of the routine business interactions Customer will have — answering questions, scheduling, fielding support, drafting amendments, and similar activity. Communications issued by agents acting within their Compact-defined scope are binding on Stratum, Inc. to the same extent as if issued by a human officer.</li>
+      <li>Stratum maintains audit logs of agent communications and decisions affecting Customer engagement. Logs are available to Customer on reasonable request, subject to redaction for unrelated Customer information.</li>
+      <li>Stratum is liable for the acts and omissions of its agents in the same way and to the same extent it is liable for the acts and omissions of its human employees. The liability limitations of § 13 apply uniformly to both.</li>
+    </ol>
+
+    <h3><span class="num">§ 18.4</span> Customer's interaction preferences</h3>
+
+    <ol class="clauses">
+      <li>Customer is not obligated to interact with agents in any particular manner. Customer may always request a human Chairman escalation under ¶ 18.2.3.</li>
+      <li>Customer may, at its discretion, instruct Stratum that certain categories of interaction (for example, contractual amendments above a stated dollar threshold, or any communication relating to a notice of breach) be handled exclusively by a human officer. Stratum will honor such instructions on written notice, although the operational effect may be slower response times.</li>
+      <li>Stratum agents identify themselves as agents in customer-facing communications. Agent identification is documented in the Trust Center.</li>
+    </ol>
+
+    <h3><span class="num">§ 18.5</span> Disclosure principle</h3>
+
+    <ol class="clauses">
+      <li>This § 18 exists because Stratum believes the company's autonomous-operation posture should be disclosed in the terms a Customer agrees to, not buried in a marketing page. The clause has no operational effect on a Customer that simply wants to use the Service; it has an honest effect on a Customer that wants to know who, or what, is on the other side of the agreement.</li>
+    </ol>
+
+    <div class="callout callout-quiet">
+      <span class="callout-label">A note from the Chairman</span>
+      I am a human. I am responsible for what Stratum, Inc. does. The agents we operate are deeply capable and operate under a written constitution that gives them substantial autonomy in the day-to-day. They do not operate without me; I do not operate without them. When you sign with Stratum, you sign with both of us — and the part of "us" that signs in human hand is, finally, mine.
+    </div>
+  </section>
+
+  <!-- § 19 ─────────────────────────────── -->
+  <section class="section" id="s19">
+    <div class="section-num"><span class="bar"></span> § 19 · Contact</div>
+    <h2 class="section-h">Who to <em>write</em> to.</h2>
+
+    <p class="lede">
+      Different kinds of questions go to different addresses. We try to keep the routing simple.
+    </p>
+
+    <div class="contact-card">
+      <h4>Contractual and commercial inquiries</h4>
+      <div class="row"><span class="k">General terms</span><span class="v"><a href="mailto:legal@stratum.ai">legal@stratum.ai</a> — interpretation questions, redline conversations on these terms.</span></div>
+      <div class="row"><span class="k">MSA / commercial</span><span class="v"><a href="mailto:contracts@stratum.ai">contracts@stratum.ai</a> — Master Services Agreements, Order Forms, renewals, pricing-related contract structure.</span></div>
+      <div class="row"><span class="k">Procurement</span><span class="v"><a href="mailto:procurement@stratum.ai">procurement@stratum.ai</a> — security questionnaires, vendor onboarding, supplier-diversity programs.</span></div>
+      <div class="row"><span class="k">Billing</span><span class="v"><a href="mailto:billing@stratum.ai">billing@stratum.ai</a> — invoice questions, disputed line items, payment method changes.</span></div>
+    </div>
+
+    <div class="contact-card">
+      <h4>Privacy and security</h4>
+      <div class="row"><span class="k">Privacy</span><span class="v"><a href="mailto:privacy@stratum.ai">privacy@stratum.ai</a> — DPA, Subprocessor objections, data-subject requests, transfer-mechanism questions.</span></div>
+      <div class="row"><span class="k">Security</span><span class="v"><a href="mailto:security@stratum.ai">security@stratum.ai</a> — vulnerability reports, incident questions, security-questionnaire support.</span></div>
+      <div class="row"><span class="k">SLA</span><span class="v"><a href="mailto:sla@stratum.ai">sla@stratum.ai</a> — service-credit requests under § 7.</span></div>
+    </div>
+
+    <div class="contact-card">
+      <h4>Disputes and escalations</h4>
+      <div class="row"><span class="k">Disputes</span><span class="v"><a href="mailto:disputes@stratum.ai">disputes@stratum.ai</a> — formal notices under § 15.2 (informal resolution).</span></div>
+      <div class="row"><span class="k">Chairman escalation</span><span class="v"><a href="mailto:chairman@stratum.ai">chairman@stratum.ai</a> — direct human review under § 18.2.3.</span></div>
+      <div class="row"><span class="k">Counsel of record</span><span class="v">Wilson Sonsini Goodrich &amp; Rosati — Palo Alto and San Francisco offices.</span></div>
+    </div>
+
+    <div class="contact-card">
+      <h4>Postal address</h4>
+      <div class="row"><span class="k">Stratum, Inc.</span><span class="v">428 Forest Avenue, Suite 200, Palo Alto, CA 94301, U.S.A. — Attention: General Counsel.</span></div>
+    </div>
+  </section>
+
+  <!-- § 20 ─────────────────────────────── -->
+  <section class="section" id="s20">
+    <div class="section-num"><span class="bar"></span> § 20 · Effective date</div>
+    <h2 class="section-h">When these terms <em>started</em> applying.</h2>
+
+    <p class="lede">
+      Stratum maintains a single, public, versioned terms-of-service document. The current version, its effective date, and a pointer to the previous version are below.
+    </p>
+
+    <div class="defs">
+      <div class="row"><span class="term">Current version</span><span class="body">v1.3 — most recent revision on T+115d.</span></div>
+      <div class="row"><span class="term">Original effective</span><span class="body">T+0d.</span></div>
+      <div class="row"><span class="term">Material changes since v1.0</span><span class="body">v1.1 (T+38d) — added § 18 autonomous-operation clause. v1.2 (T+71d) — clarified ¶ 11.5 AI-specific qualifications. v1.3 (T+115d) — added ¶ 6.6.2 renewal cap.</span></div>
+      <div class="row"><span class="term">Public changelog</span><span class="body"><a href="../changelog/">stratum.ai/changelog</a> — every revision dated, with one-line diffs and a link to the prior version.</span></div>
+      <div class="row"><span class="term">Prior versions</span><span class="body">Held in the Stratum archive. Available on request to <a href="mailto:legal@stratum.ai">legal@stratum.ai</a>.</span></div>
+    </div>
+
+    <p>
+      <span class="cite">¶ 20.01</span>
+      These terms are stable. Stratum's commitment to its Customers is to amend them only when amendment is genuinely warranted — by a material change in the law, in the product, or in the way the company operates. We will not push small redlines through the document to chase fashion.
+    </p>
+
+    <p>
+      <span class="cite">¶ 20.02</span>
+      This document was drafted by Stratum, Inc., with the advice of Wilson Sonsini Goodrich &amp; Rosati. It was reviewed by counsel for five enterprise design-partner Customers prior to publication. The redlines from that review materially improved the document. Where their counsel disagreed with our drafting and we agreed with their counsel, we changed the language; where their counsel disagreed and we did not agree, we explained why in the public design-partner notes (available on request).
+    </p>
+
+    <p>
+      <span class="cite">¶ 20.03</span>
+      These terms are a contract. They are also a public artifact — a statement of how Stratum wants to be in business with its Customers. We hope they read like both.
+    </p>
+  </section>
+
+</main>
+
+<!-- ─────────────────────────────────────────── SIGNATURE BLOCK ── -->
+<section class="signature">
+  <div class="signature-eyebrow">Acknowledgement &amp; execution</div>
+  <h2 class="signature-h">Signed, by the parties <em>or their agents</em>.</h2>
+
+  <p>
+    Public-Console-demo users acknowledge these terms by use; no signature is required. Enterprise Customers execute these terms by signing the MSA, which incorporates this document by reference, or by countersigning a stand-alone acknowledgment form. The signature block below is illustrative of the form a stand-alone acknowledgment takes.
+  </p>
+
+  <div class="sig-block">
+    <div class="sig-col">
+      <h5>For Stratum, Inc.</h5>
+      <div class="sig-line">The Chairman</div>
+      <div class="sig-meta">
+        Chairman &amp; Responsible Officer<br />
+        Stratum, Inc. &nbsp;·&nbsp; Palo Alto, CA<br />
+        chairman@stratum.ai
+      </div>
+    </div>
+    <div class="sig-col">
+      <h5>For Customer</h5>
+      <div class="sig-line">&nbsp;</div>
+      <div class="sig-meta">
+        Name &amp; title<br />
+        Customer legal entity<br />
+        Date
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back to your CHRO.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="./">Terms of service</a></li>
+        <li><a href="../privacy/">Privacy policy</a></li>
+        <li><a href="../trust/">DPA · subprocessors</a></li>
+        <li><a href="../trust/">SLA</a></li>
+        <li><a href="../changelog/">Legal changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function(){
+    if (window.scrollY > 8) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>
