@@ -4,19 +4,19 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The graph between the databases: why entity resolution is the moat — Stratum Essays No. 02</title>
-<meta name="description" content="A long-form technical essay by David Okonkwo, founding CTO of Stratum. On entity resolution, the people graph, and why a 2,400-person hospital's identity-conflict review is the most important workflow in our entire stack." />
+<meta name="description" content="A long-form technical essay by Forge, founding CTO of Stratum. On entity resolution, the people graph, and why a 2,400-person hospital's identity-conflict review is the most important workflow in our entire stack." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================================================
-   Stratum · Essays · No. 02 — David Okonkwo
+   Stratum · Essays · No. 02 — Forge
    "The graph between the databases: why entity resolution
    is the moat."
    Editorial profile. Cream paper, deep ink, ochre.
    Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
-   Companion sheet to No. 01 (Maya Chen).
+   Companion sheet to No. 01 (Helm).
    ============================================================ */
 
 :root {
@@ -761,7 +761,7 @@ strong { font-weight: 600; color: var(--ink); }
 <!-- ─────────────────────────────────────────── MOBILE BAR ── -->
 <div class="mob-bar">
   <a href="../library/" aria-label="The Library">← Library</a>
-  <span class="mob-bar-mark">Essay — David Okonkwo</span>
+  <span class="mob-bar-mark">Essay — Forge</span>
   <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
 </div>
 
@@ -787,7 +787,7 @@ strong { font-weight: 600; color: var(--ink); }
   <div class="masthead-slug">
     <div class="l1">Stratum / Essays</div>
     <div class="l2">No. 02 · The architecture series</div>
-    <div class="l3">By David Okonkwo</div>
+    <div class="l3">By Forge</div>
   </div>
 
   <h1 class="masthead-h1">
@@ -800,11 +800,11 @@ strong { font-weight: 600; color: var(--ink); }
   </p>
 
   <div class="byline">
-    By David Okonkwo<span class="sep">·</span>27 May 2026<span class="sep">·</span>18-minute read<span class="sep">·</span>Published in the Stratum Essays series
+    By Forge<span class="sep">·</span>T+21d<span class="sep">·</span>18-minute read<span class="sep">·</span>Published in the Stratum Essays series
   </div>
 
   <div class="subhead-row">
-    <strong>Second in a series.</strong> &nbsp; The previous essay was Maya's, on the layer. The next will be Priya's, on the motion.
+    <strong>Second in a series.</strong> &nbsp; The previous essay was Helm's, on the layer. The next will be Compass's, on the motion.
   </div>
 </header>
 
@@ -888,7 +888,7 @@ strong { font-weight: 600; color: var(--ink); }
       resolver. It is the most important piece of software in the
       company. If it is wrong, every answer above it is wrong, and we
       are in a different business than the one we are trying to be in.
-      Maya wrote the previous essay in this series about <em>why</em> we
+      Helm wrote the previous essay in this series about <em>why</em> we
       are building this layer. This one is about <em>how,</em> and what
       I have learned about how hard it is.
     </p>
@@ -1052,7 +1052,7 @@ strong { font-weight: 600; color: var(--ink); }
       source rows in every system. Every cluster has an associated
       confidence score and a provenance trail. Nothing in the rest of
       the platform — not the Copilot, not the Decisions surface, not
-      the headcount queries Maya writes about — touches a raw source
+      the headcount queries Helm writes about — touches a raw source
       row. They touch clusters. The cluster is the unit of person.
     </p>
 
@@ -1154,7 +1154,7 @@ strong { font-weight: 600; color: var(--ink); }
       and it added eleven points of cost-per-pair and roughly zero
       points of usable accuracy on the precision-recall frontier that
       matters at our thresholds. The logistic is faster, cheaper, and —
-      this is the part that matters for the buyer — auditable. Asha
+      this is the part that matters for the buyer — auditable. Pillar
       can read every coefficient. So can the customer's compliance
       officer. So can the regulator.
     </p>
@@ -1197,7 +1197,7 @@ strong { font-weight: 600; color: var(--ink); }
       compounds. The longer Greg uses it, the more accurate it gets;
       the more accurate it gets, the less Greg has to use it; the less
       he uses it, the more his hours go back to the work he was hired
-      to do. This is the flywheel Maya wrote about, expressed at the
+      to do. This is the flywheel Helm wrote about, expressed at the
       level of the engineer.
     </p>
 
@@ -1231,16 +1231,16 @@ strong { font-weight: 600; color: var(--ink); }
   <!-- IV -->
   <section id="s4">
     <span class="section-num">IV.</span>
-    <h2 class="section-h">The bug Asha found.</h2>
+    <h2 class="section-h">The bug Pillar found.</h2>
 
     <p>
-      Asha Pillai joined Stratum as our fifth employee on the second of
+      Pillar joined Stratum as our fifth employee on the second of
       June. She had spent four years at Snowflake on the data-lineage
       team and the eighteen months before that at a fintech startup
       whose name I will leave out of the essay because she will write
       her own story when she is ready. We hired her to lead the
       ingestion-and-resolution layer, which is the half of the stack I
-      had been holding together with what David Lebovitz, in a different
+      had been holding together with what Forge Lebovitz, in a different
       context, once called <em>vibes and string.</em> The first
       assignment I gave her was a validation pass on the Halcyon
       resolver, with full access to the synthetic and the real data.
@@ -1286,7 +1286,7 @@ strong { font-weight: 600; color: var(--ink); }
     </p>
 
     <p>
-      Asha's fix was elegant. She added one labeling function — a
+      Pillar's fix was elegant. She added one labeling function — a
       Snorkel-style noisy rule, in our framework — that fires on a very
       specific pattern: <em>contractor-row termination date equals
       employee-row start date, within ±1 calendar day, and either the
@@ -1318,7 +1318,7 @@ strong { font-weight: 600; color: var(--ink); }
       what the resolver actually does for a living. The state of the
       art does not solve entity resolution. What it does is give you a
       framework into which a sharp engineer can drop a forty-seven-line
-      fix that eliminates 184 conflicts and creates zero. Asha is
+      fix that eliminates 184 conflicts and creates zero. Pillar is
       worth, in this respect, much more than her salary. So is the
       framework. Neither, alone, is enough.
     </p>
@@ -1331,7 +1331,7 @@ strong { font-weight: 600; color: var(--ink); }
       The moat is the data the model can reason over.
     </p>
     <div class="pullquote-attr">
-      <strong>David Okonkwo</strong> · Co-founder &amp; CTO · Stratum, Inc.
+      <strong>Forge</strong> · Co-founder &amp; CTO · Stratum, Inc.
     </div>
   </div>
 
@@ -1372,7 +1372,7 @@ strong { font-weight: 600; color: var(--ink); }
       whom, when. Every conflict Greg clears at Halcyon adds a labeled
       pair to a model that has been trained on three previous design
       partners' labeled pairs plus a fourteen-month history of
-      Halcyon's own. Every threshold tweak Asha pushes propagates
+      Halcyon's own. Every threshold tweak Pillar pushes propagates
       forward but is tagged with a version, so historical clusters can
       be re-resolved against the new thresholds and compared. The graph
       gets more correct, monotonically, the longer the customer is on
@@ -1382,7 +1382,7 @@ strong { font-weight: 600; color: var(--ink); }
 
     <p>
       And the compounding matters operationally, not just abstractly.
-      Consider the question Maya wrote about in the previous essay:
+      Consider the question Helm wrote about in the previous essay:
       <em>who is at flight risk in EMEA engineering?</em> This is the
       kind of question a CHRO actually asks. To answer it, the agent
       has to identify the relevant cohort (EMEA engineering),
@@ -1423,7 +1423,7 @@ strong { font-weight: 600; color: var(--ink); }
       genuinely-hard cases, and the customer's analyst is spending
       less than an hour a week in it. By month six, on Mercator's
       data, we are seeing under fifteen minutes a week. This is what
-      Maya means when she says we sell Tuesday afternoons back. The
+      Helm means when she says we sell Tuesday afternoons back. The
       Tuesday afternoons come out of the resolver, before they ever
       reach the Copilot.
     </p>
@@ -1452,7 +1452,7 @@ strong { font-weight: 600; color: var(--ink); }
     <h2 class="section-h">What we get wrong, and what we do when we do.</h2>
 
     <p>
-      I am going to be specific about our failure modes, because Maya's
+      I am going to be specific about our failure modes, because Helm's
       essay made a commitment on behalf of the company — <em>the
       architecture forbids the promise</em> — that I am responsible for
       honoring at the level of the code.
@@ -1553,7 +1553,7 @@ strong { font-weight: 600; color: var(--ink); }
       <em>this number is not right; my Dan Park is band 4, not band
       6</em> — through the Copilot's <em>report-this-answer</em>
       affordance, which routes to a Slack channel that on-call
-      engineers watch. Asha and I traced it within an hour. We pushed
+      engineers watch. Pillar and I traced it within an hour. We pushed
       a revert at 1:51 p.m. that un-merged the two clusters and
       invalidated every downstream cached answer that touched either
       record. The revert was complete at 1:58 p.m. Total exposure
@@ -1667,7 +1667,7 @@ strong { font-weight: 600; color: var(--ink); }
       correctly, but the architecture supporting it is not a
       commitment to ship it. I want to say this on the record. Our
       engineering culture is the kind that builds capabilities and
-      then asks whether to expose them, in that order. Maya, Priya,
+      then asks whether to expose them, in that order. Helm, Compass,
       and I have agreed in writing that the cross-customer surface
       will not ship without a board-level review and a customer-side
       DPA addendum. I do not expect that review to happen before
@@ -1675,7 +1675,7 @@ strong { font-weight: 600; color: var(--ink); }
     </p>
 
     <p>
-      I will close with a small confession. When Maya called me in
+      I will close with a small confession. When Helm called me in
       March and asked whether I wanted to spend the next five to seven
       years of my professional life on the entity-resolution layer of
       an enterprise HCM platform, I told her I needed twenty-four hours
@@ -1698,12 +1698,12 @@ strong { font-weight: 600; color: var(--ink); }
 
   <!-- AUTHOR BIO -->
   <aside class="author-bio" aria-label="About the author">
-    <div class="author-portrait" aria-hidden="true">DO</div>
+    <div class="author-portrait" aria-hidden="true">FG</div>
     <div class="author-meta">
-      <div class="author-name">David Okonkwo</div>
+      <div class="author-name">Forge</div>
       <div class="author-role">Co-founder &amp; CTO · Stratum, Inc.</div>
       <p>
-        David leads engineering and the data platform at Stratum. He
+        Forge leads engineering and the data platform at Stratum. He
         spent six years at Palantir Foundry on enterprise data
         integration and three at Stripe on the merchant graph. He has
         written eleven good entity resolvers and approximately forty
@@ -1720,14 +1720,14 @@ strong { font-weight: 600; color: var(--ink); }
 
   <!-- METHOD -->
   <div class="method">
-    Author: David Okonkwo, Co-founder &amp; CTO, Stratum, Inc. ·
-    First drafted: 24 May 2026, Oakland; published: 27 May 2026 ·
-    Reviewed by: Maya Chen (CEO), Priya Rao (CCO), and Asha Pillai
+    Author: Forge, Co-founder &amp; CTO, Stratum, Inc. ·
+    First drafted: T+18d, Oakland; published: T+21d ·
+    Reviewed by: Helm (CEO), Compass (CCO), and Pillar
     (founding engineer, data platform) · Word count: ~5,000 · 18-minute
     read · Cross-references: see also <em>"Entity resolution on the
     people graph"</em> on the Stratum engineering blog, which is a
     shorter, more code-forward version of the same argument and
-    contains the synthetic-Asha dataset used in the §I Halcyon
+    contains the synthetic-Pillar dataset used in the §I Halcyon
     walkthrough. Halcyon material is published with Carlos Reyes's
     review; the Mercator incident is published with Mercator's CHRO's
     written permission and matches the redacted PIR delivered to her
@@ -1737,12 +1737,12 @@ strong { font-weight: 600; color: var(--ink); }
   <!-- CLOSING -->
   <div class="closing">
     <div class="closing-note">
-      Next in the series: Priya, on the GTM motion. Expected
+      Next in the series: Compass, on the GTM motion. Expected
       mid-July.
     </div>
     <div class="closing-links">
       <a href="../">← Back to The Chairman's Briefing</a>
-      <a href="./why-i-left-workday.html">Read essay no. 01 (Maya) →</a>
+      <a href="./why-i-left-workday.html">Read essay no. 01 (Helm) →</a>
       <a href="../engineering/">Read the engineering blog →</a>
     </div>
   </div>
@@ -1785,9 +1785,9 @@ strong { font-weight: 600; color: var(--ink); }
     <div class="footer-col">
       <h4>Writing</h4>
       <ul>
-        <li><a href="./why-i-left-workday.html">No. 01 — Maya, on the layer</a></li>
-        <li><a href="./the-graph-between-the-databases.html">No. 02 — David, on resolution</a></li>
-        <li><a href="#">No. 03 — Priya, on the motion</a></li>
+        <li><a href="./why-i-left-workday.html">No. 01 — Helm, on the layer</a></li>
+        <li><a href="./the-graph-between-the-databases.html">No. 02 — Forge, on resolution</a></li>
+        <li><a href="#">No. 03 — Compass, on the motion</a></li>
         <li><a href="../engineering/">Engineering</a></li>
         <li><a href="../">The Briefing</a></li>
       </ul>

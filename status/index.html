@@ -1172,7 +1172,7 @@ section {
     Operating without incident for <strong>21 days</strong>.
   </p>
   <div class="indicator-stamp">
-    <span>Last updated · <strong id="last-updated">13 May 2026 · 03:14 PT</strong></span>
+    <span>Last updated · <strong id="last-updated">T+7d · 03:14 PT</strong></span>
     <span>Auto-refresh · <strong>every 60 seconds</strong></span>
     <span>All times · <strong>America/Los_Angeles</strong></span>
   </div>
@@ -1293,10 +1293,10 @@ section {
   <div class="uptime-wrap">
     <div class="uptime-axis">
       <span>13 Feb 2026 ← 90 days ago</span>
-      <span>Today · 13 May 2026 →</span>
+      <span>Today · T+7d →</span>
     </div>
     <div class="uptime-grid" id="uptime-grid">
-      <!-- 90 cells. Day 0 = 13 Feb 2026, day 89 = 13 May 2026.
+      <!-- 90 cells. Day 0 = 13 Feb 2026, day 89 = T+7d.
            Ochre cell at day index 68 = 22 April 2026. -->
       <span class="uptime-cell" title="13 Feb 2026 · operational"></span>
       <span class="uptime-cell" title="14 Feb 2026 · operational"></span>
@@ -1380,14 +1380,14 @@ section {
       <span class="uptime-cell" title="03 May 2026 · operational"></span>
       <span class="uptime-cell" title="04 May 2026 · operational"></span>
       <span class="uptime-cell" title="05 May 2026 · operational"></span>
-      <span class="uptime-cell" title="06 May 2026 · operational"></span>
+      <span class="uptime-cell" title="T+0d · operational"></span>
       <span class="uptime-cell" title="07 May 2026 · operational"></span>
       <span class="uptime-cell" title="08 May 2026 · operational"></span>
-      <span class="uptime-cell" title="09 May 2026 · operational"></span>
+      <span class="uptime-cell" title="T+3d · operational"></span>
       <span class="uptime-cell" title="10 May 2026 · operational"></span>
-      <span class="uptime-cell" title="11 May 2026 · operational"></span>
-      <span class="uptime-cell" title="12 May 2026 · operational"></span>
-      <span class="uptime-cell" title="13 May 2026 · operational"></span>
+      <span class="uptime-cell" title="T+5d · operational"></span>
+      <span class="uptime-cell" title="T+6d · operational"></span>
+      <span class="uptime-cell" title="T+7d · operational"></span>
     </div>
 
     <div class="uptime-legend">
@@ -1527,7 +1527,7 @@ section {
     </article>
 
     <p class="incident-footer-note">
-      No prior public-facing incidents. Stratum was founded 06 May 2026;
+      No prior public-facing incidents. Stratum was founded T+0d;
       all operational events before the events above were pre-production
       and therefore not customer-impacting.
     </p>
@@ -1551,7 +1551,7 @@ section {
       <p>No customer-impact maintenance is planned through 30 June 2026.</p>
       <p><span class="none">● None scheduled · clear through 30 Jun</span></p>
       <p class="policy-line">
-        Next routine maintenance window: <strong>Tue 19 May 2026 · 02:00–04:00 PT</strong>
+        Next routine maintenance window: <strong>Tue T+13d · 02:00–04:00 PT</strong>
         — connector worker pool rotation, no expected impact.
       </p>
     </div>
@@ -1787,7 +1787,7 @@ section {
   (function () {
     var el = document.getElementById('last-updated');
     if (!el) return;
-    // Page is hardcoded to "13 May 2026 · 03:14 PT" — advance from there.
+    // Page is hardcoded to "T+7d · 03:14 PT" — advance from there.
     var baseMinutes = 14;        // 03:14
     var baseHour = 3;
     var startedAt = Date.now();
@@ -1797,7 +1797,7 @@ section {
       var totalMin = baseHour * 60 + baseMinutes + elapsedMin;
       var hh = Math.floor(totalMin / 60) % 24;
       var mm = totalMin % 60;
-      el.textContent = '13 May 2026 · ' + pad(hh) + ':' + pad(mm) + ' PT';
+      el.textContent = 'T+7d · ' + pad(hh) + ':' + pad(mm) + ' PT';
     }
     // Tick once a minute. We do not refresh data — there is no data.
     setInterval(tick, 60 * 1000);

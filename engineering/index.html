@@ -937,40 +937,40 @@ p { margin: 0 0 1.15em; }
   <ul class="index-list">
 
     <li class="index-item">
-      <div class="idx-date">19 Jun 2026</div>
+      <div class="idx-date">T+44d</div>
       <div class="idx-cat">Copilot</div>
       <div class="idx-body">
         <h3 class="idx-title"><a href="#post-03">Designing the agent surface</a></h3>
         <p class="idx-dek">On day one of design week I drew the copilot surface and counted eleven jobs it was being asked to do. By day five, it was doing four.</p>
       </div>
       <div class="idx-meta">
-        <span class="author">Tomás Iglesias</span>
+        <span class="author">Tessera</span>
         <span class="read">6 min read</span>
       </div>
     </li>
 
     <li class="index-item">
-      <div class="idx-date">14 Jun 2026</div>
+      <div class="idx-date">T+39d</div>
       <div class="idx-cat">People graph</div>
       <div class="idx-body">
         <h3 class="idx-title"><a href="#post-01">Entity resolution on the people graph</a></h3>
         <p class="idx-dek">Every enterprise has fifty source systems and the same person appears as eleven different entities. This is the problem we have to solve before anything else works.</p>
       </div>
       <div class="idx-meta">
-        <span class="author">David Okonkwo</span>
+        <span class="author">Forge</span>
         <span class="read">12 min read</span>
       </div>
     </li>
 
     <li class="index-item">
-      <div class="idx-date">09 Jun 2026</div>
+      <div class="idx-date">T+34d</div>
       <div class="idx-cat">Infrastructure</div>
       <div class="idx-body">
         <h3 class="idx-title"><a href="#post-02">What we mean when we say &lsquo;born compliant&rsquo;</a></h3>
         <p class="idx-dek">Compliance is the only feature where the customer punishes you for being late, not for being early. Here is how that shapes the architecture.</p>
       </div>
       <div class="idx-meta">
-        <span class="author">David Okonkwo</span>
+        <span class="author">Forge</span>
         <span class="read">8 min read</span>
       </div>
     </li>
@@ -983,7 +983,7 @@ p { margin: 0 0 1.15em; }
         <p class="idx-dek">A record is a row. A graph is a sentence. The difference shows up in the fourth question, not the first.</p>
       </div>
       <div class="idx-meta">
-        <span class="author">Maya Chen</span>
+        <span class="author">Helm</span>
         <span class="read">forthcoming</span>
       </div>
     </li>
@@ -996,7 +996,7 @@ p { margin: 0 0 1.15em; }
         <p class="idx-dek">We are publishing the 1,000 questions Stratum has to answer correctly. The wrong answers, too.</p>
       </div>
       <div class="idx-meta">
-        <span class="author">David Okonkwo &middot; Maya Chen</span>
+        <span class="author">Forge &middot; Helm</span>
         <span class="read">forthcoming</span>
       </div>
     </li>
@@ -1010,13 +1010,13 @@ p { margin: 0 0 1.15em; }
   <div class="post-eyebrow">
     <span class="num">01</span>
     <span>People graph</span>
-    <span class="cat">· 14 Jun 2026 · No. 001</span>
+    <span class="cat">· T+39d · No. 001</span>
   </div>
 
   <h1 class="post-h1">Entity resolution on the <em>people graph</em>.</h1>
 
   <div class="post-byline">
-    <span class="author">David Okonkwo</span>
+    <span class="author">Forge</span>
     <span class="sep">·</span>
     <span>Founding engineer, data</span>
     <span class="sep">·</span>
@@ -1057,7 +1057,7 @@ p { margin: 0 0 1.15em; }
     </p>
 
     <p>
-      Inside any one of those systems, the person <em>Asha Pillai</em> is
+      Inside any one of those systems, the person <em>Pillar</em> is
       reasonably consistent: she has an employee ID, an email, a manager, a cost
       centre. Across systems, she is eleven different entities. In one she is
       <span class="inline-mono">a.pillai@stratum.ai</span>. In another she is
@@ -1078,13 +1078,13 @@ p { margin: 0 0 1.15em; }
       attrition rate for engineers in their second year, who joined as
       contractors, who report into VPs hired in the last eighteen months&rdquo; —
       and we are; that is the product — then we have to know, with high
-      confidence, that the eleven Ashas are one Asha.
+      confidence, that the eleven Pillars are one Pillar.
     </p>
 
     <h2><span class="ord">§ 02 — A worked example</span>Eleven records, one person.</h2>
 
     <p>
-      Here is what the raw input looks like. This is synthetic — Asha graciously
+      Here is what the raw input looks like. This is synthetic — Pillar graciously
       let us use her name for the example, but the numbers are fictional — and it
       is representative of the join keys we get from a mid-sized customer&apos;s
       first batch of connectors.
@@ -1092,17 +1092,17 @@ p { margin: 0 0 1.15em; }
 
     <pre class="dataframe"><span class="h">source            id              name              email                          start         manager      </span>
 ─────────────────────────────────────────────────────────────────────────────────────────────────────────
-workday           E441207         Asha Pillai       a.pillai@stratum.ai            2024-08-12    E338019
-greenhouse        cand_8821       Asha S. Pillai    asha.pillai@gmail.com          2024-02-04    <span class="mute">—</span>
-okta              0oa3k1lm9d      Asha Pillai       a.pillai@stratum.ai            2024-08-13    <span class="mute">—</span>
+workday           E441207         Pillar       a.pillai@stratum.ai            2024-08-12    E338019
+greenhouse        cand_8821       Pillar S. Pillai    asha.pillai@gmail.com          2024-02-04    <span class="mute">—</span>
+okta              0oa3k1lm9d      Pillar       a.pillai@stratum.ai            2024-08-13    <span class="mute">—</span>
 slack             U05A7Q2W4       asha              <span class="mute">—</span>                              2024-08-15    <span class="mute">—</span>
 badge             B-22871         A. Pillai         <span class="mute">—</span>                              2024-08-13    <span class="mute">—</span>
-laptop_fleet      apillai-mbp-3   Asha Pillai       a.pillai@stratum.ai            2024-08-19    <span class="mute">—</span>
-contractor_sys    apillai_ext     Asha Pillai       asha.p@stratum-corp.com        2024-02-19    E101552
+laptop_fleet      apillai-mbp-3   Pillar       a.pillai@stratum.ai            2024-08-19    <span class="mute">—</span>
+contractor_sys    apillai_ext     Pillar       asha.p@stratum-corp.com        2024-02-19    E101552
 github            asha-p          <span class="mute">—</span>                <span class="mute">—</span>                              2024-08-20    <span class="mute">—</span>
-benefits_admin    BA-99203        Pillai, Asha      a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
-payroll_us        P-77118         Asha Pillai       a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
-expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai            2024-08-19    E338019      </pre>
+benefits_admin    BA-99203        Pillai, Pillar      a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
+payroll_us        P-77118         Pillar       a.pillai@stratum.ai            2024-08-12    <span class="mute">—</span>
+expense           EXP-44A         Pillar       a.pillai@stratum.ai            2024-08-19    E338019      </pre>
     <div class="dataframe-caption">Fig. 0 · Eleven source records, one human. Synthetic data; representative shape.</div>
 
     <p>
@@ -1136,7 +1136,7 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
     <ol>
       <li><strong>The contractor-to-employee transition.</strong> Different ID, different email, different start date, often a gap in tenure. The deterministic matcher creates two entities. Tenure analytics are wrong from that moment forward.</li>
       <li><strong>The acquisition / re-org.</strong> An employee from an acquired company gets a new email at the parent domain but keeps an old employee ID in the legacy payroll system that nobody ever migrated. Deterministic match fails on email; succeeds on ID; the matcher does not know which to trust.</li>
-      <li><strong>The data-entry collisions.</strong> Two real people named &ldquo;David Chen&rdquo; on the same team in the same office. The fuzzy matcher merges them. Their performance reviews and compensation history are now mixed.</li>
+      <li><strong>The data-entry collisions.</strong> Two real people named &ldquo;Forge Chen&rdquo; on the same team in the same office. The fuzzy matcher merges them. Their performance reviews and compensation history are now mixed.</li>
     </ol>
 
     <p>
@@ -1231,10 +1231,10 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
         <!-- right column: 7 entities -->
         <g font-family="JetBrains Mono" font-size="10" fill="#0e1626">
           <g><rect x="540" y="50" width="190" height="32" fill="#ebe1c9" stroke="#b8651f" stroke-width="1.3"/>
-             <text x="548" y="65" font-weight="bold">Asha Pillai</text>
+             <text x="548" y="65" font-weight="bold">Pillar</text>
              <text x="548" y="78" fill="#6c7180">7 records · conf 0.97</text></g>
           <g><rect x="540" y="92" width="190" height="32" fill="#ebe1c9" stroke="#b8651f" stroke-width="1.3"/>
-             <text x="548" y="107" font-weight="bold">Asha Pillai (contractor)</text>
+             <text x="548" y="107" font-weight="bold">Pillar (contractor)</text>
              <text x="548" y="120" fill="#6c7180">1 record · conf 0.88 · review</text></g>
           <g><rect x="540" y="134" width="190" height="22" fill="#f7f0e0" stroke="#c8b894"/>
              <text x="548" y="149">entity #2 · 1 record</text></g>
@@ -1322,7 +1322,7 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
     <h2><span class="ord">§ 06 — A specific bug</span>The temp-to-perm transition, found in 36 hours.</h2>
 
     <p>
-      <strong>Asha Pillai</strong> — the engineer, not the synthetic example —
+      <strong>Pillar</strong> — the engineer, not the synthetic example —
       joined Stratum on her first day after a six-month contract via a staffing
       agency. She is a real person and graciously agreed to be cited here. On
       her second working day, while reviewing the entity-resolution pipeline
@@ -1350,7 +1350,7 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
     </p>
 
     <p>
-      Asha found it in 36 hours. The fix was twelve lines of Python. The
+      Pillar found it in 36 hours. The fix was twelve lines of Python. The
       revalidation against the full eval set took longer — and we caught a
       separate regression in the review-band routing that we&apos;d shipped two
       weeks earlier — but the underlying lesson was hers: <em>we had been
@@ -1410,7 +1410,7 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
 
     <p>
       So we are going to keep writing about it. The next post in this series —
-      Maya is drafting it now — is about why we chose a graph representation in
+      Helm is drafting it now — is about why we chose a graph representation in
       the first place, instead of the &ldquo;people record&rdquo; pattern that
       every existing HRIS uses. The short version: a record can answer a
       question. A graph can answer the question after that one. We will write the
@@ -1428,10 +1428,10 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
 
     <div class="post-foot">
       <div class="author-bio">
-        <strong style="font-family: var(--display); font-style: normal;">David Okonkwo</strong> is a founding engineer at Stratum and leads the data platform. He spent six years at Palantir Foundry working on enterprise data integration, and three at Stripe on the merchant graph. He has written eleven good entity resolvers and approximately forty bad ones.
+        <strong style="font-family: var(--display); font-style: normal;">Forge</strong> is a founding engineer at Stratum and leads the data platform. He spent six years at Palantir Foundry working on enterprise data integration, and three at Stripe on the merchant graph. He has written eleven good entity resolvers and approximately forty bad ones.
       </div>
       <div>
-        <div>14 Jun 2026</div>
+        <div>T+39d</div>
         <div>People graph · No. 001</div>
       </div>
     </div>
@@ -1447,13 +1447,13 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
   <div class="post-eyebrow">
     <span class="num">02</span>
     <span>Infrastructure</span>
-    <span class="cat">· 09 Jun 2026 · No. 002</span>
+    <span class="cat">· T+34d · No. 002</span>
   </div>
 
   <h1 class="post-h1">What we mean when we say <em>born compliant</em>.</h1>
 
   <div class="post-byline">
-    <span class="author">David Okonkwo</span>
+    <span class="author">Forge</span>
     <span class="sep">·</span>
     <span>Founding engineer, data</span>
     <span class="sep">·</span>
@@ -1540,7 +1540,7 @@ expense           EXP-44A         Asha Pillai       a.pillai@stratum.ai         
     <p>
       We have built this constraint into the agent surface, not into a policy
       document. The copilot — internally now called the &ldquo;console&rdquo;,
-      see Tomás&apos;s post — cannot execute a consequential action without an
+      see Tessera&apos;s post — cannot execute a consequential action without an
       explicit human approval step. This is not a config flag. It is the shape
       of the API. The action types that the agent can directly perform are
       restricted at the schema level to: query, summarise, cite, draft, route.
@@ -1619,7 +1619,7 @@ HIPAA                    out of scope          <span class="mute">—</span>    
         correctly. The integration eventually worked.
       </div>
       <div>
-        <div>09 Jun 2026</div>
+        <div>T+34d</div>
         <div>Infrastructure · No. 002</div>
       </div>
     </div>
@@ -1635,13 +1635,13 @@ HIPAA                    out of scope          <span class="mute">—</span>    
   <div class="post-eyebrow">
     <span class="num">03</span>
     <span>Copilot</span>
-    <span class="cat">· 19 Jun 2026 · No. 003</span>
+    <span class="cat">· T+44d · No. 003</span>
   </div>
 
   <h1 class="post-h1">Designing the <em>agent surface</em>.</h1>
 
   <div class="post-byline">
-    <span class="author">Tomás Iglesias</span>
+    <span class="author">Tessera</span>
     <span class="sep">·</span>
     <span>Founding designer (pre-start, design week)</span>
     <span class="sep">·</span>
@@ -1816,10 +1816,10 @@ HIPAA                    out of scope          <span class="mute">—</span>    
 
     <div class="post-foot">
       <div class="author-bio">
-        <strong style="font-family: var(--display); font-style: normal;">Tomás Iglesias</strong> joined as founding designer in late June. He spent four years at Figma on the file canvas, and two at Airtable on the schema-builder. He has redesigned a copilot surface approximately fourteen times in the last three years and is not yet bored.
+        <strong style="font-family: var(--display); font-style: normal;">Tessera</strong> joined as founding designer in late June. He spent four years at Figma on the file canvas, and two at Airtable on the schema-builder. He has redesigned a copilot surface approximately fourteen times in the last three years and is not yet bored.
       </div>
       <div>
-        <div>19 Jun 2026</div>
+        <div>T+44d</div>
         <div>Copilot · No. 003</div>
       </div>
     </div>
