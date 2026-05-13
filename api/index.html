@@ -1,0 +1,2286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / API — Programmatic access to your people graph</title>
+<meta name="description" content="The Stratum API. Currently in private preview. Reference for the people graph, decisions, citations, and webhooks. OpenAPI 3.1, OAuth 2.0, signed citation packs." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/api — developer documentation
+   Cream paper · deep ink · ochre accent · moss for code-success
+   Wide reading column + sticky left rail TOC at 1024px+
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(740px, 92vw);
+  --rail:         260px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+p { margin: 0 0 1.1em; }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar {
+  display: none;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem 1rem;
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: center;
+  justify-content: space-between;
+}
+.mob-bar a { color: var(--ink-3); border-bottom: 0; }
+.mob-bar a:hover { color: var(--ochre); }
+.mob-bar-mark { color: var(--ink-2); font-weight: 500; }
+
+@media (max-width: 760px) {
+  .mob-bar { display: flex; }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after,
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 980px) {
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────────── HEADER ── */
+
+.doc-header {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4.4rem 0 2.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.doc-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.6rem;
+}
+.doc-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.doc-wordmark {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  line-height: .98;
+  letter-spacing: -.034em;
+  color: var(--ink);
+  margin: 0 0 1.15rem;
+}
+.doc-wordmark .slash {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1;
+  margin: 0 .12em;
+}
+
+.doc-sub {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  max-width: 60ch;
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  margin: 0 0 2.2rem;
+}
+
+.status-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.status-row .cell {
+  padding: .85rem 1.1rem;
+  border-right: 1px solid var(--paper-rule);
+  flex: 1 1 auto;
+  min-width: 180px;
+  color: var(--ink-2);
+}
+.status-row .cell:last-child { border-right: 0; }
+.status-row .cell .lbl {
+  color: var(--ink-mute);
+  display: block;
+  margin-bottom: .2rem;
+  font-size: 10.5px;
+  letter-spacing: .18em;
+}
+.status-row .cell .v { color: var(--ink); font-weight: 500; }
+.status-row .cell .v.ok { color: var(--moss); }
+.status-row .cell .v .dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--moss);
+  margin-right: .35rem;
+  vertical-align: middle;
+}
+
+/* ─────────────────────────────────────────── LAYOUT GRID ── */
+
+.doc-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--rail) 1fr;
+  gap: 4rem;
+  padding: 2.4rem 0 4rem;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .doc-grid {
+    grid-template-columns: 1fr;
+    gap: 1.4rem;
+  }
+}
+
+/* ─────────────────────────────────────────── TOC RAIL ── */
+
+.toc {
+  position: sticky;
+  top: 76px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: .3rem;
+}
+.toc h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .8rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.toc ul { list-style: none; margin: 0 0 1.4rem; padding: 0; }
+.toc li { margin: 0; }
+.toc a {
+  display: block;
+  padding: .3rem 0 .3rem .65rem;
+  color: var(--ink-3);
+  border-left: 2px solid transparent;
+  border-bottom: 0;
+  line-height: 1.35;
+  transition: color .15s, border-color .15s;
+}
+.toc a:hover { color: var(--ochre); }
+.toc a.is-current {
+  color: var(--ink);
+  border-left-color: var(--ochre);
+  font-weight: 500;
+}
+.toc .sub {
+  margin-left: .85rem;
+  font-size: 11px;
+  color: var(--ink-mute);
+}
+.toc .sub a { padding: .22rem 0 .22rem .55rem; }
+
+@media (max-width: 980px) {
+  .toc {
+    position: relative;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 1rem 1rem;
+    border: 1px solid var(--paper-rule);
+    background: var(--paper-warm);
+    margin-bottom: 1.6rem;
+  }
+  .toc h4 { margin-top: 0; }
+}
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+article {
+  min-width: 0;
+  max-width: 820px;
+}
+
+article section {
+  padding: 1.4rem 0 2.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+  scroll-margin-top: 86px;
+}
+article section:last-of-type { border-bottom: 0; }
+
+article h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: 2.15rem;
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+article h2 .num {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: block;
+  margin-bottom: .55rem;
+  font-weight: 500;
+}
+article h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 2.1rem 0 .6rem;
+}
+article h4 {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 1.6rem 0 .55rem;
+  font-weight: 500;
+}
+article .lede {
+  font-family: var(--serif);
+  font-size: 1.12rem;
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  color: var(--ink-2);
+  margin: .4rem 0 1.4rem;
+  max-width: 62ch;
+}
+
+article p { max-width: 70ch; }
+
+/* ─────────────────────────────────────────── CODE BLOCKS ── */
+
+.code {
+  position: relative;
+  margin: 1.1rem 0 1.6rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 2px solid var(--ochre);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  overflow: hidden;
+}
+.code-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem .9rem;
+  border-bottom: 1px solid var(--paper-rule);
+  background: rgba(232, 220, 195, 0.55);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.code-head .lang {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.code-head .copy {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: transparent;
+  border: 1px solid var(--paper-rule-2);
+  padding: .25rem .55rem;
+  cursor: pointer;
+  transition: color .15s, border-color .15s, background .15s;
+}
+.code-head .copy:hover {
+  color: var(--ink);
+  border-color: var(--ink-3);
+  background: var(--paper-deep);
+}
+.code-head .copy.is-copied {
+  color: var(--moss);
+  border-color: var(--moss-soft);
+}
+.code pre {
+  margin: 0;
+  padding: .85rem 1rem;
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+.code pre code {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  white-space: pre;
+}
+
+.tk-string  { color: var(--moss); }
+.tk-key     { color: var(--ink); font-weight: 500; }
+.tk-punct   { color: var(--ink-mute); }
+.tk-num     { color: var(--plum); }
+.tk-bool    { color: var(--plum); }
+.tk-null    { color: var(--ink-mute); font-style: italic; }
+.tk-comment { color: var(--ink-mute); font-style: italic; }
+.tk-method  { color: var(--ochre); font-weight: 700; }
+.tk-path    { color: var(--ink); font-weight: 500; }
+.tk-flag    { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── ENDPOINT CARD ── */
+
+.endpoint {
+  margin: 1.6rem 0 2.4rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+}
+.endpoint-head {
+  display: flex;
+  align-items: baseline;
+  gap: .9rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-deep);
+  font-family: var(--mono);
+  flex-wrap: wrap;
+}
+.endpoint-head .method {
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ochre);
+  padding: .25rem .55rem;
+  font-weight: 700;
+  border: 1px solid var(--ochre);
+}
+.endpoint-head .method.get { background: var(--moss); border-color: var(--moss); }
+.endpoint-head .method.del { background: var(--plum); border-color: var(--plum); }
+.endpoint-head .path {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--ink);
+  word-break: break-all;
+}
+.endpoint-head .scope {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-left: auto;
+  padding: .22rem .5rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+}
+.endpoint-body {
+  padding: 1rem 1.2rem 1.3rem;
+}
+.endpoint-body .desc {
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 1rem;
+}
+
+/* ─────────────────────────────────────────── TABLES ── */
+
+.t {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+  margin: .9rem 0 1.6rem;
+  color: var(--ink-2);
+}
+.t th, .t td {
+  text-align: left;
+  padding: .55rem .7rem;
+  border-bottom: 1px solid var(--paper-rule);
+  vertical-align: top;
+}
+.t th {
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 500;
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule-2);
+}
+.t td.name { color: var(--ink); font-weight: 500; white-space: nowrap; }
+.t td.type {
+  color: var(--ochre-deep);
+  font-size: 12px;
+}
+.t td.req { color: var(--plum); font-size: 11.5px; }
+.t td.req.opt { color: var(--ink-mute); }
+.t td.desc {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.t-wrap { overflow-x: auto; }
+
+/* ─────────────────────────────────────────── INLINE MONO ── */
+
+code.inl {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: .05em .35em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────── NOTE BLOCKS ── */
+
+.note {
+  margin: 1.2rem 0 1.4rem;
+  padding: .9rem 1.1rem .9rem 1rem;
+  border-left: 2px solid var(--moss);
+  background: rgba(197, 205, 177, 0.22);
+  font-family: var(--serif);
+  font-size: 0.98em;
+  color: var(--ink-2);
+}
+.note .lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+  margin-bottom: .35rem;
+}
+.note.warn {
+  border-left-color: var(--ochre);
+  background: rgba(230, 199, 155, 0.25);
+}
+.note.warn .lbl { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.closing-inner {
+  max-width: 720px;
+}
+.closing h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(1.9rem, 4.4vw, 3rem);
+  letter-spacing: -.024em;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.closing h2 .slash { color: var(--ochre); font-style: italic; font-variation-settings: "opsz" 144, "WONK" 1; }
+.closing p {
+  font-size: 1.12rem;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+.closing-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.6rem;
+  align-items: center;
+}
+.closing-cta .cta-primary {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .8rem 1.2rem;
+  border: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  display: inline-flex;
+  gap: .55rem;
+  align-items: center;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.closing-cta .cta-primary:hover { background: var(--ochre); border-color: var(--ochre); }
+.closing-cta .cta-primary .arr { color: var(--ochre); }
+.closing-cta .cta-primary:hover .arr { color: var(--ink); }
+.closing-cta .cta-ghost {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .8rem 1.1rem;
+  border: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  display: inline-flex;
+  gap: .55rem;
+  align-items: center;
+  background: var(--paper-warm);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.closing-cta .cta-ghost:hover { color: var(--ink); border-color: var(--ink-3); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+footer.foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.5rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+footer.foot a {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+footer.foot a:hover { color: var(--ochre); }
+footer.foot .briefing-link strong {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36, "WONK" 1;
+  font-style: italic;
+  letter-spacing: -.01em;
+  text-transform: none;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+/* ─────────────────────────────────────────── SMALL UTILS ── */
+
+.kbd {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule-2);
+  padding: .15rem .45rem;
+}
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .18rem .45rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+  color: var(--ink-3);
+  margin-right: .3rem;
+}
+.tag.preview { color: var(--ochre-deep); border-color: var(--ochre-soft); }
+.tag.gated { color: var(--plum); border-color: var(--plum); background: rgba(107, 58, 74, .08); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 760px) {
+  html, body { font-size: 16.5px; }
+  .doc-header { padding-top: 2.4rem; }
+  article h2 { font-size: 1.7rem; }
+  .endpoint-head { padding: .8rem .85rem; }
+  .endpoint-head .scope { margin-left: 0; }
+  .status-row .cell { flex: 1 1 100%; min-width: 0; border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .status-row .cell:last-child { border-bottom: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / API</span>
+  <a href="../" aria-label="Chairman&#39;s Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/index.html">Customers</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../compare/index.html">Compare</a>
+      <a href="./index.html" class="is-current">API</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a href="mailto:hello@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HEADER ── -->
+<header class="doc-header">
+  <div class="doc-eyebrow"><span class="bar"></span> Developer documentation · Private preview</div>
+  <h1 class="doc-wordmark">Stratum<span class="slash">/</span>API</h1>
+  <p class="doc-sub">
+    Programmatic access to your people graph. Currently in private preview;
+    design partners and select customers only. The shape of these endpoints will not
+    change before GA — only the rate limits, the SDK ergonomics, and the breadth of
+    write-back integrations.
+  </p>
+  <div class="status-row">
+    <div class="cell"><span class="lbl">Version</span><span class="v">v0.4 · 13 May 2026</span></div>
+    <div class="cell"><span class="lbl">Base URL</span><span class="v">https://api.stratum.ai</span></div>
+    <div class="cell"><span class="lbl">Auth</span><span class="v">OAuth 2.0 + JWT</span></div>
+    <div class="cell"><span class="lbl">Rate limit</span><span class="v">200 req/min</span></div>
+    <div class="cell"><span class="lbl">Status</span><span class="v ok"><span class="dot"></span>Operational</span></div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── DOC GRID ── -->
+<div class="doc-grid">
+
+  <!-- ─── LEFT RAIL TOC ─── -->
+  <aside class="toc" id="toc">
+    <h4>On this page</h4>
+    <ul>
+      <li><a href="#quickstart" data-toc>Quickstart</a></li>
+      <li><a href="#auth" data-toc>Authentication</a></li>
+      <li><a href="#concepts" data-toc>Concepts</a>
+        <ul class="sub">
+          <li><a href="#concept-graph" data-toc>The people graph</a></li>
+          <li><a href="#concept-decisions" data-toc>Decisions &amp; citations</a></li>
+          <li><a href="#concept-filters" data-toc>Filter grammar</a></li>
+          <li><a href="#concept-time" data-toc>Time fidelity</a></li>
+        </ul>
+      </li>
+      <li><a href="#endpoints" data-toc>Endpoints</a>
+        <ul class="sub">
+          <li><a href="#ep-query" data-toc>people/query</a></li>
+          <li><a href="#ep-aggregate" data-toc>aggregate</a></li>
+          <li><a href="#ep-distribution" data-toc>distribution</a></li>
+          <li><a href="#ep-pay-equity" data-toc>pay_equity</a></li>
+          <li><a href="#ep-decision" data-toc>decisions</a></li>
+          <li><a href="#ep-citation" data-toc>citations</a></li>
+        </ul>
+      </li>
+      <li><a href="#webhooks" data-toc>Webhooks</a></li>
+      <li><a href="#errors" data-toc>Errors</a></li>
+      <li><a href="#rate-limits" data-toc>Rate limits</a></li>
+      <li><a href="#sdks" data-toc>SDKs</a></li>
+      <li><a href="#changelog" data-toc>Changelog</a></li>
+      <li><a href="#status" data-toc>Status page</a></li>
+    </ul>
+  </aside>
+
+  <!-- ─── ARTICLE ─── -->
+  <article>
+
+    <!-- ─────────────────────────────────────────── QUICKSTART ── -->
+    <section id="quickstart">
+      <h2><span class="num">§ 01 · Quickstart</span>Your first request, in ninety seconds.</h2>
+      <p class="lede">
+        The Stratum API is a thin, opinionated layer over the same tools the Console
+        runs against your tenant. If you can ask a question in the Console, you can
+        ask it programmatically. The verbs are the same; only the response is colder.
+      </p>
+
+      <p>
+        Every request is authenticated with a scoped JWT issued by your tenant's
+        OAuth client. The example below assumes you have already exchanged a
+        <code class="inl">client_credentials</code> grant for an access token and
+        exported it as <code class="inl">$STRATUM_API_KEY</code>. If you don't have
+        a client yet, write to <a href="mailto:api@stratum.ai">api@stratum.ai</a> —
+        we'll provision one for your design-partner sandbox the same business day.
+      </p>
+
+      <p>
+        The canonical first call is a cohort query against the people graph. Pick a
+        slice you care about (here: senior engineering in EMEA), ask for it, and read
+        the response. Every read endpoint returns a row payload <em>and</em> a
+        <code class="inl">citation_pack</code> — the same provenance bundle the
+        Console uses to defend its answers in the boardroom.
+      </p>
+
+      <p>
+        Below: a curl request, the JSON response you should expect, and a brief
+        annotation of what each top-level field contains. Reading these three blocks
+        is enough to start integrating. The remainder of this document is reference
+        material you'll consult once, in anger, when something at 2am has stopped
+        behaving the way you remember.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">curl · request</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">curl</span> <span class="tk-string">https://api.stratum.ai/v1/people/query</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-H</span> <span class="tk-string">"Authorization: Bearer $STRATUM_API_KEY"</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-H</span> <span class="tk-string">"Content-Type: application/json"</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-H</span> <span class="tk-string">"Stratum-Version: 2026-05-13"</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-d</span> <span class="tk-string">'{
+    "filters": { "region": "EMEA", "level_in": ["IC5", "IC6", "M3"] },
+    "limit": 20,
+    "sort_by": "comp_ratio",
+    "sort_desc": true
+  }'</span></code></pre>
+      </div>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · response (truncated)</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK7Q4XJ8AB6KCN9MR3EVPDH"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:14:22Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"total_matched"</span><span class="tk-punct">:</span> <span class="tk-num">387</span><span class="tk-punct">,</span>
+  <span class="tk-key">"sample_capped_at"</span><span class="tk-punct">:</span> <span class="tk-num">20</span><span class="tk-punct">,</span>
+  <span class="tk-key">"truncated"</span><span class="tk-punct">:</span> <span class="tk-bool">true</span><span class="tk-punct">,</span>
+  <span class="tk-key">"rows"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_8a2c14e0"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"display_name"</span><span class="tk-punct">:</span> <span class="tk-string">"A. Achterberg"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"title"</span><span class="tk-punct">:</span> <span class="tk-string">"Staff Engineer, Platform"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC6"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"team"</span><span class="tk-punct">:</span> <span class="tk-string">"Platform · Identity"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"location"</span><span class="tk-punct">:</span> <span class="tk-string">"Amsterdam"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"country"</span><span class="tk-punct">:</span> <span class="tk-string">"NL"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"tenure_years"</span><span class="tk-punct">:</span> <span class="tk-num">5.4</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_total"</span><span class="tk-punct">:</span> <span class="tk-num">218000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_band_p50"</span><span class="tk-punct">:</span> <span class="tk-num">204000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_ratio"</span><span class="tk-punct">:</span> <span class="tk-num">1.07</span><span class="tk-punct">,</span>
+      <span class="tk-key">"last_review"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-Q1"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"performance_score"</span><span class="tk-punct">:</span> <span class="tk-num">4.2</span><span class="tk-punct">,</span>
+      <span class="tk-key">"flight_risk"</span><span class="tk-punct">:</span> <span class="tk-num">0.18</span><span class="tk-punct">,</span>
+      <span class="tk-key">"flight_risk_band"</span><span class="tk-punct">:</span> <span class="tk-string">"low"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"is_manager"</span><span class="tk-punct">:</span> <span class="tk-bool">false</span><span class="tk-punct">,</span>
+      <span class="tk-key">"span_of_control"</span><span class="tk-punct">:</span> <span class="tk-null">null</span><span class="tk-punct">,</span>
+      <span class="tk-key">"manager_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_42d9c1aa"</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-comment">// … 19 more rows …</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"cursor"</span><span class="tk-punct">:</span> <span class="tk-string">"eyJvZmZzZXQiOjIwLCJzbmFwc2hvdCI6IjIwMjYtMDUtMTNUMDk6MTQiLi4u"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"citation_pack"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK7Q4XKE7A2RPN0WK8FMA9D"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"people.query · region=EMEA, level_in=[IC5,IC6,M3]"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">387</span><span class="tk-punct">,</span>
+    <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"region"</span><span class="tk-punct">,</span> <span class="tk-string">"level"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <h4>What this query returns</h4>
+      <p>
+        The <strong>cohort</strong> is the set of EMEA-based individual contributors
+        and first-level managers at career bands IC5 through M3 — 387 people on the
+        date this query ran. <code class="inl">rows</code> is a representative
+        sample of up to 20, sorted by <code class="inl">comp_ratio</code> descending;
+        if the cohort exceeds <code class="inl">limit</code>, the response includes
+        one or two edge-case rows so you don't blind yourself to the long tail.
+        Use <code class="inl">cursor</code> for stable pagination.
+      </p>
+
+      <p>
+        The <strong>field schema</strong> is identical to the Console's internal
+        <code class="inl">projectRow</code> view: stable ids, display names (no
+        PII like email), levelled compensation against the band's 50th percentile,
+        a tenure value, a performance score on the 1-to-5 scale, and a flight-risk
+        score paired with its banded label. Gender is not returned on individual
+        rows; you'll only see it surface in cohort-level aggregates with cell-size
+        suppression, never in row payloads. This is a deliberate, non-configurable
+        constraint.
+      </p>
+
+      <p>
+        The <strong>citation pack</strong> is the per-response provenance bundle.
+        It carries the method, the controlled dimensions, the cohort size, a
+        confidence label, and the snapshot identifier of the source data. Citation
+        packs are immutable and audit-logged for eighteen months. You can replay
+        any one of them via <code class="inl">GET /v1/citations/{id}</code> — useful
+        for compliance, useful for reproducing the exact answer your CHRO read in a
+        board deck six weeks ago.
+      </p>
+    </section>
+
+    <!-- ─────────────────────────────────────────── AUTHENTICATION ── -->
+    <section id="auth">
+      <h2><span class="num">§ 02 · Authentication</span>OAuth 2.0 with scoped JWTs.</h2>
+      <p class="lede">
+        Stratum runs the same auth model whether you're calling from a server, an
+        interactive web app, or an internal AI agent. Three flows; one token type;
+        scopes that map exactly to your tenant's RBAC.
+      </p>
+
+      <h3>Flows</h3>
+      <p>
+        <strong>client_credentials.</strong> Server-to-server. The most common flow.
+        You exchange a client id and secret for a short-lived access token at
+        <code class="inl">https://auth.stratum.ai/oauth/token</code>. Tokens are JWTs
+        signed with RS256, expire in 3600 seconds, and carry the scopes you
+        requested. Refresh by re-exchanging — there are no refresh tokens for
+        machine credentials by design. Rotate the client secret every 90 days, or
+        every 30 days for clients that hold <code class="inl">admin.tenant</code>.
+      </p>
+
+      <p>
+        <strong>authorization_code with PKCE.</strong> Interactive applications
+        (custom dashboards, internal tools) embed the standard OAuth handshake.
+        Stratum hosts the consent screen at
+        <code class="inl">https://auth.stratum.ai/authorize</code> and returns to
+        your registered redirect URI with an authorization code that exchanges for
+        an access token (1 hour) and a refresh token (90 days). Per-user scopes
+        gate exactly the slice of the people graph the signed-in user could see in
+        the Console — your code does not need to re-implement permissions.
+      </p>
+
+      <p>
+        <strong>BYOA — bring-your-own-agent.</strong> The flow for embedding
+        Stratum behind a customer-owned LLM agent. You issue a scoped JWT to the
+        agent at runtime (with a 15-minute TTL, recommended) and rotate per
+        session. The agent presents the Stratum JWT to our API; it presents your
+        Anthropic/OpenAI/etc. credentials to its own model provider. The two never
+        meet on our side. The Console itself uses exactly this pattern; the
+        section below explains why that matters.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">curl · client_credentials</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">curl</span> <span class="tk-string">https://auth.stratum.ai/oauth/token</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-u</span> <span class="tk-string">"$STRATUM_CLIENT_ID:$STRATUM_CLIENT_SECRET"</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-d</span> <span class="tk-string">"grant_type=client_credentials"</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-d</span> <span class="tk-string">"scope=people.read aggregate.read citations.read"</span></code></pre>
+      </div>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · token response</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"access_token"</span><span class="tk-punct">:</span> <span class="tk-string">"eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InN0cmF0dW0tMjAyNi0wNCJ9.eyJpc3MiOiJodHRwczovL2F1dGguc3RyYXR1bS5haS8iLCJzdWIiOiJjbGllbnRfMDFIWko..."</span><span class="tk-punct">,</span>
+  <span class="tk-key">"token_type"</span><span class="tk-punct">:</span> <span class="tk-string">"Bearer"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"expires_in"</span><span class="tk-punct">:</span> <span class="tk-num">3600</span><span class="tk-punct">,</span>
+  <span class="tk-key">"scope"</span><span class="tk-punct">:</span> <span class="tk-string">"people.read aggregate.read citations.read"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"tenant_id"</span><span class="tk-punct">:</span> <span class="tk-string">"tnt_lattice_corp"</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <h3>Scopes</h3>
+      <div class="t-wrap">
+      <table class="t">
+        <thead>
+          <tr><th style="width:24%">Scope</th><th>Grants</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">people.read</td><td class="desc">Read rows from the people graph; cohort queries, single-entity lookups, edge traversal.</td></tr>
+          <tr><td class="name">aggregate.read</td><td class="desc">Run grouped statistics, distributions, and pay-equity analyses. Cell-size suppression is always applied.</td></tr>
+          <tr><td class="name">decisions.write</td><td class="desc">Create decisions that write back to a connected system. Requires an attached citation_pack and an approver_id. Gated to Platform + Decisions plan.</td></tr>
+          <tr><td class="name">citations.read</td><td class="desc">Retrieve, list, and replay citation packs. Needed for audit and reproducibility tooling.</td></tr>
+          <tr><td class="name">webhooks.manage</td><td class="desc">Subscribe to and manage webhook endpoints for tenant events.</td></tr>
+          <tr><td class="name">admin.tenant</td><td class="desc">Administer tenant configuration, OAuth clients, scope mappings, retention policies. Sensitive; 30-day secret rotation.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Token rotation</h3>
+      <p>
+        Access tokens (JWTs) expire after one hour and you should treat them as
+        disposable. Client secrets rotate on a default 90-day cadence, surfaced as
+        a calendar warning in the developer dashboard 14 days before expiry. Any
+        client that holds <code class="inl">decisions.write</code> or
+        <code class="inl">admin.tenant</code> is required to rotate every 30 days;
+        a missed rotation auto-suspends the client and emits a webhook
+        (<code class="inl">client.secret.expired</code>) so your on-call sees it
+        before your customers do.
+      </p>
+
+      <div class="note">
+        <span class="lbl">A note on the BYOK pattern used by the Console</span>
+        When you embed Stratum in a browser-facing surface (like our own Console),
+        you may use a customer-issued Anthropic API key alongside a Stratum scoped
+        JWT. The Stratum JWT controls access to your people graph; the Anthropic
+        key handles the reasoning model. The two credentials are presented to
+        different endpoints, on different origins, with different lifetimes — and
+        we never see either. The Console runs entirely in your browser; both keys
+        live in your <code class="inl">localStorage</code>, neither traverses our
+        servers. This is the same posture you should adopt for any agent you build
+        on the Stratum API.
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────── CONCEPTS ── -->
+    <section id="concepts">
+      <h2><span class="num">§ 03 · Concepts</span>Four ideas that recur in every endpoint.</h2>
+      <p class="lede">
+        Read this section once. After that, the endpoint reference will feel like
+        a checklist instead of a manual.
+      </p>
+
+      <h3 id="concept-graph">The people graph</h3>
+      <p>
+        Stratum models your workforce as a typed graph, not a flat employee table.
+        <strong>Entities</strong> are the nouns: <code class="inl">Employee</code>,
+        <code class="inl">Position</code>, <code class="inl">Team</code>,
+        <code class="inl">Location</code>, <code class="inl">CompensationBand</code>,
+        <code class="inl">PerformanceReview</code>, <code class="inl">SkillTag</code>.
+        <strong>Edges</strong> are the verbs that connect them:
+        <code class="inl">reports_to</code>, <code class="inl">manages</code>,
+        <code class="inl">member_of</code>, <code class="inl">compensated_at</code>,
+        <code class="inl">performed</code>, <code class="inl">located_at</code>,
+        <code class="inl">previously_held</code>. Every edge carries a validity
+        interval and a provenance record — the system that asserted it, the
+        timestamp it was asserted, the confidence score at assertion time.
+      </p>
+      <p>
+        Entity resolution is the boring miracle that makes the graph trustworthy.
+        When Workday calls someone <em>"Anna J. Achterberg"</em>, Greenhouse calls
+        her <em>"AJ Achterberg"</em>, and Slack calls her
+        <em>"anna.achterberg@…"</em>, Stratum resolves them to a single entity at
+        a tunable similarity threshold (default 0.94). Below threshold we hold
+        the candidates open as <code class="inl">entity_conflict_unresolved</code>
+        and route to a human reviewer rather than silently merging. Identity
+        provenance — which fields came from which connected system, and when —
+        is exposed on every row under <code class="inl">_provenance</code> when
+        you set <code class="inl">include=provenance</code> on a query.
+      </p>
+
+      <h3 id="concept-decisions">Decisions and citations</h3>
+      <p>
+        Every read returns a <code class="inl">citation_pack</code>. It carries
+        <code class="inl">method</code> (a human-readable description of what was
+        computed), <code class="inl">cohort_size</code> (n of the population
+        used), <code class="inl">dimensions_controlled</code> (the variables held
+        constant, where applicable), and a <code class="inl">confidence</code>
+        label of <code class="inl">high</code>, <code class="inl">moderate</code>,
+        or <code class="inl">low</code>. Suppressed cells, outlier handling, and
+        any methodology notes flow into <code class="inl">caveats</code>.
+      </p>
+      <p>
+        A <strong>decision</strong> is a write-back to a connected system: a comp
+        adjustment posted to Workday, a role change pushed to your HRIS, a
+        promotion case opened in your performance tool. Decisions are created via
+        <code class="inl">POST /v1/decisions</code> and require both an
+        <code class="inl">approver_id</code> (the human accountable for the
+        decision) and a citation_pack id (the evidence the decision was based
+        on). Citation packs are immutable; you cannot edit one after creation.
+        They are retained, fully indexed and replay-able, for eighteen months —
+        the EU AI Act audit window, with a buffer.
+      </p>
+
+      <h3 id="concept-filters">Filter grammar</h3>
+      <p>
+        Every read endpoint accepts the same filter shape. The grammar is
+        intentionally narrow — we'd rather support every important question well
+        than every possible query badly. The canonical fields and operators:
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · filter shape</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span>            <span class="tk-comment">// eq, scalar</span>
+  <span class="tk-key">"department_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"Engineering"</span><span class="tk-punct">,</span> <span class="tk-string">"Data"</span><span class="tk-punct">],</span> <span class="tk-comment">// in</span>
+  <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span>                     <span class="tk-comment">// one of NA, EMEA, APAC, LATAM</span>
+  <span class="tk-key">"region_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"EMEA"</span><span class="tk-punct">,</span> <span class="tk-string">"APAC"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"country"</span><span class="tk-punct">:</span> <span class="tk-string">"NL"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"location"</span><span class="tk-punct">:</span> <span class="tk-string">"Amsterdam"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"team"</span><span class="tk-punct">:</span> <span class="tk-string">"Platform · Identity"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC6"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"level_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"IC5"</span><span class="tk-punct">,</span> <span class="tk-string">"IC6"</span><span class="tk-punct">,</span> <span class="tk-string">"M3"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"employment_type"</span><span class="tk-punct">:</span> <span class="tk-string">"FT"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"flight_risk_band"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>          <span class="tk-comment">// low | moderate | high</span>
+  <span class="tk-key">"flight_risk_band_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"moderate"</span><span class="tk-punct">,</span> <span class="tk-string">"high"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"is_manager"</span><span class="tk-punct">:</span> <span class="tk-bool">true</span><span class="tk-punct">,</span>
+  <span class="tk-key">"promotion_eligible"</span><span class="tk-punct">:</span> <span class="tk-bool">true</span><span class="tk-punct">,</span>
+  <span class="tk-key">"comp_ratio_lt"</span><span class="tk-punct">:</span> <span class="tk-num">0.92</span><span class="tk-punct">,</span>             <span class="tk-comment">// lt / gt / lte / gte</span>
+  <span class="tk-key">"comp_ratio_gt"</span><span class="tk-punct">:</span> <span class="tk-num">1.05</span><span class="tk-punct">,</span>
+  <span class="tk-key">"comp_total_lt"</span><span class="tk-punct">:</span> <span class="tk-num">240000</span><span class="tk-punct">,</span>
+  <span class="tk-key">"comp_total_gt"</span><span class="tk-punct">:</span> <span class="tk-num">120000</span><span class="tk-punct">,</span>
+  <span class="tk-key">"performance_gte"</span><span class="tk-punct">:</span> <span class="tk-num">3.5</span><span class="tk-punct">,</span>
+  <span class="tk-key">"performance_lte"</span><span class="tk-punct">:</span> <span class="tk-num">4.8</span><span class="tk-punct">,</span>
+  <span class="tk-key">"tenure_gt"</span><span class="tk-punct">:</span> <span class="tk-num">2</span><span class="tk-punct">,</span>                     <span class="tk-comment">// years; tenure_lt also supported</span>
+  <span class="tk-key">"span_gte"</span><span class="tk-punct">:</span> <span class="tk-num">5</span><span class="tk-punct">,</span>
+  <span class="tk-key">"span_lte"</span><span class="tk-punct">:</span> <span class="tk-num">12</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <p>
+        Operators supported: <code class="inl">eq</code> (implicit, scalar),
+        <code class="inl">in</code> (suffix <code class="inl">_in</code> on array
+        fields), <code class="inl">lt</code> / <code class="inl">gt</code> /
+        <code class="inl">lte</code> / <code class="inl">gte</code> (suffix on
+        numeric fields), <code class="inl">between</code> (use
+        <code class="inl">_gt</code> + <code class="inl">_lt</code>),
+        <code class="inl">like</code> (string prefix; on <code class="inl">title</code>
+        and <code class="inl">team</code> only), <code class="inl">is_null</code>
+        (suffix <code class="inl">_is_null: true</code>), and
+        <code class="inl">not</code> (wrap any filter object in
+        <code class="inl">{"not": { … }}</code>). Multiple keys at the same level
+        AND together. For OR semantics, use the cohort-join shape below.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · cohort join (OR)</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"any_of"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span> <span class="tk-key">"flight_risk_band"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"APAC"</span><span class="tk-punct">,</span> <span class="tk-key">"performance_gte"</span><span class="tk-punct">:</span> <span class="tk-num">4.5</span> <span class="tk-punct">}</span>
+  <span class="tk-punct">]</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <h3 id="concept-time">Time fidelity</h3>
+      <p>
+        Stratum is event-sourced. Every change to the graph — a new hire, a comp
+        revision, a manager swap, a team rename — is recorded as an immutable
+        event with a monotonic timestamp. The current state of the graph is just
+        the fold of every event up to now; the historical state is the fold up
+        to whatever instant you ask for.
+      </p>
+      <p>
+        Every read endpoint accepts <code class="inl">as_of</code>, an ISO 8601
+        timestamp. Pass it and the graph is materialised at that moment;
+        compensation, headcount, manager relationships, even entity-resolution
+        decisions are evaluated as they stood. This is not a snapshot pulled
+        from a backup — it is a first-class query. The same endpoint that
+        answers <em>"What is our pay gap in EMEA today?"</em> answers
+        <em>"What was it on March 31, 2025, before the EU pay-transparency
+        deadline?"</em> with the same SLA.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · time-travel query</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2025-03-31T23:59:59Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span> <span class="tk-punct">},</span>
+  <span class="tk-key">"dimensions"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"level"</span><span class="tk-punct">,</span> <span class="tk-string">"region"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"minimum_n_per_cell"</span><span class="tk-punct">:</span> <span class="tk-num">10</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────── ENDPOINTS ── -->
+    <section id="endpoints">
+      <h2><span class="num">§ 04 · Endpoints</span>Six verbs. Same surface as the Console.</h2>
+      <p class="lede">
+        Every endpoint takes JSON, returns JSON, attaches a citation pack, and
+        respects scope. The cards below are intentionally repetitive — once you
+        know one, you know all of them.
+      </p>
+
+      <!-- ─────────── /v1/people/query ─────────── -->
+      <div class="endpoint" id="ep-query">
+        <div class="endpoint-head">
+          <span class="method">POST</span>
+          <span class="path">/v1/people/query</span>
+          <span class="scope">scope · people.read</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Filter and return rows from the people graph. Up to 200 rows per
+            request with cursor pagination; representative-sampling kicks in when
+            <code class="inl">limit</code> is below the matched count and
+            preserves edge cases on the tail.
+          </p>
+
+          <h4>Parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">filters</td><td class="type">object</td><td class="req opt">optional</td><td class="desc">Filter object using the canonical filter grammar. Omitted = all rows visible to scope.</td></tr>
+              <tr><td class="name">limit</td><td class="type">integer</td><td class="req opt">optional · default 20 · max 200</td><td class="desc">Maximum rows in <code class="inl">rows</code>. Cohort total is always returned in <code class="inl">total_matched</code>.</td></tr>
+              <tr><td class="name">sort_by</td><td class="type">string</td><td class="req opt">optional</td><td class="desc">Field to sort by. e.g. <code class="inl">comp_ratio</code>, <code class="inl">flight_risk</code>, <code class="inl">tenure_years</code>, <code class="inl">performance_score</code>.</td></tr>
+              <tr><td class="name">sort_desc</td><td class="type">boolean</td><td class="req opt">optional · default false</td><td class="desc">Descending sort.</td></tr>
+              <tr><td class="name">cursor</td><td class="type">string</td><td class="req opt">optional</td><td class="desc">Opaque cursor returned in a prior response; preserves the snapshot used for the original query.</td></tr>
+              <tr><td class="name">as_of</td><td class="type">string · ISO 8601</td><td class="req opt">optional</td><td class="desc">Materialise the graph at this instant. Defaults to "now" (latest snapshot).</td></tr>
+              <tr><td class="name">include</td><td class="type">array&lt;string&gt;</td><td class="req opt">optional</td><td class="desc">Additional fields: <code class="inl">provenance</code>, <code class="inl">edges</code>, <code class="inl">audit</code>.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · request body</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"flight_risk_band_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"moderate"</span><span class="tk-punct">,</span> <span class="tk-string">"high"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"performance_gte"</span><span class="tk-punct">:</span> <span class="tk-num">3.8</span>
+  <span class="tk-punct">},</span>
+  <span class="tk-key">"limit"</span><span class="tk-punct">:</span> <span class="tk-num">25</span><span class="tk-punct">,</span>
+  <span class="tk-key">"sort_by"</span><span class="tk-punct">:</span> <span class="tk-string">"flight_risk"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"sort_desc"</span><span class="tk-punct">:</span> <span class="tk-bool">true</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 200 OK</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK8MA0P1ABXTFCZNF8XYG7B"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:32:11Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"total_matched"</span><span class="tk-punct">:</span> <span class="tk-num">142</span><span class="tk-punct">,</span>
+  <span class="tk-key">"sample_capped_at"</span><span class="tk-punct">:</span> <span class="tk-num">25</span><span class="tk-punct">,</span>
+  <span class="tk-key">"truncated"</span><span class="tk-punct">:</span> <span class="tk-bool">true</span><span class="tk-punct">,</span>
+  <span class="tk-key">"rows"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_3f17a201"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"display_name"</span><span class="tk-punct">:</span> <span class="tk-string">"R. Okafor"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"title"</span><span class="tk-punct">:</span> <span class="tk-string">"Senior Engineer, Data Platform"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC5"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"team"</span><span class="tk-punct">:</span> <span class="tk-string">"Data Platform"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"location"</span><span class="tk-punct">:</span> <span class="tk-string">"London"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"country"</span><span class="tk-punct">:</span> <span class="tk-string">"GB"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"tenure_years"</span><span class="tk-punct">:</span> <span class="tk-num">3.2</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_total"</span><span class="tk-punct">:</span> <span class="tk-num">168000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_band_p50"</span><span class="tk-punct">:</span> <span class="tk-num">182000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"comp_ratio"</span><span class="tk-punct">:</span> <span class="tk-num">0.92</span><span class="tk-punct">,</span>
+      <span class="tk-key">"last_review"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-Q1"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"performance_score"</span><span class="tk-punct">:</span> <span class="tk-num">4.3</span><span class="tk-punct">,</span>
+      <span class="tk-key">"flight_risk"</span><span class="tk-punct">:</span> <span class="tk-num">0.71</span><span class="tk-punct">,</span>
+      <span class="tk-key">"flight_risk_band"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"is_manager"</span><span class="tk-punct">:</span> <span class="tk-bool">false</span><span class="tk-punct">,</span>
+      <span class="tk-key">"span_of_control"</span><span class="tk-punct">:</span> <span class="tk-null">null</span><span class="tk-punct">,</span>
+      <span class="tk-key">"manager_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_71ba8eed"</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-comment">// … 24 more rows …</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"cursor"</span><span class="tk-punct">:</span> <span class="tk-string">"eyJvIjoyNSwic25hcCI6IjIwMjYtMDUtMTNUMDk6MzIifQ"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"citation_pack"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8MA0Q3VAYHRD9NPK4WZX2"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"people.query · engineering, flight_risk_band in [moderate, high], performance ≥ 3.8"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">142</span><span class="tk-punct">,</span>
+    <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"department"</span><span class="tk-punct">,</span> <span class="tk-string">"flight_risk_band"</span><span class="tk-punct">,</span> <span class="tk-string">"performance_score"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">400 invalid_filter</code> for an unknown field or
+            operator; <code class="inl">403 scope_insufficient</code> if the
+            caller lacks <code class="inl">people.read</code>;
+            <code class="inl">422 cohort_too_small</code> if the matched cohort
+            is below your tenant's minimum cell size (default 5 for row queries).
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>1 unit per request. Cursor pages cost 1 unit each.</p>
+        </div>
+      </div>
+
+      <!-- ─────────── /v1/aggregate ─────────── -->
+      <div class="endpoint" id="ep-aggregate">
+        <div class="endpoint-head">
+          <span class="method">POST</span>
+          <span class="path">/v1/aggregate</span>
+          <span class="scope">scope · aggregate.read</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Group the people graph by one or two dimensions and compute
+            statistics. The workhorse for any "by department", "by region ×
+            level", or "headcount by team" question. Cell-size suppression is
+            always applied; cells below <code class="inl">min_cell_n</code> are
+            silently dropped from the result and counted in
+            <code class="inl">cells_suppressed_small_n</code>.
+          </p>
+
+          <h4>Parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">filters</td><td class="type">object</td><td class="req opt">optional</td><td class="desc">Filter grammar.</td></tr>
+              <tr><td class="name">group_by</td><td class="type">array&lt;string&gt;</td><td class="req">required</td><td class="desc">One or two dimensions from: <code class="inl">department</code>, <code class="inl">region</code>, <code class="inl">level</code>, <code class="inl">gender</code>, <code class="inl">country</code>, <code class="inl">team</code>, <code class="inl">location</code>, <code class="inl">flight_risk_band</code>, <code class="inl">last_review</code>, <code class="inl">employment_type</code>, <code class="inl">is_manager</code>.</td></tr>
+              <tr><td class="name">metrics</td><td class="type">array&lt;string&gt;</td><td class="req">required</td><td class="desc">Any of: <code class="inl">count</code>, <code class="inl">median_comp</code>, <code class="inl">mean_comp</code>, <code class="inl">median_comp_ratio</code>, <code class="inl">median_tenure</code>, <code class="inl">pct_high_flight_risk</code>, <code class="inl">pct_moderate_or_high_flight_risk</code>, <code class="inl">median_performance</code>, <code class="inl">median_span</code>, <code class="inl">pay_gap_pct</code>.</td></tr>
+              <tr><td class="name">min_cell_n</td><td class="type">integer</td><td class="req opt">optional · default 5</td><td class="desc">Suppress groups smaller than this n.</td></tr>
+              <tr><td class="name">as_of</td><td class="type">string · ISO 8601</td><td class="req opt">optional</td><td class="desc">Time-travel query.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · request body</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"employment_type"</span><span class="tk-punct">:</span> <span class="tk-string">"FT"</span> <span class="tk-punct">},</span>
+  <span class="tk-key">"group_by"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"region"</span><span class="tk-punct">,</span> <span class="tk-string">"level"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"metrics"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"count"</span><span class="tk-punct">,</span> <span class="tk-string">"median_comp"</span><span class="tk-punct">,</span> <span class="tk-string">"pct_high_flight_risk"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"min_cell_n"</span><span class="tk-punct">:</span> <span class="tk-num">10</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 200 OK</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK8N7F2V0DGRJ9XCQ4Z8PVH"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:36:48Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"dimensions"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"region"</span><span class="tk-punct">,</span> <span class="tk-string">"level"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"total_rows_used"</span><span class="tk-punct">:</span> <span class="tk-num">2845</span><span class="tk-punct">,</span>
+  <span class="tk-key">"cells_suppressed_small_n"</span><span class="tk-punct">:</span> <span class="tk-num">3</span><span class="tk-punct">,</span>
+  <span class="tk-key">"groups"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"group_key"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"NA"</span><span class="tk-punct">,</span> <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC6"</span> <span class="tk-punct">},</span>
+      <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">214</span><span class="tk-punct">,</span>
+      <span class="tk-key">"metrics"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+        <span class="tk-key">"count"</span><span class="tk-punct">:</span> <span class="tk-num">214</span><span class="tk-punct">,</span>
+        <span class="tk-key">"median_comp"</span><span class="tk-punct">:</span> <span class="tk-num">248000</span><span class="tk-punct">,</span>
+        <span class="tk-key">"pct_high_flight_risk"</span><span class="tk-punct">:</span> <span class="tk-num">14.5</span>
+      <span class="tk-punct">}</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"group_key"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span> <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC6"</span> <span class="tk-punct">},</span>
+      <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">131</span><span class="tk-punct">,</span>
+      <span class="tk-key">"metrics"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+        <span class="tk-key">"count"</span><span class="tk-punct">:</span> <span class="tk-num">131</span><span class="tk-punct">,</span>
+        <span class="tk-key">"median_comp"</span><span class="tk-punct">:</span> <span class="tk-num">204000</span><span class="tk-punct">,</span>
+        <span class="tk-key">"pct_high_flight_risk"</span><span class="tk-punct">:</span> <span class="tk-num">11.4</span>
+      <span class="tk-punct">}</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"group_key"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"APAC"</span><span class="tk-punct">,</span> <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC5"</span> <span class="tk-punct">},</span>
+      <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">98</span><span class="tk-punct">,</span>
+      <span class="tk-key">"metrics"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+        <span class="tk-key">"count"</span><span class="tk-punct">:</span> <span class="tk-num">98</span><span class="tk-punct">,</span>
+        <span class="tk-key">"median_comp"</span><span class="tk-punct">:</span> <span class="tk-num">142000</span><span class="tk-punct">,</span>
+        <span class="tk-key">"pct_high_flight_risk"</span><span class="tk-punct">:</span> <span class="tk-num">22.4</span>
+      <span class="tk-punct">}</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-comment">// … 14 more groups, sorted by first metric desc …</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"citation_pack"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8N7FC4XEPHGT3WVR0KAYJ"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"aggregate · region × level, FT only, min_cell_n=10"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">2845</span><span class="tk-punct">,</span>
+    <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"region"</span><span class="tk-punct">,</span> <span class="tk-string">"level"</span><span class="tk-punct">,</span> <span class="tk-string">"employment_type"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"caveats"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"3 cells suppressed (n<10): APAC×M3, LATAM×IC6, LATAM×M3"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">400 invalid_filter</code> for unknown
+            <code class="inl">group_by</code> or <code class="inl">metrics</code>
+            values; <code class="inl">422 cohort_too_small</code> if the post-
+            filter cohort has fewer than <code class="inl">min_cell_n</code> rows
+            in every cell (the entire result would be empty after suppression).
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>2 units per request. Aggregates touch more of the graph than row queries.</p>
+        </div>
+      </div>
+
+      <!-- ─────────── /v1/distribution ─────────── -->
+      <div class="endpoint" id="ep-distribution">
+        <div class="endpoint-head">
+          <span class="method">POST</span>
+          <span class="path">/v1/distribution</span>
+          <span class="scope">scope · aggregate.read</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Compute histogram bins or quantile values for one numeric field
+            across a filtered cohort. The right verb for "what does the comp_ratio
+            distribution look like for our senior ICs?" or "what's the p90 of
+            tenure in customer-facing roles?".
+          </p>
+
+          <h4>Parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">filters</td><td class="type">object</td><td class="req opt">optional</td><td class="desc">Filter grammar.</td></tr>
+              <tr><td class="name">field</td><td class="type">string</td><td class="req">required</td><td class="desc">One of: <code class="inl">comp_total</code>, <code class="inl">comp_ratio</code>, <code class="inl">tenure_years</code>, <code class="inl">performance_score</code>, <code class="inl">flight_risk</code>, <code class="inl">span_of_control</code>.</td></tr>
+              <tr><td class="name">bins</td><td class="type">integer</td><td class="req opt">optional · default 10</td><td class="desc">Number of equal-width histogram bins.</td></tr>
+              <tr><td class="name">quantiles</td><td class="type">array&lt;number&gt;</td><td class="req opt">optional</td><td class="desc">Values in <code class="inl">[0, 1]</code>. Returns each requested quantile.</td></tr>
+              <tr><td class="name">as_of</td><td class="type">string</td><td class="req opt">optional</td><td class="desc">Time-travel query.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · request body</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span> <span class="tk-key">"level_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"IC5"</span><span class="tk-punct">,</span> <span class="tk-string">"IC6"</span><span class="tk-punct">]</span> <span class="tk-punct">},</span>
+  <span class="tk-key">"field"</span><span class="tk-punct">:</span> <span class="tk-string">"comp_ratio"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"bins"</span><span class="tk-punct">:</span> <span class="tk-num">8</span><span class="tk-punct">,</span>
+  <span class="tk-key">"quantiles"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-num">0.1</span><span class="tk-punct">,</span> <span class="tk-num">0.5</span><span class="tk-punct">,</span> <span class="tk-num">0.9</span><span class="tk-punct">]</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 200 OK</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK8PA7K3VBXMC9YT2NRWQDF"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:40:02Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"field"</span><span class="tk-punct">:</span> <span class="tk-string">"comp_ratio"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">612</span><span class="tk-punct">,</span>
+  <span class="tk-key">"min"</span><span class="tk-punct">:</span> <span class="tk-num">0.78</span><span class="tk-punct">,</span>
+  <span class="tk-key">"max"</span><span class="tk-punct">:</span> <span class="tk-num">1.34</span><span class="tk-punct">,</span>
+  <span class="tk-key">"mean"</span><span class="tk-punct">:</span> <span class="tk-num">1.02</span><span class="tk-punct">,</span>
+  <span class="tk-key">"median"</span><span class="tk-punct">:</span> <span class="tk-num">1.01</span><span class="tk-punct">,</span>
+  <span class="tk-key">"quantiles"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"0.1"</span><span class="tk-punct">:</span> <span class="tk-num">0.87</span><span class="tk-punct">,</span>
+    <span class="tk-key">"0.5"</span><span class="tk-punct">:</span> <span class="tk-num">1.01</span><span class="tk-punct">,</span>
+    <span class="tk-key">"0.9"</span><span class="tk-punct">:</span> <span class="tk-num">1.21</span>
+  <span class="tk-punct">},</span>
+  <span class="tk-key">"bins"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">0.78</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">0.85</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">38</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">0.85</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">0.92</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">71</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">0.92</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">0.99</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">128</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">0.99</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">1.06</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">164</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">1.06</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">1.13</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">112</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">1.13</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">1.20</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">62</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">1.20</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">1.27</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">28</span> <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span> <span class="tk-key">"lo"</span><span class="tk-punct">:</span> <span class="tk-num">1.27</span><span class="tk-punct">,</span> <span class="tk-key">"hi"</span><span class="tk-punct">:</span> <span class="tk-num">1.34</span><span class="tk-punct">,</span> <span class="tk-key">"n"</span><span class="tk-punct">:</span> <span class="tk-num">9</span> <span class="tk-punct">}</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"citation_pack"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8PA7M0AYNMZW8KGFTVCQP"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"distribution · comp_ratio for Engineering IC5-IC6"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">612</span><span class="tk-punct">,</span>
+    <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"department"</span><span class="tk-punct">,</span> <span class="tk-string">"level"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">400 invalid_filter</code> for an unsupported
+            <code class="inl">field</code>; <code class="inl">422 cohort_too_small</code>
+            if the filtered cohort has fewer than 30 numeric values for the field
+            (the bin counts would be uninformative).
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>2 units per request.</p>
+        </div>
+      </div>
+
+      <!-- ─────────── /v1/analytics/pay_equity ─────────── -->
+      <div class="endpoint" id="ep-pay-equity">
+        <div class="endpoint-head">
+          <span class="method">POST</span>
+          <span class="path">/v1/analytics/pay_equity</span>
+          <span class="scope">scope · aggregate.read</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Specialised pay-equity computation with level and location controls.
+            Compares median compensation by gender within
+            (<code class="inl">level</code> × <code class="inl">location | region</code>)
+            cells, suppresses cells below the minimum, weights the gap by cell
+            size, and returns a methodology disclosure suitable for inclusion in
+            an EU Pay Transparency Directive filing.
+          </p>
+
+          <h4>Parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">filters</td><td class="type">object</td><td class="req opt">optional</td><td class="desc">Filter grammar.</td></tr>
+              <tr><td class="name">dimensions</td><td class="type">array&lt;string&gt;</td><td class="req opt">optional · default ["level","region"]</td><td class="desc">Cell-defining dimensions. Any combination of <code class="inl">level</code>, <code class="inl">location</code>, <code class="inl">region</code>, <code class="inl">department</code>, <code class="inl">team</code>.</td></tr>
+              <tr><td class="name">minimum_n_per_cell</td><td class="type">integer</td><td class="req opt">optional · default 10</td><td class="desc">Minimum women_n and men_n per cell; below threshold cells are suppressed.</td></tr>
+              <tr><td class="name">as_of</td><td class="type">string</td><td class="req opt">optional</td><td class="desc">Time-travel query.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · request body</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"region"</span><span class="tk-punct">:</span> <span class="tk-string">"EMEA"</span><span class="tk-punct">,</span> <span class="tk-key">"employment_type"</span><span class="tk-punct">:</span> <span class="tk-string">"FT"</span> <span class="tk-punct">},</span>
+  <span class="tk-key">"dimensions"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"level"</span><span class="tk-punct">,</span> <span class="tk-string">"location"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"minimum_n_per_cell"</span><span class="tk-punct">:</span> <span class="tk-num">12</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 200 OK</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK8QR7B0FAYVKWN3XCZPHGD"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"as_of"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:44:11Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"dimensions"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"level"</span><span class="tk-punct">,</span> <span class="tk-string">"location"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"minimum_n_per_cell"</span><span class="tk-punct">:</span> <span class="tk-num">12</span><span class="tk-punct">,</span>
+  <span class="tk-key">"cells_reported"</span><span class="tk-punct">:</span> <span class="tk-num">14</span><span class="tk-punct">,</span>
+  <span class="tk-key">"cells_suppressed_small_n"</span><span class="tk-punct">:</span> <span class="tk-num">9</span><span class="tk-punct">,</span>
+  <span class="tk-key">"weighted_gap_pct"</span><span class="tk-punct">:</span> <span class="tk-num">3.42</span><span class="tk-punct">,</span>
+  <span class="tk-key">"cells"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"cell"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"IC5"</span><span class="tk-punct">,</span> <span class="tk-key">"location"</span><span class="tk-punct">:</span> <span class="tk-string">"London"</span> <span class="tk-punct">},</span>
+      <span class="tk-key">"women_n"</span><span class="tk-punct">:</span> <span class="tk-num">34</span><span class="tk-punct">,</span>
+      <span class="tk-key">"men_n"</span><span class="tk-punct">:</span> <span class="tk-num">71</span><span class="tk-punct">,</span>
+      <span class="tk-key">"nb_n"</span><span class="tk-punct">:</span> <span class="tk-num">3</span><span class="tk-punct">,</span>
+      <span class="tk-key">"women_median"</span><span class="tk-punct">:</span> <span class="tk-num">158000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"men_median"</span><span class="tk-punct">:</span> <span class="tk-num">168000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"gap_pct"</span><span class="tk-punct">:</span> <span class="tk-num">5.95</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-punct">{</span>
+      <span class="tk-key">"cell"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"level"</span><span class="tk-punct">:</span> <span class="tk-string">"M3"</span><span class="tk-punct">,</span> <span class="tk-key">"location"</span><span class="tk-punct">:</span> <span class="tk-string">"Berlin"</span> <span class="tk-punct">},</span>
+      <span class="tk-key">"women_n"</span><span class="tk-punct">:</span> <span class="tk-num">19</span><span class="tk-punct">,</span>
+      <span class="tk-key">"men_n"</span><span class="tk-punct">:</span> <span class="tk-num">28</span><span class="tk-punct">,</span>
+      <span class="tk-key">"nb_n"</span><span class="tk-punct">:</span> <span class="tk-num">0</span><span class="tk-punct">,</span>
+      <span class="tk-key">"women_median"</span><span class="tk-punct">:</span> <span class="tk-num">182000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"men_median"</span><span class="tk-punct">:</span> <span class="tk-num">192000</span><span class="tk-punct">,</span>
+      <span class="tk-key">"gap_pct"</span><span class="tk-punct">:</span> <span class="tk-num">5.21</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-comment">// … 12 more cells, sorted by gap_pct desc …</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"methodology"</span><span class="tk-punct">:</span> <span class="tk-string">"Median comp_total compared within level × location groups; cells with women_n < 12 or men_n < 12 suppressed. Nonbinary excluded from binary gap. Weighted gap = Σ(gap × cell_n) / Σ(cell_n)."</span><span class="tk-punct">,</span>
+  <span class="tk-key">"citation_pack"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8QR7C2GEVLBNXR0HFKDWP"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"pay_equity · EMEA · level × location · min_n=12"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">1142</span><span class="tk-punct">,</span>
+    <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"level"</span><span class="tk-punct">,</span> <span class="tk-string">"location"</span><span class="tk-punct">,</span> <span class="tk-string">"region"</span><span class="tk-punct">,</span> <span class="tk-string">"employment_type"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"caveats"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"9 cells suppressed below n=12 threshold"</span><span class="tk-punct">,</span> <span class="tk-string">"binary gap; nonbinary cohort reported separately"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">422 cohort_too_small</code> if no cells meet the
+            <code class="inl">minimum_n_per_cell</code> threshold;
+            <code class="inl">400 invalid_filter</code> for unsupported
+            dimensions.
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>3 units per request.</p>
+        </div>
+      </div>
+
+      <!-- ─────────── /v1/decisions ─────────── -->
+      <div class="endpoint" id="ep-decision">
+        <div class="endpoint-head">
+          <span class="method">POST</span>
+          <span class="path">/v1/decisions</span>
+          <span class="scope">scope · decisions.write</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Create a decision: a write-back to a connected system. Examples
+            include comp adjustments, role changes, and promotion-case openings.
+            Every decision must reference an existing citation_pack and an
+            approver_id; the call is rejected without both. <span class="tag gated">Platform + Decisions plan</span>
+          </p>
+
+          <h4>Parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">subject_id</td><td class="type">string</td><td class="req">required</td><td class="desc">The entity the decision is about (typically an <code class="inl">emp_*</code> id).</td></tr>
+              <tr><td class="name">type</td><td class="type">string</td><td class="req">required</td><td class="desc">One of: <code class="inl">comp_adjustment</code>, <code class="inl">role_change</code>, <code class="inl">promotion_case</code>, <code class="inl">retention_offer</code>, <code class="inl">termination_initiated</code>.</td></tr>
+              <tr><td class="name">payload</td><td class="type">object</td><td class="req">required</td><td class="desc">Type-specific body. See per-type schemas in the developer dashboard.</td></tr>
+              <tr><td class="name">approver_id</td><td class="type">string</td><td class="req">required</td><td class="desc">The human accountable for the decision (an <code class="inl">emp_*</code> id with the appropriate role).</td></tr>
+              <tr><td class="name">citation_pack_id</td><td class="type">string</td><td class="req">required</td><td class="desc">Reference to the citation_pack that supports the decision. Must be ≤ 30 days old.</td></tr>
+              <tr><td class="name">target_system</td><td class="type">string</td><td class="req">required</td><td class="desc">Destination connector: <code class="inl">workday</code>, <code class="inl">bamboohr</code>, <code class="inl">ukg</code>, <code class="inl">greenhouse</code>, etc.</td></tr>
+              <tr><td class="name">idempotency_key</td><td class="type">string</td><td class="req opt">optional · recommended</td><td class="desc">Client-generated key; same key + same body = same decision, never duplicated.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · request body</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"subject_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_3f17a201"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"type"</span><span class="tk-punct">:</span> <span class="tk-string">"comp_adjustment"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"payload"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"new_comp_total"</span><span class="tk-punct">:</span> <span class="tk-num">182000</span><span class="tk-punct">,</span>
+    <span class="tk-key">"currency"</span><span class="tk-punct">:</span> <span class="tk-string">"GBP"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"effective_date"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-06-01"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"reason_code"</span><span class="tk-punct">:</span> <span class="tk-string">"market_alignment"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"note"</span><span class="tk-punct">:</span> <span class="tk-string">"Bring to band median; retention rationale, flight_risk=0.71"</span>
+  <span class="tk-punct">},</span>
+  <span class="tk-key">"approver_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_a92cd001"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"citation_pack_id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8MA0Q3VAYHRD9NPK4WZX2"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"target_system"</span><span class="tk-punct">:</span> <span class="tk-string">"workday"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"idempotency_key"</span><span class="tk-punct">:</span> <span class="tk-string">"comp-adj-emp3f17a201-2026Q2"</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 201 Created</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"dec_01HZK8RX9V0CFHJQNG3WTBYPZK"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"created_at"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:47:32Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"status"</span><span class="tk-punct">:</span> <span class="tk-string">"queued_for_writeback"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"subject_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_3f17a201"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"type"</span><span class="tk-punct">:</span> <span class="tk-string">"comp_adjustment"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"approver_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_a92cd001"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"citation_pack_id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8MA0Q3VAYHRD9NPK4WZX2"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"target_system"</span><span class="tk-punct">:</span> <span class="tk-string">"workday"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"target_ref"</span><span class="tk-punct">:</span> <span class="tk-null">null</span><span class="tk-punct">,</span>
+  <span class="tk-key">"writeback_attempts"</span><span class="tk-punct">:</span> <span class="tk-num">0</span><span class="tk-punct">,</span>
+  <span class="tk-key">"audit_log_id"</span><span class="tk-punct">:</span> <span class="tk-string">"aud_01HZK8RX9W4HVJDFPN0KCM2TXG"</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <div class="note warn">
+            <span class="lbl">Decisions are irrevocable from Stratum's side</span>
+            Once a decision is queued for write-back, you cannot delete it
+            through this API. You can issue a compensating decision (e.g. revert
+            a comp_adjustment) and Stratum will record both, in order, in the
+            audit log. The connected target system's policies still apply on
+            write — Workday may reject a comp change that violates a band, and
+            the decision will surface in status <code class="inl">writeback_rejected</code>
+            with the upstream error in <code class="inl">writeback_error</code>.
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">400 invalid_filter</code> (malformed payload);
+            <code class="inl">403 scope_insufficient</code> if the caller lacks
+            <code class="inl">decisions.write</code> or if the
+            <code class="inl">approver_id</code> isn't authorised for this
+            decision type; <code class="inl">409 entity_conflict_unresolved</code>
+            if subject_id is in entity-resolution review;
+            <code class="inl">422</code> if the citation_pack is older than 30
+            days or doesn't cover the subject.
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>5 units per request. Decisions count against the write-rate limit (50 req/min default).</p>
+        </div>
+      </div>
+
+      <!-- ─────────── /v1/citations/{id} ─────────── -->
+      <div class="endpoint" id="ep-citation">
+        <div class="endpoint-head">
+          <span class="method get">GET</span>
+          <span class="path">/v1/citations/{citation_id}</span>
+          <span class="scope">scope · citations.read</span>
+        </div>
+        <div class="endpoint-body">
+          <p class="desc">
+            Retrieve a citation pack by ID for audit replay. The returned object
+            includes the exact request that produced it, the resolved cohort
+            count, the snapshot identifier, and a replay token that can be
+            exchanged at the originating endpoint to reproduce the result.
+            Citation packs are retained for 18 months.
+          </p>
+
+          <h4>Path parameters</h4>
+          <div class="t-wrap">
+          <table class="t">
+            <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td class="name">citation_id</td><td class="type">string</td><td class="desc">A <code class="inl">cit_*</code> identifier returned by any read endpoint.</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h4>Example request</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">curl · request</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">curl</span> <span class="tk-string">https://api.stratum.ai/v1/citations/cit_01HZK8MA0Q3VAYHRD9NPK4WZX2</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">-H</span> <span class="tk-string">"Authorization: Bearer $STRATUM_API_KEY"</span></code></pre>
+          </div>
+
+          <h4>Example response</h4>
+          <div class="code">
+            <div class="code-head"><span class="lang">JSON · 200 OK</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"cit_01HZK8MA0Q3VAYHRD9NPK4WZX2"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"created_at"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:32:11Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"created_by"</span><span class="tk-punct">:</span> <span class="tk-string">"client_01HZJ74PQGRWAYVBD8C3MFKXPN"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"endpoint"</span><span class="tk-punct">:</span> <span class="tk-string">"POST /v1/people/query"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"request"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"filters"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+      <span class="tk-key">"department"</span><span class="tk-punct">:</span> <span class="tk-string">"Engineering"</span><span class="tk-punct">,</span>
+      <span class="tk-key">"flight_risk_band_in"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"moderate"</span><span class="tk-punct">,</span> <span class="tk-string">"high"</span><span class="tk-punct">],</span>
+      <span class="tk-key">"performance_gte"</span><span class="tk-punct">:</span> <span class="tk-num">3.8</span>
+    <span class="tk-punct">},</span>
+    <span class="tk-key">"limit"</span><span class="tk-punct">:</span> <span class="tk-num">25</span><span class="tk-punct">,</span>
+    <span class="tk-key">"sort_by"</span><span class="tk-punct">:</span> <span class="tk-string">"flight_risk"</span>
+  <span class="tk-punct">},</span>
+  <span class="tk-key">"method"</span><span class="tk-punct">:</span> <span class="tk-string">"people.query · engineering, flight_risk_band in [moderate, high], performance ≥ 3.8"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"cohort_size"</span><span class="tk-punct">:</span> <span class="tk-num">142</span><span class="tk-punct">,</span>
+  <span class="tk-key">"dimensions_controlled"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"department"</span><span class="tk-punct">,</span> <span class="tk-string">"flight_risk_band"</span><span class="tk-punct">,</span> <span class="tk-string">"performance_score"</span><span class="tk-punct">],</span>
+  <span class="tk-key">"confidence"</span><span class="tk-punct">:</span> <span class="tk-string">"high"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"caveats"</span><span class="tk-punct">:</span> <span class="tk-punct">[],</span>
+  <span class="tk-key">"source"</span><span class="tk-punct">:</span> <span class="tk-string">"hris.snapshot · 2026-05-13T08:00Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"snapshot_id"</span><span class="tk-punct">:</span> <span class="tk-string">"snap_2026-05-13T08:00:00Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"replay_token"</span><span class="tk-punct">:</span> <span class="tk-string">"rpl_eyJzbmFwIjoiMjAyNi0wNS0xM1QwODowMFoiLCJyZXEiOiJyZXFfMDFIWks4TUEwUDE..."</span><span class="tk-punct">,</span>
+  <span class="tk-key">"referenced_by"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span>
+    <span class="tk-string">"dec_01HZK8RX9V0CFHJQNG3WTBYPZK"</span>
+  <span class="tk-punct">],</span>
+  <span class="tk-key">"retention_until"</span><span class="tk-punct">:</span> <span class="tk-string">"2027-11-13T09:32:11Z"</span>
+<span class="tk-punct">}</span></code></pre>
+          </div>
+
+          <h4>Error semantics</h4>
+          <p>
+            <code class="inl">404 entity_not_found</code> if the citation id is
+            unknown or already past its 18-month retention. Citation packs are
+            scoped to the tenant; calls from a different tenant return 404, not
+            403, by design.
+          </p>
+
+          <h4>Rate limit cost</h4>
+          <p>1 unit per request.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─────────────────────────────────────────── WEBHOOKS ── -->
+    <section id="webhooks">
+      <h2><span class="num">§ 05 · Webhooks</span>Push notifications for people-graph events.</h2>
+      <p class="lede">
+        Stratum sends signed webhooks when entities in the graph change or when
+        long-running evaluations finish. Subscribe per event type, per
+        environment, per URL.
+      </p>
+
+      <h4>Event types (v0.4)</h4>
+      <div class="t-wrap">
+      <table class="t">
+        <thead><tr><th>Event</th><th>Fires when</th></tr></thead>
+        <tbody>
+          <tr><td class="name">employee.created</td><td class="desc">A new employee entity is resolved (typically from an HRIS create).</td></tr>
+          <tr><td class="name">employee.updated</td><td class="desc">Any field on an employee changes (level, location, comp_total, etc.).</td></tr>
+          <tr><td class="name">employee.terminated</td><td class="desc">An employee's <code class="inl">terminated_at</code> is recorded.</td></tr>
+          <tr><td class="name">manager.changed</td><td class="desc">A <code class="inl">reports_to</code> edge moves between entities.</td></tr>
+          <tr><td class="name">comp.review.completed</td><td class="desc">A compensation review cycle finishes for a cohort.</td></tr>
+          <tr><td class="name">decision.created</td><td class="desc">Any decision is created via <code class="inl">POST /v1/decisions</code>.</td></tr>
+          <tr><td class="name">decision.writeback_failed</td><td class="desc">A queued decision could not be written to its target system.</td></tr>
+          <tr><td class="name">eval_set.evaluation_completed</td><td class="desc">A scheduled eval-set run completes. Payload includes pass-rate and drift metrics.</td></tr>
+          <tr><td class="name">client.secret.expired</td><td class="desc">An OAuth client secret has expired and the client is now suspended.</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h4>Signed-webhook headers</h4>
+      <div class="code">
+        <div class="code-head"><span class="lang">HTTP · request headers</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-key">POST</span> /your/endpoint <span class="tk-key">HTTP/1.1</span>
+<span class="tk-key">Host:</span> hooks.example.com
+<span class="tk-key">Content-Type:</span> application/json
+<span class="tk-key">Stratum-Event:</span> employee.updated
+<span class="tk-key">Stratum-Delivery-Id:</span> dlv_01HZK91N0V0AYTKMD3WCVRPXBJ
+<span class="tk-key">Stratum-Tenant:</span> tnt_lattice_corp
+<span class="tk-key">Stratum-Timestamp:</span> 1747130100
+<span class="tk-key">Stratum-Signature:</span> v1=8c2b5fda4f9d0e1c… <span class="tk-comment">; HMAC-SHA256(timestamp.body, secret)</span></code></pre>
+      </div>
+
+      <h4>Example payload</h4>
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · employee.updated</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"id"</span><span class="tk-punct">:</span> <span class="tk-string">"evt_01HZK91N0V0AYTKMD3WCVRPXBJ"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"type"</span><span class="tk-punct">:</span> <span class="tk-string">"employee.updated"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"created_at"</span><span class="tk-punct">:</span> <span class="tk-string">"2026-05-13T09:55:00Z"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"tenant_id"</span><span class="tk-punct">:</span> <span class="tk-string">"tnt_lattice_corp"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"data"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"subject_id"</span><span class="tk-punct">:</span> <span class="tk-string">"emp_3f17a201"</span><span class="tk-punct">,</span>
+    <span class="tk-key">"changed_fields"</span><span class="tk-punct">:</span> <span class="tk-punct">[</span><span class="tk-string">"comp_total"</span><span class="tk-punct">,</span> <span class="tk-string">"comp_ratio"</span><span class="tk-punct">],</span>
+    <span class="tk-key">"before"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"comp_total"</span><span class="tk-punct">:</span> <span class="tk-num">168000</span><span class="tk-punct">,</span> <span class="tk-key">"comp_ratio"</span><span class="tk-punct">:</span> <span class="tk-num">0.92</span> <span class="tk-punct">},</span>
+    <span class="tk-key">"after"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span> <span class="tk-key">"comp_total"</span><span class="tk-punct">:</span> <span class="tk-num">182000</span><span class="tk-punct">,</span> <span class="tk-key">"comp_ratio"</span><span class="tk-punct">:</span> <span class="tk-num">1.00</span> <span class="tk-punct">},</span>
+    <span class="tk-key">"originating_decision_id"</span><span class="tk-punct">:</span> <span class="tk-string">"dec_01HZK8RX9V0CFHJQNG3WTBYPZK"</span>
+  <span class="tk-punct">},</span>
+  <span class="tk-key">"delivery"</span><span class="tk-punct">:</span> <span class="tk-punct">{</span>
+    <span class="tk-key">"attempt"</span><span class="tk-punct">:</span> <span class="tk-num">1</span><span class="tk-punct">,</span>
+    <span class="tk-key">"max_attempts"</span><span class="tk-punct">:</span> <span class="tk-num">8</span>
+  <span class="tk-punct">}</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <p>
+        Delivery is at-least-once with exponential back-off and a maximum of 8
+        attempts over 24 hours. Acknowledge with any 2xx; we treat 410 as a
+        permanent unsubscribe. Use <code class="inl">Stratum-Delivery-Id</code>
+        to deduplicate on your side. Verify
+        <code class="inl">Stratum-Signature</code> by computing
+        HMAC-SHA256 over <code class="inl">{timestamp}.{body}</code> with your
+        endpoint's signing secret and comparing in constant time.
+      </p>
+    </section>
+
+    <!-- ─────────────────────────────────────────── ERRORS ── -->
+    <section id="errors">
+      <h2><span class="num">§ 06 · Errors</span>Standard HTTP, plus a handful of Stratum-specific codes.</h2>
+      <p class="lede">
+        Every error response is JSON, with a stable <code class="inl">error</code>
+        machine-readable code, a human-readable <code class="inl">message</code>,
+        a <code class="inl">request_id</code> for support, and (where useful)
+        a <code class="inl">retry_after_ms</code> hint.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">JSON · error shape</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-punct">{</span>
+  <span class="tk-key">"error"</span><span class="tk-punct">:</span> <span class="tk-string">"cohort_too_small"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"message"</span><span class="tk-punct">:</span> <span class="tk-string">"Matched cohort (n=3) is below the minimum cell size for this operation (5)."</span><span class="tk-punct">,</span>
+  <span class="tk-key">"request_id"</span><span class="tk-punct">:</span> <span class="tk-string">"req_01HZK92B7QABYMFC8NTKDXWRZP"</span><span class="tk-punct">,</span>
+  <span class="tk-key">"hint"</span><span class="tk-punct">:</span> <span class="tk-string">"Widen the cohort by relaxing one filter, or lower min_cell_n if your tenant permits."</span>
+<span class="tk-punct">}</span></code></pre>
+      </div>
+
+      <div class="t-wrap">
+      <table class="t">
+        <thead><tr><th style="width:8%">Code</th><th style="width:26%">Name</th><th>When it happens</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td class="name">400</td><td class="name">invalid_filter</td><td class="desc">Filter object contains an unknown field, an unsupported operator, or a value of the wrong type.</td><td class="desc">Validate against the filter grammar (§ 03). The <code class="inl">message</code> names the offending key.</td></tr>
+          <tr><td class="name">401</td><td class="name">missing_or_invalid_token</td><td class="desc">Authorization header is missing, malformed, expired, or signed by a key Stratum doesn't recognise.</td><td class="desc">Re-exchange your client credentials at <code class="inl">/oauth/token</code>; verify clock skew &lt; 60s.</td></tr>
+          <tr><td class="name">403</td><td class="name">scope_insufficient</td><td class="desc">Token is valid but doesn't carry the scope this endpoint needs (e.g. <code class="inl">decisions.write</code> on a read-only client).</td><td class="desc">Re-issue the token with the required scope. Don't widen scopes preemptively.</td></tr>
+          <tr><td class="name">404</td><td class="name">entity_not_found</td><td class="desc">The path resource (citation, decision, employee) does not exist or is not visible to this tenant.</td><td class="desc">Confirm the id. Cross-tenant access is reported as 404, not 403, by design.</td></tr>
+          <tr><td class="name">409</td><td class="name">entity_conflict_unresolved</td><td class="desc">Entity resolution flagged the subject for human review; writes against it are blocked.</td><td class="desc">Resolve the conflict in the admin console, or call back after the <code class="inl">entity.resolved</code> webhook.</td></tr>
+          <tr><td class="name">422</td><td class="name">cohort_too_small</td><td class="desc">The post-filter cohort is below the minimum cell size for the requested operation.</td><td class="desc">Widen the cohort. For aggregates, lower <code class="inl">min_cell_n</code> if tenant policy permits.</td></tr>
+          <tr><td class="name">429</td><td class="name">rate_limited</td><td class="desc">Rate budget exceeded for this client. Retry after the duration in <code class="invl">retry_after_ms</code>.</td><td class="desc">Back off and retry. Use the <code class="inl">X-RateLimit-*</code> headers to pace yourself.</td></tr>
+          <tr><td class="name">500</td><td class="name">internal</td><td class="desc">Unexpected server error. Stratum has been alerted.</td><td class="desc">Retry idempotent requests with exponential back-off. For writes, check the audit log before retrying.</td></tr>
+          <tr><td class="name">503</td><td class="name">upstream_unavailable</td><td class="desc">A connected source-of-truth system (Workday, BambooHR, etc.) is unreachable; read continues from the last snapshot.</td><td class="desc">Reads still succeed against cached snapshots. Retry writes when <code class="inl">connector.recovered</code> webhook fires.</td></tr>
+          <tr><td class="name">524</td><td class="name">graph_traversal_timeout</td><td class="desc">A graph traversal exceeded the per-request budget (default 8s).</td><td class="desc">Narrow the cohort, or contact us to raise the budget for a specific use case.</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────── RATE LIMITS ── -->
+    <section id="rate-limits">
+      <h2><span class="num">§ 07 · Rate limits</span>Two budgets, generous bursts, per-tenant overrides.</h2>
+      <p class="lede">
+        Reads run on one budget; writes on another. Burst capacity is 4× the
+        per-minute rate. Enterprise contracts can negotiate higher steady-state
+        limits per endpoint family.
+      </p>
+
+      <div class="t-wrap">
+      <table class="t">
+        <thead><tr><th>Class</th><th>Steady-state</th><th>Burst</th><th>Endpoints</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Read</td><td class="desc">200 req/min</td><td class="desc">800 req/min for 15s</td><td class="desc">people/query, aggregate, distribution, analytics/pay_equity, citations/*</td></tr>
+          <tr><td class="name">Write</td><td class="desc">50 req/min</td><td class="desc">200 req/min for 15s</td><td class="desc">decisions</td></tr>
+          <tr><td class="name">Auth</td><td class="desc">30 req/min</td><td class="desc">90 req/min for 15s</td><td class="desc">oauth/token, webhooks management</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>
+        Every response carries <code class="inl">X-RateLimit-Limit</code>,
+        <code class="inl">X-RateLimit-Remaining</code>, and
+        <code class="inl">X-RateLimit-Reset</code> (a Unix timestamp in seconds).
+        When you hit the limit you'll receive a
+        <code class="inl">429 rate_limited</code> with a
+        <code class="inl">retry_after_ms</code> value in the body and the
+        <code class="inl">Retry-After</code> header in seconds.
+      </p>
+
+      <p>
+        Endpoints have unit costs (see each endpoint's "Rate limit cost"
+        note). Costs roll into the same budget — an aggregate request costs 2
+        units against the read budget, a decision costs 5 against the write
+        budget. The Console runs against the same budgets your engineering team
+        does; if the Console is sluggish, check whether a script is in a loop.
+      </p>
+    </section>
+
+    <!-- ─────────────────────────────────────────── SDKs ── -->
+    <section id="sdks">
+      <h2><span class="num">§ 08 · SDKs</span>Three languages, all in private preview.</h2>
+      <p class="lede">
+        Thin SDKs over the same JSON API. They handle auth refresh,
+        pagination, retries with jitter, and webhook signature verification.
+        Nothing they do is impossible to do by hand against the HTTP API.
+      </p>
+
+      <h3>Python <span class="tag preview">Private preview</span></h3>
+      <p>Install:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">shell · pip</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">pip</span> install stratum</code></pre>
+      </div>
+      <p>Quickstart:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">python</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-key">from</span> stratum <span class="tk-key">import</span> Stratum
+
+client = Stratum(api_key=os.environ[<span class="tk-string">"STRATUM_API_KEY"</span>])
+cohort = client.people.query(filters={<span class="tk-string">"region"</span>: <span class="tk-string">"EMEA"</span>, <span class="tk-string">"level_in"</span>: [<span class="tk-string">"IC5"</span>, <span class="tk-string">"IC6"</span>]}, limit=<span class="tk-num">20</span>)
+<span class="tk-key">print</span>(cohort.total_matched, cohort.citation_pack.id)</code></pre>
+      </div>
+      <p>
+        Repo: <code class="inl">github.com/stratum-hr/stratum-python</code>.
+        Access by invitation only — write to
+        <a href="mailto:api@stratum.ai?subject=Python%20SDK%20access">api@stratum.ai</a>
+        to request.
+      </p>
+
+      <h3>TypeScript <span class="tag preview">Private preview</span></h3>
+      <p>Install:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">shell · npm</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">npm</span> install @stratum/sdk</code></pre>
+      </div>
+      <p>Quickstart:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">typescript</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-key">import</span> { Stratum } <span class="tk-key">from</span> <span class="tk-string">"@stratum/sdk"</span>;
+
+<span class="tk-key">const</span> stratum = <span class="tk-key">new</span> Stratum({ apiKey: process.env.STRATUM_API_KEY! });
+<span class="tk-key">const</span> cohort = <span class="tk-key">await</span> stratum.people.query({
+  filters: { region: <span class="tk-string">"EMEA"</span>, level_in: [<span class="tk-string">"IC5"</span>, <span class="tk-string">"IC6"</span>] },
+  limit: <span class="tk-num">20</span>,
+});
+console.log(cohort.totalMatched, cohort.citationPack.id);</code></pre>
+      </div>
+      <p>
+        Repo: <code class="inl">github.com/stratum-hr/stratum-ts</code>.
+        Access by invitation only — write to
+        <a href="mailto:api@stratum.ai?subject=TypeScript%20SDK%20access">api@stratum.ai</a>
+        to request.
+      </p>
+
+      <h3>Go <span class="tag preview">Private preview</span></h3>
+      <p>Install:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">shell · go</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">go</span> get github.com/stratum-hr/stratum-go</code></pre>
+      </div>
+      <p>Quickstart:</p>
+      <div class="code">
+        <div class="code-head"><span class="lang">go</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-key">package</span> main
+
+<span class="tk-key">import</span> (
+    <span class="tk-string">"context"</span>
+    <span class="tk-string">"fmt"</span>
+    <span class="tk-string">"os"</span>
+
+    stratum <span class="tk-string">"github.com/stratum-hr/stratum-go"</span>
+)
+
+<span class="tk-key">func</span> main() {
+    c := stratum.New(stratum.WithAPIKey(os.Getenv(<span class="tk-string">"STRATUM_API_KEY"</span>)))
+    cohort, err := c.People.Query(context.Background(), &amp;stratum.QueryParams{
+        Filters: stratum.Filters{Region: <span class="tk-string">"EMEA"</span>, LevelIn: []<span class="tk-key">string</span>{<span class="tk-string">"IC5"</span>, <span class="tk-string">"IC6"</span>}},
+        Limit:   <span class="tk-num">20</span>,
+    })
+    <span class="tk-key">if</span> err != <span class="tk-null">nil</span> {
+        <span class="tk-key">panic</span>(err)
+    }
+    fmt.Println(cohort.TotalMatched, cohort.CitationPack.ID)
+}</code></pre>
+      </div>
+      <p>
+        Repo: <code class="inl">github.com/stratum-hr/stratum-go</code>.
+        Access by invitation only — write to
+        <a href="mailto:api@stratum.ai?subject=Go%20SDK%20access">api@stratum.ai</a>
+        to request.
+      </p>
+    </section>
+
+    <!-- ─────────────────────────────────────────── CHANGELOG ── -->
+    <section id="changelog">
+      <h2><span class="num">§ 09 · Changelog</span>Public-preview version history.</h2>
+      <p class="lede">
+        Every version is additive within a major. Breaking changes are accumulated
+        for the next major and are announced 90 days before they land.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">api · changelog</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-method">v0.4</span>  <span class="tk-comment">— 2026-05-13 · current</span>
+      Idempotency keys on /v1/decisions. New webhooks: decision.writeback_failed,
+      client.secret.expired. <span class="tk-string">replay_token</span> on citation packs.
+
+<span class="tk-method">v0.3</span>  <span class="tk-comment">— 2026-04-28</span>
+      Added /v1/analytics/pay_equity. Methodology disclosure included in
+      response. Tenant-configurable min_cell_n defaults.
+
+<span class="tk-method">v0.2</span>  <span class="tk-comment">— 2026-04-16</span>
+      Added /v1/distribution (histogram bins + quantiles). Cursor pagination
+      on /v1/people/query. <span class="tk-string">as_of</span> parameter on all read endpoints.
+
+<span class="tk-method">v0.1</span>  <span class="tk-comment">— 2026-04-06 · initial preview</span>
+      First six endpoints. OAuth 2.0 client_credentials only. Webhooks beta.
+      No SDKs yet — raw HTTP.</code></pre>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────────────────── STATUS ── -->
+    <section id="status">
+      <h2><span class="num">§ 10 · Status page</span>Live state at status.stratum.ai.</h2>
+      <p class="lede">
+        The authoritative health surface for every Stratum environment. The
+        snapshot below is updated hourly from the same telemetry the on-call
+        engineer reads.
+      </p>
+
+      <div class="code">
+        <div class="code-head"><span class="lang">status · 30-day window</span><button class="copy" data-copy>Copy</button></div>
+<pre><code><span class="tk-key">api.stratum.ai</span>           uptime  99.987%   p99 latency  214ms   <span class="tk-string">operational</span>
+<span class="tk-key">auth.stratum.ai</span>          uptime  99.999%   p99 latency   72ms   <span class="tk-string">operational</span>
+<span class="tk-key">hooks (delivery)</span>         uptime  99.972%   p99 attempt  3.1s   <span class="tk-string">operational</span>
+<span class="tk-key">console (browser app)</span>    uptime  99.991%   p99 first-paint 540ms <span class="tk-string">operational</span></code></pre>
+      </div>
+
+      <h4>Recent incidents</h4>
+      <div class="t-wrap">
+      <table class="t">
+        <thead><tr><th style="width:18%">Date</th><th style="width:14%">Severity</th><th>Summary</th><th>Duration</th></tr></thead>
+        <tbody>
+          <tr><td class="name">— last 30 days</td><td class="desc">—</td><td class="desc">No incidents.</td><td class="desc">—</td></tr>
+          <tr><td class="name">2026-02-11</td><td class="desc">Minor</td><td class="desc">Elevated p99 latency on /v1/aggregate in EU region due to cache warm-up after a routine snapshot rebuild. No data impact.</td><td class="desc">42 minutes</td></tr>
+          <tr><td class="name">2026-01-24</td><td class="desc">Minor</td><td class="desc">Webhook delivery delayed for tenants on a single dispatcher pod; auto-recovered. All payloads delivered within 90 minutes of intended send time.</td><td class="desc">18 minutes</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <p>
+        Subscribe to incident notifications at
+        <code class="inl">status.stratum.ai</code> or via the
+        <code class="inl">status.incident.*</code> webhook family.
+      </p>
+    </section>
+
+  </article>
+</div>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <div class="closing-inner">
+    <h2>The API is in <span class="slash">private</span> preview.</h2>
+    <p>
+      We are intentionally slow to GA. Every endpoint we ship is one we have to
+      maintain for a decade; the way to be fast in ten years is to be slow now.
+      If you want early access — to integrate Stratum into your developer
+      portal, to build a custom dashboard against the people graph, or to
+      compose Stratum tools into an agent of your own — write to us with a
+      one-paragraph description of what you want to build.
+    </p>
+    <p>
+      We read every request. Most receive a sandbox tenant the same week.
+    </p>
+    <div class="closing-cta">
+      <a class="cta-primary" href="mailto:api@stratum.ai?subject=API%20preview%20access">
+        api@stratum.ai <span class="arr">→</span>
+      </a>
+      <a class="cta-ghost" href="../console/">
+        Try the Console first <span>→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="foot">
+  <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+  <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // Smooth scroll for in-page anchors + close-to-top offset
+  (function () {
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var href = a.getAttribute('href');
+        if (href.length < 2) return;
+        var target = document.querySelector(href);
+        if (!target) return;
+        e.preventDefault();
+        var offset = 86;
+        var top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        history.replaceState(null, '', href);
+      });
+    });
+  })();
+
+  // Copy buttons
+  (function () {
+    var buttons = document.querySelectorAll('button[data-copy]');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var block = btn.closest('.code');
+        if (!block) return;
+        var pre = block.querySelector('pre');
+        if (!pre) return;
+        var text = pre.innerText;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () {
+            btn.textContent = 'Copied';
+            btn.classList.add('is-copied');
+            setTimeout(function () {
+              btn.textContent = 'Copy';
+              btn.classList.remove('is-copied');
+            }, 1400);
+          }).catch(function () {
+            btn.textContent = 'Press ⌘C';
+            setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+          });
+        } else {
+          // Fallback: select the text
+          var range = document.createRange();
+          range.selectNodeContents(pre);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          btn.textContent = 'Press ⌘C';
+          setTimeout(function () { btn.textContent = 'Copy'; }, 1400);
+        }
+      });
+    });
+  })();
+
+  // TOC active-link tracking via IntersectionObserver
+  (function () {
+    var sections = document.querySelectorAll('article section[id]');
+    var links = document.querySelectorAll('.toc a[data-toc]');
+    if (!('IntersectionObserver' in window) || !sections.length || !links.length) return;
+
+    function setCurrent(id) {
+      links.forEach(function (a) {
+        a.classList.toggle('is-current', a.getAttribute('href') === '#' + id);
+      });
+    }
+
+    var visible = new Map();
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+        else visible.delete(e.target.id);
+      });
+      // Pick the one with the largest ratio
+      var best = null;
+      var bestRatio = -1;
+      visible.forEach(function (ratio, id) {
+        if (ratio > bestRatio) { best = id; bestRatio = ratio; }
+      });
+      if (best) setCurrent(best);
+    }, { rootMargin: '-86px 0px -65% 0px', threshold: [0, 0.1, 0.5, 1] });
+
+    sections.forEach(function (s) { io.observe(s); });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum vs the incumbents — an honest side-by-side</title>
+<meta name="description" content="A truthful comparison of Stratum against Workday, SAP SuccessFactors, Oracle HCM, Rippling, and Lattice. We will tell you where we win, where we draw, and where we lose." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/compare — public comparison page
+   Cream paper + deep ink + ochre · honest editorial register
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --plum:         #6b3a4a;
+
+  --win:          #4a5d3a;
+  --draw:         #8a7330;
+  --loss:         #8a2a2a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-text:     min(72ch, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar { position: sticky; top: 0; z-index: 200; background: rgba(244,236,218,.96); -webkit-backdrop-filter: saturate(140%) blur(10px); backdrop-filter: saturate(140%) blur(10px); border-bottom: 1px solid var(--paper-rule); padding: .6rem 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: .6rem; font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-3); }
+  .mob-bar a { color: var(--ink-3); text-decoration: none; min-height: 36px; display: flex; align-items: center; padding: 0 .25rem; border: 0; }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark { font-family: var(--display); font-weight: 600; font-size: 1.05rem; letter-spacing: -.02em; color: var(--ink); text-transform: none; flex: 1; text-align: center; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current {
+  color: var(--ink);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-cta { padding: .5rem .75rem; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.4rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 9vw, 6rem);
+  line-height: .95;
+  letter-spacing: -.036em;
+  margin: 0 0 1.8rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+.hero-h1 .nbr { white-space: nowrap; }
+
+.hero-sub {
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 1.4vw, 1.35rem);
+  font-variation-settings: "opsz" 24;
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 2.4rem;
+}
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .9rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  border: 1px solid var(--ink);
+  transition: background .2s, color .2s, border-color .2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.btn-primary .arr { color: var(--ochre); transition: color .2s; }
+.btn-primary:hover .arr { color: var(--ink); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+
+.hero-meta {
+  margin-top: 2.8rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem 2.4rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-meta strong { color: var(--ink); font-weight: 600; }
+
+/* ─────────────────────────────────────────── SECTION SHARED ── */
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.03;
+  letter-spacing: -.024em;
+  margin: 0 0 1rem;
+  color: var(--ink);
+  max-width: 26ch;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.6rem;
+}
+.section-dek em { font-style: italic; color: var(--ochre); }
+
+/* ─────────────────────────────────────────── PREMISE ── */
+
+.premise {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+.premise-grid {
+  display: grid;
+  grid-template-columns: 0.7fr 1.3fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.premise-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  padding-top: .4rem;
+  position: relative;
+}
+.premise-label::before {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: var(--ochre);
+  margin-bottom: .8rem;
+}
+.premise-label .premise-title {
+  display: block;
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-transform: none;
+  line-height: 1.1;
+  margin-top: .8rem;
+}
+
+.premise-body {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 18;
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.premise-body p { margin: 0 0 1.4rem; }
+.premise-body p:last-child { margin-bottom: 0; }
+.premise-body em { font-style: italic; color: var(--ochre); }
+.premise-body strong { color: var(--ink); }
+.premise-body .footnote {
+  display: block;
+  margin-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  border-left: 2px solid var(--ochre);
+  padding: .4rem 0 .4rem 1rem;
+  text-transform: none;
+}
+
+/* ─────────────────────────────────────────── MATRIX ── */
+
+.matrix-section {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 5rem 0 5rem;
+}
+.matrix-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+}
+
+.matrix-wrap {
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table.matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  min-width: 980px;
+}
+table.matrix th, table.matrix td {
+  padding: 1rem .9rem;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--paper-rule);
+  border-right: 1px solid var(--paper-rule);
+}
+table.matrix th:last-child, table.matrix td:last-child { border-right: 0; }
+table.matrix thead th {
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 1rem .8rem;
+  border-right-color: rgba(244, 236, 218, .14);
+  vertical-align: bottom;
+  text-align: center;
+  line-height: 1.25;
+}
+table.matrix thead th.left {
+  text-align: left;
+}
+table.matrix thead th .sub {
+  display: block;
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: var(--ochre-soft);
+  font-weight: 400;
+  margin-top: .3rem;
+  text-transform: none;
+}
+table.matrix td.firm {
+  text-align: left;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  background: var(--paper-warm);
+  padding-left: 1.2rem;
+  min-width: 200px;
+}
+table.matrix td.firm .firm-sub {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 400;
+  margin-top: .3rem;
+}
+table.matrix tr.stratum td.firm {
+  background: var(--ink);
+  color: var(--paper);
+}
+table.matrix tr.stratum td.firm .firm-sub { color: var(--ochre-soft); }
+table.matrix tr.stratum td { background: rgba(184, 101, 31, .06); }
+table.matrix tr.stratum td.firm { background: var(--ink); }
+
+.dots {
+  font-family: var(--mono);
+  letter-spacing: .12em;
+  font-size: 14px;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.dots .off { color: var(--paper-rule-2); }
+tr.stratum .dots { color: var(--ochre); }
+tr.stratum .dots .off { color: var(--paper-rule-2); }
+
+.matrix-note {
+  margin-top: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  line-height: 1.6;
+  max-width: 90ch;
+  border-left: 2px solid var(--ochre);
+  padding: .4rem 0 .4rem 1rem;
+}
+.matrix-note strong { color: var(--ink); font-weight: 600; }
+
+.matrix-legend {
+  margin-top: 2.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem 2.6rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.matrix-legend .swatch {
+  display: inline-block;
+  margin-right: .55rem;
+  letter-spacing: .1em;
+  color: var(--ink);
+}
+.matrix-legend .swatch .off { color: var(--paper-rule-2); }
+
+/* ─────────────────────────────────────────── HEAD-TO-HEAD ── */
+
+.h2h {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3rem;
+}
+
+.h2h-intro {
+  max-width: 60ch;
+  margin-bottom: 3rem;
+}
+
+.h2h-card {
+  border-top: 2px solid var(--ink);
+  padding: 3rem 0 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.h2h-card:last-child { padding-bottom: 1rem; }
+
+.h2h-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.h2h-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+
+.h2h-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0;
+  color: var(--ink);
+}
+.h2h-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.h2h-stat-row {
+  display: flex;
+  gap: 1.8rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .4rem;
+}
+.h2h-stat-row strong { color: var(--ink); font-weight: 600; }
+
+.h2h-body {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 18;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.h2h-body p { margin: 0 0 1.1rem; }
+.h2h-body p:last-child { margin-bottom: 0; }
+.h2h-body em { font-style: italic; color: var(--ochre); }
+.h2h-body strong { color: var(--ink); }
+.h2h-body .pullquote {
+  display: block;
+  margin-top: 1.4rem;
+  padding: 1rem 0 0;
+  border-top: 1px dashed var(--paper-rule-2);
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  font-style: italic;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.h2h-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+}
+
+.h2h-block {
+  border: 1px solid var(--ink);
+  padding: 1.2rem 1.2rem 1.1rem;
+  font-family: var(--mono);
+  background: var(--paper-warm);
+}
+.h2h-block .blk-label {
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.h2h-block .blk-dot {
+  width: 8px; height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+}
+.h2h-block .blk-body {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  letter-spacing: 0;
+}
+.h2h-block .blk-body strong { color: var(--ink); font-weight: 600; }
+
+.h2h-block.win .blk-label { color: var(--win); }
+.h2h-block.win .blk-dot { background: var(--win); }
+.h2h-block.win { border-color: var(--win); }
+
+.h2h-block.loss .blk-label { color: var(--loss); }
+.h2h-block.loss .blk-dot { background: var(--loss); }
+.h2h-block.loss { border-color: var(--loss); }
+
+.h2h-block.draw .blk-label { color: var(--draw); }
+.h2h-block.draw .blk-dot { background: var(--draw); }
+.h2h-block.draw { border-color: var(--draw); }
+
+/* ─────────────────────────────────────────── NO-COMPETE ── */
+
+.nocompete {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5.5rem 0 5.5rem;
+  position: relative;
+}
+.nocompete::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(184, 101, 31, 0.08), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(244, 236, 218, 0.04), transparent 50%);
+  pointer-events: none;
+}
+.nocompete-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  position: relative;
+}
+.nocompete .section-eyebrow { color: var(--ochre-soft); }
+.nocompete .section-eyebrow .bar { background: var(--ochre-soft); }
+.nocompete .section-h { color: var(--paper); max-width: 22ch; }
+.nocompete .section-h em { color: var(--ochre-soft); }
+.nocompete .section-dek { color: rgba(244, 236, 218, .82); max-width: 60ch; }
+
+.nocompete-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid rgba(244, 236, 218, .25);
+  margin-top: 1rem;
+}
+
+.nc-item {
+  padding: 2.4rem 1.8rem 2rem;
+  border-right: 1px solid rgba(244, 236, 218, .14);
+  border-bottom: 1px solid rgba(244, 236, 218, .14);
+}
+.nc-item:last-child { border-right: 0; }
+
+.nc-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.nc-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+  line-height: 1.08;
+  letter-spacing: -.02em;
+  color: var(--paper);
+  margin: 0 0 1.1rem;
+}
+.nc-body {
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 16;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .82);
+}
+.nc-body strong { color: var(--paper); font-weight: 500; }
+.nc-partners {
+  display: block;
+  margin-top: 1.1rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+}
+
+/* ─────────────────────────────────────────── DECISION MATRIX ── */
+
+.decision {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+}
+
+.decision-table {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  border-collapse: collapse;
+  width: 100%;
+}
+.decision-table tr {
+  border-bottom: 1px solid var(--paper-rule);
+}
+.decision-table tr:last-child { border-bottom: 0; }
+.decision-table tr.us {
+  background: var(--ink);
+  color: var(--paper);
+}
+.decision-table tr.us td.need { color: var(--ochre-soft); }
+.decision-table tr.us td.answer { color: var(--paper); }
+.decision-table tr.us td.answer strong { color: var(--ochre); }
+
+.decision-table td {
+  padding: 1.4rem 1.3rem;
+  vertical-align: middle;
+}
+.decision-table td.need {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  width: 52%;
+  border-right: 1px solid var(--paper-rule);
+}
+.decision-table tr.us td.need { border-right-color: rgba(244, 236, 218, .14); }
+.decision-table td.answer {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 24;
+  font-weight: 400;
+  font-size: 1.15rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.decision-table td.answer strong {
+  font-weight: 600;
+  color: var(--ochre);
+}
+.decision-table td .quote {
+  display: block;
+  font-style: italic;
+  color: var(--ink-3);
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  background: var(--paper-warm);
+  border-top: 1px solid var(--paper-rule);
+  padding: 6rem 0 6.5rem;
+}
+.closing-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  text-align: left;
+}
+.closing-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.closing-eyebrow .bar {
+  height: 1px; width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.closing-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-style: italic;
+  font-size: clamp(2.4rem, 6.4vw, 4.6rem);
+  line-height: 1.02;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  max-width: 22ch;
+  margin: 0 0 1.6rem;
+}
+.closing-h em { color: var(--ochre); }
+.closing-sub {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.4rem;
+}
+.closing-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer { background: var(--ink); color: var(--paper); padding: 4.5rem 0 2.4rem; }
+.footer-grid { width: var(--col-wide); margin: 0 auto; display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 2.6rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(244,236,218,.14); }
+.footer-brand .mark { font-family: var(--display); font-weight: 600; font-variation-settings: "opsz" 72; font-size: 1.65rem; letter-spacing: -.035em; color: var(--paper); margin-bottom: 1rem; }
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p { font-family: var(--serif); font-size: 14px; line-height: 1.55; color: rgba(244,236,218,.78); max-width: 36ch; margin: 0; }
+.footer-col h4 { font-family: var(--mono); font-size: 10.5px; letter-spacing: .24em; text-transform: uppercase; color: var(--ochre); margin: 0 0 1rem; font-weight: 600; }
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a { font-family: var(--serif); font-size: 14.5px; color: rgba(244,236,218,.78); border: 0; }
+.footer-col a:hover { color: var(--ochre); }
+.footer-foot { width: var(--col-wide); margin: 0 auto; padding-top: 1.6rem; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(244,236,218,.55); }
+.footer-foot .briefing-link { color: rgba(244,236,218,.8); border: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--paper); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .h2h-card { grid-template-columns: 1fr; gap: 2rem; }
+  .premise-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+  .nocompete-grid { grid-template-columns: 1fr; }
+  .nc-item { border-right: 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .hero { padding: 3rem 0 2.5rem; }
+  .hero-h1 { font-size: clamp(2.4rem, 11vw, 4rem); }
+  .matrix-section { padding: 3.5rem 0; }
+  .h2h { padding: 3rem 0 2rem; }
+  .h2h-card { padding: 2.4rem 0 2.4rem; }
+  .nocompete { padding: 4rem 0; }
+  .decision { padding: 3.5rem 0 2.5rem; }
+  .closing { padding: 4rem 0 4.5rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-foot { flex-direction: column; gap: .8rem; align-items: flex-start; }
+  .decision-table td.need { width: 50%; padding: 1rem 1rem; }
+  .decision-table td.answer { padding: 1rem 1rem; font-size: 1rem; }
+  .h2h-stat-row { flex-direction: column; gap: .4rem; }
+}
+
+@media (max-width: 540px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum vs</span>
+  <a href="../briefings/005.html" aria-label="Briefing 005">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="#" class="is-current">Compare</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai?subject=Stratum%20%E2%80%94%20comparative%20evaluation">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>Comparison · Stratum vs the incumbents · May 2026</span>
+  </div>
+  <h1 class="hero-h1">
+    Where Stratum <em>stands</em> vs the incumbents — and where we <span class="nbr">don't.</span>
+  </h1>
+  <p class="hero-sub">
+    An honest side-by-side. We will not tell you Stratum wins on every
+    dimension. We will tell you where we win, where we draw, and where we
+    lose. We will also tell you when an incumbent is right for you.
+  </p>
+  <div class="hero-ctas">
+    <a href="../console/" class="btn btn-primary">Try the live console <span class="arr">→</span></a>
+    <a href="../intel/" class="btn btn-ghost">Read our intelligence dossier →</a>
+  </div>
+  <div class="hero-meta">
+    <span><strong>Subjects:</strong> Workday · SAP · Oracle · Rippling · Lattice</span>
+    <span><strong>Method:</strong> product trials · 11 CHRO interviews · 4 ex-incumbents</span>
+    <span><strong>Last refreshed:</strong> 13 May 2026</span>
+    <span><strong>Source:</strong> Internal CI Dossier No. 001 (declassified)</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── PREMISE ── -->
+<section class="premise">
+  <div class="premise-grid">
+    <div class="premise-label">
+      § 01 · The premise
+      <span class="premise-title">Why this page exists, and why it doesn't read like a marketing page.</span>
+    </div>
+    <div class="premise-body">
+      <p>
+        Most "Why Us vs Them" pages on the open internet are a
+        <em>marketing artifact</em> — a feature checklist where the vendor
+        marks every column green and the competitors get a tasteful red X.
+        We won't insult you with one. This page is built on the actual
+        product trials of all five subjects, eleven CHRO interviews
+        conducted under personal NDA between February and April 2026, and
+        four conversations with people who used to work for the incumbents
+        we cover. It summarises and de-confidentialises material that lives
+        in Stratum's internal Competitive Intelligence Dossier No. 001.
+        Where it would help, we have linked to <a href="../intel/">that
+        dossier</a>; the public version of this page leaves the names of
+        the customers anonymous.
+      </p>
+      <p>
+        We will lose to a Workday, an Oracle, or a SAP if your need is
+        system-of-record completeness, deep ERP integration, or seventeen
+        years of audit-ready payroll history across forty jurisdictions.
+        We are not the right answer there, and we will tell you so on the
+        first call. We will win when your need is asking your people data
+        a question and getting an answer you can put in front of your
+        board on Tuesday afternoon. That is the boundary. Everything else
+        on this page is detail.
+      </p>
+      <span class="footnote">
+        Numbers and rankings on this page defer to the briefings and the
+        intel dossier. If a number on this page disagrees with one in
+        those documents, the briefings are right. Methodology in the
+        footnote below the table.
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── MATRIX ── -->
+<section class="matrix-section" id="matrix">
+  <div class="matrix-inner">
+    <div class="section-eyebrow">
+      <span class="bar"></span>
+      <span>§ 02 · The scoring table</span>
+    </div>
+    <h2 class="section-h">Six firms, eight dimensions, <em>no asterisks</em>.</h2>
+    <p class="section-dek">
+      Five dots is excellent; one dot is poor. Each row was scored by
+      Maya Sundaram (Head of CI) and Priya Rao (CTO) independently, then
+      reconciled. Dimensions are the ones a CHRO told us, repeatedly, are
+      what she will be asked to defend in the procurement memo.
+    </p>
+
+    <div class="matrix-wrap" role="region" aria-label="Comparison matrix" tabindex="0">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th class="left">Subject</th>
+            <th>Speed to<br/>first answer<span class="sub">weeks to defensible</span></th>
+            <th>AI-native<br/>architecture<span class="sub">graph + agentic</span></th>
+            <th>Compliance<br/>posture<span class="sub">SOC 2 · GDPR · EU AI Act</span></th>
+            <th>System-of-record<br/>completeness<span class="sub">HRIS · payroll · benefits</span></th>
+            <th>Enterprise<br/>integration depth<span class="sub">ERP · 20-yr audit data</span></th>
+            <th>Pricing<br/>transparency<span class="sub">annual, no per-seat surprise</span></th>
+            <th>Customer<br/>NPS<span class="sub">median, public</span></th>
+            <th>AI feature<br/>maturity<span class="sub">today, not Q4 roadmap</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="stratum">
+            <td class="firm">Stratum
+              <span class="firm-sub">Pvt · Seed $8M · 2026</span>
+            </td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+          </tr>
+          <tr>
+            <td class="firm">Workday
+              <span class="firm-sub">NASDAQ : WDAY · $61B</span>
+            </td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          </tr>
+          <tr>
+            <td class="firm">SAP SuccessFactors
+              <span class="firm-sub">DE : SAP · part of $250B parent</span>
+            </td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          </tr>
+          <tr>
+            <td class="firm">Oracle HCM
+              <span class="firm-sub">NYSE : ORCL · $384B</span>
+            </td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●●</span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          </tr>
+          <tr>
+            <td class="firm">Rippling
+              <span class="firm-sub">Pvt · $13.5B last round</span>
+            </td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+          </tr>
+          <tr>
+            <td class="firm">Lattice
+              <span class="firm-sub">Pvt · last priced $3.0B</span>
+            </td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●●●<span class="off">●●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+            <td><span class="dots">●<span class="off">●●●●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●●●<span class="off">●</span></span></td>
+            <td><span class="dots">●●<span class="off">●●●</span></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="matrix-note">
+      <strong>Scoring methodology.</strong> Scores are Stratum's read of
+      public information, product trials, and eleven anonymised CHRO
+      interviews. <em>Speed to first answer</em> is the median weeks from
+      signed contract to first defensible board-grade answer; we score
+      4–8 weeks at five dots, 9–16 weeks at four, 4–12 months at three,
+      12–18 months at two, &gt;18 months at one. <em>AI feature maturity</em>
+      is "what you can ship to your CHRO this quarter," not what is
+      announced for Q4 2026. <em>NPS</em> is the median we have heard
+      across at least three independent customer references per subject,
+      paraphrased for confidentiality and triangulated with public peer
+      review data. Scores will not match a Gartner Magic Quadrant exactly
+      because we think Gartner under-weights AI-native architecture and
+      over-weights brand. We will tell you the same in person.
+    </p>
+
+    <div class="matrix-legend">
+      <span><span class="swatch">●●●●●</span> 5 · excellent</span>
+      <span><span class="swatch">●●●●<span class="off">●</span></span> 4 · strong</span>
+      <span><span class="swatch">●●●<span class="off">●●</span></span> 3 · adequate</span>
+      <span><span class="swatch">●●<span class="off">●●●</span></span> 2 · weak</span>
+      <span><span class="swatch">●<span class="off">●●●●</span></span> 1 · poor</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── HEAD-TO-HEAD ── -->
+<section class="h2h" id="head-to-head">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 03 · Head to head</span>
+  </div>
+  <h2 class="section-h">Four <em>vendors,</em> four honest reads.</h2>
+  <p class="section-dek h2h-intro">
+    For each of the primary competitors, three things in monospace:
+    where they win, where we win, and the customer profile for which they
+    are the right answer. We are happy to put any of this in writing for
+    your procurement memo.
+  </p>
+
+  <!-- ────────────── STRATUM vs WORKDAY ─────────── -->
+  <article class="h2h-card">
+    <div class="h2h-header">
+      <div>
+        <div class="h2h-tag">Head to head · 01</div>
+        <h3 class="h2h-title">Stratum <em>vs</em> Workday</h3>
+      </div>
+      <div class="h2h-stat-row">
+        <span><strong>WDAY:</strong> $61B mkt cap</span>
+        <span><strong>Customers:</strong> 10,500+</span>
+        <span><strong>Implementation:</strong> 14–22 months</span>
+      </div>
+    </div>
+
+    <div class="h2h-body">
+      <p>
+        The architectural difference matters more than any feature
+        comparison. Workday is the <em>system of record</em>. It is the
+        place where the employee object lives — hire date, comp band,
+        manager, badge ID, leave balance — and the warehouse it was
+        designed to be in 2008. Stratum is the <em>system of truth.</em> We
+        sit on top of Workday (and ADP, and Greenhouse, and your CSV
+        backups) and resolve those records into a graph that a CHRO can
+        ask a question of in English.
+      </p>
+      <p>
+        Workday is genuinely excellent at what it was built for. The
+        Illuminate Copilot is a credible orchestration layer, but it was
+        welded onto an object model designed before "agent" meant
+        anything technical. We are not trying to replace Workday; we are
+        trying to be the surface a CHRO actually <strong>uses</strong>
+        — and we read Workday's data on the way in.
+      </p>
+      <span class="pullquote">
+        "We use Workday like a filing cabinet. We'd like to use it like
+        a brain." — CHRO, regional bank, 4,200 EE
+      </span>
+    </div>
+
+    <div class="h2h-grid">
+      <div class="h2h-block win">
+        <div class="blk-label"><span class="blk-dot"></span>Where Workday wins</div>
+        <div class="blk-body">
+          17 years of audit-ready payroll history across 40+
+          jurisdictions. Deep ERP integration with Oracle Financials and
+          SAP S/4HANA. Reference-customer breadth (10,500+, including
+          most of the Fortune 500). Six-figure spend approves without a
+          procurement fight. <strong>If you are buying a system of
+          record, Workday is the safe answer.</strong>
+        </div>
+      </div>
+      <div class="h2h-block loss">
+        <div class="blk-label"><span class="blk-dot"></span>Where we win</div>
+        <div class="blk-body">
+          Speed to first answer: 8 weeks in our design partners vs 14–22
+          months for a typical Workday rollout. Per-decision pricing,
+          not per-seat — your CHRO is not punished for hiring. AI-native
+          architecture: a people graph and an agentic surface were the
+          chassis, not a 2024 retrofit. NPS 47 (Mercator) vs Workday's
+          median 18.
+        </div>
+      </div>
+      <div class="h2h-block draw">
+        <div class="blk-label"><span class="blk-dot"></span>When to pick them</div>
+        <div class="blk-body">
+          If you are a 5,000-EE company replacing a custom HRIS or an
+          aging PeopleSoft install and you need a full system-of-record
+          replacement with payroll across 12+ countries, buy Workday.
+          Put Stratum on top of it in year two when you are ready to
+          actually use the data you've paid to migrate.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ────────────── STRATUM vs SAP SF ─────────── -->
+  <article class="h2h-card">
+    <div class="h2h-header">
+      <div>
+        <div class="h2h-tag">Head to head · 02</div>
+        <h3 class="h2h-title">Stratum <em>vs</em> SAP SuccessFactors</h3>
+      </div>
+      <div class="h2h-stat-row">
+        <span><strong>SAP:</strong> part of $250B parent</span>
+        <span><strong>HCM rev:</strong> ~$2.9B</span>
+        <span><strong>Joule for HR:</strong> beta · Apr '26</span>
+      </div>
+    </div>
+
+    <div class="h2h-body">
+      <p>
+        SuccessFactors is the slowest mover in the incumbent set and the
+        one whose AI story is most clearly behind. Joule for HR went into
+        beta in April 2026 and the public reception has been middling. Of
+        the four CHRO interviews where SuccessFactors came up, three were
+        candidly looking at alternatives — and the alternative they
+        mentioned most often was Workday, not Stratum. We hear that and
+        take the lesson: SAP's vulnerability is not automatic upside for
+        a challenger.
+      </p>
+      <p>
+        That said: SAP wins decisively on global payroll, on talent suite
+        breadth (LMS, comp, succession, recruiting), and on
+        EU-government tenders where being a German vendor is worth
+        points. Stratum wins on AI maturity, on velocity, and on the
+        pricing model. The customer that should pick SAP is the one
+        already deep on S/4HANA — the integration math wins.
+      </p>
+    </div>
+
+    <div class="h2h-grid">
+      <div class="h2h-block win">
+        <div class="blk-label"><span class="blk-dot"></span>Where SAP wins</div>
+        <div class="blk-body">
+          Global payroll in 99 countries with country-team coverage.
+          Talent suite breadth (LMS · comp · succession · recruiting in
+          one suite). EU-government tender preference. Long ERP
+          relationships through S/4HANA. Compliance posture is genuinely
+          strong (BAFIN, BaFin-adjacent, ICO).
+        </div>
+      </div>
+      <div class="h2h-block loss">
+        <div class="blk-label"><span class="blk-dot"></span>Where we win</div>
+        <div class="blk-body">
+          AI maturity by a wide margin — Joule for HR is early; our
+          agentic surface is in production with five design partners.
+          Velocity: SAP ships on a 12–18 month cycle; we ship a release
+          every six weeks. Pricing transparency: SuccessFactors quotes
+          assume an ERP cross-sell. We don't.
+        </div>
+      </div>
+      <div class="h2h-block draw">
+        <div class="blk-label"><span class="blk-dot"></span>When to pick them</div>
+        <div class="blk-body">
+          If you are already running SAP S/4HANA and your CIO has a
+          standing order to buy SAP for everything ERP-adjacent, the
+          integration math favours SuccessFactors. Use Stratum on top
+          for the CHRO surface.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ────────────── STRATUM vs ORACLE ─────────── -->
+  <article class="h2h-card">
+    <div class="h2h-header">
+      <div>
+        <div class="h2h-tag">Head to head · 03</div>
+        <h3 class="h2h-title">Stratum <em>vs</em> Oracle HCM</h3>
+      </div>
+      <div class="h2h-stat-row">
+        <span><strong>ORCL:</strong> $384B mkt cap</span>
+        <span><strong>OCI HR Assistant:</strong> beta · 2026</span>
+        <span><strong>Cloud HCM customers:</strong> ~6,000</span>
+      </div>
+    </div>
+
+    <div class="h2h-body">
+      <p>
+        Oracle HCM is the quiet incumbent. It does not market like
+        Workday and does not have SAP's branding budget, but in
+        healthcare, federal-adjacent government, and Oracle Cloud
+        Financials shops, it is genuinely dominant. The OCI HR Assistant
+        beta is a real product, not vapor — but, like SAP's Joule, it is
+        early. And Oracle's installed base is most concentrated in
+        industries (healthcare, public sector) where the buyer is
+        legitimately not in a hurry to adopt AI.
+      </p>
+      <p>
+        We will not compete with Oracle in an Oracle Cloud ERP shop on
+        Oracle Cloud Financials. The integration cost favours staying.
+        We will compete — and win — when an Oracle Fusion customer is
+        looking for a CHRO surface that can read out of Fusion without
+        moving to it.
+      </p>
+    </div>
+
+    <div class="h2h-grid">
+      <div class="h2h-block win">
+        <div class="blk-label"><span class="blk-dot"></span>Where Oracle wins</div>
+        <div class="blk-body">
+          Cloud ERP integration if you are on Oracle Cloud Financials.
+          Long-tenure customer references in healthcare (Cleveland
+          Clinic-class), public sector, and US federal-adjacent
+          contractors. Database-grade audit trails. Compliance posture
+          for FedRAMP-adjacent buyers.
+        </div>
+      </div>
+      <div class="h2h-block loss">
+        <div class="blk-label"><span class="blk-dot"></span>Where we win</div>
+        <div class="blk-body">
+          AI maturity (OCI HR Assistant is beta; we are GA). Pricing
+          transparency — Oracle list prices are negotiated three times
+          and the final number is opaque to your board. Time-to-value:
+          our design partners hit first defensible answer at week 8 vs
+          12–18 months for Fusion HCM.
+        </div>
+      </div>
+      <div class="h2h-block draw">
+        <div class="blk-label"><span class="blk-dot"></span>When to pick them</div>
+        <div class="blk-body">
+          If you are an Oracle Fusion ERP shop, you intend to stay
+          there, and your CFO already trusts Oracle's database posture,
+          Oracle HCM is the right answer. Layer Stratum on top in year
+          two if your CHRO wants a surface that her board will actually
+          read.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ────────────── STRATUM vs RIPPLING ─────────── -->
+  <article class="h2h-card">
+    <div class="h2h-header">
+      <div>
+        <div class="h2h-tag">Head to head · 04</div>
+        <h3 class="h2h-title">Stratum <em>vs</em> Rippling</h3>
+      </div>
+      <div class="h2h-stat-row">
+        <span><strong>Rippling:</strong> $13.5B last round</span>
+        <span><strong>Customers:</strong> ~20,000</span>
+        <span><strong>Sweet spot:</strong> 200–2,000 EE</span>
+      </div>
+    </div>
+
+    <div class="h2h-body">
+      <p>
+        Rippling is a different shape of competitor. It is the
+        most-product-velocity company in this dossier and the one whose
+        compression strategy on pricing has reset what an HR-buyer
+        expects to pay. It is not, today, a CHRO platform — it is an HR
+        + IT + Finance bundle for the mid-market. That distinction
+        matters: a Rippling competitor at 600 EE is a different
+        conversation than at 6,000 EE.
+      </p>
+      <p>
+        Where Rippling wins is the under-2,000-EE company that wants one
+        bill for HR, IT provisioning, finance, and devices. Where we win
+        is the 1,000–8,000 EE enterprise where the buyer is a CHRO, not
+        a COO, and the decision surface matters more than the
+        consolidated invoice. Different ideal customer; honest
+        positioning.
+      </p>
+    </div>
+
+    <div class="h2h-grid">
+      <div class="h2h-block win">
+        <div class="blk-label"><span class="blk-dot"></span>Where Rippling wins</div>
+        <div class="blk-body">
+          Mid-market HR + IT + Finance bundle (the only credible
+          single-vendor play for sub-2,000-EE companies). Speed to
+          deploy: 4–6 weeks for a 600-EE rollout. Pricing simplicity in
+          that segment — a published per-employee number that does
+          land at $8/head in some segments.
+        </div>
+      </div>
+      <div class="h2h-block loss">
+        <div class="blk-label"><span class="blk-dot"></span>Where we win</div>
+        <div class="blk-body">
+          AI maturity: Rippling's AI investment is real but newer than
+          ours. Enterprise customer profile: we serve 1,000–8,000 EE
+          credibly; Rippling's sweet spot is 200–2,000. Depth of
+          decision-support for CHROs — Rippling has not built that
+          surface yet.
+        </div>
+      </div>
+      <div class="h2h-block draw">
+        <div class="blk-label"><span class="blk-dot"></span>When to pick them</div>
+        <div class="blk-body">
+          If you are a 600-EE company consolidating HR + IT + Finance
+          and you don't have a full-time CHRO yet, Rippling is the
+          right answer. We will say so on the first call and pass you
+          their AE. We expect to see you again at 1,500 EE.
+        </div>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- ─────────────────────────────────────────── NO-COMPETE ── -->
+<section class="nocompete" id="no-compete">
+  <div class="nocompete-inner">
+    <div class="section-eyebrow">
+      <span class="bar"></span>
+      <span>§ 04 · Where we deliberately don't compete</span>
+    </div>
+    <h2 class="section-h">Three categories we will <em>not</em> pretend to be.</h2>
+    <p class="section-dek">
+      A surprising number of HR vendors quietly try to be everything.
+      We won't. Here are the three categories where the right answer is
+      a specialist, not Stratum.
+    </p>
+
+    <div class="nocompete-grid">
+      <div class="nc-item">
+        <div class="nc-label">01 · Out of scope</div>
+        <h3 class="nc-title">A full payroll provider.</h3>
+        <div class="nc-body">
+          Payroll is a regulated, jurisdictional business that demands
+          decades of investment in country-team coverage and tax
+          compliance. We <strong>integrate</strong> to ADP, Workday
+          Payroll, Gusto, Rippling Payroll, and twelve country-specific
+          systems. We do not run payroll ourselves, and we do not intend
+          to. If you are buying a payroll provider, the right answer is
+          one of the above.
+          <span class="nc-partners">Partners · ADP · Workday Payroll · Gusto · Rippling Payroll · Deel · Remote</span>
+        </div>
+      </div>
+      <div class="nc-item">
+        <div class="nc-label">02 · Out of scope</div>
+        <h3 class="nc-title">A benefits administration platform.</h3>
+        <div class="nc-body">
+          Benefits admin — enrollment, carrier connections, COBRA,
+          ACA reporting — is a category in which Bswift, Mercer, and Aon
+          have invested for two decades. We <strong>surface benefits
+          data</strong> into the people graph so a CHRO can ask about
+          take-rate and equity by cohort. We do not manage carriers and
+          we do not run open enrollment.
+          <span class="nc-partners">Partners · Bswift · Mercer Marsh · Aon · Sequoia Consulting</span>
+        </div>
+      </div>
+      <div class="nc-item">
+        <div class="nc-label">03 · Out of scope</div>
+        <h3 class="nc-title">A learning management system.</h3>
+        <div class="nc-body">
+          LMS — course hosting, SCORM, compliance training, learning
+          paths, manager certifications — is a category served well by
+          Cornerstone, Workday Learning, Docebo, and LinkedIn Learning.
+          We <strong>surface learning data</strong> (completion,
+          certifications, skill gaps) into the people graph. We do not
+          host courses.
+          <span class="nc-partners">Partners · Cornerstone · Workday Learning · Docebo · LinkedIn Learning</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── DECISION MATRIX ── -->
+<section class="decision" id="decision">
+  <div class="section-eyebrow">
+    <span class="bar"></span>
+    <span>§ 05 · Pick by need</span>
+  </div>
+  <h2 class="section-h">A decision matrix for the <em>CHRO.</em></h2>
+  <p class="section-dek">
+    If you are reading this with one hour before a procurement meeting,
+    here is the shortcut. The need on the left; the vendor on the right.
+    We have put ourselves in the table twice. The other answers are
+    honest.
+  </p>
+
+  <table class="decision-table">
+    <tbody>
+      <tr>
+        <td class="need">"I need to replace my whole HRIS, including payroll and benefits across multiple countries."</td>
+        <td class="answer">Workday, Oracle, or SAP <span class="quote">— depending on your existing ERP.</span></td>
+      </tr>
+      <tr class="us">
+        <td class="need">"I need to ask my people data a question I can defend to my board this quarter."</td>
+        <td class="answer"><strong>Stratum.</strong> <span class="quote">This is the question we exist to answer.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I'm a 600-EE company wanting one bill for HR, IT, and finance."</td>
+        <td class="answer">Rippling <span class="quote">— and we will pass you the AE.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I want best-in-class performance management as a standalone."</td>
+        <td class="answer">Lattice <span class="quote">— performance is genuinely their craft.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I want continuous engagement signals across the org."</td>
+        <td class="answer">Culture Amp or Lattice <span class="quote">— both are credible.</span></td>
+      </tr>
+      <tr class="us">
+        <td class="need">"I want my CHRO to have leverage on a complex multi-system environment — Workday, ADP, Greenhouse, Bswift."</td>
+        <td class="answer"><strong>Stratum.</strong> <span class="quote">Sit on top, don't replace.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I want a low-risk, board-friendly incumbent and I am not in a hurry."</td>
+        <td class="answer">Workday <span class="quote">— there is no procurement memo it cannot survive.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I'm an Oracle Fusion ERP shop, intending to stay there."</td>
+        <td class="answer">Oracle HCM <span class="quote">— the integration math is decisive.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I'm running SAP S/4HANA and my CIO has a standing SAP-first directive."</td>
+        <td class="answer">SAP SuccessFactors <span class="quote">— same logic.</span></td>
+      </tr>
+      <tr>
+        <td class="need">"I want a Tuesday-afternoon answer, not a Q4-2027 roadmap commitment."</td>
+        <td class="answer">Stratum or Rippling <span class="quote">— in that order, by enterprise fit.</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing" id="closing">
+  <div class="closing-inner">
+    <div class="closing-eyebrow">
+      <span class="bar"></span>
+      <span>§ 06 · A closing note</span>
+    </div>
+    <h1 class="closing-h">
+      The right answer is <em>sometimes</em> "not Stratum."<br/>
+      We will tell you when.
+    </h1>
+    <p class="closing-sub">
+      If you are running a comparative evaluation, send us the procurement
+      memo. We will read it, mark up the parts where we disagree with our
+      own positioning, and tell you which of the five firms above
+      genuinely fits your situation. If it is not us, we will say so on
+      the first call. We would rather lose the deal than waste your
+      Tuesday afternoon.
+    </p>
+    <div class="closing-ctas">
+      <a href="mailto:hello@stratum.ai?subject=Stratum%20%E2%80%94%20comparative%20evaluation" class="btn btn-primary">Talk to us about your evaluation <span class="arr">→</span></a>
+      <a href="../console/" class="btn btn-ghost">Try the live console →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back to your CHRO.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Compare</h4>
+      <ul>
+        <li><a href="#head-to-head">vs Workday</a></li>
+        <li><a href="#head-to-head">vs SAP SuccessFactors</a></li>
+        <li><a href="#head-to-head">vs Oracle HCM</a></li>
+        <li><a href="#head-to-head">vs Rippling</a></li>
+        <li><a href="../intel/">Intel dossier</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var apply = function () {
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    };
+    apply();
+    window.addEventListener('scroll', apply, { passive: true });
+  })();
+</script>
+
+</body>
+</html>

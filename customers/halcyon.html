@@ -1,0 +1,1337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The week we lost the room — Stratum Customer Notes 002 · Halcyon Health</title>
+<meta name="description" content="How a 2,400-person hospital system's sponsor transition tested everything we said we were. A long read by Priya Rao." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Customer Notes · No. 002 — Halcyon Health
+   The honest one. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.masthead-slug div + div { color: var(--ink-3); }
+.masthead-slug div + div + div { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.1rem;
+}
+.byline span { color: var(--ink-mute); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── HERO STATS ── */
+
+.hero-stats {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.stat-cell .stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.stat-cell .stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.stat-cell .stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.6em;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .35rem;
+}
+.stat-cell .stat-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .82rem;
+  color: var(--ink-3);
+  margin-top: .35rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 920px) {
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero-stats { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.5rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.2rem auto;
+  padding: 2.4rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AT A GLANCE ── */
+
+.glance {
+  width: var(--col-read);
+  margin: 4rem auto 3rem;
+  padding: 2.2rem 2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.glance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.glance dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: .55rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.glance dt {
+  color: var(--ink-mute);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.glance dd {
+  margin: 0;
+  color: var(--ink);
+}
+@media (max-width: 560px) {
+  .glance dl { grid-template-columns: 1fr; gap: .15rem 0; }
+  .glance dt { margin-top: .8rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article { width: 100%; }
+}
+</style>
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+<style id="mobile-readability-patch">
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.row):not(.artifact):not(.mob-bar a) { min-height: 28px; }
+}
+</style>
+</head>
+<body>
+<div class="mob-bar"><a href="../" aria-label="The Library">← Library</a><span class="mob-bar-mark">Case study — Halcyon Health</span><a href="../briefings/004.html" aria-label="Briefing">Briefing →</a></div>
+
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="./halcyon.html" class="is-current">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Customers · Case Study 002</div>
+    <div>Halcyon Health</div>
+    <div>The honest one</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    The week we lost the room, and the day we <em>earned</em> it back.
+  </h1>
+
+  <p class="masthead-dek">
+    How a 2,400-person hospital system's sponsor transition tested everything we
+    said we were — and why we are publishing this before the outcome is known.
+  </p>
+
+  <div class="byline">
+    By Priya Rao<span>·</span>28 July 2026<span>·</span>11-minute read<span>·</span>Published in the Stratum Customer Notes series
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── HERO STATS ── -->
+<section class="hero-stats" aria-label="Engagement at a glance">
+  <div class="stat-cell">
+    <div class="stat-label">Employees</div>
+    <div class="stat-value">2,400</div>
+    <div class="stat-foot">14 facilities, 2 states</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Geography</div>
+    <div class="stat-value">4<span class="unit">states served</span></div>
+    <div class="stat-foot">NC &amp; VA core, MD &amp; SC overflow</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">HR systems, pre-Stratum</div>
+    <div class="stat-value">9</div>
+    <div class="stat-foot">Workday, UKG, ADP, and six others</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Engagement status</div>
+    <div class="stat-value">60<span class="unit">day eval</span></div>
+    <div class="stat-foot">downgraded from partnership 12 Jun</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Sofia's Phoenix list</div>
+    <div class="stat-value">14<span class="unit">questions</span></div>
+    <div class="stat-foot">about pipes, not the product</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">The day Avery got promoted.</h2>
+
+    <p>
+      <span class="dropcap">O</span>n the ninth of June 2026, at eleven-forty
+      in the morning Pacific time, a Slack message from a name I had not yet
+      learned to recognise arrived in our shared #halcyon channel. The sender
+      was Olivia Brennan, chief of staff to Dr. Avery Mensah-Cole, who was
+      then Halcyon Health's Chief Human Resources Officer and who had,
+      twenty-nine days earlier, signed the design-partner letter that made
+      Halcyon Stratum's second customer in name and our first in healthcare.
+      The message was four lines long. The first congratulated Avery on her
+      promotion to System Chief Operating Officer, effective immediately.
+      The second noted, with the kind of operational grace that defines
+      Olivia, that Avery would be transitioning her CHRO portfolio to her
+      successor over the next two weeks. The third named the successor:
+      Carlos Reyes, who had been Halcyon's COO and who would, until a
+      permanent CHRO was hired, hold both seats. The fourth thanked us for
+      our patience as the team realigned and offered a thirty-minute call
+      to discuss continuity on Thursday.
+    </p>
+
+    <p>
+      Maya read the message first. We were in the founders' room — the small
+      glass-walled corner at the end of the second floor of the Palo Alto
+      office, with the whiteboard that still has, in Maya's hand from May,
+      the architecture diagram from the night David convinced Mercator's CIO
+      to let us read from source. She read it once, said nothing, and slid
+      her laptop across the table to me. I read it twice. I read it again.
+      Then I said, because there was nothing else useful to say: <em>our
+      sponsor just got promoted out from under us.</em>
+    </p>
+
+    <p>
+      Maya did not respond immediately. She has a habit — those who have
+      worked with her for any length of time will recognise it — of holding
+      a moment until the moment is finished. She held this one for what I
+      later, with the help of a Loom recording running on the desk, measured
+      to be eleven seconds. Then she said, in a voice that was the voice she
+      uses when she has finished thinking but has not yet started speaking:
+      <em>that is the second-best thing that could have happened.</em>
+    </p>
+
+    <p>
+      I asked her what the best would have been. She said: <em>if Avery had
+      stayed.</em> The second-best, she said, was that Avery had been
+      promoted up rather than out. Her champion was still inside the
+      building. Her champion was now one level higher. The third-best was
+      that we had Avery in our debt for a month while she handed over a
+      portfolio she had not, herself, finished defining, and the worst was
+      somewhere below that, and we were not yet in worst territory. Maya is,
+      among the founders, the one most likely to count outcomes before she
+      reacts. She finished counting and went to find David.
+    </p>
+
+    <p>
+      What I did not know at eleven-forty-one Pacific on the ninth of June,
+      and what we would learn in the seventy-two hours that followed, was
+      this: Avery's promotion had been in motion since March. Her successor
+      had been chosen since the second of June. The design-partner letter
+      she had signed on the eleventh of May had been signed in full knowledge
+      that she would, by the time the first connector went live, no longer
+      be the executive responsible for the project. She had not told us.
+      She had not, by her own account given to me on a recorded call on the
+      twenty-third of July, intended to deceive. She had intended to give
+      us the relationship and then transfer it cleanly. The transfer is
+      what this piece is about.
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">Who Carlos Reyes is.</h2>
+
+    <p>
+      Carlos Reyes is fifty-three years old, the son of two pharmacists who
+      met in Ponce and raised him in suburban Hartford, and he has spent
+      twenty-three of his working years inside large American health
+      insurers. Twelve of those years were at Anthem, where he rose from a
+      regional claims-operations analyst to a divisional vice president
+      responsible for the Mid-Atlantic block of business. The next ten were
+      at Cigna, where he ran the operations function for a commercial book
+      that, by the time he left in early 2024, comprised somewhere north of
+      eleven million covered lives. He came to Halcyon in March of 2024 as
+      Chief Operating Officer, recruited by the system's CEO with the
+      explicit mandate to bring health-insurance operating discipline to
+      what was, at that point, a hospital system run mostly by clinicians
+      who had been promoted into management.
+    </p>
+
+    <p>
+      He is, by every account I have collected and by my own observation
+      across nine calls and two on-site meetings, the kind of operator who
+      reads the prepared materials and then asks for the spreadsheet behind
+      them. He has, on his Halcyon office wall, a framed copy of the first
+      operations memo he wrote at Anthem in 2007. The memo is one page long.
+      Its central sentence, which he quoted to me without prompting on our
+      third call, reads: <em>most of the enterprise software we buy is sold
+      on a promise and delivered on a discount.</em> He believes this
+      sentence in the way other people believe in proverbs. He has, in
+      twenty-three years, watched it prove itself often enough.
+    </p>
+
+    <p>
+      I am writing about Carlos at length because the rest of this piece
+      will not make sense without him. The story of Halcyon, from the
+      ninth of June onward, is the story of a sponsor we did not choose
+      meeting a company he did not choose to inherit and deciding, on his
+      own timeline, whether we deserved the room. He is courteous in
+      conversation, scrupulous in correspondence, and almost completely
+      uninterested in product demonstrations. He read our website twice
+      before our first call. He had read, by the time we spoke on the
+      twelfth, two of our published Chairman's Briefings end to end. He had
+      not run our agent.
+    </p>
+
+    <p>
+      The first call was on the tenth of June, a Wednesday, at eight a.m.
+      Eastern time, which is five a.m. Pacific. Maya took it alone from the
+      kitchen of her apartment in Mountain View. Carlos took it from his
+      office in Charlotte. The call lasted thirty-eight minutes. He asked
+      five questions. None of them were about features. He asked, in this
+      order: how long the company had existed; how much capital we had
+      raised and from whom; who, specifically, would be accountable for
+      Halcyon's implementation if something went wrong on a Saturday night;
+      what our SOC 2 timeline was; and whether we had, in writing, a clause
+      that would allow Halcyon to exit the partnership at any point without
+      penalty other than what had already been delivered. Maya answered
+      each in turn. The honest answer to the first was thirty-four days.
+      The honest answer to the fourth was that we had begun the SOC 2
+      readiness engagement but did not yet have a report. Carlos thanked
+      her for her honesty and asked to meet in person.
+    </p>
+
+    <p>
+      What I have come to understand about Carlos, in retrospect, is that
+      Avery's promotion did not hand him an opportunity. It handed him a
+      problem. He had inherited a vendor relationship he had not approved,
+      with a company younger than the period between his Halcyon
+      anniversary and the date of the meeting, against a backdrop of nine
+      separate HR systems his predecessor had been planning to consolidate
+      and that, in his view, were not the kind of mess one solved by adding
+      a tenth thing on top. He was not hostile. He was not even, as Sofia
+      would later observe, sceptical in the unproductive sense. He was
+      doing his job. His job was to protect a 2,400-person non-profit
+      hospital system from a category of mistake he had spent two decades
+      watching other large institutions make.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">The Phoenix conversation.</h2>
+
+    <p>
+      The in-person meeting happened on the twelfth of June, two days after
+      the first call. It was held in a windowless conference room on the
+      third floor of Halcyon's regional administrative office in Charlotte
+      — not Phoenix; Phoenix was where Sofia later went; but the
+      configuration was the same: a long table, four chairs, a whiteboard
+      that had been wiped imperfectly and still bore the faded outline of a
+      capacity-planning grid from the previous occupant. Maya flew in on
+      the morning red-eye and arrived at the lobby with twenty minutes to
+      spare. She brought a single-page printed agenda, an architecture
+      diagram, and the laptop on which she had loaded a Halcyon-specific
+      sandbox of our console. She did not bring David. She did not bring me.
+      She did not bring slides.
+    </p>
+
+    <p>
+      Carlos arrived four minutes early. He was wearing a navy suit without
+      a tie, carrying a leather folio with what looked like a printed
+      version of our website's pricing page on top of a stack of yellow
+      legal pad. He shook Maya's hand. He sat down. He did not open the
+      folio. He looked at the agenda for perhaps ten seconds, set it gently
+      to one side, and said, in the conversational register of a man who
+      has done this kind of meeting often enough that he no longer needed
+      to warm into it: <em>I would like to skip the architecture walkthrough,
+      if you do not mind. I want to ask you one question.</em>
+    </p>
+
+    <p>
+      The question was this: <em>what is the worst thing that has happened
+      to a Stratum customer?</em>
+    </p>
+
+    <p>
+      Maya later told me — and I have heard her tell three other people in
+      slightly different forms — that the eight seconds she took before
+      answering were the longest eight seconds of her year. She had
+      prepared, on the flight, for objections about architecture, about
+      data residency, about pricing, about our age. She had not prepared
+      for this question, because she had not yet been asked it by anyone
+      who had the standing to ask it. She considered, briefly, telling him
+      that we had not yet had a customer long enough for anything truly bad
+      to have happened. She considered, more briefly, telling him about a
+      reconciliation error that had occurred during a Mercator test
+      ingestion the previous week. She rejected both. She told him,
+      instead, about a synthetic edge case our internal eval set had
+      surfaced during the second week of the architecture phase with
+      Halcyon itself.
+    </p>
+
+    <p>
+      The case was this. The entity-resolution layer, presented with two
+      physicians who shared a name — common enough in any system of 2,400
+      employees, common to the point of inevitability in healthcare — and
+      whose records appeared in two different source systems with
+      overlapping but non-identical employment dates, had resolved them as
+      a single person and surfaced the wrong compensation band to a
+      hypothetical manager running a comparison query. The error had been
+      caught by the eval set, not by a customer. The case was not real, in
+      the sense that no manager had ever actually run the query against
+      live data. But the resolution logic was real, and the failure mode
+      was real, and the patch — which David and Asha had shipped to the
+      eval branch on the seventh of June — was real. Maya described all of
+      this in roughly two minutes. She described what we had changed: the
+      resolver now flagged any same-name match across heterogeneous source
+      systems as ambiguous until human review, even if the structured
+      fields suggested confidence. She described what we had not yet
+      changed: we had not yet built a defensible mechanism for the manager
+      on the other end to understand <em>why</em> the result they were
+      seeing had a confidence band attached.
+    </p>
+
+    <p>
+      Carlos listened. He did not write anything down, which surprised her,
+      and he did not interrupt, which surprised her more. When she
+      finished, he was quiet for perhaps five seconds. Then he said:
+      <em>thank you. That is the answer I needed.</em>
+    </p>
+
+    <p>
+      He went on for another nine minutes. He told her, in measured and
+      almost gentle terms, that he was not going to commit his
+      organisation to a company that was six weeks old. He said it twice,
+      in two different sentences, so that there could be no possibility of
+      ambiguity. He said that the work Avery had begun would not be
+      discarded, because Avery's judgement carried weight inside Halcyon
+      and because his own preliminary review had not surfaced anything
+      disqualifying. But the partnership label, as written, presumed a
+      reciprocal commitment that he was not yet prepared to make. He
+      proposed, in its place, a sixty-day evaluation. The evaluation would
+      end on the eleventh of August. It would carry no fee. It would
+      require us to demonstrate, over those sixty days, that we could
+      operate inside Halcyon's environment without breaking anything, and
+      that the people we put in front of him understood not only what our
+      product did but how his systems worked. <em>Earn it,</em> he said,
+      in the closing minute of the meeting, and Maya wrote those two words
+      on the back of the agenda and underlined them twice. <em>Earn it,
+      and we will revisit the partnership conversation in August.</em>
+    </p>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">The Compact, internally.</h2>
+
+    <p>
+      Maya flew back on a five-thirty evening flight, made notes during the
+      first hour, slept for the second, and was in our Palo Alto office at
+      nine the next morning. She had not yet called the rest of us; she had
+      sent a single Slack message at six on the morning of the thirteenth
+      that said only, <em>downgrade. Talk at nine.</em> David and I were
+      already in the founders' room when she arrived. She closed the door.
+      She told us what had happened. The conversation that followed lasted
+      a little over two hours.
+    </p>
+
+    <p>
+      Three options were on the table, and we put them there honestly. The
+      first was to attempt to preserve the partnership label by offering an
+      aggressive discount — a permanent reduction on the first year's
+      pricing in exchange for Carlos's signature on the original letter.
+      David put this on the table because someone had to, and because he
+      believed, correctly, that we should consider every possibility before
+      we ruled it out. We ruled it out within twenty minutes. The
+      partnership label, as Maya had heard it described, was not the kind
+      of commitment one bought with a discount. Buying it would have told
+      Carlos that we were the company his framed memo described.
+    </p>
+
+    <p>
+      The second was to accept the downgrade and use the sixty days
+      seriously. Maya wanted this. I wanted this. David wanted this. We
+      agreed on the shape of it before we agreed on the cost. The cost, as
+      David named it within the first half-hour, was that the sixty days
+      could not be run from Palo Alto with the existing team. Halcyon
+      needed somebody on the ground, in Charlotte and at the regional
+      offices, who could sit with their data team and walk their systems
+      with them. We had no such person on payroll. We had budgeted, in our
+      seed plan, for the first customer engineering hire to begin in
+      September. September was eighty-eight days away.
+    </p>
+
+    <p>
+      The third option was the one I have not yet named. The third option
+      was to walk away from the customer — to write a brief, gracious
+      letter to Carlos thanking him for the consideration, to redirect the
+      engineering capacity to Mercator and to the next two pilots in the
+      pipeline, and to take the lesson without taking the bruise. David
+      laid this option out clearly. He has, in our short institutional
+      memory, a habit of insisting that the option to walk away is always
+      on the table, because pretending it is not is the surest way to make
+      bad decisions. We considered it for perhaps fifteen minutes. We
+      ruled it out because the lesson we would learn from walking away
+      would be the wrong lesson. We would learn that we could only win
+      customers who were easy. Carlos was not the customer who was easy.
+      He was the customer who, if we earned him, would teach us how to
+      win the next one.
+    </p>
+
+    <p>
+      The compromise was a hiring decision we had not planned to make for
+      another quarter. We would extend an offer to a customer engineer — a
+      founding customer engineer, with the seniority and the stock and the
+      title to match — and we would do it within seventy-two hours. The
+      candidate Maya had in mind was Sofia Vargas, an implementation
+      engineer she had worked with twice at Workday, who had since spent
+      two years at a healthcare-focused integration consultancy and who
+      had, in Maya's words, the rare quality of <em>preferring the data
+      conversation to the demo conversation</em>. Maya had been in light
+      touch with Sofia for six weeks. She had not, until that morning,
+      been authorised to make her an offer.
+    </p>
+
+    <p>
+      The unbudgeted compensation package required Chairman approval, which
+      we secured the same afternoon. Maya called Sofia at four-fifteen
+      Pacific. Sofia asked for the weekend. Sofia called back on the
+      morning of the sixteenth, a Monday, and accepted. She gave two weeks'
+      notice that afternoon. Her start date was the thirtieth of June. The
+      offer-to-acceptance window, by my count, was ninety-six hours. The
+      sixty-day evaluation had at that point used four of its days. We had
+      fifty-six left, and now we had Sofia.
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      Your engineer understands my pipes, not just my product. That is rare.
+    </p>
+    <div class="pullquote-attr">
+      <strong>Carlos Reyes</strong> · Chief Operating Officer · Halcyon Health
+    </div>
+  </div>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">Sofia's list of fourteen questions.</h2>
+
+    <p>
+      Sofia Vargas started on the morning of the thirtieth of June, a
+      Monday. She spent her first day reading. Her second day she spent on
+      a call with Asha, walking the connector code line by line. Her third
+      day she spent on the phone with three different members of Halcyon's
+      data team, none of whom she had yet met, asking permission to come
+      see them. By Tuesday evening she had a flight booked to Phoenix —
+      not Charlotte; the Halcyon data team's lead, a quietly authoritative
+      data architect named Renata Okafor, worked from the Phoenix
+      administrative annex Halcyon kept for its regional billing
+      operations, and Sofia had decided, correctly, that the data
+      conversation needed to happen where the data lived. Maya did not
+      argue. I did not argue. The flight was on Sofia's corporate card by
+      Wednesday morning.
+    </p>
+
+    <p>
+      She landed in Phoenix on the morning of the first of July. She did
+      not bring a laptop bag, which is a thing I noticed when she walked
+      out of our office on the thirtieth with nothing but a notebook and a
+      pen. She did not, in any of the four hours she spent with Carlos and
+      Renata, open a Stratum demo. She did not show a slide. She did not
+      use the word <em>console</em> once. What she brought with her, and
+      what she put on the conference table within the first three minutes
+      of the meeting, was a single sheet of paper with fourteen
+      hand-written questions.
+    </p>
+
+    <p>
+      The questions, paraphrased and lightly reordered, were these. How
+      old is the Workday tenancy and which Workday release line is it
+      pinned to. How were the custom UKG sub-tenancies that Halcyon stood
+      up for the rural-hospital divisions in 2019 configured, and were
+      those sub-tenancies still in a supported state by UKG's reckoning or
+      had they drifted into the unsupported regime that the major UKG
+      reorganisation of 2024 had created. Which of the two definitions of
+      <em>physician</em> in active use at Halcyon — the human-resources
+      definition, which treated medical-staff appointments as a categorical
+      attribute, and the credentialing definition, which carried them as a
+      time-bounded series of privileges by facility — was authoritative
+      for which decisions, and how were the two reconciled in the
+      compensation-band reporting that Renata's team produced for the
+      finance function. How were overnight nurse shift differentials
+      carried on the comp-band data, given that the differentials had been
+      restructured in 2023 and the historical record predating the
+      restructuring had been preserved in a parallel field whose schema
+      no one currently on the data team had personally designed. What was
+      the data-residency posture for protected health information that
+      flowed adjacent to but not within the HR systems, and what was
+      Renata's view of the question that the system CIO had, by Renata's
+      own admission earlier in the call, been reluctant to surface
+      formally with vendors. And nine others, of similar kind.
+    </p>
+
+    <p>
+      Renata read the list in silence. She looked up at Sofia, then at
+      Carlos, then back at Sofia, and she said: <em>I have been asking
+      the last three vendors who came through this office some version
+      of these questions, and none of them brought the questions with
+      them.</em> Sofia, who has a dry sense of humour she deploys
+      sparingly, said: <em>I assumed you were tired of explaining the
+      pipes. I read your slack-overflow posts. I thought I would do my
+      reading first.</em>
+    </p>
+
+    <p>
+      Renata laughed. Carlos did not laugh, but he leaned back in his
+      chair perhaps half an inch, which from Carlos is the same thing.
+      The three of them sat at the table for four hours and twenty
+      minutes. Sofia took notes longhand. By the end of the afternoon
+      she had a thirty-eight-row implementation plan written on the back
+      of the original sheet of fourteen questions and on three further
+      sheets she borrowed from Renata's printer. The plan named, by
+      system and by field, which parts of Halcyon's environment we could
+      connect to inside thirty days, which parts would require a quarter
+      of coordinated work with UKG support, and which parts — three
+      rows, all of them about pre-2022 historical data — Sofia did not
+      yet recommend we try to read at all. Carlos asked her, as she was
+      folding her papers, whether she could come back the following
+      Tuesday. She said yes. He walked her to her rental car. He shook
+      her hand at the driver's-side door, which is, I am told by Renata,
+      something he does not do often.
+    </p>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">What Carlos told Priya.</h2>
+
+    <p>
+      Two days after Sofia's first Phoenix visit, on the evening of the
+      third of July — a Thursday, the day before the long weekend — my
+      phone rang. The number was Carlos's direct line, which I had given
+      him on our second call and which he had not previously used. I was
+      in my kitchen. I picked up on the second ring. He apologised for
+      calling without a calendared invitation. I told him, truthfully,
+      that he could call whenever he liked. He said he would not keep me
+      long.
+    </p>
+
+    <p>
+      He had, he said, spent four hours on Tuesday with our customer
+      engineer. He wanted me to know that he had not been certain, going
+      into the meeting, what he would find. He had assumed Sofia would
+      arrive with a demo, attempt to walk Renata through the product, and
+      thereby waste his afternoon. He had been prepared, he said with
+      some humour, to leave after the first hour. He had instead stayed
+      for four. He paused. I waited. Then he said, in a sentence I have
+      since written down in three different places so I will not lose it:
+      <em>your engineer understands my pipes, not just my product. That
+      is rare.</em>
+    </p>
+
+    <p>
+      He did not, in that call, commit to anything. He did not say the
+      sixty-day evaluation was over, or that the partnership was being
+      reinstated, or that he had made a decision. He said he wanted me
+      to know what he had seen, and that he wanted Sofia back the
+      following Tuesday, and that he had asked his finance director to
+      pull the budget line for what a paid pilot at our standard pricing
+      would look like inside Halcyon's current fiscal year. He said it
+      in the tone of a man reporting on an analysis he had not yet
+      finished. He thanked me. He hung up.
+    </p>
+
+    <p>
+      I sat in the kitchen for a while. Then I wrote down the sentence,
+      the date, and the context, and I sent it in a single Slack message
+      to Maya and David. Maya replied within four minutes with three
+      words: <em>print it out.</em> The printed version, in a small
+      black frame, now hangs on the wall of the founders' room, beside
+      the architecture diagram from May. I look at it most mornings.
+    </p>
+
+    <p>
+      I want to be careful, here, not to make more of this than it was.
+      A single sentence, said in confidence on a Thursday evening, is
+      not a contract. It is not even, in the strictest sense, an
+      indication. What it is, and what I think it is fair to say it is,
+      is the moment the conversation changed register. We had spent
+      twenty-four days being the company Carlos was evaluating. On the
+      third of July, for the first time, we became — provisionally,
+      conditionally, and not yet in writing — the company he was
+      considering keeping.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">What we don't know yet.</h2>
+
+    <p>
+      I am writing this on the twenty-eighth of July, and the sixty-day
+      evaluation ends on the eleventh of August. There are fourteen days
+      between now and then. By the time this piece is published — which,
+      if our small editorial schedule holds, will be the morning of the
+      twenty-ninth — there will be thirteen. We have, in those fourteen
+      days, three more on-site visits scheduled with Sofia and Renata;
+      one joint call with the system CIO that Maya will lead; a
+      data-residency memo we owe Carlos by the fifth; and the formal
+      thirty-day review that Sofia and Carlos have agreed will, in
+      substance though not in name, decide the question of conversion.
+    </p>
+
+    <p>
+      Our internal conviction is high. By that I mean: every member of
+      the Stratum team who has had a working interaction with the
+      Halcyon environment in the last fortnight believes, in their own
+      assessment, that we are on track to be reinstated as a design
+      partner under a paid pilot at our standard fifty-thousand-dollar
+      pilot fee. The thirty-eight-row implementation plan is, as of last
+      Friday, twenty-one rows complete; eleven are scheduled to land
+      inside the evaluation window; six are scheduled to land in the
+      first month after. Renata has, in three successive calls with
+      Sofia, used the future indicative when describing what Halcyon
+      will be able to do with our graph layer once it is live. Avery,
+      from her new seat as System COO, has twice in July asked Olivia
+      Brennan to forward us internal context she thought would be
+      useful. None of these are signatures. All of them are signals.
+    </p>
+
+    <p>
+      Our internal certainty, however, is not high. By that I mean: we
+      have been wrong about customers before. We were wrong, in our
+      first week of conversations with Halcyon in early May, about how
+      much sponsor weight Avery's signature actually represented inside
+      the institution. We were wrong, in our first call with Carlos on
+      the tenth of June, about how much he had already read about us
+      before we met. We could be wrong now, in our seventh week of
+      knowing him, about the meaning of his sentence on the third of
+      July. He is a careful man. He has not signed anything. The
+      sentence may, in retrospect, prove to have been an observation
+      rather than a commitment. He owes us nothing. We have not yet
+      earned, by his standard, the right to count him.
+    </p>
+
+    <p>
+      I have argued internally, and Maya and David agreed, that this
+      piece should be published before the outcome is known. The
+      argument was this: if we publish Halcyon only after the
+      conversion is signed, we will have written a victory note. If we
+      publish only after Carlos walks away, we will have written a
+      post-mortem. Neither is the piece the customer base we are trying
+      to earn — careful operators in cautious industries who are tired
+      of being sold software on a promise — would benefit from reading.
+      What might benefit them is a piece written from inside the
+      uncertainty. A piece that names the moment the room was lost, the
+      decisions made in response, the person hired to make the response
+      legible, and the sentence that, on a Thursday evening, suggested
+      the work might be working. The outcome will be what it is. We
+      will publish it, on this page, in our August update, either way.
+    </p>
+
+    <p>
+      I will say one further thing, and then I will stop, because I
+      have been writing for longer than the eleven-minute read this
+      piece promises. The thing I want to say is that we have, in
+      eighty-four days of being a company, learned a lesson at Halcyon
+      that we did not learn at Mercator, and that the second lesson is
+      the more durable one. The Mercator lesson was that we could win
+      a sophisticated customer on a clean architecture argument. That
+      lesson is true and important and it is the foundation of the
+      product story we tell. The Halcyon lesson is that some
+      customers, in some industries, will not be won on architecture
+      at all. They will be won, if they are won, by a single
+      engineer, on a Tuesday afternoon, in a windowless room in
+      Phoenix, with fourteen questions handwritten on a single sheet
+      of paper, and the patience to listen to the answers before
+      speaking. That is the lesson Sofia taught us. That is the
+      lesson we are spending the next fortnight earning.
+    </p>
+  </section>
+
+  <!-- AT A GLANCE -->
+  <aside class="glance" aria-label="At a glance">
+    <div class="glance-label">At a glance</div>
+    <dl>
+      <dt>Subject</dt><dd>Halcyon Health (501(c)(3) non-profit hospital system)</dd>
+      <dt>Sector</dt><dd>Healthcare delivery</dd>
+      <dt>Size</dt><dd>2,400 employees · 14 facilities</dd>
+      <dt>Geography</dt><dd>North Carolina, Virginia · MD &amp; SC overflow</dd>
+      <dt>Stratum usage</dt><dd>Design partner since 11 May 2026 · Downgraded to 60-day evaluation 12 Jun 2026 · Evaluation ends 11 Aug 2026</dd>
+      <dt>Status</dt><dd>60-day evaluation in progress · Conversion conversation Q3 2026</dd>
+      <dt>People quoted</dt><dd>Carlos Reyes (Chief Operating Officer) · Dr. Avery Mensah-Cole (System COO, formerly CHRO) · Renata Okafor (Halcyon Data Architect) · Maya Chen (Stratum CEO) · Priya Rao (Stratum CCO, author) · Sofia Vargas (Stratum founding Customer Engineer)</dd>
+    </dl>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    This case study is built from 9 calls and two on-site visits between 12 June and 24 July 2026.
+    Direct quotations confirmed with the speaker. Reviewed for accuracy by Halcyon's
+    communications director prior to publication. Carlos Reyes reviewed the four scenes
+    in which he appears and approved the language.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Stratum publishes one customer note per quarter. The Halcyon outcome will appear in our August update either way.
+    </div>
+    <div class="closing-links">
+      <a href="../">← Back to The Chairman's Briefing</a>
+      <a href="./mercator.html">Read the first case study — Mercator →</a>
+      <a href="../product/index.html">Read about the product →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="./mercator.html">Customers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">Connector library</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../">Briefings index</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,1522 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Why I left Workday to build the system of truth above the system of record — Stratum Essays No. 01</title>
+<meta name="description" content="A long-form essay by Maya Chen, founding CEO of Stratum. A letter to her former Workday colleagues, her new ones, and the CHROs who keep asking her the same question." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Essays · No. 01 — Maya Chen
+   "Why I left Workday to build the system of truth above the
+   system of record."
+   Editorial profile. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.72;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.5rem 0 3.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  line-height: 1.95;
+}
+.masthead-slug .l1 { color: var(--ochre); }
+.masthead-slug .l2 { color: var(--ink-3); }
+.masthead-slug .l3 { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.18rem, 1.6vw, 1.32rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.05rem;
+}
+.byline span.sep { color: var(--ink-mute); margin: 0 .55rem; }
+
+.subhead-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .9rem;
+  line-height: 1.6;
+}
+.subhead-row strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.55rem, 2.2vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* numbered reasons in section VI */
+.reasons {
+  margin: 1.3rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: reason;
+}
+.reasons li {
+  position: relative;
+  padding: 1.1rem 0 1.1rem 3rem;
+  border-top: 1px solid var(--paper-rule);
+  counter-increment: reason;
+}
+.reasons li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.reasons li::before {
+  content: counter(reason, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.15rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ochre);
+}
+.reasons li em.lead {
+  font-style: italic;
+  color: var(--ink);
+  display: block;
+  margin-bottom: .35rem;
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  font-family: var(--display);
+  font-size: 1.08rem;
+  line-height: 1.4;
+}
+
+/* audience block in VII */
+.audiences {
+  margin: 1.4rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+.audiences > li {
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.audiences > li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.audiences .a-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .45rem;
+  display: block;
+}
+.audiences p { margin: 0 0 .55rem; }
+.audiences .a-link {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 2px;
+}
+.audiences .a-link:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.4rem auto;
+  padding: 2.6rem 0 2.6rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AT A GLANCE ── */
+
+.glance {
+  width: var(--col-read);
+  margin: 4rem auto 3rem;
+  padding: 2.2rem 2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.glance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.glance dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: .55rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.glance dt {
+  color: var(--ink-mute);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.glance dd {
+  margin: 0;
+  color: var(--ink);
+}
+@media (max-width: 560px) {
+  .glance dl { grid-template-columns: 1fr; gap: .15rem 0; }
+  .glance dt { margin-top: .8rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); border-bottom: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── MOBILE READABILITY ── */
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+  body { font-size: 17.5px; }
+  .article { font-size: 1.04rem; }
+  .masthead { padding-top: 3.4rem; padding-bottom: 2.4rem; }
+  .article { padding-top: 3.2rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .article { font-size: 1.02rem; line-height: 1.7; }
+  .masthead-h1 { font-size: clamp(2.5rem, 9vw, 3.4rem); }
+  .pullquote { margin: 2.4rem auto; padding: 2rem 0; }
+  .pullquote-text { font-size: clamp(1.7rem, 7vw, 2.2rem); }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .mob-bar, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article, .masthead, .glance, .closing, .pullquote { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Essay — Maya Chen</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/mercator.html">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../intel/">Compare</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="./why-i-left-workday.html" class="is-current">Essays</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div class="l1">Stratum / Essays</div>
+    <div class="l2">No. 01 · The architecture series</div>
+    <div class="l3">By Maya Chen</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    Why I left Workday to build the <em>system of truth</em> above the system of record.
+  </h1>
+
+  <p class="masthead-dek">
+    A letter to my former colleagues, my new ones, and the CHROs who keep
+    asking me the same question.
+  </p>
+
+  <div class="byline">
+    By Maya Chen<span class="sep">·</span>14 May 2026<span class="sep">·</span>16-minute read<span class="sep">·</span>Published in the Stratum Essays series
+  </div>
+
+  <div class="subhead-row">
+    <strong>First in a series.</strong> &nbsp; The next essay will be by David, on entity resolution.
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">Five Mondays a year.</h2>
+
+    <p>
+      <span class="dropcap">F</span>or the last four years at Workday I had
+      a recurring meeting that, by the end, I could have run from memory.
+      Five Mondays a year, more or less — sometimes four, once seven — I
+      flew to a customer city, took a car from the airport to a corporate
+      campus, signed in at a security desk that did not know my name, and
+      spent four hours in a glass-walled conference room briefing a Chief
+      Human Resources Officer who was about to roll out a configuration my
+      team had shipped. The CHROs were never the same person twice. The
+      room was, with small variations, the same room. The slide deck was,
+      with smaller variations, the same deck. And the meeting always ended,
+      eventually, with the same question.
+    </p>
+
+    <p>
+      The question was usually asked in the last fifteen minutes, after the
+      CHRO had walked her people through the rollout plan and the risk
+      register and the change-management timeline; after we had agreed on
+      who would own training; after she had thanked me politely and the
+      room had begun to thin. She would look at me — sometimes across the
+      table, sometimes from the doorway with her coat already on — and she
+      would say, in some variation: <em>I love this. Can you make it move
+      faster?</em>
+    </p>
+
+    <p>
+      She did not mean the software. She meant the company. She meant: can
+      you make the next configuration take six weeks instead of six months;
+      can the data model accept the new comp band I am proposing without
+      another sprint of professional services; can the report I will need
+      for the audit committee in November exist by October without me
+      paying a consultant another forty thousand dollars; can the
+      contractors who run my distribution centers — there are now more of
+      them than full-time employees in three of my regions — appear in the
+      same headcount view as everybody else, in a way I can defend on the
+      audit. Can the tool I bought to manage my workforce keep up with the
+      workforce I actually have.
+    </p>
+
+    <p>
+      I gave the same answer for four years. I would try. The team would
+      try. We had a roadmap; some of what she was asking for was on the
+      next release; some of it was further out; some of it would require an
+      architectural change that I could not, sitting in that conference
+      room, promise her. I gave this answer in San Diego, in Charlotte, in
+      Stamford, in Toronto, in Frankfurt, in Singapore. I gave it to the
+      head of people at a $14B insurer who had been at her company for
+      nineteen years and who, six weeks after I gave it, retired. I gave it
+      to a younger CHRO at a software company in Austin whose Slack-name
+      was an emoji and who, in the meeting, was visibly tired in the way
+      that people running large functions become tired around their fourth
+      year. I gave it to a woman in Düsseldorf who interrupted me, mid-
+      answer, to say in clear English: <em>I have been listening to the
+      same answer from your company since 2014.</em>
+    </p>
+
+    <p>
+      I will tell you what I now think she was asking. She was not asking
+      for a software upgrade. She was asking whether anyone in my industry
+      had noticed that the world her people lived in — the world of dotted
+      lines and fractional roles and contractors and agents and matrix
+      teams — had begun, sometime around 2019, to leave the world that our
+      data model could describe. She was asking whether anyone had noticed
+      that her job had changed underneath her, and whether the platform she
+      had bought to do that job was going to change with it, or whether she
+      was going to have to.
+    </p>
+
+    <p>
+      I want to be careful here. I am not writing this essay to be cruel
+      about a company that taught me almost everything I know about
+      building enterprise software, and where I worked for people whom I
+      still call when I am stuck. Workday is, by any reasonable measure,
+      one of the best-built pieces of business software of the last twenty
+      years. The architecture is consistent. The team is serious. The
+      product moves, in production, against payroll, in two hundred and
+      forty countries, on Tuesday afternoons at scale, and very rarely
+      breaks. I am writing this because the question the CHRO was asking
+      me, five Mondays a year, was not a question I could answer from
+      inside the architecture I had inherited. And I had begun to suspect,
+      around the third Monday of 2025, that no one inside that architecture
+      could.
+    </p>
+
+    <p>
+      I left in March. I called David Okonkwo, who had spent seven years
+      moving money through Stripe's payments infrastructure, and asked him
+      whether he would have a long conversation with me. He said yes,
+      provided I bring Priya Rao, whom we had both known for years and
+      whose career had been spent inside the buyer we were going to be
+      selling to. We sat in a room together for forty-one hours, between
+      the sixth and the ninth of May. On the ninth we incorporated. This
+      essay is, in some ways, what we talked about in that room. It is also
+      the answer I wish I had been able to give the woman in Düsseldorf.
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">The org isn't a tree.</h2>
+
+    <p>
+      In 2008, when Workday's core data model was designed, the
+      organization was a tree. Every employee had one manager, one
+      location, one cost center, one job family, one comp band. Reporting
+      relationships ran upward to a single chief executive in a clean
+      hierarchy that could be drawn on a single piece of paper and that
+      could, with reasonable confidence, be reconciled against the same
+      structure in a payroll system. The data model was an honest
+      description of the organization. The org chart and the data model
+      were, more or less, the same object.
+    </p>
+
+    <p>
+      By 2026 this is no longer true, and the gap is no longer small.
+      Inside a 5,000-person enterprise today, an employee may have a solid-
+      line manager and a dotted-line manager and a third manager for the
+      cross-functional team she spends sixty percent of her week on. A
+      single role may be split between two people, each at fifty percent,
+      one of whom is a contractor on a 1099 paid through a vendor of record
+      in a different country. A director-level individual contributor may
+      report into a vice president who reports into a different director,
+      because the title and the reporting line have been decoupled on
+      purpose. A workflow that two years ago belonged to a Senior Analyst
+      named Rebecca may now be owned by an internally-deployed AI agent
+      that was provisioned by IT, charged to Rebecca's cost center, and
+      reviewed quarterly by her manager. None of this is exotic. All of it
+      is happening right now, inside companies that are paying $1.4M a year
+      for an HCM system that cannot describe most of it.
+    </p>
+
+    <p>
+      The org is no longer a tree. It is a graph — a graph in the
+      mathematical sense, with nodes that are people and software agents
+      and vendors and projects, and edges that are reporting lines and
+      working relationships and contractual obligations and budget
+      authorities, and properties on those edges that say <em>how much,</em>
+      <em>for how long,</em> <em>under what authority,</em> <em>visible to
+      whom.</em> A graph cannot be flattened into a tree without losing
+      information, and the information you lose is precisely the
+      information the CHRO most needs to do her job. When she asks <em>how
+      many people work on the LATAM growth team,</em> she is asking a graph
+      question. When she asks <em>what is the true cost of the data-
+      platform org if you include the contractors and the AI seats,</em>
+      she is asking a graph question. When she asks <em>which of my
+      employees moved from a contractor relationship to a full-time
+      relationship in the last year and where did they land in the comp
+      band,</em> she is asking a graph question that her current platform
+      will answer wrong, or not at all.
+    </p>
+
+    <p>
+      Asha Pillai, our first engineer outside the three founders, ran into
+      this on her literal first week. We had given her, as an onboarding
+      project, a small dataset from one of our design partners — a clean
+      one, we thought, just to let her exercise the connector framework
+      she would soon be building. Within four days she had surfaced a
+      problem we had not anticipated. The data contained eleven people who,
+      across a fourteen-month window, had moved from a contractor
+      arrangement to a full-time employment arrangement at the same
+      company. In the source-of-record system, these eleven people existed
+      as twenty-two distinct entities — eleven contractor records and
+      eleven employee records — with overlapping but non-identical names,
+      different employee IDs, different start dates, and no foreign key
+      anywhere in the schema connecting the before to the after. The
+      company's headcount report counted the employee record; its spend
+      report counted the contractor record; nobody had ever, on a single
+      page, reconciled the two. The CHRO did not know that eleven of her
+      people had become twenty-two of her people on paper. Neither did
+      anyone else.
+    </p>
+
+    <p>
+      That is a graph problem dressed up as a data-hygiene problem. It is
+      not solvable by a better report. It is not solvable by a better UI.
+      It is solvable, eventually, by a data model that admits up front that
+      a person is one node and not eleven different rows, that a role can
+      change shape over time without changing identity, that the edges
+      between a person and a company can be of multiple kinds at once. The
+      model has to be graph-native, because the world is graph-native.
+      Stratum's bet is that every successful HCM company of the next
+      decade will accept this, build for it, and that the companies that
+      do not will, over the same decade, slowly become invisible to their
+      customers — not because their software broke, but because the world
+      walked past the model the software is written in. The data model is
+      upstream of the user experience, and the user experience is upstream
+      of the contract renewal, and the contract renewal is upstream of the
+      stock price. The architecture is the company.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">The Tuesday afternoon argument.</h2>
+
+    <p>
+      I want to pivot, here, from the architectural argument to the buyer,
+      because if you have been a CHRO reading this essay so far you may
+      have nodded politely at the graph point and waited for me to get to
+      what you actually came here for, which is whether Stratum will give
+      you back the next eight hours of your week. So let me get to it.
+    </p>
+
+    <p>
+      The CHROs I have talked to in the last six months — and the number is
+      now north of ninety, by Priya's count, in companies ranging from
+      eight hundred to twenty-eight thousand employees, in seven countries
+      — do not, in private and at the second drink, describe themselves as
+      having a software problem. They describe themselves as having a time
+      problem. The number Priya likes to quote, because we have heard it
+      now from enough of them that we believe it, is that seventy percent
+      of a senior people leader's week is spent reconciling, formatting,
+      and re-cutting reports that nobody, including the person who asked
+      for them, actually reads. The other thirty percent — the part that
+      contains the leadership conversations, the talent calibration, the
+      compensation decisions, the work she was hired to do — is what is
+      left over after the reconciliation has finished. The reconciliation
+      almost never finishes.
+    </p>
+
+    <p>
+      The promise of AI in our industry, as it is currently being marketed,
+      is approximately: <em>we will make your software prettier.</em> A
+      chat box on the corner of a dashboard. A summarization of a
+      performance review. A suggested calendar invite. The promise is, on
+      its face, not wrong. The work is real, and the demos are competent,
+      and the press cycle will reward it. But it is the wrong promise,
+      because it does not address the time problem. The time problem is
+      not that the dashboard is ugly. The time problem is that the
+      dashboard requires four hours of human assembly before it can be
+      shown, and the assembly is performed by a senior analyst whose
+      training is wasted on it, and the answer that emerges is eighty
+      percent confident at best, and by the time it is delivered, the
+      question has moved.
+    </p>
+
+    <p>
+      The right promise is not <em>we will make your software prettier.</em>
+      The right promise is: <em>we will give you back your Tuesday
+      afternoons.</em>
+    </p>
+
+    <p>
+      I am repeating a line that has now been said inside our company more
+      times than is strictly dignified, but it earned its repetition on the
+      fourth of June, over dinner at Aneel Bhusri's house in Atherton.
+      Aneel, who co-founded Workday and who, with a generosity I am still
+      surprised by, became one of our first angels, had invited six CHROs
+      to a long table for an evening that was, on its face, a small dinner
+      and, in fact, an unannounced advisory board. The six of them ranged
+      from a chief people officer at a publicly-traded healthcare company
+      to the head of HR at a sub-2,000-person manufacturing firm in the
+      Midwest. The conversation moved, as these dinners do, through the
+      polite preliminaries and then, somewhere around the second course,
+      began to be honest.
+    </p>
+
+    <p>
+      Annika Whitfield, the CHRO at Cordova Manufacturing — a 1,600-person
+      industrial firm headquartered in Cleveland, who would later become
+      our fifth signed design partner — said, into a moment of quiet that
+      followed someone else's complaint about a long-running implementation
+      project: <em>the time I get back is not free; it is reallocated to
+      better questions.</em> Aneel, who is a careful listener, wrote that
+      sentence down on the back of his menu. So did I. I have it still. I
+      think it is the most precise account of the value of what we are
+      building that I have heard from a buyer, and it is more precise than
+      anything we have written about ourselves.
+    </p>
+
+    <p>
+      What Annika meant, and what she elaborated for the rest of the table
+      over the next twenty minutes, is that the hours she would get back if
+      her platform could answer the board's questions defensibly in eleven
+      minutes — that this is the number Mercator's CHRO has begun to see —
+      would not vanish into the calendar. They would be reallocated. They
+      would be spent on the leadership bench review she had been
+      postponing for two quarters. On the compensation philosophy
+      conversation with the CEO that needed four uninterrupted hours and
+      had been getting forty interrupted minutes. On reading the engagement
+      survey responses, in full, herself, instead of reading the summary
+      written by a consultant. The reallocation, she said, was the point.
+      The hours were not the prize. The questions she would now have time
+      to ask were the prize.
+    </p>
+
+    <p>
+      I would like to tell you that this is what we sell. It is not, yet,
+      what we sell — we are too early; the product is in private beta with
+      five design partners; the eval set is published but the platform
+      itself is not generally available; I am writing this in May. But it
+      is what we are trying to build. And it is the only promise about AI
+      in our industry that I have heard a CHRO repeat unprompted, with her
+      own example, to other CHROs, at a dinner where she did not know she
+      was being quoted.
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      The org is no longer a tree. It is a graph — and the data model is
+      upstream of the user experience, which is upstream of the contract
+      renewal, which is upstream of the stock price. The architecture is
+      the company.
+    </p>
+    <div class="pullquote-attr">
+      <strong>Maya Chen</strong> · Co-founder &amp; CEO · Stratum, Inc.
+    </div>
+  </div>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">Why "system of truth" and not "system of record."</h2>
+
+    <p>
+      Most of the HCM startups that have been pitched to me — and a
+      surprising number have, in the eleven weeks since we incorporated,
+      sent me their decks — are trying to build a better Workday. They are
+      trying to displace the system of record. They will lose. I want to
+      explain, plainly, why we think that is the wrong fight, and what we
+      are doing instead.
+    </p>
+
+    <p>
+      The system of record is, in most enterprises, fine. It works. It has
+      been deployed for three to seven years, it has consumed eighteen
+      months of implementation, it has trained the workforce, it handles
+      payroll, it runs the year-end process, it survives audits, and it is
+      not going to be ripped out. The CHRO does not want to rip it out, the
+      CIO does not want to rip it out, the CFO has the implementation cost
+      on a depreciation schedule, and the procurement team is in year three
+      of a seven-year contract. Displacement is not the buyer's request. A
+      startup whose theory of the case is <em>we will replace the system
+      of record</em> is selling against the strongest interest in the
+      room, which is the buyer's interest in not having to do an
+      eighteen-month implementation again.
+    </p>
+
+    <p>
+      The system of record is not broken. The problem is not that the
+      record is wrong. The problem is that no one trusts the record,
+      because the record is fragmented across nine systems. In a
+      representative 2,000-person company, the answer to a single board
+      question — <em>what is our true cost of headcount in LATAM, including
+      contractors and rehires</em> — lives in Workday, in ADP, in a
+      regional payroll vendor, in a time-and-attendance system bought by a
+      previous COO, in an engagement survey platform, in two spreadsheets
+      maintained by analysts, in a Slack channel where finance and HR
+      argue about taxonomy, and in the head of one senior analyst named
+      Greg who has been at the company for nine years. The record is not
+      wrong. The record is scattered. The system of record cannot make
+      itself a system of truth, because the truth lives between the
+      records.
+    </p>
+
+    <p>
+      Stratum's wager is this. We are going to build the layer above. We
+      are going to ingest, in read-only mode, from the nine systems the
+      enterprise already runs. We are going to resolve identities — the
+      same person, the same role, the same cost center — into a graph that
+      is kept consistent on a schedule the customer sets. We are going to
+      provide an agentic interface on top of that graph that can answer the
+      questions the CHRO is actually being asked, with citations back to
+      the source rows, with methodology disclosed, with cohort sizes
+      visible, with confidence intervals where they matter. The system of
+      record stays where it is. The system of truth is the layer above,
+      and the layer above is where the intelligence lives.
+    </p>
+
+    <p>
+      Then, selectively, for the workflows where intelligence is the moat —
+      not for headcount entry, not for benefits enrollment, not for any of
+      the workflows where the system of record is mature and correct, but
+      for comp review, succession planning, headcount allocation, the
+      narrow set of decisions that an enterprise makes a few times a year
+      and gets wrong more often than it admits — we will write back. We
+      will write back through documented APIs, with the customer's
+      governance team in the loop, with a clean audit trail, in the
+      direction of the systems that exist, not against them. We will not
+      compete with the record. We will compose on it.
+    </p>
+
+    <p>
+      David, who is the architect of this, has a phrase he likes to use
+      with engineers who interview with us: <em>the moat is not the
+      database. The moat is the graph that sits between the databases.</em>
+      Entity resolution across nine systems, at the scale of a 5,000-
+      person enterprise with five years of history, is a hard problem. It
+      is harder than it looks. It is hardest at the edges — the rehires,
+      the contractor-to-employee transitions, the acquisitions, the name
+      changes, the regional payroll quirks — and the edges are exactly
+      where the CHRO's questions land. Whoever builds the graph correctly
+      owns the layer. The layer is the company. I will let David write the
+      next essay about how he intends to build it; he has reserved the
+      right to be specific about the algorithm.
+    </p>
+
+    <p>
+      A quick aside on language. <em>System of truth</em> is not a phrase
+      I love. It is grandiose; it has been used by data-warehouse vendors
+      for fifteen years to mean something else; it invites the obvious
+      retort that no system is the system of truth, that truth in an
+      organization is contested, social, often political. All of that is
+      fair. We use the phrase anyway, because the alternative — <em>system
+      of intelligence,</em> which our investors at one point suggested —
+      misstates the wager. The wager is not that the layer is smart. The
+      wager is that the layer is correct. The layer is the place where, for
+      the first time, the headcount number and the spend number and the
+      attrition number can be reconciled against each other on a single
+      page, defensibly, in a way the CHRO can take to the board without
+      asking Greg to stay past midnight. That is what we mean by
+      <em>truth.</em> A small, contested, useful word.
+    </p>
+  </section>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">The case for being honest.</h2>
+
+    <p>
+      I am going to write this section in a more personal voice, because
+      what I want to say in it cannot quite be said in the architectural
+      register of the previous sections, and because I am, in the end,
+      asking you to trust a company that has eleven people in it and will
+      need, over the next five years, to earn that trust against a long
+      list of incumbents who are very good at sounding trustworthy.
+    </p>
+
+    <p>
+      Inside Stratum we have a phrase that I did not invent — Priya wrote
+      it on the third whiteboard of the founding session and we have never
+      taken it down — which is: <em>the architecture forbids the
+      promise.</em> What she meant is that we have written the platform
+      such that we cannot, even if we wanted to, tell a customer something
+      the system does not know. Every answer in the Console returns with
+      citation chips back to the source rows. Every methodology is named.
+      Every cohort size is shown. The eval set is published; the failure
+      modes are documented; the platform itself refuses to render an
+      answer below a configurable confidence threshold. These are not
+      marketing decisions. They are architectural decisions that have
+      forced us, repeatedly, to ship slower than we would otherwise have
+      shipped, and which I have come to believe are the difference between
+      a company that builds enterprise AI and a company that gets sued for
+      it.
+    </p>
+
+    <p>
+      I will tell you the moment this became real for me. On the
+      twenty-eighth of April — eleven days before we incorporated, in the
+      slow-motion period when David and I were already working but the
+      legal entity did not yet exist — I had a second conversation with
+      Carlos Reyes, who is the chief people officer at a 4,200-person
+      hospital system called Halcyon Health, headquartered in Phoenix.
+      Carlos is a careful buyer. He has been at Halcyon for six years; he
+      came up through clinical operations; he reports directly to the CEO;
+      he has a board that asks him hard questions and that will sit, in
+      September of this year, in front of an evidence pack about
+      physician-pay-equity that his finance team is currently building.
+      I had been hoping he would become our second design partner.
+    </p>
+
+    <p>
+      In the second call I demoed a synthetic dataset. The synthetic data
+      was meant to look like a hospital system; it had been generated by
+      David two weekends prior, after we realized that I could not, in
+      good conscience, demo on a real customer's data even with masking.
+      The dataset contained, among ten thousand rows, a deliberate edge
+      case David had planted to test the entity-resolution layer:
+      <em>Dr. Maria Hernandez, MD,</em> employed in the cardiology
+      department, and <em>Dr. Maria Hernández, M.D.,</em> employed in the
+      same department three months later under a separate record after a
+      payroll-system migration. Two records, one diacritic, one person.
+      David's resolver should have merged them. The version I was demoing,
+      which was the version we had agreed to ship to design partners, did
+      merge them. It also, in merging them, surfaced a comp band that was
+      wrong — a hallucination, more or less, from an upstream join that
+      had picked the wrong row.
+    </p>
+
+    <p>
+      I caught it on the screen. So did Carlos. I had a choice in that
+      moment that I will not pretend I made gracefully. I could have moved
+      on, said the demo was synthetic, suggested we look at a different
+      query. The error was, after all, in a fake dataset designed to test
+      exactly this kind of failure mode. Instead I stopped the demo. I
+      said, on the call, with David muted on his end and visibly tense:
+      <em>Carlos, that comp band is wrong. The resolver did the right
+      thing on the merge and the wrong thing on the band. I am going to
+      send you, after this call, a one-pager that explains exactly what
+      happened, why it happened, what we are doing about it, and what our
+      eval set will and will not catch.</em> I sent the one-pager that
+      evening. It was three pages.
+    </p>
+
+    <p>
+      Carlos did not sign that day. He did not sign that week. The
+      Halcyon partnership, which I had been planning a press release
+      around in my head, was downgraded to a sixty-day evaluation, then
+      paused while Carlos changed jobs internally and a new clinical-
+      operations head came in. I assumed, for most of June, that we had
+      lost the deal.
+    </p>
+
+    <p>
+      In the last week of June, Carlos wrote me an email I have not
+      forgotten. It was eleven lines long. The seventh line said: <em>I
+      trust the company that tells me what went wrong. I have spent
+      eighteen years in this industry and the vendors who tell you what
+      went wrong are not the vendors who win the room on the first call.
+      They are the vendors who are still in business in ten years. Let us
+      restart the conversation.</em> We are now in the early stages of
+      that restart, with a new sponsor and a redrawn scope, and Carlos
+      will speak for himself when he is ready. The published Halcyon case
+      study, when it appears, will be his story to tell, not mine.
+    </p>
+
+    <p>
+      I am telling this story here because it has become, inside our
+      company, a kind of small founding myth — the moment that I could
+      have shaded the truth to protect a deal and did not, and the deal
+      came back six weeks later, larger and on better terms. I want to be
+      honest about why I did not shade it. I did not do it because I am
+      virtuous. I did it because I am scared. I am scared of building a
+      company that ships an enterprise AI product to a 4,200-person
+      hospital and gets the comp band wrong on a real physician in a real
+      pay-equity audit and gets sued, deservedly, and ends an industry's
+      willingness to take a chance on the next AI-native HCM company for a
+      decade. The architecture forbids the promise because the founders
+      are afraid of the alternative. The fear is, I have come to believe,
+      a feature of the company. We will need to keep it.
+    </p>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">Why I left Workday.</h2>
+
+    <p>
+      I have so far been writing around the question in the title of this
+      essay. Let me answer it directly. There are three reasons, and they
+      are in order of how comfortable I am saying them out loud.
+    </p>
+
+    <ol class="reasons">
+      <li>
+        <em class="lead">Because the org I was shipping for was not the org I was reading about.</em>
+        Every Monday-morning newsletter on the future of work was
+        describing a workforce of mixed employment models, agent-augmented
+        roles, fluid team composition, and project-based reporting. Every
+        Tuesday I was shipping into a data model that presumed a single
+        manager, a single location, a single role, and a single comp band.
+        Workday is not blind to this. The team is working on it. But the
+        core data model is fifteen years old and its assumptions have
+        compounded; you cannot retrofit a graph into a tree without
+        rewriting the tree, and the tree is what is in production at
+        seventy percent of the Fortune 500. The architecture I was shipping
+        into could be extended. It could not, I came to believe, be
+        rebuilt from inside.
+      </li>
+      <li>
+        <em class="lead">Because the customers I was talking to no longer needed faster reports — they needed a different question answered.</em>
+        The question that the CHRO is being asked by her board in 2026 is
+        not the question her platform was designed to answer in 2008. The
+        question has changed shape. It has become a question about
+        cohorts that do not match the org chart, about costs that do not
+        map to a single cost center, about people whose status is more
+        than one thing at once. The platform answers an adjacent question
+        very well. It cannot, architecturally, answer the question being
+        asked. This is the AI-native opportunity, and Workday is
+        constrained from fully addressing it not by talent — the team is
+        excellent — but by the cost of breaking a data model that runs
+        payroll for a third of the global economy. Someone outside that
+        constraint will build it. I would rather it be us than someone who
+        is going to be careless with the product.
+      </li>
+      <li>
+        <em class="lead">Because I wanted to find out if I could build a company that practiced the honesty I was admiring from a distance.</em>
+        This is the personal one and I am not going to oversell it. I had
+        been reading, for the better part of two years, founders' essays
+        and engineering blogs from companies — Stripe, Anthropic, Linear,
+        a few smaller ones — that wrote about their products and their
+        mistakes with a specificity that the marketing pages of enterprise
+        software did not, in my experience, ever match. I wanted to find
+        out whether the gap between how those companies wrote about
+        themselves and how my industry wrote about itself was a difference
+        in culture or a difference in courage. I did not know. I still do
+        not know. What I knew, by the middle of last year, was that I was
+        not going to find out from inside.
+      </li>
+    </ol>
+
+    <p>
+      I did not leave angry. I did not leave because of a person or a
+      project or a missed promotion. I left for a category of reasons that
+      sound, said out loud, suspiciously close to the kinds of reasons
+      every founder claims, which is part of why I am writing them down
+      here and not in a Substack. If, in three years, this essay is being
+      cited against me as evidence of something I did not do, the
+      receipts will be public.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">What I am asking of you.</h2>
+
+    <p>
+      This essay is the first in a series, and series come with asks.
+      Mine are different depending on which audience you are reading
+      from, so I will be specific.
+    </p>
+
+    <ul class="audiences">
+      <li>
+        <span class="a-label">To my former Workday colleagues</span>
+        <p>
+          I am not building against you. I am building above you. The
+          system of record is not the problem; the layer is the problem,
+          and the layer is what we are building. If a customer of yours
+          ever asks you a question the platform cannot answer — a graph
+          question, a cohort question, a question about contractors or
+          agents or the cost of a team that crosses three cost centers —
+          send them to me, and we will integrate, not displace. I will
+          read every introduction email. Nothing in this essay is intended
+          to make your job harder. Several things in it are intended to
+          make it easier.
+        </p>
+        <a class="a-link" href="mailto:maya@stratum.ai">maya@stratum.ai →</a>
+      </li>
+
+      <li>
+        <span class="a-label">To the CHROs reading</span>
+        <p>
+          Open the live Console at <em>stratum.ai/console</em> and ask it
+          your hardest question. It will refuse some of them, which is
+          how it is supposed to behave. It will answer others, with
+          citations and methodology, and you can decide for yourself
+          whether the answer is defensible. If it gets one wrong — if it
+          surfaces a number you cannot defend, if it cites a regulation
+          that is not the right regulation, if it hallucinates a comp
+          band the way it did to Carlos — send me what it said, and what
+          you think it should have said. I will read it personally. I owe
+          the field the same honesty Carlos gave me.
+        </p>
+        <a class="a-link" href="../console/">Open the live console →</a>
+      </li>
+
+      <li>
+        <span class="a-label">To engineers thinking about joining</span>
+        <p>
+          We are hiring our eleventh employee this week. We are slow on
+          purpose. Every engineering hire reads the eval set and the
+          architecture brief before the second interview; every hire
+          meets all three founders before an offer; we have walked away
+          from five offers in the last two months because the
+          conversation about failure modes was not honest enough. If you
+          are the kind of engineer who reads David's commit messages on a
+          Saturday and finds them more interesting than your current
+          codebase, we will probably get along. The role descriptions are
+          long because we mean them.
+        </p>
+        <a class="a-link" href="../careers/index.html">See open roles →</a>
+      </li>
+
+      <li>
+        <span class="a-label">To anyone who wants the long version</span>
+        <p>
+          The architecture, the team, the financials, the customer
+          notes, the engineering blog — they live in the library. I
+          publish a Chairman's Briefing every fortnight. It is written
+          for an audience of one — our board chair — but we make it
+          public because the discipline of writing for him is the
+          discipline of being honest with everybody. If you want to know
+          what we are doing this fortnight, that is where to look.
+        </p>
+        <a class="a-link" href="../library/">The library →</a>
+      </li>
+    </ul>
+
+    <p>
+      I left a company I loved to build a company I have only known for
+      eleven weeks. I cannot tell you, on a Wednesday morning in May, that
+      I will succeed. The base rates are not in my favor; the incumbents
+      are real; the architecture problem is harder than this essay has
+      made it sound, and the honesty problem is harder than the
+      architecture problem. What I can tell you is that I now know, with
+      a clarity I did not have last September, what I am trying to do and
+      why I think it is worth doing. The org is no longer a tree. The
+      system of record is not the moat. The CHRO does not need a better
+      report; she needs an architecture that admits the workforce she
+      actually has and the time she actually does not have. We are going
+      to try to build that. If you have read this far, you are part of
+      the small group of people whose attention this essay is in service
+      of, and I am, finally, grateful for it.
+    </p>
+
+    <p>
+      The next essay in this series will be David's, on entity resolution
+      — the technical problem at the center of the company. Mine was the
+      framing essay. His will be the harder one.
+    </p>
+  </section>
+
+  <!-- AT A GLANCE -->
+  <aside class="glance" aria-label="At a glance">
+    <div class="glance-label">At a glance · Methodology note</div>
+    <dl>
+      <dt>Author</dt><dd>Maya Chen, Co-founder &amp; CEO, Stratum, Inc.</dd>
+      <dt>First drafted</dt><dd>12 May 2026, Palo Alto</dd>
+      <dt>Published</dt><dd>14 May 2026</dd>
+      <dt>Reviewed by</dt><dd>David Okonkwo (CTO) · Priya Rao (CCO) · Sarah Cannon (Index Ventures, board)</dd>
+      <dt>Word count</dt><dd>~6,000 · 16-minute read</dd>
+      <dt>Composite figures</dt><dd>The unnamed CHRO in §I is a composite of four conversations between 2023 and 2025. All other named individuals are real and have reviewed the passages in which they appear.</dd>
+      <dt>Series</dt><dd>First of an essay series. No. 02 by David Okonkwo (entity resolution); No. 03 by Priya Rao (the GTM motion).</dd>
+      <dt>Subscribe</dt><dd><a href="mailto:essays@stratum.ai">essays@stratum.ai</a></dd>
+    </dl>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    This essay was drafted by Maya Chen between 10 and 12 May 2026 and
+    reviewed by David Okonkwo, Priya Rao, and board member Sarah Cannon
+    prior to publication. The Bhusri dinner is referenced with Aneel
+    Bhusri's permission; the Whitfield quotation with Annika Whitfield's;
+    the Halcyon passage with Carlos Reyes's, on the condition that the
+    Halcyon case study, when published separately, will be his to write.
+    All factual claims about Workday's data model are Maya's reading of
+    the public architecture and her own four years inside it.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Stratum publishes one founder essay every six weeks. The series is
+      meant to be read; it is not meant to be skimmed.
+    </div>
+    <div class="closing-links">
+      <a href="../">← Back to The Chairman's Briefing</a>
+      <a href="../customers/mercator.html">Read the Mercator case study →</a>
+      <a href="../engineering/">Read the engineering blog →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../console/">Live console</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/mercator.html">Customers</a></li>
+        <li><a href="./why-i-left-workday.html">Essays</a></li>
+        <li><a href="../press/">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Writing</h4>
+      <ul>
+        <li><a href="./why-i-left-workday.html">No. 01 — Maya, on the layer</a></li>
+        <li><a href="#">No. 02 — David, on resolution</a></li>
+        <li><a href="#">No. 03 — Priya, on the motion</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../">The Briefing</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>
