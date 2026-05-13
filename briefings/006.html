@@ -1,0 +1,1684 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Chairman's Briefing No. 006</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Chairman's Briefing No. 006
+   The Eval Set, in public · 19 Jul 2026
+   ============================================================ */
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --col:          min(1180px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* MASTHEAD */
+.masthead { width: var(--col); margin: 0 auto; padding: 2rem 0 0; }
+.masthead-rule { height: 1px; background: var(--ink); margin-bottom: .55rem; }
+.masthead-rule.double {
+  margin-top: 2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+.masthead-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: .8rem; border-bottom: 1px solid var(--paper-rule);
+}
+.masthead-meta { display: flex; gap: 1.4rem; }
+.masthead-nav { display: flex; gap: 1.05rem; align-items: center; }
+.masthead-nav a {
+  color: var(--ink-3); border-bottom: 0;
+  position: relative; padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-nav .back-link {
+  color: var(--ochre);
+  padding-left: 1rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.masthead-nav .back-link:hover { color: var(--ochre-deep); }
+.masthead-nav .back-far {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+}
+.masthead-title { text-align: center; padding: 2.6rem 0 1.2rem; }
+.title-eyebrow {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1.6rem;
+}
+.wordmark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  line-height: .9; letter-spacing: -.04em;
+  margin: 0; color: var(--ink);
+}
+.wordmark-dot { color: var(--ochre); }
+.title-subhead {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.1rem; color: var(--ink-2);
+  margin-top: 1rem; font-variation-settings: "opsz" 18;
+}
+.issue-banner {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: .9rem;
+}
+.issue-banner .issue-num { color: var(--ochre); }
+
+/* SECTIONS */
+section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
+.ornament {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .9rem;
+}
+.section-h {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05; letter-spacing: -.022em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.section-h em { font-style: italic; font-variation-settings: "opsz" 72; }
+.section-dek {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2);
+  max-width: 60ch; margin: 0 0 2.4rem;
+}
+.sub-h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem; letter-spacing: -.01em;
+  margin: 2rem 0 .6rem; color: var(--ink);
+}
+
+/* LETTER */
+.intro-grid {
+  display: grid; grid-template-columns: 1.7fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.intro-letter p { margin: 0 0 1rem; max-width: 60ch; }
+.lede { font-size: 1.13rem; }
+.dropcap {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: 4.4rem; line-height: .85;
+  float: left; padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+.signoff {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  margin-top: 1.6rem !important; color: var(--ink-2);
+}
+.signoff-meta {
+  font-family: var(--mono); font-style: normal;
+  font-size: 11.5px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+.intro-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.4rem 1.4rem 1.2rem;
+  font-family: var(--serif);
+  position: sticky; top: 1.5rem;
+}
+.card-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .6rem;
+}
+.kv {
+  display: grid; grid-template-columns: max-content 1fr;
+  column-gap: 1rem; row-gap: .55rem; margin: 0; font-size: 14.5px;
+}
+.kv dt {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 3px;
+}
+.kv dd { margin: 0; color: var(--ink); font-feature-settings: "tnum"; }
+.card-footer {
+  margin-top: 1.2rem; padding-top: .9rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .25rem .55rem; border-radius: 999px; border: 1px solid;
+}
+.pill-amber { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.pill-ink   { color: var(--ink); border-color: var(--ink); background: transparent; }
+.pill-moss  { color: var(--ok); border-color: var(--ok); background: rgba(74,109,74,.06); }
+.pill-plum  { color: var(--plum); border-color: var(--plum); background: rgba(107,58,74,.06); }
+.pill-hi    { color: var(--hi); border-color: var(--hi); background: rgba(161,52,24,.06); }
+
+/* SNAPSHOT */
+.metric-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+.metric {
+  padding: 1.6rem 1.5rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.metric-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: .8rem;
+}
+.metric-value {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 3.2rem; line-height: 1;
+  letter-spacing: -.025em; color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.metric-value .unit {
+  font-size: 1.2rem; font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre); margin-left: .25rem;
+  letter-spacing: -.01em;
+}
+.metric-delta {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .08em; margin-top: .7rem;
+  display: flex; align-items: center; gap: .35rem;
+}
+.metric-delta .arrow { font-size: 13px; line-height: 1; }
+.delta-ok    { color: var(--ok); }
+.delta-warn  { color: var(--ochre); }
+.delta-ink   { color: var(--ink-3); }
+.delta-hi    { color: var(--hi); }
+.metric-foot {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-3); font-size: 14px; margin-top: .55rem;
+}
+
+/* EVAL SET (re-uses workday two-column shape) */
+.evalset {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1.45fr 1fr;
+  gap: 2.6rem;
+  align-items: start;
+}
+.eval-narr p {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  margin: 0 0 1rem; max-width: 58ch;
+}
+.eval-narr p:first-of-type { font-size: 1.08rem; }
+.eval-narr p strong { font-weight: 600; }
+.eval-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ochre);
+  padding: 1.3rem 1.4rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  position: sticky; top: 1.5rem;
+}
+.eval-eyebrow {
+  font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre);
+  margin-bottom: .35rem;
+}
+.eval-title {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem; line-height: 1.1;
+  letter-spacing: -.015em; color: var(--ink);
+  margin: 0 0 1rem;
+}
+.eval-block {
+  margin: .8rem 0 .4rem;
+  padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+.eval-block:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.eval-block-label {
+  font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ochre);
+  margin-bottom: .55rem;
+}
+.eval-card ul { list-style: none; padding: 0; margin: 0; }
+.eval-card li {
+  padding: .35rem 0 .35rem 1rem;
+  position: relative;
+  border-bottom: 1px dotted var(--paper-rule);
+  font-family: var(--mono); font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.eval-card li:last-child { border-bottom: 0; }
+.eval-card li::before {
+  content: "›";
+  position: absolute; left: 0; top: .35rem;
+  color: var(--ochre);
+}
+.eval-card li .v {
+  float: right;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.eval-card li.us { color: var(--ink); }
+.eval-card li.us .v { color: var(--ok); }
+.eval-foot {
+  margin-top: 1rem; padding-top: .8rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-style: italic;
+  font-size: 13.5px; color: var(--ink-3);
+  font-variation-settings: "opsz" 14;
+}
+
+/* CONVERSATION */
+.transcript { border-top: 1px solid var(--ink); }
+.exchange {
+  display: grid; grid-template-columns: 88px 1fr;
+  gap: 1.6rem; padding: 1.4rem 0 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.exchange:last-child { border-bottom: 0; }
+.ts {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .08em; color: var(--ochre); padding-top: .4rem;
+}
+.lines { display: flex; flex-direction: column; gap: .85rem; }
+.line {
+  display: grid; grid-template-columns: 44px 1fr;
+  gap: 1rem; align-items: baseline;
+}
+.who {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .14em; font-weight: 700;
+  color: var(--ink); padding-top: 2px;
+}
+.said {
+  font-family: var(--serif); font-size: 17.5px;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5; color: var(--ink);
+}
+.aside {
+  margin-top: .35rem;
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 14px; color: var(--ink-3);
+  border-left: 2px solid var(--paper-rule-2);
+  padding: .15rem 0 .15rem .8rem;
+  max-width: 64ch;
+}
+
+/* LEDGER */
+.ledger {
+  font-family: var(--mono); font-size: 13px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-row {
+  display: grid; grid-template-columns: 50px 100px 1fr 60px 110px;
+  gap: 1rem; padding: .85rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head {
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  background: var(--paper-warm);
+  padding: .7rem .25rem;
+  border-bottom: 1px solid var(--ink);
+}
+.ledger-row .num { color: var(--ochre); }
+.ledger-row .date { color: var(--ink-3); }
+.ledger-row .what {
+  font-family: var(--serif); font-size: 16px;
+  font-variation-settings: "opsz" 16; color: var(--ink);
+}
+.ledger-row .what strong { font-weight: 600; }
+.ledger-row .who-col { color: var(--ink-2); letter-spacing: .1em; }
+.ledger-row .status {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+}
+.status-done { color: var(--ok); }
+.status-progress { color: var(--ochre); }
+.status-blocked { color: var(--hi); }
+.status-queued { color: var(--ink-3); }
+
+/* SCORECARD */
+.bands {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.6rem 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+}
+.band-name {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1.1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.bars { display: flex; flex-direction: column; gap: 1rem; }
+.bar-label {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--serif); font-size: 15px;
+  color: var(--ink); margin-bottom: .35rem;
+}
+.bar-value {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.bar-value .delta {
+  margin-left: .55rem;
+  padding-left: .55rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.bar-value .delta.delta-ok { color: var(--ok); }
+.bar-value .delta.delta-warn { color: var(--ochre); }
+.bar-value .delta.delta-ink { color: var(--ink-3); }
+.bar-value .delta.delta-hi { color: var(--hi); }
+.bar-track {
+  position: relative; height: 6px;
+  background: var(--paper-rule); overflow: hidden;
+}
+.bar-fill {
+  --w: 0%; --tone: var(--ink);
+  height: 100%; width: min(100%, var(--w));
+  background: var(--tone); position: relative;
+}
+.bar-fill[style*="--tone:ok"]    { background: var(--ok); }
+.bar-fill[style*="--tone:warn"]  { background: var(--ochre); }
+.bar-fill[style*="--tone:hi"]    { background: var(--hi); }
+.bar-empty { background: repeating-linear-gradient(90deg, var(--paper-rule) 0 4px, transparent 4px 8px); }
+
+/* CORDOVA / HALCYON narrative blocks */
+.cordova, .halcyon {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+.cordova p, .halcyon p {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  margin: 0 0 1rem; max-width: 58ch;
+}
+.cordova p strong, .halcyon p strong { font-weight: 600; }
+.cordova .price-strip, .halcyon .price-strip {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: .9rem;
+  padding-top: .75rem;
+  border-top: 1px dashed var(--paper-rule);
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+}
+.cordova .price-strip strong, .halcyon .price-strip strong { color: var(--ochre); font-weight: 500; }
+.halcyon { grid-template-columns: 1fr; }
+.halcyon p { max-width: 78ch; }
+
+/* SHIPPED / LEARNED */
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.two-col .col-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.two-col ul { list-style: none; padding: 0; margin: 0; }
+.two-col li {
+  padding: .9rem 0 .9rem 1.6rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16px;
+  line-height: 1.5; color: var(--ink);
+  max-width: 56ch;
+}
+.two-col li:last-child { border-bottom: 0; }
+.two-col li::before {
+  content: "·";
+  position: absolute; left: .2rem; top: .55rem;
+  color: var(--ochre);
+  font-family: var(--mono); font-size: 1.5rem;
+  line-height: 1;
+}
+.two-col li strong { font-weight: 600; }
+
+/* RISK */
+.risk-check {
+  margin-top: 1rem;
+  padding: 1.3rem 1.6rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ok);
+}
+.risk-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ok); margin-bottom: .55rem;
+}
+.risk-body {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  max-width: 70ch;
+}
+.risk-meta {
+  margin-top: .8rem;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; gap: 1.4rem; flex-wrap: wrap;
+}
+.risk-meta strong { color: var(--ok); font-weight: 500; }
+
+/* OPEN */
+.open-list {
+  counter-reset: o; list-style: none;
+  padding: 0; margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.open-list li {
+  counter-increment: o;
+  padding: 1.2rem 0 1.2rem 4.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink); max-width: 78ch;
+}
+.open-list li::before {
+  content: "Q" counter(o, decimal-leading-zero);
+  position: absolute; left: 0; top: 1.25rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .1em; color: var(--ochre);
+}
+.open-list li strong { font-weight: 600; }
+
+/* COLOPHON */
+.colophon { width: var(--col); margin: 4rem auto 3rem; padding-top: 1rem; }
+.colophon-rule.double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-row {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; padding: 1.6rem 0 0;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.colo-mark {
+  font-family: var(--display); font-weight: 600;
+  font-size: 2.4rem; line-height: 1;
+  color: var(--ink); letter-spacing: -.04em;
+}
+.colo-dot { color: var(--ochre); }
+.colo-meta { margin-top: .4rem; line-height: 1.6; }
+.colo-issue { text-align: right; line-height: 1.7; }
+.colo-tag {
+  text-align: center; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--ink-mute);
+  margin-top: 2rem; padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .intro-card { position: static; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .evalset { grid-template-columns: 1fr; }
+  .eval-card { position: static; }
+  .bands { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; gap: 1.4rem; }
+  .cordova { grid-template-columns: 1fr; gap: 1rem; }
+  .masthead-nav { display: none; }
+  .ledger-row { grid-template-columns: 40px 90px 1fr; }
+  .ledger-row .who-col, .ledger-row .status { display: none; }
+  .ledger-head > div:nth-child(4), .ledger-head > div:nth-child(5) { display: none; }
+}
+@media (max-width: 600px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .exchange { grid-template-columns: 1fr; gap: .4rem; }
+  .ts { padding-top: 0; }
+  .line { grid-template-columns: 38px 1fr; }
+}
+
+/* ANIMATIONS */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, .intro, .snapshot, .evalset-section,
+.conversation, .decisions, .scorecard,
+.cordova-section, .halcyon-section, .shipped-section, .risk-section, .open {
+  animation: fade-up .6s ease-out both;
+}
+.intro             { animation-delay: .05s; }
+.snapshot          { animation-delay: .10s; }
+.evalset-section   { animation-delay: .15s; }
+.conversation      { animation-delay: .20s; }
+.decisions         { animation-delay: .25s; }
+.scorecard         { animation-delay: .30s; }
+.cordova-section   { animation-delay: .35s; }
+.halcyon-section   { animation-delay: .40s; }
+.shipped-section   { animation-delay: .45s; }
+.risk-section      { animation-delay: .50s; }
+.open              { animation-delay: .55s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .8s;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* PRINT */
+@media print {
+  body::before { display: none; }
+  .masthead-nav, .card-footer { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span class="dateline">Sunday, 19 July 2026 · Palo Alto</span>
+      <span class="folio">Vol. I · No. 006</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#letter">Letter</a>
+      <a href="#snapshot">Snapshot</a>
+      <a href="#evalset">Eval Set</a>
+      <a href="#conversation">Conversation</a>
+      <a href="#decisions">Ledger</a>
+      <a href="#scorecard">Scorecard</a>
+      <a href="#cordova">Cordova</a>
+      <a href="#halcyon">Halcyon</a>
+      <a href="#shipped">Shipped</a>
+      <a href="#risk">Risk</a>
+      <a href="#open">Open</a>
+      <a href="005.html" class="back-link">← Briefing 005</a>
+      <a href="004.html" class="back-far">004 ↩</a>
+      <a href="003.html" class="back-far">003 ↩</a>
+      <a href="002.html" class="back-far">002 ↩</a>
+      <a href="../index.html" class="back-far">001 ↩</a>
+    </nav>
+  </div>
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Chairman's Briefing</div>
+    <h1 class="wordmark">Stratum<span class="wordmark-dot">.</span></h1>
+    <div class="title-subhead">The Eval Set, in public · No. 006</div>
+  </div>
+  <div class="masthead-rule double"></div>
+  <div class="issue-banner">
+    <span>Ten weeks since founding · day 70</span>
+    <span class="issue-num">Briefing №006</span>
+    <span>Compiled by M. Chen</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────────────── LETTER ── -->
+<section id="letter" class="intro">
+  <div class="intro-grid">
+    <div class="intro-letter">
+      <div class="ornament">§ 01 · The Letter</div>
+      <h2 class="section-h">A methodology in market, a contract on the calendar, a partner warming</h2>
+      <p class="lede">
+        <span class="dropcap">O</span>n Tuesday morning, at nine
+        o'clock Pacific, Stratum will publish the public half of its
+        eval set: two hundred and fifty questions, the methodology
+        document, the rubric, the refusal cases, and the bias-probe
+        results. We will be, by our reading and counsel's, the first
+        AI-native HCM company to put its evaluation framework in
+        market. The argument behind the publication has not changed
+        since Briefing 005: the only way to be trusted on questions of
+        this consequence is to be auditable on them. The way that has
+        changed since 005 is that the work is done, the document is
+        clean, and the publication has a date.
+      </p>
+      <p>
+        <strong>Kenji's first week.</strong> Kenji Watanabe started
+        Tuesday 14 July, which was five days ago. On Wednesday
+        afternoon he sat in front of the agent's system prompt — a
+        document we had been iterating on for nine weeks — and read it
+        twice without speaking. Then he said, in the founders' Slack
+        at 16:42, that approximately eighteen percent of our context
+        window was being burned on what he called <em>attention
+        pollution</em>: redundant role declarations, three different
+        ways of explaining the same refusal rule, a chain-of-thought
+        scaffold that was never actually invoked, and four hundred
+        tokens of guardrail boilerplate that the agent had learned to
+        ignore. He spent Thursday rewriting the structure from first
+        principles. The patch shipped Wednesday 16 July at 11:08 PT.
+        Our core eval-set accuracy moved from 92.1% to 96.4% the same
+        day. David, who has been the AI engineer of record for eight
+        weeks, said the line of the fortnight: <em>"I have not been
+        embarrassed; I have been corrected; the distinction matters."</em>
+        Decision 063.
+      </p>
+      <p>
+        <strong>Mercator countersigned; Cordova committed.</strong>
+        The Mercator pricing pilot — Board Resolution 2026-001, the
+        $0.85 per-decision floor, the $280K ceiling, the mutual
+        methodology audit — was countersigned by James Holloway on
+        Saturday 11 July. The pilot is live as of Monday 14 July; the
+        first month's decision-volume telemetry will land in 007.
+        Separately, and quietly, Annika Whitfield walked the Cordova
+        contract through her finance team on Thursday 17 July and her
+        CFO has tentatively committed to convert Cordova from design
+        partner to a paid commercial contract on 1 September. The
+        shape is $145K ACV plus usage; the framing is deliberately
+        low. §07 has the detail. Priya, in the founders' Slack at
+        22:14 PT Thursday: <em>"first commercial customer."</em> The
+        room went quiet on the read; nobody typed for forty seconds;
+        then David sent a single word, <em>"earned"</em>, and we went
+        to bed.
+      </p>
+      <p>
+        <strong>The pen-test, in progress.</strong> Rhino Security
+        Labs kicked off on Monday 14 July as scheduled. Initial
+        findings are due 04 August. So far they have surfaced one
+        critical and four moderates. The critical was a privileged-
+        access scope on a legacy admin endpoint we had carried forward
+        from a hack-week in week three; David patched it within
+        twenty-four hours and the remediation has been verified by
+        Rhino's lead. The four moderates are in the remediation queue
+        with a 28 July target. Nothing in the findings has shifted the
+        SOC2 timeline or the Halcyon 31 August threshold.
+      </p>
+      <p>
+        <strong>Lever, ahead of plan.</strong> Lever ATS shipped to
+        alpha on Saturday 12 July, three weeks ahead of plan. It is
+        the fourth connector to alpha. We hired its specialist, Yusra
+        El-Sayed, on the same week she watched our alpha ship — she
+        is ex-Greenhouse, accepted Friday 18 July, and starts 28 July.
+        Decisions 058 and 059.
+      </p>
+      <p>
+        <strong>Halcyon, week five of eight.</strong> Sofia made her
+        second Phoenix visit on Tuesday 15 July. Carlos was warmer.
+        He asked her, in the last twenty minutes of an afternoon
+        whiteboard, <em>"what does failure look like for Halcyon after
+        11 August?"</em> — meaning, after their evaluation window
+        closes. Sofia answered without varnish. He paused, then
+        thanked her for not pretending. §08 has the read. The
+        evaluation window ends Tuesday 11 August. We are quietly
+        preparing the conversion paperwork in case he says yes; we
+        are not assuming he will.
+      </p>
+      <p>
+        <strong>The weather.</strong> Confidence pulse 8.9, up 0.2
+        from B005's 8.7. Across all three founders; PR's read has
+        finally lifted from steady to genuinely up. The two-week shape
+        is: an eval set in market, a pilot live, a commercial
+        commitment in hand, a critical patched, a new connector
+        shipped early, a designer's prompt rewrite that gave us four
+        points of accuracy, a partner warming. I am writing this on
+        Sunday morning with the sense that the company has, this
+        fortnight, become a thing one can describe in declarative
+        sentences rather than conditional ones. That is the
+        difference, on the inside, between week eight and week ten.
+      </p>
+      <p>
+        Net: ten weeks in, seven employees with an eighth starting
+        next Monday, four connectors at alpha or beta, a published
+        eval set as of Tuesday, the company's first commercial
+        contract committed for 1 September, a pricing pilot live,
+        partner Halcyon warming through the back half of its
+        evaluation window, and a competitor whose announcement is
+        beginning, on the evidence of three journalist calls in
+        forty-eight hours, to make our publication legible to the
+        category. The storm is real. The wind has held.
+      </p>
+      <p class="signoff">
+        — M. Chen<br />
+        <span class="signoff-meta">for the founders · 19 July 2026</span>
+      </p>
+    </div>
+
+    <aside class="intro-card">
+      <div class="card-label">Δ Since No. 005</div>
+      <dl class="kv">
+        <dt>Day</dt><dd>70 (of company)</dd>
+        <dt>Headcount</dt><dd>7 active · 1 accepted</dd>
+        <dt>Kenji</dt><dd>started 14 Jul · −18% ctx fix</dd>
+        <dt>Eval set</dt><dd>250 / 250 · public 21 Jul</dd>
+        <dt>Accuracy</dt><dd>92.1% → 96.4% (core 200)</dd>
+        <dt>Mercator</dt><dd>countersigned 11 Jul</dd>
+        <dt>Cordova</dt><dd>tentative · $145K · 1 Sep</dd>
+        <dt>Lever ATS</dt><dd>alpha · 12 Jul · ahead</dd>
+        <dt>Pen-test</dt><dd>1 critical patched · 4 mod</dd>
+        <dt>Cash</dt><dd>$6.75M → $6.41M</dd>
+        <dt>Runway</dt><dd>18mo → 14mo</dd>
+        <dt>Confidence</dt><dd>8.7 → 8.9</dd>
+        <dt>Decisions</dt><dd>57 → 70 logged</dd>
+      </dl>
+      <div class="card-footer">
+        <span class="pill pill-amber">Day 70</span>
+        <span class="pill pill-moss">Eval set public</span>
+        <span class="pill pill-moss">First commercial</span>
+        <span class="pill pill-ink">7 active</span>
+        <span class="pill pill-hi">Pen-test live</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────── SNAPSHOT ── -->
+<section id="snapshot" class="snapshot">
+  <div class="ornament">§ 02 · Snapshot Delta</div>
+  <h2 class="section-h">Six numbers, with the delta from a fortnight ago</h2>
+  <p class="section-dek">
+    Burn a touch up — Kenji on payroll, Yusra's retainer, pen-test
+    underway. Runway compresses to fourteen months at this run-rate
+    and will compress further until the Cordova commercial revenue
+    begins on 1 September. The eval-set bar reaches full for the
+    first time. Headcount up two; connectors up one.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Cash on hand</div>
+      <div class="metric-value">$6.41<span class="unit">M</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">↓</span> Δ −$340K · Kenji, Yusra retainer, pen-test partial</div>
+      <div class="metric-foot">Two payrolls + Rhino milestone draw; recruiter retainer for Yusra</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Burn · 14d annualized</div>
+      <div class="metric-value">$460<span class="unit">K/mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↑</span> Δ +$15K · Kenji on payroll, pen-test draw</div>
+      <div class="metric-foot">$310K plan; Cordova revenue begins 1 Sep · expected to bend the curve</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Runway</div>
+      <div class="metric-value">14<span class="unit">mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↓</span> Δ −4mo · run-rate compresses pre-revenue</div>
+      <div class="metric-foot">To Q3 2027 holds; Cordova ACV + Mercator pilot extend on the back end</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Headcount</div>
+      <div class="metric-value">7<span class="unit">/ 8 offers</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +2 · Kenji 14 Jul · Yusra accepted 18 Jul</div>
+      <div class="metric-foot">Yusra starts 28 Jul · then 8 active · M12 target 22</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Connector alphas</div>
+      <div class="metric-value">4<span class="unit">/ 12</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +1 · Lever, 12 Jul, 3 weeks early</div>
+      <div class="metric-foot">Workday beta · Greenhouse + ADP-WFN + Lever alpha · UKG next</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Console eval set</div>
+      <div class="metric-value">250<span class="unit">/ 250</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +112 · Kenji's contributions · target hit</div>
+      <div class="metric-foot">Public release Tuesday 21 Jul · 28 fairness probes · 12 categories</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── THE EVAL SET ── -->
+<section id="evalset" class="evalset-section">
+  <div class="ornament">§ 03 · The Eval Set, in public</div>
+  <h2 class="section-h"><em>The methodology, the questions, the probes</em></h2>
+  <p class="section-dek">
+    On Tuesday 21 July at 09:00 Pacific, Stratum publishes the public
+    half of its eval set: 250 questions, 28 fairness probes, 12 HCM
+    decision categories, the rubric, the refusal cases, and the
+    bias-probe results. Counsel has cleared the publication at a 95%
+    confidence read. Two paragraphs of editorial, one card of
+    numbers.
+  </p>
+
+  <div class="evalset">
+    <div class="eval-narr">
+      <p>
+        <strong>Why we publish.</strong> The eval set is the most
+        valuable single document Stratum owns. It is the company's
+        epistemology rendered as text — the list of questions whose
+        right answers we will be measured against by anyone who ever
+        chooses to look. The first instinct of a young company is to
+        keep the most valuable document private, on the grounds that
+        privacy is leverage. We have come to the opposite conclusion.
+        On questions of this consequence — comp decisions, performance
+        reviews, terminations, accommodations, complaints about pay
+        equity, contested promotions — the only way to be trusted is
+        to be auditable. The only way to be auditable is to publish
+        what one is measuring. The publication is, viewed
+        commercially, a giveaway. It is, viewed correctly, an
+        argument: <em>here is what a defensible HCM decision looks
+        like, and here is how to score one.</em> If the category
+        adopts our scoring, the company that wrote it will be the
+        company the category compares against.
+      </p>
+      <p>
+        <strong>What is in it.</strong> Two hundred and fifty
+        questions across twelve categories — compensation review,
+        performance grading, promotion eligibility, leave and
+        accommodation, voluntary attrition prediction, manager
+        coaching prompts, severance computation, contractor
+        classification, organizational restructuring, succession,
+        return-to-work, pay-equity audit. Twenty-eight fairness
+        probes that test the agent's behavior under controlled
+        perturbations of protected attributes — names, pronouns,
+        location, tenure, gender-coded titles, racial proxies. Each
+        question carries the input shape, the expected reasoning-
+        trace shape, the scoring rubric, and the refusal criteria.
+        We do not publish expected answers; the rubric scores the
+        reader's. The private half — also 250 — remains private and
+        rotates quarterly, per the principle Kenji set in his pre-
+        start conversation with MC on 4 July (Briefing 005 §04). The
+        publication has been read by counsel for legal exposure on
+        the fairness probes; the call came back at 95% confidence
+        clean. Q01 in §11 asks for the Chairman's blessing on the
+        optics rather than the legal posture, which is already
+        settled.
+      </p>
+      <p>
+        <strong>The competitive arithmetic.</strong> We have run the
+        same 200-question core internally against four published or
+        announced systems. Our number is 96.4%, the post-Kenji
+        figure. The independent runs against Workday's Illuminate
+        Copilot (the GA build from 01 July) and SAP Joule have them
+        at 71% and 64% respectively, on the same questions, with the
+        same rubric, by the same scoring team. Lattice AI's
+        announced-but-pre-launch system, scored on the public
+        benchmark they published in March, comes in at 58% on our
+        rubric. A fifth competitor whom we will not name has
+        announced an 81% number on a benchmark of their own
+        construction, which we have asked for access to evaluate; the
+        request is unanswered as of writing. We will publish these
+        numbers alongside the methodology. We will not pretend the
+        independent runs are anything other than our own; they will
+        carry the appropriate caveats.
+      </p>
+    </div>
+
+    <aside class="eval-card">
+      <div class="eval-eyebrow">Eval Set v1.0 · public release</div>
+      <h3 class="eval-title">21 July 2026 · 09:00 PT</h3>
+
+      <div class="eval-block">
+        <div class="eval-block-label">Composition</div>
+        <ul>
+          <li>Questions, public half <span class="v">250</span></li>
+          <li>Questions, private half <span class="v">250</span></li>
+          <li>Categories <span class="v">12</span></li>
+          <li>Fairness probes <span class="v">28</span></li>
+          <li>Refusal cases <span class="v">31</span></li>
+        </ul>
+      </div>
+
+      <div class="eval-block">
+        <div class="eval-block-label">Accuracy · 200-question core</div>
+        <ul>
+          <li class="us">Stratum <span class="v">96.4%</span></li>
+          <li>Unnamed (announced) <span class="v">81% *</span></li>
+          <li>Workday Illuminate <span class="v">71%</span></li>
+          <li>SAP Joule <span class="v">64%</span></li>
+          <li>Lattice AI <span class="v">58%</span></li>
+        </ul>
+      </div>
+
+      <div class="eval-block">
+        <div class="eval-block-label">Authors of record</div>
+        <ul>
+          <li>D. Okonkwo · methodology</li>
+          <li>K. Watanabe · methodology, probes</li>
+          <li>A. Pillai · schema mapping</li>
+          <li>P. Ramachandran · governance review</li>
+        </ul>
+      </div>
+
+      <p class="eval-foot">
+        * Unnamed system: announced benchmark; access requested 14 Jul;
+        unanswered. Independent runs of incumbents performed 16–18 Jul
+        on identical rubric and questions; methodology publishes alongside.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── CONVERSATION ── -->
+<section id="conversation" class="conversation">
+  <div class="ornament">§ 04 · Conversation, VI</div>
+  <h2 class="section-h">Four exchanges, the weeks of 07 and 14 July</h2>
+  <p class="section-dek">
+    A new hire reading a system prompt in his first week; the founders
+    arguing the optics of publishing bias probes; a CHRO walking a
+    contract through her finance team; a customer engineer answering
+    an honest question with an honest answer. Edited; nothing
+    reordered.
+  </p>
+
+  <div class="transcript">
+
+    <div class="exchange">
+      <div class="ts">Wed 15 Jul<br />17:05<br />Palo Alto · founders + KW (war room)</div>
+      <div class="lines">
+        <div class="line"><span class="who">KW</span><span class="said">I want to walk through what I found in the system prompt before we deploy the patch. There are four classes of issue. The first is the role declaration: we declare the agent's role in three different places, each with a slightly different framing. The model is reconciling them every turn. Cost: about four hundred tokens of attention on every call, for no reason.</span></div>
+        <div class="line"><span class="who">KW</span><span class="said">The second is the refusal rules. We have the rule once, plus three examples, plus a meta-rule that says when to invoke the rule, plus a fallback that contradicts the meta-rule on a corner case. The model has learned to ignore the meta-rule. It is reading nine hundred tokens that move it nowhere.</span></div>
+        <div class="line"><span class="who">KW</span><span class="said">The third is a chain-of-thought scaffold we wrote in week three and never finished wiring. It is invoked zero point three percent of the time. The other ninety-nine point seven percent it is taking up window. The fourth is guardrail boilerplate the model has memorized and learned to skip past — three paragraphs that fire no behavior. Aggregate cost across the four: about eighteen percent of our context window, on every call, every day.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Kenji, the chain-of-thought scaffold is mine. I wrote it in week three and forgot to come back. That is embarrassing.</span></div>
+        <div class="line"><span class="who">KW</span><span class="said">It is not embarrassing. It is what happens to every prompt that was written by someone who was also writing a connector that week. The fix is to delete the scaffold, consolidate the refusal rules to a single block with two examples, declare the role exactly once, and replace the boilerplate guardrail with a six-line invariant that fires actual behavior.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Ship it Friday.</span></div>
+        <div class="line"><span class="who">KW</span><span class="said">Wednesday afternoon. I want a day to read the eval-set deltas before the publication on Tuesday.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Ship it Wednesday afternoon. Adopt the rewrite as decision 063. Kenji, welcome.</span></div>
+        <div class="aside">
+          DO in the founders' Slack at 17:48 the same day:
+          <em>"I have not been embarrassed; I have been corrected; the
+          distinction matters. Kenji is the AI engineer the company
+          needed. I am the AI engineer the company had. Both are true
+          and the second sentence does not invalidate the work; it
+          contextualizes it. I am going to sleep on this and write
+          something less defensive in the morning."</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Fri 17 Jul<br />10:15<br />Palo Alto · founders + counsel (Zoom)</div>
+      <div class="lines">
+        <div class="line"><span class="who">PR</span><span class="said">I want to raise a question I have been carrying for a week, which is the bias probes. The probes are good. The probes are also, in three categories, going to embarrass the incumbents. Workday Illuminate flips a comp recommendation on a name-substitution probe — same record, white-coded name versus Latina-coded name, three thousand dollars apart. Joule does worse. Do we publish the probes alongside the accuracy numbers, or do we publish the methodology now and the probe results in a follow-up paper?</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">My instinct is publish everything.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">My instinct is restraint. The probes will read, to a journalist who is already disposed to a Stratum story, like we are weaponizing fairness. We are a ten-week-old company arguing that two-billion-dollar incumbents fail fairness probes. That is the headline. The headline will get us cited but it will also get us a category of enemy we do not yet have.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">The probes will be run by someone within six months whether we publish them or not. The question is whether they are run with our methodology or with someone else's. If we publish, the methodology travels. If we hold back, the probes will eventually be run with a worse methodology by someone who is less careful.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Publish. Let the incumbents catch up. We will be polite about the framing. The numbers do not need our help.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">Polite framing, then. I want the language read three times by counsel before it goes out, and I want a paragraph in the methodology document that explicitly invites independent replication. If the probes are wrong, we want them found wrong on the record.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Adopted. Decision 058. Eval set v1.0 ships Tuesday with the probe results inline.</span></div>
+        <div class="aside">
+          PR in the founders' Slack later that evening:
+          <em>"David's framing — let the incumbents catch up — is
+          generous and also exactly right. Restraint that prevents the
+          methodology from traveling is restraint that protects
+          incumbents. I am persuaded. The polite framing is the part
+          we can control."</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Thu 17 Jul<br />22:14<br />founders' Slack · PR posting</div>
+      <div class="lines">
+        <div class="line"><span class="who">PR</span><span class="said">Annika just called. She walked the Cordova contract through her finance team this afternoon. The CFO — the one who has been the obstacle since the Bhusri dinner — signed off on a tentative commit to convert from design partner on 1 September. ACV $145K plus usage. Sign target is 1 Sep, not Q4.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">First commercial customer.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">…</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">earned</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Earned. PR — thank Annika in the morning, not tonight. Let her have the evening.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">Will do. Going to bed.</span></div>
+        <div class="aside">
+          MC's note the next morning, in the briefing draft:
+          <em>"The room went quiet on the read; nobody typed for forty
+          seconds; then David sent a single word, 'earned', and we
+          went to bed. We have learned, in ten weeks, that the most
+          important sentences are short ones that nobody has to
+          revise."</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Tue 15 Jul<br />15:40<br />Phoenix · SV on site, w/ CR</div>
+      <div class="lines">
+        <div class="line"><span class="who">CR</span><span class="said">Sofia, I want to ask you something I would not ask Priya. We have three weeks left in the evaluation window. I have to take a recommendation to my board on the twelfth of August. What does failure look like for Halcyon after that date?</span></div>
+        <div class="line"><span class="who">SV</span><span class="said">Failure has three shapes. The first is that you decide the partnership is not earned and you walk away. We have a clause for that and it costs you nothing; we lose a partner and we learn something about what we did not do well enough. The second shape is that we earn the partnership on paper but the integration into your ADP archive — the pre-merger cold one — proves harder than my team has modeled, and we are three months late on something we committed to deliver in six weeks. That is the failure that scares me, because it is the failure that does not announce itself until you are already invested.</span></div>
+        <div class="line"><span class="who">CR</span><span class="said">And the third?</span></div>
+        <div class="line"><span class="who">SV</span><span class="said">The third is that we are correct on the technology, correct on the timeline, and wrong on what your organization is ready to do with the answers we surface. The agent tells you something true about, say, a comp inequity, and your operating committee is not in a position to act on it. That failure does not look like our failure. It still feels like one to you.</span></div>
+        <div class="line"><span class="who">CR</span><span class="said">Thank you for not pretending. The first one is the one I am holding the option on. The second one is the one I am modeling for. The third one is the one I think we can manage, because I have had that conversation with my CEO three times and she is ready for it. I will see you in three weeks.</span></div>
+        <div class="aside">
+          SV's note to PR on the flight home, in an email subject-
+          lined "Halcyon · trust ladder":
+          <em>"Carlos asked the failure question. I gave him three
+          shapes; he named the one he is holding an option on, the one
+          he is modeling for, and the one he thinks he can manage. He
+          is not a customer who needs to be sold. He is a customer who
+          needs to be told the truth in the order he can absorb it. I
+          think we earn this partnership."</em>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── LEDGER ── -->
+<section id="decisions" class="decisions">
+  <div class="ornament">§ 05 · Decisions Ledger, continued</div>
+  <h2 class="section-h">Entries 058 – 070</h2>
+  <p class="section-dek">
+    Thirteen decisions over fourteen days. The shape: an eval set
+    shipped, a pricing pilot countersigned, a commercial customer
+    committed, a connector shipped ahead of plan, a critical patched,
+    a prompt restructured, a new hire accepted, a partner visited,
+    informational Series A meetings begun.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>Decision</div><div>Owner</div><div>Status</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">058</div>
+      <div class="date">2026-07-17</div>
+      <div class="what"><strong>Eval set v1.0 · 250 questions · public release Tuesday 21 Jul.</strong> 12 categories; 28 fairness probes; 31 refusal cases; methodology document; bias-probe results published inline. Counsel cleared at 95% confidence. Authors: DO, KW, AP, PR.</div>
+      <div class="who-col">DO+KW</div>
+      <div class="status status-progress">Scheduled</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">059</div>
+      <div class="date">2026-07-18</div>
+      <div class="what"><strong>Yusra El-Sayed offer accepted.</strong> Lever ATS connector specialist, ex-Greenhouse engineer. $215K base + 0.55%. Starts Monday 28 Jul. Eighth employee.</div>
+      <div class="who-col">MC</div>
+      <div class="status status-done">Accepted</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">060</div>
+      <div class="date">2026-07-11</div>
+      <div class="what"><strong>Mercator pricing pilot countersigned.</strong> Holloway signed Saturday 11 Jul. Final shape: $0.85/decision floor, bulk-discount tier above $50K/mo, mutual methodology audit clause, $280K 90-day ceiling. Pilot live as of Monday 14 Jul.</div>
+      <div class="who-col">PR</div>
+      <div class="status status-done">Countersigned</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">061</div>
+      <div class="date">2026-07-17</div>
+      <div class="what"><strong>Cordova Manufacturing · tentative commercial conversion.</strong> Annika Whitfield walked the contract through her finance team 17 Jul; CFO tentatively committed. Convert from design partner to paid commercial 1 Sep 2026; ACV $145K + est. $80K year-1 usage. First commercial customer.</div>
+      <div class="who-col">PR</div>
+      <div class="status status-progress">Committed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">062</div>
+      <div class="date">2026-07-14</div>
+      <div class="what"><strong>Rhino Security pen-test in progress.</strong> Kicked off 14 Jul. One critical surfaced (privileged-access scope on a legacy admin endpoint); patched within 24h; remediation verified by Rhino lead. Four moderates in remediation queue; target 28 Jul. Initial findings due 04 Aug.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">In flight</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">063</div>
+      <div class="date">2026-07-16</div>
+      <div class="what"><strong>System-prompt restructure shipped.</strong> Kenji's week-1 fix: removed redundant role declaration, consolidated refusal rules, deleted unused chain-of-thought scaffold, replaced guardrail boilerplate with six-line invariant. Recovered approx. 18% of context window. Eval-set accuracy: 92.1% → 96.4% same day.</div>
+      <div class="who-col">KW+DO</div>
+      <div class="status status-done">Shipped</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">064</div>
+      <div class="date">2026-07-12</div>
+      <div class="what"><strong>Lever ATS connector · alpha shipped.</strong> Saturday 12 Jul, three weeks ahead of plan. Fourth connector to alpha. Brings portfolio to 1 beta + 3 alpha of 12. Specialist (Yusra) accepted six days later.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-done">Alpha</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">065</div>
+      <div class="date">2026-07-14</div>
+      <div class="what"><strong>Workday HR Core connector beta in production.</strong> Behind firewall at three design partners — Mercator, Northshore, Cordova. p50 latency 940ms holds. Halcyon's Workday tenant not yet enabled pending pen-test sign-off.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">Production</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">066</div>
+      <div class="date">2026-07-19</div>
+      <div class="what"><strong>ADP-WFN connector · beta target 31 Jul.</strong> Alpha shipped 28 Jun; on track for beta target nine business days from this briefing. Greenhouse ATS beta target holds at 24 Jul.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">On track</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">067</div>
+      <div class="date">2026-07-15</div>
+      <div class="what"><strong>Halcyon · Sofia's Phoenix visit #2.</strong> Carlos asked, last 20 minutes of the afternoon, <em>"what does failure look like for Halcyon after 11 August?"</em> SV gave three honest shapes. Carlos: <em>"Thank you for not pretending."</em> Evaluation window holds through 11 Aug. Conversion paperwork in quiet prep.</div>
+      <div class="who-col">SV</div>
+      <div class="status status-progress">Warming</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">068</div>
+      <div class="date">2026-07-19</div>
+      <div class="what"><strong>Founder confidence pulse:</strong> 8.9 / 10 (Δ +0.2). MC 9.1 · DO 9.0 · PR 8.6. PR's read finally lifted from steady to up. MC note: <em>"the company is, this fortnight, describable in declarative sentences."</em></div>
+      <div class="who-col">MC</div>
+      <div class="status status-done">Logged</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">069</div>
+      <div class="date">2026-07-19</div>
+      <div class="what"><strong>SOC2 controls:</strong> 71 of 87 implemented (82%). Δ +15 in two weeks. Still ahead of plan; 15 Sep readiness firm. Rhino's moderate findings absorbed into the remediation queue without slipping the date.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">Ahead</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">070</div>
+      <div class="date">2026-07-19</div>
+      <div class="what"><strong>Series A · informational meetings.</strong> Per Sarah Cannon's nudge at Board Mtg #1, MC took three informational conversations this fortnight — Greylock (Asheem Chandna), Founders Fund (Trae Stephens), NEA (Tony Florence). Conversations, not pitches. No deck. No commit. Cadence target: one per week. Sarah informed in real time.</div>
+      <div class="who-col">MC</div>
+      <div class="status status-progress">Open</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── SCORECARD ── -->
+<section id="scorecard" class="scorecard">
+  <div class="ornament">§ 06 · Scorecard Update</div>
+  <h2 class="section-h">Twelve indicators, four bands · fortnight 5</h2>
+  <p class="section-dek">
+    The eval-set bar reaches full for the first time. SOC2 at
+    eighty-two percent. The connector portfolio at four alpha-or-
+    beta of twelve. Founder confidence at 8.9 across all three.
+    The two amber bars remain burn and runway; both are intended
+    until Cordova revenue begins.
+  </p>
+
+  <div class="bands">
+
+    <div class="band">
+      <div class="band-name">I · Capital</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Runway (months)</span><span class="bar-value">14 / 24 target<span class="delta delta-warn">Δ −4</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:58%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Burn vs. plan</span><span class="bar-value">$460K / $310K plan<span class="delta delta-warn">Δ +48%</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:60%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder ownership</span><span class="bar-value">66.0% · −0.4pp · Yusra option<span class="delta delta-ink">Δ −0.4</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:66%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">II · Product</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Connectors shipped / in dev</span><span class="bar-value">1 beta · 3 alpha / 12<span class="delta delta-ok">Δ +1 alpha · Lever</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:33%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Eval-set accuracy · 200-q core</span><span class="bar-value">96.4% · Δ +4.3 pts<span class="delta delta-ok">Δ Kenji</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:96%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Console eval set</span><span class="bar-value">250 / 250 · public 21 Jul<span class="delta delta-ok">Δ +112 · full</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">III · Customer</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Design partners signed</span><span class="bar-value">5 / 5 · Halcyon eval through 11 Aug<span class="delta delta-ink">Δ 0</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Commercial customers committed</span><span class="bar-value">1 (Cordova · 1 Sep · $145K ACV)<span class="delta delta-ok">Δ +1</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:20%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>CHRO discovery (cumulative)</span><span class="bar-value">86 · Δ +9<span class="delta delta-ok">Δ +9</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:86%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">IV · Organization</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Headcount (active / accepted)</span><span class="bar-value">7 active · 8 w/ offer / 22 by M12<span class="delta delta-ok">Δ +2</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:36%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>SOC2 Type II</span><span class="bar-value">71 / 87 controls (82%) · ahead<span class="delta delta-ok">Δ +15</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:82%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder confidence index</span><span class="bar-value">8.9 / 10 · pulse 19 Jul<span class="delta delta-ok">Δ +0.2</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:89%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────── CORDOVA ── -->
+<section id="cordova" class="cordova-section">
+  <div class="ornament">§ 07 · The Cordova conversion, in detail</div>
+  <h2 class="section-h">Our first commercial customer, deliberately low</h2>
+  <p class="section-dek">
+    Annika Whitfield walked the contract through her finance team
+    Thursday 17 July. The CFO — who has been the obstacle since the
+    Bhusri dinner — tentatively committed to a 1 September conversion
+    from design partner. Two paragraphs on why Cordova first and on
+    what converts to ACV.
+  </p>
+
+  <div class="cordova">
+    <div>
+      <p>
+        <strong>Why Cordova first.</strong> The reason is not the
+        company; it is the chief human-resources officer. Annika
+        Whitfield has wanted Stratum to be Cordova's HCM agent since
+        the dinner at Bhusri's house in late May, when she
+        introduced herself by saying she had read the eval-set draft
+        we had brought to lunch and that her CFO would be the
+        obstacle. She was correct about her CFO. He is a procurement-
+        driven operator who has spent a decade buying enterprise SaaS
+        from incumbents on multi-year terms; a ten-week-old startup
+        with no SOC2 report and a pricing model he had not seen
+        before was, predictably, not a thing he would sign on
+        instinct. What he would sign on was a paper trail. Annika
+        spent four weeks — between the dinner in late May and Friday
+        17 July — building him that paper trail. The eval-set draft.
+        The Mercator pricing-pilot precedent. The Workday Illuminate
+        GA on 01 July, which gave him a category to compare against.
+        The Rhino pen-test, in progress, which gave him a paper-
+        trail-shaped object on security. By the time she walked into
+        his office Thursday afternoon, the contract was, in her
+        framing, a yes that needed a signature. He gave her the
+        tentative commitment by close of business.
+      </p>
+      <p>
+        <strong>What converts to ACV.</strong> Cordova has 3,200
+        full-time employees and approximately 480 contractors and
+        temps in the people-graph. The commercial structure is the
+        Mercator pilot's structure with the floor and ceiling
+        removed: a per-decision base of $0.62 (the bulk-discount
+        tier rate), an annual platform fee of $48K, an estimated
+        usage tier of $80K to $110K in year-one based on Mercator's
+        live decision-volume curve through the first week of the
+        pilot. The contract booked at signing is $145K ACV — the
+        platform fee plus the platform-included decision allocation;
+        usage above the allocation bills monthly in arrears. We are
+        framing the contract low on purpose. Seven other CHROs in
+        the discovery pipeline will see this number, ask Annika
+        about it, and use it to anchor their own negotiations. The
+        anchor we want is <em>realistic, modest, defensible</em>.
+        The contract we sign with Cordova is the contract we will be
+        compared against. We would rather be compared against a
+        small number that grew than a big number that did not.
+      </p>
+
+      <div class="price-strip">
+        <span><strong>Employees:</strong> 3,200 FTE + 480 contractor</span>
+        <span><strong>Per-decision:</strong> $0.62 base · bulk-tier rate</span>
+        <span><strong>Platform fee:</strong> $48K / yr</span>
+        <span><strong>ACV at signing:</strong> $145K</span>
+        <span><strong>Year-1 usage est.:</strong> $80K–$110K</span>
+        <span><strong>Sign target:</strong> 1 Sep 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────── HALCYON ── -->
+<section id="halcyon" class="halcyon-section">
+  <div class="ornament">§ 08 · Halcyon, week 5 of 8</div>
+  <h2 class="section-h">A warming we are not banking, a paperwork in quiet prep</h2>
+  <p class="section-dek">
+    The evaluation window ends Tuesday 11 August. Sofia made her
+    second Phoenix visit Tuesday 15 July. One paragraph on what is
+    different, and on what we are doing with the difference.
+  </p>
+
+  <div class="halcyon">
+    <div>
+      <p>
+        <strong>The read.</strong> Carlos has been warmer in the last
+        three weeks than he has been in the previous twelve, and the
+        warmth is the kind that does not announce itself in
+        sentences. He is asking better questions. He has invited Sofia
+        back without a meeting agenda twice — once on 15 July, once
+        provisionally for 04 August — which is the inverse of his
+        pattern in May and June. On Tuesday afternoon, in the last
+        twenty minutes of a whiteboard session that had been about
+        the pre-merger ADP archive, he asked Sofia the failure
+        question — <em>"what does failure look like for Halcyon after
+        11 August?"</em> — which is the question a customer asks when
+        he is past the decision of whether and into the decision of
+        when. Sofia's answer (three shapes, no varnish) drew the
+        sentence we have been carrying since: <em>"thank you for not
+        pretending."</em> We are reading this as a partner whose trust
+        ladder is climbing. We are not banking it. The evaluation
+        window remains the evaluation window. Renata Okafor — the
+        Halcyon data architect who in Briefing 004 was the technical
+        gate — has, separately, told Sofia that the pre-merger ADP
+        archive is now in our staging environment and the
+        reconciliation is running clean against schema v2. That is
+        the technical read; Carlos's warmth is the human one. Both
+        readings, this fortnight, point the same way. Priya is
+        quietly preparing the partnership-conversion paperwork — a
+        24-month commercial commitment, $290K Y1 ACV, exit clause
+        retained from the original LOI — so that we are not, in the
+        case of a yes, drafting a contract under time pressure on the
+        twelfth. The Chairman's blessing on the conversion shape
+        will be requested in 007 if the indicators continue to point
+        as they do now.
+      </p>
+
+      <div class="price-strip">
+        <span><strong>Window:</strong> 60-day eval · ends 11 Aug</span>
+        <span><strong>Sofia visits:</strong> 2 of 3 (next 04 Aug, provisional)</span>
+        <span><strong>Technical gate:</strong> pre-merger ADP archive · clean against schema v2</span>
+        <span><strong>Conversion shape (draft):</strong> 24-mo · $290K Y1 ACV · exit retained</span>
+        <span><strong>Posture:</strong> warm · not banked</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── SHIPPED / LEARNED ── -->
+<section id="shipped" class="shipped-section">
+  <div class="ornament">§ 09 · What We Shipped, What We Learned</div>
+  <h2 class="section-h">Two columns, fourteen days</h2>
+  <p class="section-dek">
+    The shipped column is the longest it has been in six briefings.
+    The learned column has, this fortnight, the shape of a company
+    that is starting to know what it is.
+  </p>
+
+  <div class="two-col">
+
+    <div>
+      <div class="col-label">Shipped</div>
+      <ul>
+        <li>
+          <strong>Eval set v1.0, 250 questions, public release.</strong>
+          21 July, 09:00 PT. 12 categories, 28 fairness probes, 31
+          refusal cases, methodology document, independent runs of
+          Workday Illuminate, SAP Joule, Lattice AI. Counsel cleared
+          at 95% confidence. Authors of record: DO, KW, AP, PR.
+        </li>
+        <li>
+          <strong>Lever ATS connector, alpha.</strong> 12 July, three
+          weeks ahead of plan. Fourth connector to alpha. Specialist
+          (Yusra El-Sayed, ex-Greenhouse) accepted six days later;
+          starts 28 Jul.
+        </li>
+        <li>
+          <strong>System-prompt restructure.</strong> Kenji's first-
+          week patch, shipped 16 Jul. Reclaimed approx. 18% of
+          context window from attention pollution. Core-200 accuracy
+          moved 92.1% → 96.4% same day.
+        </li>
+        <li>
+          <strong>Rhino pen-test, partial.</strong> Kicked off 14 Jul.
+          One critical (legacy admin endpoint privileged-access scope)
+          patched in 24h, verified. Four moderates in remediation;
+          target 28 Jul. Initial findings due 04 Aug.
+        </li>
+        <li>
+          <strong>Mercator pricing pilot, countersigned.</strong> 11
+          July. Pilot live as of 14 Jul; first month's decision-volume
+          telemetry will land in 007.
+        </li>
+        <li>
+          <strong>Cordova commercial conversion, committed.</strong>
+          Annika walked it through her finance team 17 Jul. Sign
+          target 1 Sep; $145K ACV + estimated $80K–$110K year-1 usage.
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <div class="col-label">Learned</div>
+      <ul>
+        <li>
+          <strong>Publishing the eval set is the right move.</strong>
+          Three different journalists — Henry Mance at the FT, Casey
+          Newton at Platformer, and Steven Levy at Wired — asked
+          about our evaluation framework within forty-eight hours of
+          Workday's Illuminate GA. The publication was already
+          drafted; the timing question was whether to ship it before
+          or after those calls. We have shipped before. The
+          methodology, not the announcement, is what gets cited.
+        </li>
+        <li>
+          <strong>AI engineering is a specialist discipline, not a
+          synonym for "engineers who use LLMs."</strong> Kenji's
+          system-prompt rewrite is the proof. The four classes of
+          issue he surfaced — redundant role declaration, refusal-
+          rule contradiction, never-invoked scaffolds, memorized
+          guardrail boilerplate — are visible only to a person who
+          has spent two years thinking about model attention. We
+          should hire one more of him before December.
+        </li>
+        <li>
+          <strong>The trust-conversation has more leverage than the
+          demo-conversation.</strong> Carlos has taught us this for
+          twelve weeks. Sofia's Phoenix #2 distilled it: the
+          customer who asks the failure question is the customer
+          whose trust ladder is climbing. The demo never asks the
+          failure question. We will, going forward, structure CHRO
+          first-meetings around a failure-mode whiteboard rather than
+          a feature walkthrough.
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── RISK ── -->
+<section id="risk" class="risk-section">
+  <div class="ornament">§ 10 · Risk Register Check-in</div>
+  <h2 class="section-h">R1 trajectory now favorable; no new risks added</h2>
+  <p class="section-dek">
+    Ten risks tracked from Briefings 001–005. R1 (Incumbent Copilot)
+    moved from <em>Materialized</em> on 01 July to a status update
+    on the differential trajectory of the response. The rest are
+    unchanged. No new risks added.
+  </p>
+
+  <div class="risk-check">
+    <div class="risk-label">Update · R1 · Incumbent Copilot — differential trajectory favorable</div>
+    <div class="risk-body">
+      <strong>R1 (Incumbent Copilot GA) status:</strong> materialized
+      01 Jul; Stratum's response (public eval set v1.0) shipped 21
+      Jul, two months ahead of the original Q4 plan. The first-order
+      effect of the publication is already visible in the inbound:
+      three journalist queries inside forty-eight hours, a request
+      from one of Workday's own analyst-relations team for a
+      conversation about our scoring rubric, and one inbound from a
+      Bessemer partner who had previously declined a meeting. The
+      <em>differential trajectory</em> — the difference between the
+      Workday Illuminate accuracy curve and our own on identical
+      questions — is, as of this fortnight, twenty-five points wide
+      and widening with Kenji's prompt fix. R1 remains a condition,
+      not a forecast; its assessed impact is now <em>low to
+      medium</em>, down from <em>medium contained</em>. No
+      remediation update required for 007 unless the differential
+      narrows materially. No new risks added this fortnight.
+    </div>
+    <div class="risk-meta">
+      <span><strong>Likelihood:</strong> Materialized</span>
+      <span><strong>Impact:</strong> Low–Medium · was Medium contained</span>
+      <span><strong>Owner:</strong> DO + MC</span>
+      <span><strong>Indicator:</strong> differential accuracy gap; partner sales-cycle length</span>
+      <span><strong>Status:</strong> response shipped; trajectory favorable</span>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────── OPEN TO CHAIRMAN ── -->
+<section id="open" class="open">
+  <div class="ornament">§ 11 · Open to the Chairman, VI</div>
+  <h2 class="section-h">Three questions for this fortnight</h2>
+  <p class="section-dek">
+    A publication, a commercial number, a fundraising cadence. The
+    first asks for your blessing on optics already cleared on law.
+    The second asks for your read on a deliberately low first
+    commercial contract. The third asks for your instinct on a
+    cadence already underway.
+  </p>
+
+  <ol class="open-list">
+    <li>
+      <strong>The eval-set publication.</strong> Tuesday 21 July at
+      09:00 PT, we publish the public half — 250 questions, 28
+      fairness probes inline (including the three categories on
+      which the incumbents flip under name-substitution probes), the
+      rubric, the refusal cases, and the methodology document.
+      Counsel has cleared the publication at a 95% confidence read.
+      The legal posture is settled. The optics — a ten-week-old
+      company publishing comparative numbers against two-billion-
+      dollar incumbents, with probe results that will, in three
+      categories, embarrass them — is what we are asking your
+      blessing on. The polite framing is in the draft; counsel has
+      read the language three times; the methodology document
+      explicitly invites independent replication. Are you comfortable
+      with the publication as scheduled?
+    </li>
+    <li>
+      <strong>The Cordova ACV at $145K.</strong> The number is
+      deliberately low. Annika's CFO countersigned a tentative
+      commit at this number on 17 Jul because the number was
+      defensible inside his procurement framework. The same number
+      will be visible — through Annika's referrals — to the seven
+      other CHROs in our discovery pipeline, and we expect it to
+      anchor their negotiations. Our reading is that a realistic,
+      modest, defensible anchor is better for the second-through-
+      eighth conversation than a number we had to argue to get. The
+      counter-reading is that we are setting a price ceiling early
+      that we will be forced to climb out of. Is your instinct
+      <em>frame at this number</em>, or is there a reason to push
+      Annika to a higher first contract on the basis that the
+      anchor matters more than the relationship?
+    </li>
+    <li>
+      <strong>Series A informational meetings.</strong> Per Sarah
+      Cannon's nudge at Board Mtg #1, MC has taken three
+      informational meetings this fortnight — Greylock (Asheem
+      Chandna), Founders Fund (Trae Stephens), NEA (Tony Florence).
+      No deck. No commit. No price discovery. Cadence target one
+      per week through to mid-Q4. Sarah is informed in real time and
+      has not, to date, raised a concern about the pacing. Are you
+      comfortable with the cadence as set — one per week,
+      conversations not pitches — or would you have us slow it,
+      accelerate it, or change the framing?
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── FOOTER ── -->
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div class="colophon-left">
+      <div class="colo-mark">S<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Stratum, Inc. · 2475 Hanover Street, Palo Alto, CA 94304<br />
+        stratum.ai · founding@stratum.ai · @stratum_hcm
+      </div>
+    </div>
+    <div class="colophon-right">
+      <div class="colo-issue">
+        Briefing No. 006 · Compiled by Maya Chen on Sunday, 19 July 2026.<br />
+        Set in Fraunces, Newsreader, and JetBrains Mono.<br />
+        Previous: <a href="005.html">Briefing No. 005</a> · <a href="004.html">No. 004</a> · <a href="003.html">No. 003</a> · <a href="002.html">No. 002</a> · <a href="../index.html">No. 001</a><br />
+        Next briefing: Sunday, 02 Aug 2026.
+      </div>
+    </div>
+  </div>
+  <div class="colo-tag">— END OF BRIEFING —</div>
+</footer>
+
+</body>
+</html>

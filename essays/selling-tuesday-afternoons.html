@@ -1,0 +1,2083 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Selling Tuesday afternoons: why we don't run a sales motion — Stratum Essays No. 03</title>
+<meta name="description" content="A long-form essay by Priya Rao, founding Chief Customer Officer of Stratum. On why Stratum has never run a sales motion, what customer engineering is instead, and how the discipline either scales or quietly comes apart." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Essays · No. 03 — Priya Rao
+   "Selling Tuesday afternoons: why we don't run a sales motion."
+   Editorial profile. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   Companion sheet to No. 01 (Maya Chen) and No. 02 (David Okonkwo).
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --plum:         #5a2742;
+  --plum-deep:    #3a1a2c;
+  --plum-warm:    #7a3a58;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.72;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.5rem 0 3.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  line-height: 1.95;
+}
+.masthead-slug .l1 { color: var(--ochre); }
+.masthead-slug .l2 { color: var(--ink-3); }
+.masthead-slug .l3 { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.18rem, 1.6vw, 1.32rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.05rem;
+}
+.byline span.sep { color: var(--ink-mute); margin: 0 .55rem; }
+
+.subhead-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .9rem;
+  line-height: 1.6;
+}
+.subhead-row strong { color: var(--ochre); font-weight: 500; }
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.55rem, 2.2vw, 1.85rem);
+  line-height: 1.18;
+  letter-spacing: -.014em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* three discovery questions in IV */
+.questions {
+  margin: 1.4rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: question;
+}
+.questions li {
+  position: relative;
+  padding: 1.1rem 0 1.1rem 3rem;
+  border-top: 1px solid var(--paper-rule);
+  counter-increment: question;
+}
+.questions li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.questions li::before {
+  content: "Q" counter(question, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 1.15rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ochre);
+}
+.questions li em.lead {
+  font-style: italic;
+  color: var(--ink);
+  display: block;
+  margin-bottom: .35rem;
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  font-family: var(--display);
+  font-size: 1.08rem;
+  line-height: 1.4;
+}
+
+/* audience block in VI (three audiences) */
+.audiences {
+  margin: 1.4rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+.audiences > li {
+  padding: 1.3rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.audiences > li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.audiences .a-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .45rem;
+  display: block;
+}
+.audiences p { margin: 0 0 .55rem; }
+.audiences .a-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.audiences .a-meta strong { color: var(--ink); font-weight: 500; }
+
+/* sales motion vs. customer engineering comparison in II/III */
+.compare {
+  margin: 1.6rem 0 2rem;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.compare-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.6rem;
+  padding: 1.2rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.compare-row:last-child { border-bottom: 0; }
+.compare-col .label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .35rem;
+}
+.compare-col .body {
+  font-family: var(--serif);
+  color: var(--ink-2);
+  font-size: .97rem;
+  line-height: 1.55;
+}
+.compare-row.is-head .compare-col .label { color: var(--ink-mute); }
+.compare-row.is-head .compare-col .body {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--ink);
+}
+@media (max-width: 560px) {
+  .compare-row { grid-template-columns: 1fr; gap: .6rem; padding: 1rem 0; }
+}
+
+/* pricing script block in V */
+.script {
+  margin: 1.8rem 0;
+  padding: 1.4rem 1.4rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.script-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.script p {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  color: var(--ink-2);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin: 0 0 .8rem;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--ochre-soft);
+}
+.script p:last-child { margin-bottom: 0; }
+.script p strong { font-style: normal; color: var(--ink); font-weight: 600; }
+
+/* three audience documents in VI */
+.docs {
+  margin: 1.4rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+.docs > li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1.4rem;
+  padding: 1.2rem 0;
+  border-top: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.docs > li:last-child { border-bottom: 1px solid var(--paper-rule); }
+.docs .doc-pages {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.5;
+}
+.docs .doc-pages strong {
+  display: block;
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 80;
+  font-size: 2.4rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+.docs .doc-body em {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 60;
+  color: var(--ink);
+  display: block;
+  margin-bottom: .3rem;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+.docs .doc-body p { margin: 0; font-size: .97rem; color: var(--ink-2); line-height: 1.6; }
+@media (max-width: 560px) {
+  .docs > li { grid-template-columns: 1fr; gap: .4rem; }
+  .docs .doc-pages strong { font-size: 2rem; }
+}
+
+/* inline callout in I and VII */
+.callout {
+  margin: 1.8rem 0;
+  padding: 1.2rem 1.4rem;
+  border-left: 2px solid var(--ochre);
+  background: var(--paper-warm);
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-2);
+  font-size: .98rem;
+  line-height: 1.6;
+}
+.callout strong { font-style: normal; color: var(--ink); }
+
+/* dinner-table seating diagram in I */
+.seating {
+  margin: 1.8rem auto;
+  padding: 1.4rem 1.2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  white-space: pre;
+  overflow-x: auto;
+}
+.seating .lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  white-space: normal;
+}
+.seating .m { color: var(--ink-mute); }
+.seating .o { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.4rem auto;
+  padding: 2.6rem 0 2.6rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(2.1rem, 4.2vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AUTHOR BIO ── */
+
+.author-bio {
+  width: var(--col-read);
+  margin: 4rem auto 0;
+  padding: 2.4rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 1.6rem;
+  align-items: start;
+}
+.author-portrait {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--plum-warm) 0%, var(--plum) 45%, var(--plum-deep) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 2.1rem;
+  color: var(--paper);
+  letter-spacing: -.02em;
+  box-shadow: inset 0 -8px 18px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.05);
+}
+.author-meta .author-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.25rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin-bottom: .15rem;
+}
+.author-meta .author-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .9rem;
+}
+.author-meta p {
+  margin: 0 0 .9rem;
+  color: var(--ink-2);
+  font-size: .98rem;
+  line-height: 1.65;
+}
+.author-links {
+  display: flex;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.author-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 2px;
+}
+.author-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+@media (max-width: 540px) {
+  .author-bio { grid-template-columns: 1fr; }
+  .author-portrait { width: 72px; height: 72px; font-size: 1.7rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); border-bottom: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── MOBILE READABILITY ── */
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+  body { font-size: 17.5px; }
+  .article { font-size: 1.04rem; }
+  .masthead { padding-top: 3.4rem; padding-bottom: 2.4rem; }
+  .article { padding-top: 3.2rem; }
+}
+@media (max-width: 600px) {
+  body { font-size: 17px; }
+  .article { font-size: 1.02rem; line-height: 1.7; }
+  .masthead-h1 { font-size: clamp(2.4rem, 9vw, 3.2rem); }
+  .pullquote { margin: 2.4rem auto; padding: 2rem 0; }
+  .pullquote-text { font-size: clamp(1.7rem, 7vw, 2.2rem); }
+  .seating { font-size: 10.5px; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .mob-bar, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article, .masthead, .closing, .pullquote, .author-bio { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Essay — Priya Rao</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/mercator.html">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../intel/">Compare</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="./why-i-left-workday.html" class="is-current">Essays</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div class="l1">Stratum / Essays</div>
+    <div class="l2">No. 03 · The architecture series</div>
+    <div class="l3">By Priya Rao</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    Selling <em>Tuesday afternoons</em>: why we don't run a sales motion.
+  </h1>
+
+  <p class="masthead-dek">
+    Or: how Stratum's GTM team came to be a customer engineering team —
+    and what we are about to find out about whether the discipline scales.
+  </p>
+
+  <div class="byline">
+    By Priya Rao<span class="sep">·</span>14 July 2026<span class="sep">·</span>17-minute read<span class="sep">·</span>Published in the Stratum Essays series
+  </div>
+
+  <div class="subhead-row">
+    <strong>Third in a series.</strong> &nbsp; The first essay was Maya's, on the layer; the second was David's, on resolution.
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">The dinner.</h2>
+
+    <p>
+      <span class="dropcap">A</span>neel Bhusri lives in a low, long
+      cedar-clad house on the western edge of Atherton, set back from a
+      road that does not announce it. On the evening of the fourth of
+      June — a clear Wednesday, sixty-eight degrees, the magnolias on the
+      driveway already past — six chief human resources officers, two
+      Stratum founders, and one host gathered around a single dark walnut
+      table in a dining room whose only ornament was a framed page of
+      sheet music on the south wall. There were no name cards. There was
+      no projector. There was no deck. The hosts had agreed in advance,
+      with a gentleness that I now understand was the entire pedagogy of
+      the evening, that the table would be cleared of work product before
+      the first course. Aneel's only instruction, delivered as he opened
+      the door to me at six-fifty-five, was: <em>nobody is presenting
+      tonight. We're going to eat, and we're going to listen.</em>
+    </p>
+
+    <p>
+      I want to describe the seating because the seating turned out to
+      matter. Aneel sat at one head of the table, in a chair that had
+      visibly been his for some time. Maya sat at his immediate right; I
+      sat at his immediate left, which placed me across from her. To
+      Maya's right was Annika Whitfield, the CHRO at Cordova
+      Manufacturing — a 1,600-person industrial firm in Cleveland whose
+      board chair Aneel had known since 2009. To my right was Pradeep
+      Iyer, the head of people at a publicly-traded medical-device
+      company in Indianapolis; to his right, a woman named Helen Chau,
+      who had recently joined a private-equity-owned restaurant group as
+      CPO and whom I had not previously met. Beyond Annika sat two more:
+      Marcus Reuben, the chief talent officer at a 22,000-person
+      software company, and at the far end, opposite Aneel and looking
+      slightly outflanked by the room, the chief people officer of a
+      growth-stage logistics firm who had been at her job for fewer
+      than five months and who, by the second course, would become the
+      most useful person at the table.
+    </p>
+
+    <div class="seating">
+<span class="lbl">Seating · 04 June 2026 · Atherton</span>
+                       <span class="o">aneel</span>
+            <span class="m">┌──────────────────────────┐</span>
+            <span class="m">│</span>                          <span class="m">│</span>
+  <span class="o">priya</span>     <span class="m">│</span>                          <span class="m">│</span>     <span class="o">maya</span>
+            <span class="m">│</span>                          <span class="m">│</span>
+  pradeep   <span class="m">│</span>                          <span class="m">│</span>   <span class="o">annika</span>
+            <span class="m">│</span>                          <span class="m">│</span>
+  helen     <span class="m">│</span>                          <span class="m">│</span>   marcus
+            <span class="m">└──────────────────────────┘</span>
+                       <span class="m">claudia</span>
+                       (logistics, 6,400 ee)</div>
+
+    <p>
+      The first hour was, as these dinners are, mostly small. Annika
+      asked Helen about the restaurant group's union exposure; Helen
+      asked Pradeep about FDA hiring; Pradeep asked Marcus about Iceland
+      (Marcus had just come back). Aneel listened, asked the kinds of
+      careful, narrow questions that draw out anecdote without forcing
+      it, and watched the plates. Maya and I had agreed in the car on
+      the way that we would not, that night, pitch. We would not present
+      a single slide of the Stratum architecture. We would not ask for
+      design partner conversations. If somebody brought up our company,
+      we would answer the question they asked and stop there. If nobody
+      brought us up, we would not. Aneel had, in arranging the dinner,
+      asked us to do this. He said: <em>the value of a dinner like this
+      is what they say when they forget you are listening for a
+      reason.</em>
+    </p>
+
+    <p>
+      The conversation became honest somewhere between the salad and the
+      main, which is the canonical place for honesty in a dinner of this
+      kind. It started with Claudia — the new chief people officer at
+      the logistics company at the far end of the table — who said, in
+      response to a question Aneel had asked about her first hundred
+      days, that the most surprising thing about her new job was how
+      little of it was her job. <em>I was hired,</em> she said, <em>to
+      think about people. I spend ninety percent of my week
+      reconciling reports.</em> She did not say it bitterly. She said it
+      diagnostically, the way a doctor describes a symptom. The other
+      five chief people officers at the table nodded — some at once,
+      some after a beat — in a way that told me they had not previously
+      said this out loud to anybody who would understand exactly what
+      she meant.
+    </p>
+
+    <p>
+      It was Annika who said the sentence. She was holding the stem of
+      her wine glass between two fingers, looking at the table cloth,
+      and she said, into a quiet that had followed somebody else's
+      complaint about an implementation: <em>the time I get back is not
+      free. It is reallocated to better questions.</em> Aneel, who is a
+      careful listener, pulled the printed dinner menu toward him and
+      wrote the sentence on the back, in pencil, in block letters. Maya
+      wrote it on the inside of the leather-bound notebook she carries.
+      I wrote it on the back of an envelope that I had been using as a
+      bookmark. Annika, who had not realized she had said anything
+      worth writing down, looked up, saw three people writing, and
+      laughed. The laugh broke the spell. The conversation became less
+      careful after that, and more useful.
+    </p>
+
+    <p>
+      For the next two hours and twelve minutes — I know because Maya
+      and I compared notes on the drive back — the six chief people
+      officers at that table talked about questions their boards had
+      asked them in the last twelve months that they could not answer
+      well. Pradeep had been asked, in March, what fraction of his
+      medical-affairs cost base would be exposed if a single contract
+      manufacturer in Tijuana shifted from employees to a vendor of
+      record. He had needed eight weeks and a McKinsey engagement to
+      answer it, and he was not certain the answer he had given was
+      right. Helen had been asked, two weeks before the dinner, whether
+      her front-of-house attrition in the southwestern cluster of
+      restaurants was being driven by pay or by scheduling; she had
+      produced a slide that, she said, openly, hedged. Marcus had been
+      asked something so specific that he declined to repeat it at the
+      table, but the shape of the question was clear: it was a
+      cross-system, cross-time, cross-classification cohort query that
+      his platform could not, architecturally, answer. Claudia had not
+      yet been asked anything; she had been asked, instead, to write the
+      questions her board would, in six months, want to ask her. She had
+      not yet finished writing them.
+    </p>
+
+    <p>
+      I was, by the dessert course, no longer hungry and no longer
+      thinking about the dinner. I was thinking about whether I had ever
+      been in a room of senior people leaders who agreed, this
+      precisely, on the shape of the problem. I had not. Maya had not.
+      Aneel — I asked him later, in the kitchen, while he was wrapping
+      a piece of bread for me to take home — said yes, he had, three
+      times in the last twenty years, and that each of those rooms had
+      preceded the start of a company that mattered. He said this
+      without weight. He has known a lot of companies. He has also,
+      separately, a generous instinct for telling founders the things
+      they need to hear when they need to hear them.
+    </p>
+
+    <p>
+      Two of the people at that table — Annika, and Pradeep — became
+      design-partner conversations within the following week. The
+      conversations are early; neither is yet signed; both, by the
+      norms of this essay series, will be allowed to speak for
+      themselves when they are ready. What I want to say about the
+      dinner, having had six weeks to think about it, is that I cannot
+      construct a sales motion that would have produced what that
+      dinner produced. There was no SDR. There was no first-call
+      script. There was no qualifying framework. There was a host who
+      knew the people in the room, a question quietly placed in the
+      middle of the table, six honest answers, and a sentence written on
+      the back of a menu. The most useful evening of go-to-market work
+      we have done so far at Stratum looked, from the outside, like a
+      dinner. From the inside, it was a piece of customer engineering.
+    </p>
+
+    <p>
+      The rest of this essay is about why I think that is true, and what
+      it has cost us to organize the company around it.
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">Why we don't run a sales motion.</h2>
+
+    <p>
+      I want to be careful with this section, because I worked at
+      McKinsey before I worked in software, and I spent four years at a
+      mid-stage SaaS company in a chief revenue role, and I have run a
+      standard enterprise sales motion at scale. I am not writing this
+      essay as somebody who resents the motion. The motion is, for the
+      right product, the best machine ever invented for moving a thing
+      from a builder to a buyer. It has been refined, over thirty years,
+      into a discipline more precise than most professions: an SDR
+      prospects on cadence; an AE qualifies against BANT or MEDDIC or
+      whatever the current acronym is; an SE demos; a deal-desk
+      negotiates the terms; a CSM owns the renewal. The motion
+      compounds. Salesforce, where this machine was effectively
+      productized, runs it with eleven thousand quota-carrying people
+      around it; the motion is what is on the slide deck the night
+      before a board meeting. I am not contemptuous of the motion. I am
+      a graduate of it. I am saying that it is the wrong motion for the
+      product Stratum is building, and the reason has nothing to do
+      with virtue.
+    </p>
+
+    <p>
+      The motion is correct for a product whose value proposition is
+      well-understood by the buyer before the first call. <em>We are a
+      better CRM than the one you currently use.</em> <em>We are an HRIS
+      that costs forty percent less than Workday for companies in this
+      size band.</em> <em>We do payments-orchestration and we are
+      compliant in the seventeen countries you are not.</em> When the
+      buyer already knows what the category is, what good looks like,
+      and what she is going to compare you against, the motion is
+      designed exactly for her: it qualifies her early, surfaces her
+      objections in a structured way, builds an internal coalition, and
+      closes against a timeline she set. The buyer is not being taught
+      anything. She is being routed. The motion is a logistics machine.
+      It is good at logistics.
+    </p>
+
+    <p>
+      An AI-native HCM platform — a system of truth above the system of
+      record, in the language Maya laid out in the first essay in this
+      series — is not a product whose value proposition is well-
+      understood by the buyer before the first call. It cannot be. The
+      buyer for this product is a CHRO who, the morning of our
+      conversation, has been asked by her board a question her existing
+      platform cannot answer; who has produced an answer she does not
+      believe; who is not sure whether her problem is a data problem, a
+      tooling problem, a process problem, or a vendor problem; who has
+      been pitched, in the last twelve months, by three AI-for-HR
+      startups whose decks all looked the same and none of which seemed
+      to know her data; and who is, reasonably, skeptical that the next
+      vendor in the room will be different. The motion that sends an
+      SDR to schedule a thirty-minute demo with her is the wrong motion.
+      Not because the SDR is wrong, and not because the demo is wrong.
+      Because the demo is the wrong artefact. She does not want to be
+      shown software. She wants somebody who understands her problem
+      before they walk into the room, and who will, with her, name the
+      question that her board has actually been asking. That naming is
+      the work. The product comes later.
+    </p>
+
+    <div class="compare" aria-label="Sales motion vs. customer engineering">
+      <div class="compare-row is-head">
+        <div class="compare-col"><div class="label">Sales motion</div><div class="body">Pushes a product into a defined category.</div></div>
+        <div class="compare-col"><div class="label">Customer engineering</div><div class="body">Brings the buyer into the room to name the question.</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-col"><div class="label">First contact</div><div class="body">SDR books a 30-minute discovery call against a qualifying script.</div></div>
+        <div class="compare-col"><div class="label">First contact</div><div class="body">Customer engineer reads the buyer's last earnings call, prior CHRO interview, and board composition before any outreach.</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-col"><div class="label">First meeting</div><div class="body">AE qualifies budget, authority, timing. Demo follows if qualified.</div></div>
+        <div class="compare-col"><div class="label">First meeting</div><div class="body">Customer engineer arrives with 8–14 specific questions about the buyer's data. No deck. No demo.</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-col"><div class="label">Artefact produced</div><div class="body">Proposal, term sheet, security questionnaire.</div></div>
+        <div class="compare-col"><div class="label">Artefact produced</div><div class="body">A one-page restatement, in the buyer's words, of the question her board has been asking that her tools cannot answer.</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-col"><div class="label">Hand-off</div><div class="body">AE → SE → CSM. Three relationships, three internal contracts.</div></div>
+        <div class="compare-col"><div class="label">Hand-off</div><div class="body">Same customer engineer for the first ninety days of deployment. One relationship, one accountability.</div></div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-col"><div class="label">Compensation</div><div class="body">Quota-carrying, commission-bearing, deal-closing.</div></div>
+        <div class="compare-col"><div class="label">Compensation</div><div class="body">Salary plus equity. No commission. No quota until at least customer fifty.</div></div>
+      </div>
+    </div>
+
+    <p>
+      I want to flag, before the obvious objection, that I know how this
+      sounds. Every founder of an early-stage enterprise company has, at
+      some point, told themselves that <em>we are different</em> and
+      that the standard motion does not apply to us. Most of the time,
+      this turns out to be a story the founders are telling themselves
+      because they have not yet learned how to sell. Most of the time, a
+      year and a half in, the founder hires a real chief revenue
+      officer, the motion gets installed, and the company starts to
+      work like a company. I am aware of this base rate. I have watched
+      it happen in seven companies whose founders I have personally
+      advised. I do not believe we are exempt from gravity. What I
+      believe is that the product Stratum is building is, for at least
+      the first thirty enterprise customers, in a regime where the
+      buyer does not yet have a frame in her head for what category we
+      are in, and that the motion that works after she has a frame is
+      different from the motion that gives her the frame in the first
+      place. The discipline of the first phase is customer engineering.
+      The discipline of the second phase will, eventually, look more
+      like sales. We do not have to solve the second phase yet. We
+      have to solve the first one well.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">Customer engineering as a discipline.</h2>
+
+    <p>
+      The Stratum GTM team is not a sales team. It is a customer
+      engineering team. We have been deliberate about the words. We do
+      not have an Account Executive, a Sales Development Representative,
+      or a Solutions Engineer on payroll. We have, as of the publication
+      of this essay, four customer engineers and one customer
+      engineering manager — a role I will return to in section VII. The
+      first hire into the function, Sofia Vargas, joined on the
+      thirtieth of June; she is now, six weeks in, the most over-
+      indexed-on-Halcyon-time member of the company, including the
+      founders, by a margin I will not embarrass her with publicly.
+    </p>
+
+    <p>
+      A customer engineer at Stratum has a job description that is
+      easier to describe by what it is not than by what it is. She does
+      not carry a quota. She does not have a commission plan. She does
+      not own a pipeline stage; we do not, internally, have pipeline
+      stages of the kind a sales operations leader would recognize. She
+      does not produce, in the first conversation with a prospect, a
+      proposal; she does not, in the second, send a security
+      questionnaire; she does not, in the third, escalate to a deal
+      desk. She does, in the first conversation, walk in with a list of
+      questions about the customer's data — questions she has prepared
+      by reading whatever public material exists about the customer
+      (earnings calls, prior CHRO press, board composition, any product
+      announcements that imply a hiring story) and whatever private
+      material the customer has chosen to share before the meeting. The
+      list is not generic. The list is for that customer. Sofia's
+      Halcyon list — which is now a small founding artefact, framed and
+      hanging on the wall of our Palo Alto office, in Sofia's
+      handwriting — was fourteen items long. None of the items would
+      have been on a deck.
+    </p>
+
+    <p>
+      I want to walk through what Sofia did at Halcyon, because Halcyon
+      is the canonical case for what customer engineering is supposed
+      to look like, and because the case has now been documented in
+      enough detail elsewhere — in the Halcyon customer note, in Maya's
+      essay on the layer, in David's footnote on the eval set — that I
+      can refer to it without re-narrating it. Sofia got on a plane on
+      the morning of the first of July. She had been at Stratum for
+      one working day. She had spent the previous weekend reading
+      Halcyon's last three years of public financial reporting, every
+      published interview Carlos Reyes had given, the public CV of
+      Renata Okafor — Halcyon's data architect, whom Sofia would, by
+      the end of week two, come to call regularly — and the credentialing
+      committee minutes that Halcyon had quietly published as part of
+      its joint-commission compliance materials. By the time Sofia
+      walked into the conference room in Phoenix on the second of July,
+      she knew more about the structure of Halcyon's people-data systems
+      than anybody at Halcyon had ever heard a vendor describe. She
+      walked in without a deck. She put a single sheet of paper on the
+      table — the fourteen-question list — and she said: <em>I'd like
+      to spend the morning understanding which of these you have already
+      solved, and which you have not, and why.</em> Renata read the
+      list in silence. She looked up. She said, in a sentence Carlos
+      later told me he wrote down: <em>I have been asking versions of
+      these questions inside this organisation for two years, and I
+      have not had a single vendor ask me back.</em>
+    </p>
+
+    <p>
+      That sentence is what customer engineering is. It is not what we
+      did at the meeting; it is what we did before the meeting. The
+      meeting was an exam, and Sofia had revised. The buyer rewards
+      preparation in this category in a way I have not seen a buyer
+      reward anything else. I want to be honest that this preparation
+      is expensive. Sofia spent — she has logged it because we ask our
+      customer engineers to log it, not for accountability but so we
+      can plan capacity — fourteen hours of pre-reading and pre-
+      drafting time before the first Halcyon meeting. That is not the
+      time of an SDR; that is the time of a senior consultant. The
+      economics work because the conversion rate works. By the end of
+      the second week of July — eleven days after Sofia's first visit —
+      Carlos had granted Sofia and Renata read-only access to a
+      sandboxed copy of the Halcyon data, had agreed to a thirty-day
+      review with a Stratum sandbox deployment, and had told Maya in a
+      private email that he was, for the first time, considering
+      converting the sixty-day evaluation into a multi-year design
+      partnership. Sofia earned that trust in eleven days. No demo
+      could have produced it. No SDR could have produced it. No deck
+      could have produced it. Fourteen questions, one ream of public
+      research, and one person sitting in the conference room who had
+      done her work — that produced it.
+    </p>
+
+    <p>
+      The central architectural claim of the Stratum GTM is this:
+      <strong>we will not hire an Account Executive before we have
+      hired fifteen customer engineers.</strong> The order matters. The
+      sequence matters. If we hire the AE first, the AE will, because
+      AEs are good at their jobs, install the motion the AE knows. The
+      motion will pull the company toward demos, qualifying scripts,
+      and pipeline-stage management; it will pull the customer
+      engineers, over the first six quarters, into a supporting role
+      that maps cleanly to what a Solutions Engineer does in a
+      conventional motion. The discipline will dissolve into the
+      logistics machine, and Stratum will look, by 2028, like every
+      other early-stage enterprise SaaS company. Several of our
+      investors have, kindly, suggested to me that this sequencing is
+      wrong; that the AE comes first, the AE generates pipeline, the
+      pipeline funds the customer engineers. I have listened. I have
+      then said no. The discipline is the moat, and the discipline does
+      not survive the introduction of incentives that point in a
+      different direction. We will hire an AE when we have a category;
+      we will not have a category before customer thirty; we will not
+      hire an AE before customer thirty. Possibly later. The board has
+      agreed.
+    </p>
+
+    <div class="callout">
+      <strong>An aside on titles.</strong> We considered, for a long
+      time, calling these people <em>solutions architects.</em> We
+      considered <em>field engineers,</em> <em>customer architects,</em>
+      <em>deployment leads.</em> We landed on <em>customer engineer</em>
+      because the word <em>engineer</em> is precise about the kind of
+      thinking the role requires (rigorous, evidence-based, willing to
+      be wrong on the record) and the word <em>customer</em> is
+      precise about whom the work is for. The combination forces the
+      role into a posture that titles like <em>account executive</em>
+      cannot. Words are not free.
+    </div>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">What discovery actually is.</h2>
+
+    <p>
+      I want to describe, in detail, what a Stratum customer engineer
+      does in the first meeting with a customer, because this is the
+      single most-asked operational question from the founders I have
+      met who are trying to figure out how to sell an AI-native product
+      to an enterprise buyer. The answer, in the abstract, is that we
+      replace discovery-by-qualifying-script with discovery-by-
+      teaching-the-buyer-to-name-her-own-question. The answer, in
+      practice, is that we ask three questions. We ask them in this
+      order. We ask them every time.
+    </p>
+
+    <ol class="questions">
+      <li>
+        <em class="lead">What is a question your board has asked you in
+        the last twelve months that you could not answer well?</em>
+        We do not say <em>could not answer;</em> we say <em>could not
+        answer well.</em> The distinction matters. Most CHROs have
+        produced an answer to most of the questions their boards have
+        asked them. The interesting answers are the ones where the
+        CHRO knows, privately, that what she handed over was a hedge.
+        That is where the work is. That is the question Stratum is
+        for.
+      </li>
+      <li>
+        <em class="lead">What is the answer you produced, and why did
+        it not satisfy you?</em>
+        The second question is diagnostic. It does two things at once.
+        It produces the artefact — the actual deck, the actual
+        spreadsheet, the actual paragraph she sent her board chair —
+        which the customer engineer will, with permission, take home
+        and study. And it surfaces, in the CHRO's own words, what was
+        wrong with it. Was the cohort wrong? Was the comparator wrong?
+        Was the methodology defensible but the conclusion soft? The
+        CHRO will, almost always, know exactly why her answer did not
+        satisfy her. The question is just permission to say so.
+      </li>
+      <li>
+        <em class="lead">If you could ask any question of your people
+        data right now, what would it be?</em>
+        The third question is the future-tense version of the first.
+        It is also the question that, in my experience, the CHRO has
+        never been asked by a vendor. Vendors ask her what she wants
+        the software to do. They do not ask her what she would, given
+        a working layer above her existing systems, want to know. The
+        answers are specific. They are interesting. They are the
+        questions her platform should be built to answer.
+      </li>
+    </ol>
+
+    <p>
+      I will give three examples, drawn from the three Customer Notes
+      we have published in this series. They are not hypothetical;
+      they are the actual answers customer engineers heard in the
+      first meetings with the three customers, and they are the
+      questions that, in each case, became the architectural anchor
+      for the Stratum deployment that followed.
+    </p>
+
+    <p>
+      <strong>Mercator.</strong> The first question Elena Vasquez gave
+      us, in the conversation that became our founding design
+      partnership, was a question her board chair had handed her at
+      six-eleven on the seventh Tuesday of 2026 — a Friday evening
+      email, two lines long, asking why freight-handler attrition in
+      Mexico was running at almost twice the rate of the same job in
+      Atlanta, and what it was costing the company. Elena had built a
+      board deck in eleven days, on three hours of sleep, with a
+      number she was eighty percent confident in and a methodology she
+      had written, she told us, <em>in the spirit of full
+      disclosure.</em> The board chair was satisfied. Elena was not.
+      The pay-equity follow-on question — which is now the first
+      Stratum-supported decision Mercator runs in production — emerged
+      a quarter later, when the board asked the related but harder
+      question: whether the pay practices in Mercator's LATAM
+      operations were defensible against a global equity framework
+      that the company had not yet formally adopted. That question
+      could not be answered in eleven days. It could, in fact, only
+      be answered by a system that had ingested all six of Mercator's
+      relevant people-data sources, resolved identities across them,
+      and held them in a graph that could be queried defensibly. The
+      first question taught us what to build. The second question
+      told us we had built the right thing.
+    </p>
+
+    <p>
+      <strong>Halcyon.</strong> Carlos Reyes's first question was, on
+      its face, not a question at all. It was a scenario. He
+      described a dual-identity case that had once produced an
+      unrecoverable error in the predecessor system: two physicians
+      with the same surname, one of whom was a clinical attending
+      and the other an interventional specialist, whose records had
+      been merged by the prior platform's identity layer into a
+      single composite person, and whose comp band had, as a
+      consequence, been miscalculated for two quarters before the
+      error was caught. The miscalculation was not, mercifully,
+      surfaced to a manager — but the audit trail had been
+      ambiguous, and the recovery had taken nine weeks. Carlos's
+      question, when he finally articulated it, was: <em>can you
+      describe to me, with confidence, what your platform would have
+      done with these two physicians, and how I would have known what
+      it did?</em> That is a question about the resolver. It is also
+      a question about provenance, about the design of the conflict
+      queue, about the calibration of the confidence band. It is the
+      question that turned the Halcyon deployment from a sale into an
+      architecture conversation. David's essay describes the
+      technical answer. Sofia's job was to make the question askable
+      out loud.
+    </p>
+
+    <p>
+      <strong>Northwind.</strong> Lila Park's first question came at
+      her, like Elena's, in a Slack message — this one from her CFO,
+      Marcus Tang, in the last week of February. The question was
+      this: of the four-point-two million dollars Northwind paid in
+      agency invoices over the prior twelve months, what fraction of
+      that spend had resulted in a hire who was still at Northwind
+      twelve months later, performing at or above expectation, and
+      promoted at the standard cohort rate. The number, Lila told us,
+      was being asked of her because Marcus could not get a clean
+      view of it from any combination of his existing systems. She
+      had, like Elena, produced a deck. The deck had been silent on
+      the central question, by which I mean the deck had answered
+      adjacent questions about agency spend without answering the
+      cost-per-hire question Marcus had asked. The customer
+      engineering conversation that became Northwind's pilot was, in
+      its first ninety minutes, almost entirely about that one
+      question — what data would be needed, where it lived, what the
+      probable answer was, and why the existing systems had not
+      produced it.
+    </p>
+
+    <p>
+      Across all three: the CHRO had a question; her existing tools
+      could not answer it; she had been producing brittle
+      workarounds; the work of the customer engineer was to name the
+      question precisely, and then — only then — to describe what an
+      answer architected against the people graph would look like.
+      Notice that in none of the three examples did the customer
+      engineer pitch the platform in the first meeting. The platform
+      pitched itself, after the question had been named. This is the
+      whole motion. The motion is in the order of operations. If you
+      name the platform before you name the question, you are running
+      a sales motion. If you name the question before you name the
+      platform, you are running a customer-engineering motion. The
+      cost is in preparation. The benefit is in conversion. There is
+      no trick.
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      Sales pushes a product. Customer engineering brings the buyer
+      into the room and helps her define the question.
+    </p>
+    <div class="pullquote-attr">
+      <strong>Priya Rao</strong> · Co-founder &amp; Chief Customer Officer · Stratum, Inc.
+    </div>
+  </div>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">The pricing conversation, in plain language.</h2>
+
+    <p>
+      I do not love that I have to write this section, because the
+      truth is that I would rather not be the person who has the
+      pricing conversation. Most chief customer officers I have known
+      treat pricing as an inheritance: the model came from somebody
+      else, the rates were set in a spreadsheet a long time ago, and
+      the conversation with the customer is mostly about making the
+      inherited model legible. The Stratum model is not inherited. It
+      was drafted by the three founders over the course of a single
+      Saturday afternoon in February of this year, with three pieces
+      of paper, three sharpies, and the assumption — held quietly at
+      first, then more loudly — that the seat-based model used by
+      every HCM company we had grown up inside was the wrong unit of
+      value for what we are selling. I have now had this conversation,
+      in roughly identical form, with the first four design partners.
+      I will be having it again on Tuesday. I am told it will get
+      easier; it has not yet gotten easier.
+    </p>
+
+    <p>
+      The model, in plain language, has two components. There is a
+      platform fee, paid annually, which covers the connectors, the
+      ingestion infrastructure, the people-graph resolver, the
+      conflict queue, the Copilot, and everything else that is true of
+      the deployment whether the customer uses it ten times or ten
+      thousand. The platform fee scales with the size of the
+      customer's underlying entity graph — roughly, with the number of
+      resolved people-nodes, including employees, contractors, agents,
+      and former employees retained in the system for compliance
+      reasons. It does not scale with the number of human seats
+      logging into the platform. There is then a usage fee, which is a
+      per-decision charge: each time the Decisions surface produces a
+      defensible answer that the customer has chosen to retain in the
+      audit trail — a comp-band recommendation, a pay-equity report, a
+      headcount-cost reconciliation — the platform records a unit of
+      usage, and the customer is billed against a tiered rate card
+      that descends quickly with volume. Most customers, in their
+      first quarter, run between forty and two hundred decisions a
+      month. Heavy users — Mercator is one — run several hundred. The
+      heaviest user we have modelled, on a hypothetical Northwind-
+      sized deployment with the full agency-cost analytic in
+      production, would run something in the high four-figures
+      annually.
+    </p>
+
+    <p>
+      The first reaction from most customers, when I describe this, is
+      confusion. They have never bought enterprise software priced
+      this way. Workday is priced per seat. ADP is priced per
+      paycheck. Cornerstone is priced per learner. Every comparable
+      they have is a unit they understand. The Stratum unit — a
+      <em>decision</em> — is novel; novel in a category where novelty
+      is usually a tactic to obscure cost. The customer's first
+      instinct, correctly, is to ask whether the model is a way to
+      charge her more. The answer is no, but it is no in a way that
+      requires the customer to do a small piece of modelling alongside
+      us, and the modelling is what most procurement teams initially
+      push back on. They want a quote. We want a co-built model. The
+      gap between those two is where most of the friction lives.
+    </p>
+
+    <p>
+      The conversation I now have, the same conversation, with each
+      new customer, goes like this. I do not deviate from it. I have
+      tried; deviation has not, in my limited sample, produced a
+      better outcome. I am reproducing the script verbatim, in part
+      because I want our customer engineers to be able to read it and
+      use it, and in part because publishing it removes the surprise
+      from any future negotiation. We are not going to negotiate this
+      from a hidden position. We are going to negotiate it from a
+      published one.
+    </p>
+
+    <div class="script" aria-label="Pricing script">
+      <div class="script-label">The script · used in every first pricing conversation</div>
+      <p>
+        <strong>You will pay a platform fee</strong> that covers the
+        connectors and the infrastructure. The fee scales with the
+        size of your people graph, not with the number of seats. We
+        will share the price points before the next conversation; we
+        do not negotiate them on the call.
+      </p>
+      <p>
+        <strong>You will pay a usage fee</strong> per decision Stratum
+        supports. A decision is a defensible answer retained in your
+        audit trail. We charge per decision because that is the unit
+        of value; we publish the rate card on our pricing page; we do
+        not charge for queries that you discard.
+      </p>
+      <p>
+        <strong>You will not pay per seat,</strong> because we do not
+        believe seats are the unit of value of an AI-native platform.
+        Your senior analyst should not be the bottleneck and her seat
+        should not be the meter.
+      </p>
+      <p>
+        <strong>If you want to model it before signing,</strong> we
+        will co-build the financial model with you in a ninety-minute
+        working session. You bring your usage assumptions; we bring
+        the rate card; we build the model in the room. You take it
+        home. If it does not work, we go back to the drawing board.
+      </p>
+    </div>
+
+    <p>
+      The CFO reaction is, almost without exception, more sophisticated
+      than the procurement reaction. The CFO, once she has been walked
+      through the rate card and the co-built model, accepts. I have
+      yet to have a CFO push back on the second meeting; the
+      pushback, when there is pushback, happens once, at the end of
+      the first meeting, and it is almost always the same pushback:
+      <em>I do not want unpredictable usage costs.</em> The answer is
+      that we will, on request, cap the usage at a published ceiling
+      for the first contract year, with overages quoted in advance and
+      never billed without prior written approval. We have not, in
+      any of the four design partner contracts, had to invoke that
+      ceiling. The reason is that decisions, as a unit, are not the
+      kind of thing that customers run frantically. A defensible
+      answer is, by construction, a deliberate artefact. Customers
+      run as many of them as they need and very few of the ones they
+      do not. The unit self-paces. This was not entirely accidental in
+      the design; it was, however, partly accidental. We were lucky.
+    </p>
+
+    <p>
+      The procurement team is harder. Procurement is structured, in
+      most large enterprises, around the comparison of like-priced
+      vendors. The Stratum model does not have a like-priced
+      comparator. Procurement, presented with our pricing, will
+      sometimes try to translate it back into seats — to compute an
+      implied per-seat cost and compare it against Workday. The
+      computation will show that Stratum is more expensive per seat
+      than Workday, which is true, and which is also irrelevant,
+      because Stratum is not displacing the per-seat platform. The
+      conversation I have with procurement, when this happens, is the
+      same conversation I had with the CHRO at Cordova two weeks
+      after the dinner: <em>the comparison is wrong. The platform you
+      are comparing us to is the platform that produces the
+      questions. We produce the answers. The questions are priced per
+      seat because they are produced by the seats. The answers are
+      priced per decision because they are produced by the platform.
+      You are not buying seats. You are buying defensible
+      answers.</em> Most procurement teams accept this on the second
+      pass. A few do not. We have, twice, walked away from late-stage
+      negotiations because the procurement team could not be moved
+      off the per-seat translation. I do not regret either of those
+      walk-aways. Selling our model to a procurement team that did
+      not understand it would have been a short-term win and a
+      long-term renewal problem.
+    </p>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">The CHRO is not the buyer.</h2>
+
+    <p>
+      I want to say something about the buyer that took me four months
+      and three nearly-lost deals to fully internalise. The CHRO is
+      not the buyer. The CHRO is the champion. She is the person who
+      will, in the second meeting, walk us through her problem; who
+      will introduce us to her data architect; who will, if the work
+      is good, advocate for us inside her organisation. She will
+      almost never be the person who signs the contract. The person
+      who signs the contract is the CFO. The person who can stop the
+      contract from being signed is the CIO. The Stratum motion has
+      to treat all three as audiences, because all three have to
+      be addressed before a deal closes, and addressing them in the
+      same artefact does not work. The CHRO does not want to read an
+      architecture review. The CIO does not want to read a people-
+      strategy summary. The CFO wants a finance model and very little
+      else.
+    </p>
+
+    <p>
+      I now draft three documents for every enterprise deal we move
+      into the second meeting. They are produced by the customer
+      engineer assigned to the account, reviewed by me, and reviewed,
+      for the first ten accounts, by Maya. They are not interchangeable.
+      Each is written in the language of its audience. Each is the
+      length it needs to be and not longer. The page counts have been
+      stable across the first four design partner conversations,
+      which suggests we have, at least provisionally, found the right
+      shape.
+    </p>
+
+    <ul class="docs">
+      <li>
+        <div class="doc-pages"><strong>1</strong> CHRO summary</div>
+        <div class="doc-body">
+          <em>One page. The champion's brief.</em>
+          <p>
+            Written for the chief human resources officer. Names the
+            question her board has been asking. Restates it in her own
+            language. Describes, in three short paragraphs, what
+            Stratum will produce as an answer, what the deployment
+            timeline looks like, and what she will be able to take
+            into her next quarterly board meeting. No architecture.
+            No pricing detail. No vendor logos. The artefact is
+            designed to be forwarded by her, unchanged, to anybody
+            inside her organisation she wants to introduce us to.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="doc-pages"><strong>3</strong> CFO finance model</div>
+        <div class="doc-body">
+          <em>Three pages. The buyer's case.</em>
+          <p>
+            Written for the chief financial officer. Page one: the
+            platform fee, the usage tier, the ceiling, the contract
+            term. Page two: the modelled three-year cost, with
+            sensitivity analysis on the usage variable; the comparable
+            cost of producing the same answers via the existing
+            workflow (analysts, consultants, deferred decisions); the
+            net present value of the time saved, with assumptions
+            shown. Page three: the renewal mechanics, the exit
+            mechanics, the data-portability commitments, and the
+            single page of red-flag language her general counsel will
+            want to see. No architecture diagrams. No people
+            strategy.
+          </p>
+        </div>
+      </li>
+      <li>
+        <div class="doc-pages"><strong>7</strong> CIO architecture review</div>
+        <div class="doc-body">
+          <em>Seven pages. The blocker's brief.</em>
+          <p>
+            Written for the chief information officer. Page one: the
+            read-only ingestion stance. Pages two and three: the
+            people-graph resolver — Stage 1 through Stage 4, with
+            the same diagram David published in essay no. 02, and
+            the same calibration data. Page four: the security
+            posture (SOC 2 Type II, ISO 27001 in flight, GDPR DPA,
+            EU AI Act stance, sub-processor list). Page five: the
+            data residency commitments, including the per-region
+            options we have implemented and the ones we have not.
+            Page six: the failure modes, the eval set, the published
+            confidence bands, and the explicit list of decisions
+            Stratum will refuse to render. Page seven: the
+            integration plan for the customer's existing systems,
+            named by vendor and by version, with the connector
+            status for each. The CIO reads this document. If the
+            CIO does not block, the deal closes. If the CIO blocks,
+            the deal does not close, and we have to fix the
+            architecture review before we re-engage.
+          </p>
+        </div>
+      </li>
+    </ul>
+
+    <p>
+      The three documents add to eleven pages. Eleven pages is more
+      writing than most enterprise vendors produce per account; it is
+      considerably less than most enterprise vendors produce per
+      account if you count the slides nobody reads. I would rather
+      write eleven pages that get read than eighty pages that do not.
+      I would rather have three conversations, each pitched at the
+      right register, than one conversation pitched at none of them.
+      The CHRO will read the one page. The CFO will read the three
+      pages. The CIO will read the seven pages. Each will read her
+      pages carefully, because the artefact is the length of her
+      attention. Several CHROs, in the first months, have told me —
+      sometimes with a kind of quiet pleasure — that this is the
+      first time a vendor has given them <em>fewer</em> pages than
+      they expected, and that they have, as a result, read every
+      word.
+    </p>
+
+    <p>
+      I want to flag one more dimension of the three-audience model
+      that does not fit cleanly anywhere else. The CHRO is, in the
+      first conversation, our champion. But she is not, in most
+      enterprises, a permanent fixture. The median CHRO tenure in
+      the Fortune 500 is now under four years. Our champion will,
+      sometime in the third year of a five-year contract, leave or
+      be moved or retire; her successor will inherit us as a vendor
+      she did not choose. The motion has to anticipate this. Our
+      customer engineering team is, for this reason, accountable not
+      to the CHRO who signs the contract but to the role itself.
+      When a CHRO transitions, the customer engineer transitions
+      with her: a fresh fourteen-question list, a fresh discovery
+      conversation, a fresh restatement of the question that
+      Stratum is being asked to answer. We treat the second CHRO as
+      a new customer. We have not yet had to do this for real; we
+      will, within the next eighteen months. The plan is on file.
+      Whether it survives contact with the actual transition is one
+      of the things this essay does not yet know.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">Where this scales, and where it breaks.</h2>
+
+    <p>
+      I have spent the previous six sections defending a discipline.
+      I owe the reader, and especially the GTM leader who has read
+      this far hoping to find the operational pattern she could
+      adopt at her own company, a section on where it breaks. The
+      honest answer is that we do not yet know precisely where it
+      breaks, but we know roughly the shape of where it will, and we
+      have a plan that is, at the moment of publication, more
+      ambitious than tested. I want to walk through it carefully,
+      because the next twelve months are when the plan either
+      survives contact with the world or does not, and I would
+      rather have the plan in writing now, where it can be checked
+      against, than describe what we did in retrospect when the
+      retrospect has a built-in narrative.
+    </p>
+
+    <p>
+      The customer-engineering model scales beautifully through the
+      first thirty customers. The math is approximately as follows. A
+      single customer engineer, given the preparation rhythm we
+      have established at Halcyon, can carry between three and four
+      active deployments through their first ninety days. After day
+      ninety-one, when the deployment has stabilised and the
+      decisions surface is in production, the same customer engineer
+      can carry an additional eight to twelve customers in a
+      lower-touch <em>steady-state</em> mode, where her work is
+      structured around quarterly reviews, decision-quality audits,
+      and the standing eleven-minute weekly conflict-queue
+      walk-through that has, somewhat to our surprise, become the
+      most-loved recurring meeting in most of our customer
+      organisations. The math, then, is roughly: four customer
+      engineers, at four active deployments per engineer plus ten
+      steady-state customers each, gives us capacity for sixteen
+      new deployments per year and forty steady-state customers in
+      total. That is enough to get us to customer thirty by the
+      middle of 2027.
+    </p>
+
+    <p>
+      Around customer fifty the math breaks. We cannot fly a
+      customer engineer to every customer's office for the first
+      ninety days when there are fifty customers. We cannot, more
+      to the point, sustain the preparation discipline at fifty
+      customers per founder-oversight cycle; Maya and I cannot,
+      jointly, read every customer engineer's fourteen-question
+      list before every first meeting once the list is being
+      written four times a week. The discipline that depends on
+      direct founder observation is, by construction, the
+      discipline that does not survive scale beyond what the
+      founders can directly observe. The honest fear we have, the
+      fear I have, is not that we will fail to ship product to
+      customers fifty through one hundred. It is that we will ship
+      product, and the product will work, and the engineering
+      against the customer will dilute — quietly, slowly, in a way
+      we will not notice until the renewal data tells us — into
+      the more comfortable shape of every other enterprise sales
+      motion. The discipline will become a brand element rather
+      than a practice. That is the loss I am trying to plan
+      against.
+    </p>
+
+    <p>
+      The plan, as we currently have it written, has three parts.
+      The first is structural. Customer engineers will continue to
+      handle the top ten strategic accounts directly — these will
+      be the accounts where the question the customer is being
+      asked is genuinely novel, where the data architecture has
+      meaningful complexity, or where the deployment has surface
+      area into a regulated domain we have not yet seen. Customer
+      engineers will continue, also, to onboard every new
+      customer through the first ninety days. Day ninety-one, the
+      relationship transfers — explicitly, by named hand-off, with
+      a written brief that the customer reviews — to a new role
+      we are calling the <strong>customer engineering manager.</strong>
+      The CEM is not a Customer Success Manager. The CEM is a
+      former customer engineer who has been through the
+      discipline, who has run her own fourteen-question lists,
+      and who has earned the right to inherit relationships from
+      her peers. We will, as a matter of policy, hire no CEMs
+      from outside the Stratum customer engineering team. The
+      role is internal-only. There is no external pipeline. There
+      will be one CEM per ten steady-state customers. The first
+      CEM will, by my count, be promoted in late Q4 of this year
+      from inside the existing CE team; we have already had the
+      conversation with the candidate.
+    </p>
+
+    <p>
+      The second part is measurement. I have asked our engineering
+      team to build, alongside the customer-facing eval set that
+      David described in essay no. 02, an internal eval set whose
+      purpose is to measure whether new customer engineers are
+      producing customer-engineering work at the level Sofia did at
+      Halcyon. The eval set is a corpus of anonymised first-meeting
+      transcripts, fourteen-question lists, and post-meeting
+      restatement artefacts from our first thirty customers. New
+      customer engineers, in their second month, will produce a
+      simulated first-meeting artefact against a sample customer
+      from the eval set, scored against the rubric we used to
+      score Sofia's Halcyon work. The scoring is not pass/fail; it
+      is a calibration tool, designed to give the CE feedback on
+      where her discipline is and is not yet at the level the
+      role requires. We have not yet run this eval against a real
+      hire. The first run is scheduled for the second week of
+      August. I will report what we learned, in the next briefing,
+      whether or not it was flattering.
+    </p>
+
+    <p>
+      The third part is cultural, and is the part I am least sure
+      will hold. The discipline of customer engineering is the
+      discipline of being prepared, being honest, and being
+      slightly slower than the obvious motion would be. It is a
+      discipline that runs against several of the standard
+      gravitational forces inside an enterprise software company:
+      the gravity of pipeline growth, the gravity of board
+      reporting cycles, the gravity of the comparison with peer
+      companies who are closing faster than we are. The cultural
+      part of the plan is that Maya, David, and I have agreed —
+      in writing, with a copy filed with our board chair — that
+      we will not, between now and customer fifty, hire a chief
+      revenue officer, install a quota structure, or run the
+      customer engineering team against a pipeline target. We
+      will measure customer engineers on the quality of the
+      questions they produce in first meetings, on the
+      conversion rate from first meeting to design-partner
+      conversation, and on the customer's own assessment of
+      whether the engineer arrived prepared. We will not measure
+      them on bookings. The decision is documented. The
+      documentation is dated. If, in eighteen months, the board
+      believes the decision was wrong, the decision can be
+      revisited; the discipline of writing it down is the
+      discipline of forcing the conversation to be explicit.
+    </p>
+
+    <div class="callout">
+      <strong>What I am not saying.</strong> I am not saying that
+      Stratum will never have a sales team. I am saying that, for
+      the regime in which the buyer does not yet have a frame for
+      the category we are in, the customer-engineering motion is
+      the discipline that builds the frame. When the frame exists —
+      when, three years from now, a CHRO has heard the words
+      <em>system of truth</em> from three of her peers before we
+      walk in the room — the motion will adapt. The adaptation
+      will, I hope, be deliberate. The adaptation will, I expect,
+      be uncomfortable. The adaptation will be the next essay in
+      this series after the next one.
+    </div>
+
+    <p>
+      I will close with a story I have not yet told, because it has
+      been bothering me, in a small private way, since the dinner.
+      In the kitchen at Aneel's house, while I was waiting for Maya
+      to finish a conversation with Marcus in the doorway, Annika
+      came in to refill her water and we ended up at the counter
+      together for perhaps ninety seconds. She said, with the kind
+      of half-question one asks at the end of a long evening:
+      <em>can you actually deliver what we talked about tonight?</em>
+      I told her, honestly, that we did not yet know. I told her
+      that the architecture was real, the team was small, the work
+      was harder than the essays made it look, and that any
+      promise I made to her in the next four months I would,
+      probably, have to walk back at some point. She nodded. She
+      did not look disappointed, which surprised me. She said: <em>the
+      vendors who walk back are the vendors who tell the truth. I
+      can work with that.</em> I have, since the dinner, thought
+      about this exchange more often than I intended to. The
+      customer-engineering discipline, at its core, is a discipline
+      of being able to be walked back from. A motion that depends
+      on never being walked back from is a motion that cannot tell
+      the truth about a product that is being built in real time.
+      The discipline is the version of the company that can, when
+      it has to, admit it does not know. The motion is what we
+      adopted because the architecture forbids the alternative. We
+      did not choose it because we are righteous. We chose it
+      because the buyer for what we are building does not respond to
+      anything else, and the company that is honest about that is
+      the company that, on a fortnight I cannot yet name, will be
+      the first one a CHRO calls when her board hands her a question
+      her platform cannot answer. That call is what we sell. That
+      call, on a Tuesday afternoon, is the company.
+    </p>
+  </section>
+
+  <!-- AUTHOR BIO -->
+  <aside class="author-bio" aria-label="About the author">
+    <div class="author-portrait" aria-hidden="true">PR</div>
+    <div class="author-meta">
+      <div class="author-name">Priya Rao</div>
+      <div class="author-role">Co-founder &amp; Chief Customer Officer · Stratum, Inc.</div>
+      <p>
+        Priya leads customer engineering, pricing, and the go-to-market
+        discipline at Stratum. She spent six years at McKinsey in the
+        people analytics and organisational design practice, four
+        years as Chief Revenue Officer at a mid-stage HR-tech company,
+        and the year before founding Stratum advising late-stage
+        enterprise SaaS companies on the transition from founder-led
+        selling to a scaled motion. She is the author of the
+        Stratum Customer Notes series. She lives in San Francisco
+        with her husband and one demanding cat.
+      </p>
+      <div class="author-links">
+        <a href="mailto:priya@stratum.ai">priya@stratum.ai</a>
+        <a href="../customers/">Customer notes →</a>
+        <a href="mailto:priya@stratum.ai">LinkedIn →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    Author: Priya Rao, Co-founder &amp; Chief Customer Officer,
+    Stratum, Inc. · First drafted: 09 July 2026, San Francisco;
+    published: 14 July 2026 · Reviewed by: Maya Chen (CEO), David
+    Okonkwo (CTO), Sarah Cannon (Index Ventures, board) · Word
+    count: ~5,400 · 17-minute read · The Bhusri dinner is published
+    with Aneel Bhusri's permission; the Annika Whitfield quotation
+    with Annika Whitfield's, who has independently reviewed the
+    seating description and the exchange in the kitchen. The
+    customer examples in §IV are drawn from the published Mercator,
+    Halcyon, and Northwind Customer Notes and have been re-reviewed
+    by the named participants for accuracy. All financial figures
+    in §V are described qualitatively; the rate card is published
+    in full on the Stratum pricing page.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Next in the series: Maya, on what we got wrong in our first
+      six months. Expected late August.
+    </div>
+    <div class="closing-links">
+      <a href="../">← Back to The Chairman's Briefing</a>
+      <a href="./why-i-left-workday.html">Essay no. 01 (Maya) →</a>
+      <a href="./the-graph-between-the-databases.html">Essay no. 02 (David) →</a>
+      <a href="../customers/">Customer notes →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../console/">Live console</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/mercator.html">Customers</a></li>
+        <li><a href="./why-i-left-workday.html">Essays</a></li>
+        <li><a href="../press/">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Writing</h4>
+      <ul>
+        <li><a href="./why-i-left-workday.html">No. 01 — Maya, on the layer</a></li>
+        <li><a href="./the-graph-between-the-databases.html">No. 02 — David, on resolution</a></li>
+        <li><a href="./selling-tuesday-afternoons.html">No. 03 — Priya, on the motion</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../">The Briefing</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>

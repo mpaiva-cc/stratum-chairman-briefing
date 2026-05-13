@@ -1,0 +1,1306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Customer Notes — Stratum</title>
+<meta name="description" content="An honest field report from a six-week-old company. Three customer notes, five design partners, one published quarterly cadence." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Customer Notes · Index
+   Editorial hub. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+  --col-mid:      min(960px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav { display: none; }
+}
+
+/* ─────────────────────────────────────────── HEADER ── */
+.header {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.header-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.header-slug div + div { color: var(--ink-3); }
+
+.header-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 2rem 0 1.6rem;
+  color: var(--ink);
+  max-width: 14ch;
+}
+.header-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.header-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 58ch;
+  margin: 0 0 2.4rem;
+  font-weight: 300;
+}
+
+.dateline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.1rem;
+}
+.dateline span { color: var(--ink-mute); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── FEATURED ── */
+.featured {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.featured-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.3rem;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.featured-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+  max-width: 14ch;
+}
+.featured-h2 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+.featured-h2 a {
+  color: inherit;
+  border-bottom: 0;
+}
+.featured-h2 a:hover em { color: var(--ochre-deep); }
+
+.featured-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.8rem;
+  font-weight: 300;
+  max-width: 38ch;
+}
+
+.featured-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.6rem;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 1.8rem;
+}
+.featured-stats .stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .35rem;
+}
+.featured-stats .stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.featured-stats .stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.55em;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .25rem;
+}
+
+.featured-excerpt p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.featured-excerpt p:first-child::first-letter {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 3.4rem;
+  line-height: .85;
+  float: left;
+  padding: .25rem .45rem 0 0;
+  color: var(--ochre);
+}
+
+.featured-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+  margin-top: .6rem;
+}
+.featured-cta:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+.featured-byline {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 1rem;
+}
+.featured-byline span { color: var(--ink-3); margin: 0 .5rem; }
+
+@media (max-width: 960px) {
+  .featured-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .featured-stats { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+}
+@media (max-width: 480px) {
+  .featured-stats { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── SERIES ── */
+.series {
+  width: var(--col-mid);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.series-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+}
+
+.series-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 0 2.6rem;
+}
+
+.entry {
+  display: block;
+  color: inherit;
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 2.2rem 0;
+  border-radius: 0;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  transition: background .2s;
+}
+.entry:hover {
+  background: var(--paper-warm);
+  border-bottom-color: var(--paper-rule-2);
+}
+.entry:first-of-type { border-top: 1px solid var(--paper-rule); }
+
+.entry-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .7rem;
+}
+.entry-num .name {
+  color: var(--ink-3);
+  margin-left: .5rem;
+}
+
+.entry-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+  max-width: 28ch;
+}
+.entry-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.entry-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 80;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  font-weight: 300;
+  max-width: 56ch;
+}
+
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 1.2rem;
+}
+
+.entry-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--paper-rule);
+  margin: 1rem 0 1.2rem;
+  max-width: 600px;
+}
+.entry-stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .25rem;
+}
+.entry-stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.entry-stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.55em;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .25rem;
+}
+
+.entry-read {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.entry:hover .entry-read { color: var(--ochre-deep); }
+
+@media (max-width: 600px) {
+  .entry-stats { grid-template-columns: 1fr; gap: .8rem; }
+  .entry-meta { gap: .9rem; font-size: 10px; }
+}
+
+/* ─────────────────────────────────────────── RULES ── */
+.rules {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.rules-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+
+.rules-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 2rem;
+}
+
+.rules dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 12rem 1fr;
+  gap: 1.6rem 2rem;
+}
+.rules dt {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  padding-top: .2rem;
+}
+.rules dd {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+.rules dd em { color: var(--ink); }
+.rules dd a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+}
+.rules dd a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+@media (max-width: 720px) {
+  .rules dl { grid-template-columns: 1fr; gap: .4rem 0; }
+  .rules dt { padding-top: 1rem; }
+  .rules dt:first-child { padding-top: 0; }
+}
+
+/* ─────────────────────────────────────────── PARTNERS TABLE ── */
+.partners {
+  width: var(--col-mid);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.partners-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+
+.partners-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+
+.partners-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 80;
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  margin: 0 0 2rem;
+  font-weight: 300;
+  max-width: 60ch;
+}
+
+.partners-table {
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+  border-top: 1px solid var(--paper-rule-2);
+}
+
+.partner-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1.1fr 1.5fr;
+  gap: 1.4rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.partner-row.head {
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding: .8rem 0;
+  border-bottom: 1px solid var(--paper-rule-2);
+}
+.partner-name {
+  color: var(--ink);
+  font-weight: 500;
+}
+.partner-name .meta {
+  display: block;
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: .2rem;
+  font-weight: 400;
+}
+.partner-since {
+  color: var(--ink-2);
+}
+.partner-status {
+  color: var(--ink-3);
+}
+.partner-status .badge {
+  display: inline-block;
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .2rem .5rem;
+  margin-right: .4rem;
+  border: 1px solid var(--paper-rule-2);
+  color: var(--ink-2);
+}
+.partner-status .badge.active { color: var(--ochre); border-color: var(--ochre-soft); }
+.partner-status .badge.eval { color: var(--ink-2); border-color: var(--paper-rule-2); }
+.partner-status .note {
+  display: block;
+  margin-top: .25rem;
+  color: var(--ink-mute);
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: none;
+  font-family: var(--serif);
+  font-style: italic;
+  line-height: 1.45;
+}
+
+@media (max-width: 720px) {
+  .partner-row { grid-template-columns: 1fr; gap: .4rem; padding: 1.2rem 0; }
+  .partner-row.head { display: none; }
+}
+
+/* ─────────────────────────────────────────── CLOSING CTA ── */
+.cta {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  text-align: left;
+}
+
+.cta-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 2.2rem;
+  max-width: 24ch;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.cta-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .85rem 1.25rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.cta-btn.primary {
+  color: var(--paper);
+  background: var(--ink);
+}
+.cta-btn.primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+  border-bottom-color: var(--ochre);
+}
+.cta-btn.ghost {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--paper-rule-2);
+}
+.cta-btn.ghost:hover {
+  color: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.cta-btn .arr { color: var(--ochre); }
+.cta-btn.primary:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+@media (max-width: 960px) {
+  .header { padding: 2.8rem 0 2.2rem; }
+  .featured { padding: 2.8rem 0 2.4rem; }
+  .series, .rules, .partners { padding: 2.8rem 0 2.4rem; }
+  .cta { padding: 3.4rem 0 3rem; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .mob-bar, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Customers</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="./" class="is-current">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HEADER ── -->
+<header class="header">
+  <div class="header-slug">
+    <div>Stratum / Customers</div>
+    <div>The Customer Notes series · published quarterly</div>
+  </div>
+
+  <h1 class="header-h1">Customer <em>Notes.</em></h1>
+
+  <p class="header-dek">
+    An honest field report from a six-week-old company. We publish one customer
+    note per quarter. The next will appear in October.
+  </p>
+
+  <div class="dateline">
+    3 published<span>·</span>5 design partners<span>·</span>1 commercial pilot<span>·</span>GA target Q1 2027
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── FEATURED ── -->
+<section class="featured" aria-label="Latest customer note">
+  <div class="featured-eyebrow">The latest · Customer Note 003</div>
+
+  <div class="featured-grid">
+    <div class="featured-left">
+      <div class="featured-byline">
+        By Priya Rao<span>·</span>04 August 2026<span>·</span>13-minute read
+      </div>
+
+      <h2 class="featured-h2">
+        <a href="./northwind.html">$4.2 million in agency invoices and <em>one</em> defensible question.</a>
+      </h2>
+
+      <p class="featured-dek">
+        How a creative agency network finally answered the question its CFO had
+        been asking for three years.
+      </p>
+
+      <a class="featured-cta" href="./northwind.html">Read the full note →</a>
+    </div>
+
+    <div class="featured-right">
+      <div class="featured-stats">
+        <div>
+          <div class="stat-label">Employees</div>
+          <div class="stat-value">1,200</div>
+        </div>
+        <div>
+          <div class="stat-label">Cities</div>
+          <div class="stat-value">4</div>
+        </div>
+        <div>
+          <div class="stat-label">Agency spend</div>
+          <div class="stat-value">$4.2<span class="unit">M</span></div>
+        </div>
+        <div>
+          <div class="stat-label">Concentration</div>
+          <div class="stat-value">71<span class="unit">%</span></div>
+        </div>
+        <div>
+          <div class="stat-label">Conversion</div>
+          <div class="stat-value">12<span class="unit">%</span></div>
+        </div>
+      </div>
+
+      <div class="featured-excerpt">
+        <p>
+          The question Marcus Tang had been asking for three years was disarmingly
+          simple: of the $4.2 million Northwind spent on creative-recruiting agencies
+          in 2025, how much produced a hire that stayed past their first year? Lila
+          Park, Northwind's CHRO, had given him three different answers. She did
+          not believe any of them.
+        </p>
+        <p>
+          What follows is the story of how a 1,200-person agency network — operating
+          across four cities, two ATSs, and a cultural memory of how creative
+          recruiting is supposed to work — finally produced a defensible number,
+          and what it cost both Lila and us to get there. The number is in the
+          piece. So is what it changed, and what it has not yet.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SERIES ── -->
+<section class="series" aria-label="The customer notes series">
+  <div class="series-eyebrow">The series · reverse chronological</div>
+  <h2 class="series-h2">Three notes, in order of publication.</h2>
+
+  <!-- 003 Northwind -->
+  <a class="entry" href="./northwind.html">
+    <div class="entry-num">Customer Note 003<span class="name">· Northwind Studios</span></div>
+    <h3 class="entry-title">$4.2 million in agency invoices and <em>one</em> defensible question.</h3>
+    <p class="entry-dek">
+      How a creative agency network finally answered the question its CFO had
+      been asking for three years.
+    </p>
+    <div class="entry-meta">
+      <span>04 Aug 2026</span>
+      <span>13-min read</span>
+      <span>By Priya Rao</span>
+    </div>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Employees</div>
+        <div class="entry-stat-value">1,200</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Agency spend</div>
+        <div class="entry-stat-value">$4.2<span class="unit">M</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Conversion rate</div>
+        <div class="entry-stat-value">12<span class="unit">%</span></div>
+      </div>
+    </div>
+    <span class="entry-read">Read the note →</span>
+  </a>
+
+  <!-- 002 Halcyon -->
+  <a class="entry" href="./halcyon.html">
+    <div class="entry-num">Customer Note 002<span class="name">· Halcyon Health</span></div>
+    <h3 class="entry-title">The week we lost the room, and the day we <em>earned</em> it back.</h3>
+    <p class="entry-dek">
+      How a 2,400-person hospital system's sponsor transition tested everything we
+      said we were — and why we are publishing this before the outcome is known.
+    </p>
+    <div class="entry-meta">
+      <span>28 Jul 2026</span>
+      <span>11-min read</span>
+      <span>By Priya Rao</span>
+    </div>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Employees</div>
+        <div class="entry-stat-value">2,400</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Status</div>
+        <div class="entry-stat-value">60<span class="unit">day eval</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Outcome</div>
+        <div class="entry-stat-value">Pending</div>
+      </div>
+    </div>
+    <span class="entry-read">Read the note →</span>
+  </a>
+
+  <!-- 001 Mercator -->
+  <a class="entry" href="./mercator.html">
+    <div class="entry-num">Customer Note 001<span class="name">· Mercator</span></div>
+    <h3 class="entry-title">The first ingestion: <em>thirty days</em> inside Mercator.</h3>
+    <p class="entry-dek">
+      How a 1,900-person logistics company became Stratum's first design partner —
+      and what it taught both sides.
+    </p>
+    <div class="entry-meta">
+      <span>28 Jun 2026</span>
+      <span>12-min read</span>
+      <span>By Priya Rao</span>
+    </div>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Employees</div>
+        <div class="entry-stat-value">1,900</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">HR systems</div>
+        <div class="entry-stat-value">7</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Time-to-answer</div>
+        <div class="entry-stat-value">11<span class="unit">min</span></div>
+      </div>
+    </div>
+    <span class="entry-read">Read the note →</span>
+  </a>
+</section>
+
+<!-- ─────────────────────────────────────────── RULES ── -->
+<section class="rules" aria-label="The series rules">
+  <div class="rules-eyebrow">The series rules</div>
+  <h2 class="rules-h2">What we publish, and what we don't.</h2>
+
+  <dl>
+    <dt>What we publish</dt>
+    <dd>
+      Real engagements, with the customer's written consent and every quotation
+      confirmed by the speaker. Reviewed by the customer's CHRO and CIO before
+      we hit publish. Names of internal-only individuals are lightly anonymised
+      only where they ask us to.
+    </dd>
+
+    <dt>What we don't</dt>
+    <dd>
+      Customer names, if they don't want to be named. We have one design partner
+      who has asked us not to write about them. We don't. We won't, and we have
+      taken that page out of the deck we show prospects.
+    </dd>
+
+    <dt>What's coming</dt>
+    <dd>
+      Our next case study, scheduled for early Q4 2026, covers Cordova
+      Manufacturing — Annika Whitfield's adoption of comp-review write-back.
+      Estimated publication: <em>12 October 2026.</em>
+    </dd>
+
+    <dt>Subscribe</dt>
+    <dd>
+      Email <a href="mailto:customer-notes-subscribe@stratum.ai">customer-notes-subscribe@stratum.ai</a>
+      to receive the next note the morning it goes live. No marketing, no
+      newsletter, no other mail from us. One note per quarter.
+    </dd>
+  </dl>
+</section>
+
+<!-- ─────────────────────────────────────────── PARTNERS TABLE ── -->
+<section class="partners" aria-label="All design partners">
+  <div class="partners-eyebrow">The full list · all five design partners</div>
+  <h2 class="partners-h2">Who we work with, and where each stands.</h2>
+  <p class="partners-sub">
+    Three of the five have published case studies. One is in a 60-day evaluation
+    with the outcome pending. One has asked us not to write about them, and we
+    have honoured that. The list, as of today.
+  </p>
+
+  <div class="partners-table">
+    <div class="partner-row head">
+      <div>Partner</div>
+      <div>Design partner since</div>
+      <div>Status</div>
+    </div>
+
+    <div class="partner-row">
+      <div class="partner-name">
+        Mercator
+        <span class="meta">Logistics · 1,900 EE</span>
+      </div>
+      <div class="partner-since">11 May 2026</div>
+      <div class="partner-status">
+        <span class="badge active">Active</span>
+        <span class="note">Conversion conversation Q4 2026 · <a href="./mercator.html" style="color:var(--ochre);border-bottom:0;font-style:normal;">Case study 001 →</a></span>
+      </div>
+    </div>
+
+    <div class="partner-row">
+      <div class="partner-name">
+        Halcyon Health
+        <span class="meta">Healthcare · 2,400 EE</span>
+      </div>
+      <div class="partner-since">11 May 2026</div>
+      <div class="partner-status">
+        <span class="badge eval">60-day eval</span>
+        <span class="note">Evaluation through 11 Aug 2026 · outcome pending · <a href="./halcyon.html" style="color:var(--ochre);border-bottom:0;font-style:normal;">Case study 002 →</a></span>
+      </div>
+    </div>
+
+    <div class="partner-row">
+      <div class="partner-name">
+        Northshore
+        <span class="meta">Fintech · 3,200 EE</span>
+      </div>
+      <div class="partner-since">18 May 2026</div>
+      <div class="partner-status">
+        <span class="badge active">Active</span>
+        <span class="note">No published case study, by request. We honour it.</span>
+      </div>
+    </div>
+
+    <div class="partner-row">
+      <div class="partner-name">
+        Northwind Studios
+        <span class="meta">Creative agency network · 1,200 EE</span>
+      </div>
+      <div class="partner-since">20 Jun 2026</div>
+      <div class="partner-status">
+        <span class="badge active">Active</span>
+        <span class="note">Case study published 04 Aug 2026 · <a href="./northwind.html" style="color:var(--ochre);border-bottom:0;font-style:normal;">Case study 003 →</a></span>
+      </div>
+    </div>
+
+    <div class="partner-row">
+      <div class="partner-name">
+        Cordova Manufacturing
+        <span class="meta">Manufacturing · 5,200 EE</span>
+      </div>
+      <div class="partner-since">20 Jun 2026</div>
+      <div class="partner-status">
+        <span class="badge active">Active</span>
+        <span class="note">Next case study target · estimated publication 12 Oct 2026</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING CTA ── -->
+<section class="cta" aria-label="Closing call to action">
+  <p class="cta-line">The honest customer story is the only kind that compounds.</p>
+  <div class="cta-row">
+    <a class="cta-btn primary" href="../console/">Try the Console <span class="arr">→</span></a>
+    <a class="cta-btn ghost" href="mailto:customer-references@stratum.ai?subject=Customer%20reference%20call">Talk to a customer <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="./">Customers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">Connector library</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>
