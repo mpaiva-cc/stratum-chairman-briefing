@@ -1,0 +1,1257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The first ingestion: thirty days inside Mercator — Stratum Customer Notes 001</title>
+<meta name="description" content="How a 1,900-person logistics company became Stratum's first design partner — and what it taught both sides. A long read by Priya Rao." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Customer Notes · No. 001 — Mercator
+   Editorial profile. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.masthead-slug div + div { color: var(--ink-3); }
+.masthead-slug div + div + div { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.1rem;
+}
+.byline span { color: var(--ink-mute); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── HERO STATS ── */
+
+.hero-stats {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.stat-cell .stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.stat-cell .stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.stat-cell .stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.6em;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .35rem;
+}
+.stat-cell .stat-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .82rem;
+  color: var(--ink-3);
+  margin-top: .35rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 920px) {
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero-stats { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.5rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.2rem auto;
+  padding: 2.4rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AT A GLANCE ── */
+
+.glance {
+  width: var(--col-read);
+  margin: 4rem auto 3rem;
+  padding: 2.2rem 2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.glance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.glance dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: .55rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.glance dt {
+  color: var(--ink-mute);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.glance dd {
+  margin: 0;
+  color: var(--ink);
+}
+@media (max-width: 560px) {
+  .glance dl { grid-template-columns: 1fr; gap: .15rem 0; }
+  .glance dt { margin-top: .8rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="./mercator.html" class="is-current">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Customers</div>
+    <div>Case Study 001</div>
+    <div>Mercator</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    The first ingestion: <em>thirty days</em> inside Mercator.
+  </h1>
+
+  <p class="masthead-dek">
+    How a 1,900-person logistics company became Stratum's first design partner —
+    and what it taught both sides.
+  </p>
+
+  <div class="byline">
+    By Priya Rao<span>·</span>28 June 2026<span>·</span>12-minute read<span>·</span>Published in the Stratum Customer Notes series
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── HERO STATS ── -->
+<section class="hero-stats" aria-label="Engagement at a glance">
+  <div class="stat-cell">
+    <div class="stat-label">Employees</div>
+    <div class="stat-value">1,900</div>
+    <div class="stat-foot">across 14 countries</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Geography</div>
+    <div class="stat-value">14<span class="unit">countries</span></div>
+    <div class="stat-foot">North America &amp; LATAM core</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">HR systems, pre-Stratum</div>
+    <div class="stat-value">7</div>
+    <div class="stat-foot">Workday at the centre</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Board questions / fortnight</div>
+    <div class="stat-value">3</div>
+    <div class="stat-foot">from chair to CHRO inbox</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Median time-to-answer</div>
+    <div class="stat-value">11<span class="unit">min</span></div>
+    <div class="stat-foot">post-Stratum, four data points</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">The seventh Tuesday.</h2>
+
+    <p>
+      <span class="dropcap">O</span>n the seventh Tuesday of 2026 — the twenty-fourth
+      of February, a cold, wet morning in Memphis where Mercator keeps its
+      headquarters — Elena Vasquez sat at the long oak desk she had inherited
+      from her predecessor and counted, with a kind of clinical attention,
+      the tabs open in her browser. Forty-three. Two of them were the same
+      Workday report opened twice; she closed one and then, after a moment,
+      re-opened it because she had forgotten which subsidiary the other one
+      belonged to. She was building a board deck. The deck was due Friday.
+      The question, posed to her by Tomás Eberle, the chair of Mercator's
+      board, in a brief two-line email the previous Thursday evening, was
+      this: why is our freight-handler attrition in Mexico running at almost
+      twice the rate of the same job in Atlanta, and what is it costing us?
+    </p>
+
+    <p>
+      The question was reasonable. Eberle, a former operator who had run a
+      regional rail company before joining Mercator's board in 2021, asked
+      reasonable questions. He asked them roughly every fortnight, sometimes
+      from his office in Houston, sometimes from a hotel room in Madrid. He
+      did not consider himself difficult. Elena, who liked him, agreed; he
+      was not difficult. The data was difficult.
+    </p>
+
+    <p>
+      The data, in this case, lived in six systems. Workday held the
+      headcount and the org tree for the United States and Canada. A custom
+      build of Workday, hosted by a third-party integrator in São Paulo, held
+      the same for Brazil and most of LATAM — but with field names in
+      Portuguese, a deliberately altered termination-reason taxonomy, and a
+      ninety-day data-residency lag that no one at corporate had ever fully
+      explained to her. ADP held payroll for the United States; a regional
+      vendor named Runa held payroll for Mexico. A standalone time-and-
+      attendance system, deployed in 2019 by a previous COO, held the
+      shift-level data that would be necessary to tell a freight handler in
+      Atlanta from a freight handler in Monterrey doing materially different
+      work. And then there was the engagement survey, run by a fourth vendor,
+      which Elena was almost certain contained the underlying answer if only
+      it could be joined to the rest.
+    </p>
+
+    <p>
+      Elena had eleven days. She had a team of three analysts, one of whom
+      was on parental leave. She had a CIO who was, at that moment, in
+      Frankfurt, and a CFO who had asked her, twice, whether the answer
+      could be presented at the next month's board meeting rather than this
+      one. She told him no, because she had told Eberle yes.
+    </p>
+
+    <p>
+      What followed was, depending on your sympathies, either ordinary or
+      grotesque. Elena's senior analyst, a man named Greg who had been at
+      Mercator for nine years and whose patience with this kind of work was
+      essentially limitless, built a spreadsheet that crossed four of the
+      six systems by employee ID, after first writing a small script to
+      reconcile the four different ways that the same person — say, a
+      forty-one-year-old freight handler named Rosa Martínez who worked out
+      of the Monterrey hub — was represented across them. The script took
+      two days to write and one to validate. Greg ran the join on Thursday
+      evening. It produced a number Elena did not believe. She asked him to
+      run it again. The second run produced a number two percent different
+      from the first. Neither of them could explain the difference.
+    </p>
+
+    <p>
+      Elena worked through Thursday night, and through most of Friday. She
+      sent the deck to Eberle at six-eleven on Friday evening, three hours
+      after she had promised to send it. The deck contained a number she
+      was eighty percent confident in, a methodology section she had
+      written in the spirit of full disclosure, and a recommendation she
+      believed in. Eberle read it on the Sunday before the Monday meeting.
+      He replied with two sentences: <em>Helpful. Thank you.</em> On Monday
+      he asked her, in front of the rest of the board, whether the gap was
+      really driven by pay or by shift structure. Elena said, honestly, that
+      she did not yet know. The chairman was satisfied.
+    </p>
+
+    <p>
+      She was not. What troubled her, walking out of the boardroom on that
+      first Monday in March, was not that the answer had taken eleven days.
+      It was that she could not, with confidence, run the same query again
+      next quarter. The work was bespoke; it would not compound. The
+      institutional memory of how Greg had reconciled the four employee-ID
+      schemes lived in a Google Doc he had not yet finished writing. If
+      Eberle asked a related question in May — and he would — Elena would
+      do the work again, from scratch, with a different team.
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">How we found each other.</h2>
+
+    <p>
+      Maya Chen and Elena had met four years earlier, at a Workday user
+      conference in Las Vegas. Elena was then VP People at a regional
+      health-services firm and was, as she likes to put it now, in the
+      mid-career stage where you spend half your week defending budget
+      against the CFO and the other half explaining Workday to people who
+      do not work in HR. Maya was a product manager at Workday, ten years
+      younger, presenting a roadmap session on talent intelligence that
+      Elena had walked into largely by accident. They had coffee twice
+      during the conference, exchanged numbers, and stayed in light, semi-
+      annual touch — the kind of professional relationship that consists of
+      a Slack message every six months and a forwarded article every
+      eighteen.
+    </p>
+
+    <p>
+      Maya cold-emailed her on the third of May 2026 — three days before
+      Stratum was incorporated, two before Maya, David Okonkwo, and I sat
+      down for the forty-one hours of conversation that produced the
+      company. The pitch was three paragraphs long. The first paragraph
+      named the problem (the board question that costs you a week). The
+      second named the wedge (a graph that sits on top of your existing
+      systems and answers the question in thirty seconds, with the chart,
+      the cohort, and the regulation cited). The third paragraph asked for
+      a single thirty-minute call before Maya signed any other design
+      partner.
+    </p>
+
+    <p>
+      Elena replied in nine hours. The reply was four lines long. The first
+      line was the word <em>yes</em>. The second was a calendar link. The
+      third was a question — <em>are you the same Maya I met in Vegas in
+      2022?</em> — and the fourth was an apology for the brevity. The first
+      call happened on the sixth of May, at seven-fifteen in the morning
+      Pacific time, which was nine-fifteen in Memphis. It ran an hour past
+      its allotted thirty minutes. Maya took the call from a borrowed
+      conference room in Palo Alto, surrounded by the whiteboards on which
+      the company's architecture was, at that moment, still being drawn.
+    </p>
+
+    <p>
+      What Elena told Maya on that first call has become, in the brief
+      institutional memory of Stratum, a small piece of folklore. She said:
+      <em>I do not need you to replace Workday. I need you to make the
+      board question take an hour instead of a week. If you can do that,
+      I will be your first customer, and I will tell every other CHRO I
+      know to be your second.</em> Maya, who has a habit of writing down
+      sentences she suspects she will need later, wrote that one down. It
+      is now on a whiteboard in the founders' room.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">The conversation that nearly killed it.</h2>
+
+    <p>
+      It is important, in a piece written by the company about its first
+      customer, to say plainly that the partnership nearly did not happen.
+      The early conversations — between the sixth of May and the
+      seventeenth — moved quickly along the CHRO axis and stalled, hard,
+      along the CIO axis. Elena's CIO, a Norwegian engineer named Devon
+      Larsen who joined Mercator from a global logistics competitor in 2023
+      and who, by his own admission, has never been called diplomatic,
+      objected to almost every aspect of the proposed architecture.
+    </p>
+
+    <p>
+      The objection, when distilled, was not unreasonable. Larsen had spent
+      eighteen months consolidating Mercator's data infrastructure into a
+      central Snowflake warehouse. He had political capital in that work.
+      He had told the board, in a memo dated January, that no major new
+      vendor would be permitted to read directly from source systems; all
+      analytics would flow through the warehouse. Stratum, as Maya had
+      proposed it to Elena, would have read across all of Mercator's
+      systems directly, ingesting from Workday, ADP, Runa, the
+      time-and-attendance system, and the engagement survey vendor in
+      parallel, and resolving identities into a graph layer of its own.
+      This was, Larsen said on a call on the thirteenth of May, exactly
+      what his memo had been written to prevent.
+    </p>
+
+    <p>
+      He proposed an alternative. Stratum, in his version, would sit
+      behind the warehouse: it would read from a curated, governed copy of
+      the data that his team controlled, on a refresh schedule his team
+      set, with field-level access controls his team owned. The benefit
+      was governance. The cost was the wedge. Maya was, by the end of that
+      call, very close to telling Elena that the partnership would not
+      work; David Okonkwo, on the same call, had already typed and deleted
+      three different versions of the same polite withdrawal.
+    </p>
+
+    <p>
+      What changed was not the architecture. It was a compromise about
+      where the data lived. David offered it, twenty minutes into a
+      follow-up call on the fifteenth: Stratum would not persist a copy of
+      Mercator's raw data anywhere. Stratum would ingest, resolve
+      identities into a graph layer kept entirely in memory during the
+      resolution window, write only the graph itself — the relationships,
+      the resolved entities, the cohort definitions — to its own
+      database, and then forget the underlying rows. The source of truth
+      for any given field would always remain the source system. The
+      graph, in Stratum's database, would be a set of pointers, a
+      compressed and resolved set of references, not a copy.
+    </p>
+
+    <p>
+      Larsen was sceptical. He did not believe it could be built that
+      way, and he said so. He asked for a working diagram, a threat model,
+      and a session with David in person. David offered him a flight to
+      Palo Alto for the following Tuesday. Larsen, who travels at the
+      drop of a hat and who is in his own way easy to convince when the
+      argument is technical, accepted. He flew out on the eighteenth and
+      walked into the Palo Alto office at nine a.m. on the nineteenth of
+      May.
+    </p>
+
+    <p>
+      I was not in that meeting. David was. The two of them spent six
+      hours at a whiteboard. Maya joined at the third hour and stayed for
+      the rest. By four in the afternoon, the three of them had drawn the
+      diagram that now hangs, photographed and framed, on the wall outside
+      the engineering room. By six, Larsen had agreed in principle. By
+      seven, he was on a call with Elena, telling her that he had been
+      wrong on one specific point — the point about persistence — and
+      that he would support the partnership on the architecture David had
+      proposed. He flew back on the red-eye. He has since become, by his
+      own count and ours, the second-loudest internal advocate at
+      Mercator after Elena.
+    </p>
+
+    <p>
+      The lesson, which Maya likes to repeat now, is that the architecture
+      argument matters more than the product demo. We could have won the
+      CHRO ten times over and lost the company. We won the CIO on the
+      whiteboard.
+    </p>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">The first ingestion.</h2>
+
+    <p>
+      The first ingestion happened on the twenty-second of May 2026, a
+      Friday. The connector pointed at a sandboxed copy of Mercator's
+      Workday HR Core, hosted in a dedicated tenant Larsen's team had
+      stood up over the previous weekend. The connector was read-only, by
+      contract and by configuration. It had been built, almost entirely,
+      by a single engineer named Asha Pillai, Stratum's first employee
+      outside the three founders, who had started fourteen days earlier
+      and whose first task on her first day had been to write the
+      connector specification she would now implement against.
+    </p>
+
+    <p>
+      Asha ran the ingestion from her desk in Palo Alto. Larsen and two
+      of his engineers watched a Loom recording — the call itself was
+      asynchronous because of the time zones — from a conference room in
+      São Paulo, where they had flown that week to spend time with the
+      LATAM data team. The ingestion ran for forty-seven minutes. At the
+      end, three thousand four hundred and twelve employee records had
+      been read, parsed, resolved against an empty graph, and committed.
+    </p>
+
+    <p>
+      Of those three thousand four hundred and twelve, twenty-two had
+      identity-resolution conflicts that the system could not resolve
+      automatically. Most were minor: a person who had changed their name
+      mid-employment and whose pre-change record in a downstream system
+      had not been updated, or a person whose primary work location had
+      changed mid-quarter in a way that the engagement survey vendor's
+      schema did not capture cleanly. Two were more serious: cases where
+      two separate Workday records, originating from a 2022 acquisition
+      that Mercator had only partially integrated, almost certainly
+      referred to the same person but could not be confirmed without
+      human review.
+    </p>
+
+    <p>
+      Elena reviewed all twenty-two over the weekend. She did this not
+      because she had to — Asha had offered, and Larsen's team had
+      offered — but because she wanted to see the raw shape of the
+      problem at close range. She spent roughly forty minutes on
+      Saturday morning and another hour on Sunday. She closed every
+      conflict by Sunday evening. On Monday she sent Maya a one-line
+      Slack message: <em>this is going to work.</em>
+    </p>
+
+    <p>
+      The first ingestion was not, on its surface, dramatic. No board
+      question was answered that weekend. No money changed hands. The
+      Stratum engineering team did not celebrate; they were already
+      writing the next connector, for the engagement survey, which would
+      ingest the following Friday. But something had been demonstrated
+      that the founders had previously been able only to argue: that a
+      graph layer over an enterprise's existing systems was possible to
+      build, in production, against real data, in under an hour, with a
+      reconciliation error rate under one percent.
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      The time I get back is not free; it is reallocated to better questions.
+    </p>
+    <div class="pullquote-attr">
+      <strong>Elena Vasquez</strong> · CHRO · Mercator, Inc.
+    </div>
+  </div>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">The first board answer.</h2>
+
+    <p>
+      On the eighteenth of June 2026, twenty-seven days after the first
+      ingestion and twelve weeks after Eberle had asked the freight-
+      handler attrition question, the chairman asked another. This one
+      was about pay equity in Mercator's Latin American subsidiaries.
+      The board's compensation committee had received a flag from an
+      external auditor — not an accusation, exactly, but a request for a
+      methodology — and Eberle wanted, before the next quarterly meeting,
+      a defensible answer about whether Mercator's pay practices in
+      Mexico, Brazil, Colombia, Chile, and Peru showed statistically
+      significant gender or ethnicity-correlated gaps after controlling
+      for role, level, and tenure.
+    </p>
+
+    <p>
+      The question would, in February, have taken eleven days. Elena ran
+      it through Stratum's console — at that point still in private beta,
+      hosted behind Mercator's firewall, with Larsen's team having full
+      audit visibility into every query and every result — at four-fifty-
+      one in the afternoon on a Thursday. The answer came back in eleven
+      minutes.
+    </p>
+
+    <p>
+      The answer was not a single number. It was a methodology, presented
+      first; cohort sizes, presented second; the result for each of the
+      five subsidiaries, presented third; and a regulatory citation
+      section, presented fourth, that referenced specific provisions of
+      Mexico's Federal Labor Law and Brazil's CLT, the two pieces of
+      enabling legislation under which Mercator's pay-equity obligations
+      were defined. A small, italicised note at the end of the report
+      flagged that two of the five sub-cohorts — Colombia and Peru — had
+      sample sizes below the threshold for statistical significance at
+      the ninety-five-percent confidence level, and recommended that
+      those two be reported with explicit confidence intervals rather
+      than as point estimates.
+    </p>
+
+    <p>
+      Elena read the report twice. She reviewed the methodology, which
+      Stratum's agent had selected by default but which she could have
+      overridden. She agreed with it. She added two sentences to the
+      executive summary, asked the console to regenerate the chart with
+      one different cohort cut for the Mexican subsidiary, watched the
+      chart redraw in eleven seconds, and sent the deck to Eberle.
+    </p>
+
+    <p>
+      She put down the company laptop at seven-fourteen p.m. Pacific —
+      she was in California that week, visiting the West Coast hub —
+      and went to make dinner. Her husband, who had not seen her cook
+      dinner on a Thursday in four months, asked her whether something
+      was wrong. She said no, and meant it.
+    </p>
+
+    <p>
+      I tell this story carefully because it is the kind of story that
+      sells software, and we are trying not to be the kind of company
+      that sells software with stories. The eleven minutes is real. The
+      methodology is real. The Federal Labor Law citation is real and is
+      defensible, audited, and reproducible. The dinner is also real.
+      What is not yet real — and we say this because Elena says it — is
+      that Mercator runs all of its decisions through Stratum. Mercator
+      runs, as of this writing, four. The first was the pay-equity
+      question. The other three are smaller; we will describe them in
+      the next Customer Note if Elena permits us to.
+    </p>
+  </section>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">What did not change.</h2>
+
+    <p>
+      It would be dishonest to end this piece without saying what has
+      not yet changed at Mercator. Several things have not changed.
+    </p>
+
+    <p>
+      Mercator's CFO, a woman named Janice Holloway who has been at the
+      company since 2014 and who runs the most disciplined finance
+      function I have ever encountered as a customer, still asks Elena
+      for the same monthly headcount report in the same format. The
+      format is a spreadsheet with twelve tabs, one for each subsidiary,
+      that Holloway has used for nine years. The data on each tab is now
+      generated, end to end, by Stratum, in roughly thirty seconds. But
+      the format is unchanged, the cadence is unchanged, and the
+      ritual — Holloway opens the file on the second Tuesday of the
+      month and reads it line by line — is unchanged. We have not yet
+      earned the right to change the format, and we may never need to.
+    </p>
+
+    <p>
+      Two of Elena's directors — one in talent management, one in total
+      rewards — remain openly sceptical of the partnership. They have
+      sat in two demos and they ask, every time, the same kind of
+      question: what does the agent do when it is wrong, and how would
+      I know. These are correct questions. They are the questions our
+      eval set was built to answer, and we are still building the
+      answer. We have not converted them; we may not convert them; and
+      Elena is, in private and to us, perfectly clear that she does not
+      consider this a failure on our part. <em>You should be earning
+      them,</em> she said, in a quarterly review on the fifteenth of
+      June, <em>not asking me to instruct them.</em>
+    </p>
+
+    <p>
+      The Mexican subsidiary's HR information system, the custom
+      Workday build hosted in São Paulo, presents a structural problem
+      that our connector cannot yet fully solve. The build was
+      customised in 2018, before Mercator's current data governance
+      regime existed, by a third-party integrator who is no longer
+      under contract. Approximately fourteen percent of the people
+      graph we owe Mercator — specifically, certain fields related to
+      shift structure, internal-transfer history, and a Spanish-
+      language termination-reason taxonomy — cannot at present be read
+      cleanly. We have a workaround, which involves a nightly extract
+      to a flat file and a hand-rolled parser. The workaround is not
+      satisfactory. We have not yet committed, on a date, to a
+      permanent solution. Larsen knows this. Elena knows this. It is in
+      the partnership's open-issues log, which Maya updates weekly.
+    </p>
+
+    <p>
+      Elena spends roughly the same number of hours each week on people
+      work as she did before. This may be the most important sentence
+      in this piece. She does not work less. What has changed is the
+      shape of the hours. The pay-equity question, which would have
+      consumed twenty hours of her senior analyst's time and four of
+      her own in February, consumed forty minutes in June. The hours
+      that opened up did not vanish into the calendar — they were
+      consumed by other work, which she chose. She spent some of them
+      with the talent-management director who is still sceptical. She
+      spent some of them on a leadership-bench review for the LATAM
+      region that she had been postponing for two quarters. She spent
+      some of them, by her own count, simply thinking.
+    </p>
+
+    <p>
+      Her own assessment, which she gave us on a recorded call on the
+      twenty-fourth of June and which we are using with her permission
+      and which is also the pull quote above, is this: <em>the time I
+      get back is not free; it is reallocated to better questions.</em>
+      We take that to be the most honest description of the value of
+      the product we have yet heard from any customer, and we have, in
+      our brief life, talked to about ninety.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">What we learned, said plainly.</h2>
+
+    <p>
+      Three lessons. We will write them down here, in my voice, without
+      varnish, because we will need them in writing when, in twelve
+      months, we have forgotten them.
+    </p>
+
+    <p>
+      The first: the architecture argument matters more than the product
+      demo. We almost lost Mercator on the fifteenth of May, not because
+      our product was wrong but because our story about where the data
+      lived was insufficient. A CHRO will buy a product. A CIO will buy
+      an architecture. We need both, and we need to take both seriously
+      from the first conversation. Every future enterprise partnership
+      will begin, on our side, with a written architecture brief that
+      anticipates the CIO's objections before they are raised. We have
+      already begun writing the template.
+    </p>
+
+    <p>
+      The second: the CHRO is the buyer, the CIO is the gate, and the
+      CFO is the customer of the answer. We will need to speak three
+      languages, and we will need to speak them at the same time,
+      because in a 1,900-person company these three people sit on the
+      same executive team and they will compare notes after every call.
+      We have, in the early months, leaned hard on the CHRO conversation.
+      We will, going forward, structure our discovery calls to put the
+      CIO and CFO in the room from the second meeting, not the fifth.
+    </p>
+
+    <p>
+      The third: the first customer's first board question is the most
+      important moment in the company's first year. Not the first
+      ingestion, not the first dollar, not the seed close. The first
+      board question. Because the board question is what the CHRO is
+      paid to answer, and the moment Stratum answers one — defensibly,
+      in eleven minutes, with the citation — the CHRO has a story to
+      tell about us that we could never tell about ourselves. Eleven
+      minutes on the eighteenth of June is, in some real sense, the
+      moment Stratum became a company in Elena's mind. We will, going
+      forward, structure every design partnership around the question
+      of what the customer's next board question will be, and what we
+      need to ingest, resolve, and build to answer it.
+    </p>
+
+    <p>
+      A final, smaller thing. When Elena reviewed a draft of this piece
+      on the twenty-sixth of June, she sent me back four edits. Three
+      were factual — a date, a system name, a slight overstatement of
+      what the engagement survey vendor's schema permits. The fourth
+      was a tonal note. She wrote, in the margin: <em>tell them I am
+      still cautious. I have been the first customer for two products
+      before, and one of them was a disaster. Tell them the partnership
+      is working. Do not tell them it is finished.</em> We have not
+      told them it is finished. We have tried to tell them what is
+      working, and what is not, and what we have not yet earned.
+    </p>
+  </section>
+
+  <!-- AT A GLANCE -->
+  <aside class="glance" aria-label="At a glance">
+    <div class="glance-label">At a glance</div>
+    <dl>
+      <dt>Subject</dt><dd>Mercator (NYSE: MRCT)</dd>
+      <dt>Sector</dt><dd>Freight &amp; Logistics</dd>
+      <dt>Size</dt><dd>1,900 employees · $4.2B revenue</dd>
+      <dt>Geography</dt><dd>14 countries · North America + LATAM core</dd>
+      <dt>Stratum usage</dt><dd>Design partner since 11 May 2026 · First ingestion 22 May 2026 · Console in private beta</dd>
+      <dt>Status</dt><dd>Active partner · Conversion conversation Q4 2026</dd>
+      <dt>People quoted</dt><dd>Elena Vasquez (CHRO) · Devon Larsen (CIO) · Tomás Eberle (Board Chair) · Maya Chen (Stratum CEO) · David Okonkwo (Stratum CTO) · Asha Pillai (Stratum founding eng) · Priya Rao (Stratum CCO, author)</dd>
+    </dl>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    This case study is built from 11 calls and three on-site visits between 03 May and 24 June 2026.
+    All quotations confirmed with the speaker. Reviewed for accuracy by Elena Vasquez and Devon Larsen
+    prior to publication. Names of internal-only individuals lightly anonymised.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Stratum publishes one customer note per quarter. The next will appear in October.
+    </div>
+    <div class="closing-links">
+      <a href="../index.html">← Back to The Chairman's Briefing</a>
+      <a href="../product/index.html">Read about the product →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="./mercator.html">Customers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">Connector library</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>
