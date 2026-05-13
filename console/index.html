@@ -89,8 +89,18 @@
       </div>
     </div>
 
-    <!-- Answer card will be injected here -->
+    <!-- Demo gallery / Answer card mount -->
     <div id="answer-mount" aria-live="polite"></div>
+
+    <!-- Slim "Connect" CTA banner shown after first demo answer -->
+    <div class="demo-cta-banner" id="demo-cta-banner" role="status" aria-live="polite" hidden>
+      <span class="demo-cta-text">
+        <strong>Want to ask your own question?</strong>
+        Connect an Anthropic API key in 30 seconds — it never leaves this browser.
+      </span>
+      <button type="button" class="demo-cta-btn" id="demo-cta-connect">Connect <span class="arr">→</span></button>
+      <button type="button" class="demo-cta-dismiss" id="demo-cta-dismiss" aria-label="Dismiss">×</button>
+    </div>
 
     <!-- Recent saved -->
     <div class="saved-rail" id="saved-rail" hidden>
@@ -279,7 +289,7 @@
       <div class="modal-row">
         <a class="modal-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Get a key →</a>
         <span style="flex:1"></span>
-        <button type="button" class="btn btn-ghost" onclick="sessionStorage.setItem('stratum_skipped_onboarding','1'); closeOnboarding();">Skip · stay in demo</button>
+        <button type="button" class="btn btn-ghost" id="onboard-skip-demo">Skip · see the demo</button>
         <button type="submit" class="btn btn-ochre" id="onboard-submit">Connect</button>
       </div>
       <div class="modal-status" id="onboard-status"></div>

@@ -1756,8 +1756,11 @@ async function boot() {
   // Tool dispatcher self-test (gated by ?test=tools)
   maybeRunToolSelfTest();
 
-  // First-run: prompt for API key (non-blocking — demo mode still works)
-  if (!LLM.settings.apiKey && !sessionStorage.getItem('stratum_skipped_onboarding')) {
+  // First-run: prompt for API key (non-blocking — demo mode still works).
+  // Suppress the auto-open when the visitor has asked for the demo gallery
+  // explicitly via ?demo=1 / #demo — they don't want a modal in their face.
+  const wantsDemo = /[?&]demo=1/.test(location.search) || location.hash === '#demo';
+  if (!LLM.settings.apiKey && !sessionStorage.getItem('stratum_skipped_onboarding') && !wantsDemo) {
     setTimeout(() => openOnboarding(), 600);
   }
 }
@@ -3169,3 +3172,1028 @@ function maybeRunToolSelfTest() {
   console.groupEnd();
 }
 
+// ═════════════════════════════════════════════════════════════
+// ░░░░░░░░░░░░░░░░░░░░░░  DEMO MODE GALLERY  ░░░░░░░░░░░░░░░░░░
+// ═════════════════════════════════════════════════════════════
+// When no API key is present, the user lands in a curated
+// "Demo gallery": six chip-style question buttons over a
+// synthetic 2,000-employee dataset. Each chip renders the full
+// four-section answer card (ASK · ANSWER · INSPECT · CITE) with
+// real numbers computed on the live JSON. Names are anonymized
+// in demo mode; clicking through anywhere does NOT open the
+// individual employee drawer (PII-safe by construction).
+//
+// Code layout:
+//   DEMO.SLUGS                - the six slug definitions
+//   DEMO.precomputeStats()    - cohort sizes + headline numbers
+//                               surfaced on the chips upfront
+//   DEMO.computeAnswer(slug)  - lazily compute + anonymize a
+//                               result object via Q_* handlers
+//   DEMO.renderGallery()      - hero card + 6 chip buttons
+//   DEMO.runSlug(slug)        - fake-thinking delay + render
+//   DEMO.renderAnswer(result) - paint into #answer-mount
+//   DEMO.showPostAnswerCTA()  - slim bottom banner after view 1
+//
+// Routing:
+//   ?demo=1  in URL          → gallery on boot
+//   "Skip"   in onboarding   → gallery + dismiss modal
+//   no api key && no match   → gallery (replaces refusal card)
+// ═════════════════════════════════════════════════════════════
+
+const DEMO = (() => {
+
+  // ── Helpers — anonymization & coded handles ─────────────────
+  function codeLetter(i) {
+    // 0 → A, 1 → B, …, 25 → Z, 26 → AA, …
+    let s = '';
+    do { s = String.fromCharCode(65 + (i % 26)) + s; i = Math.floor(i / 26) - 1; } while (i >= 0);
+    return s;
+  }
+  function anonName(prefix, i) {
+    return prefix + ' ' + codeLetter(i);
+  }
+
+  // ── SLUGS ───────────────────────────────────────────────────
+  const SLUGS = [
+    {
+      slug: 'pay-equity-emea',
+      question: "Show me our pay equity gap in EMEA at senior IC and M3 levels",
+      eyebrow: 'Pay equity · EMEA',
+      kicker: 'Controlled for level + location',
+    },
+    {
+      slug: 'flight-risk-eng',
+      question: "Who's at flight risk in engineering with comp below band?",
+      eyebrow: 'Flight risk · Engineering',
+      kicker: 'Cohort × estimated true-up cost',
+    },
+    {
+      slug: 'tenure-senior-eng',
+      question: "What's the median tenure for senior engineers globally?",
+      eyebrow: 'Tenure · Engineering',
+      kicker: 'IC4–IC7 · global · P25/P50/P75',
+    },
+    {
+      slug: 'span-of-control',
+      question: "How does manager span of control look across teams?",
+      eyebrow: 'Org shape · spans',
+      kicker: 'Healthy 4–8 · over-extended 12+',
+    },
+    {
+      slug: 'underpaid-high-performers',
+      question: "Show me underpaid high performers",
+      eyebrow: 'Comp · performance',
+      kicker: 'Score ≥ 4 · comp_ratio < 0.85',
+    },
+    {
+      slug: 'na-new-joiner-retention',
+      question: "What's our retention story for new joiners in NA?",
+      eyebrow: 'Retention · NA · 0–18mo',
+      kicker: 'Tenure × flight-risk distribution',
+    },
+  ];
+
+  // ── PRE-COMPUTED STATS for chip previews ────────────────────
+  // Cheap to compute over 2,000 rows; runs once after data load.
+  let stats = null;
+  function precomputeStats() {
+    if (stats || !state.people || !state.people.length) return stats;
+    const P = state.people;
+
+    // Q1 – pay equity, level + location weighted
+    const eq = computePayEquity(P);
+    // Q2 – engineers at risk + below band
+    const q2Cohort = P.filter(p =>
+      p.department === 'Engineering' &&
+      p.comp_ratio < 0.95 &&
+      (p.flight_risk_band === 'high' || p.flight_risk_band === 'moderate')
+    );
+    const q2Cost = q2Cohort.reduce(
+      (s, p) => s + Math.max(0, (p.comp_band_p50 - p.comp_total)),
+      0
+    );
+    // Q3 – senior eng tenure
+    const q3Cohort = P.filter(p =>
+      p.department === 'Engineering' &&
+      ['IC4','IC5','IC6','IC7','M1','M2','M3','M4'].includes(p.level)
+    );
+    const q3Median = median(q3Cohort.map(p => p.tenure_years));
+    // Q4 – spans
+    const mgrs = P.filter(p => p.is_manager && p.span_of_control > 0);
+    const q4Over = mgrs.filter(m => m.span_of_control >= 12);
+    const q4Med = median(mgrs.map(m => m.span_of_control));
+    // Q5 – underpaid high performers
+    const q5Cohort = P.filter(p => p.performance_score >= 4.0 && p.comp_ratio < 0.85);
+    const q5Cost = q5Cohort.reduce(
+      (s, p) => s + Math.max(0, (p.comp_band_p50 * 0.95 - p.comp_total)),
+      0
+    );
+    // Q6 – NA new joiners
+    const q6Cohort = P.filter(p => p.region === 'NA' && p.tenure_years < 1.5);
+    const q6High = q6Cohort.filter(p => p.flight_risk_band === 'high');
+
+    stats = {
+      'pay-equity-emea': {
+        cohort: eq.cohortSize,
+        headline: eq.weightedGapPct.toFixed(1) + '%',
+        sub: 'gap · n=' + eq.cohortSize,
+      },
+      'flight-risk-eng': {
+        cohort: q2Cohort.length,
+        headline: q2Cohort.length.toString(),
+        sub: '≈ ' + fmt.moneyShort(q2Cost) + ' to re-band',
+      },
+      'tenure-senior-eng': {
+        cohort: q3Cohort.length,
+        headline: q3Median.toFixed(1) + ' yrs',
+        sub: 'median · n=' + q3Cohort.length,
+      },
+      'span-of-control': {
+        cohort: mgrs.length,
+        headline: q4Med.toFixed(0) + ' / ' + q4Over.length,
+        sub: 'median span / over-extended',
+      },
+      'underpaid-high-performers': {
+        cohort: q5Cohort.length,
+        headline: q5Cohort.length.toString(),
+        sub: '≈ ' + fmt.moneyShort(q5Cost) + ' true-up',
+      },
+      'na-new-joiner-retention': {
+        cohort: q6Cohort.length,
+        headline: q6Cohort.length
+          ? Math.round(q6High.length / q6Cohort.length * 100) + '%'
+          : '—',
+        sub: 'already in high-risk band',
+      },
+      // store eq for later use
+      _eq: eq,
+    };
+    return stats;
+  }
+
+  // ── PAY EQUITY (Q1) — controlled for level × location ───────
+  // For each (level, location) cell with ≥ 5 women AND ≥ 5 men:
+  //   cell_gap = (median_men − median_women) / median_men
+  //   cell_weight = women_n + men_n
+  // Overall gap = sum(gap × weight) / sum(weight)
+  // Also returns per-level rollup for the grouped-bar chart and table.
+  function computePayEquity(P) {
+    const cohort = P.filter(p =>
+      p.region === 'EMEA' &&
+      (p.level === 'IC5' || p.level === 'IC6' || p.level === 'M3')
+    );
+    const women = cohort.filter(p => p.gender === 'woman');
+    const men   = cohort.filter(p => p.gender === 'man');
+    const nb    = cohort.filter(p => p.gender === 'nonbinary');
+
+    // (level, location) cells
+    const cellMap = new Map();
+    cohort.forEach(p => {
+      const key = p.level + '||' + p.location;
+      if (!cellMap.has(key)) cellMap.set(key, { level: p.level, location: p.location, w: [], m: [] });
+      if (p.gender === 'woman') cellMap.get(key).w.push(p.comp_total);
+      else if (p.gender === 'man') cellMap.get(key).m.push(p.comp_total);
+    });
+    const cells = Array.from(cellMap.values())
+      .filter(c => c.w.length >= 5 && c.m.length >= 5)
+      .map(c => {
+        const mw = median(c.w), mm = median(c.m);
+        return {
+          level: c.level, location: c.location,
+          women_n: c.w.length, men_n: c.m.length,
+          women_median: mw, men_median: mm,
+          gap_pct: mm > 0 ? (mm - mw) / mm * 100 : 0,
+          weight: c.w.length + c.m.length,
+        };
+      });
+
+    let totalW = 0, weightedGap = 0;
+    cells.forEach(c => { totalW += c.weight; weightedGap += c.gap_pct * c.weight; });
+    const weightedGapPct = totalW > 0 ? weightedGap / totalW : 0;
+
+    // Per-level rollup (median-of-medians across qualifying cells, weighted)
+    const levels = ['IC5','IC6','M3'];
+    const byLevel = levels.map(L => {
+      const lCells = cells.filter(c => c.level === L);
+      const lW = lCells.reduce((s, c) => s + c.weight, 0);
+      const lGap = lW > 0
+        ? lCells.reduce((s, c) => s + c.gap_pct * c.weight, 0) / lW
+        : 0;
+      // For the chart: also compute simple per-level medians (uncontrolled),
+      // because the level-only view is what the bars represent.
+      const ws = cohort.filter(p => p.level === L && p.gender === 'woman').map(p => p.comp_total);
+      const ms = cohort.filter(p => p.level === L && p.gender === 'man').map(p => p.comp_total);
+      return {
+        level: L,
+        women_n: ws.length, men_n: ms.length,
+        women_median: median(ws), men_median: median(ms),
+        gap_pct_controlled: lGap,
+        gap_pct_raw: median(ms) > 0 ? (median(ms) - median(ws)) / median(ms) * 100 : 0,
+      };
+    });
+
+    return {
+      cohortSize: cohort.length,
+      women_n: women.length,
+      men_n: men.length,
+      nb_n: nb.length,
+      cellCount: cells.length,
+      weightedGapPct,
+      byLevel,
+    };
+  }
+
+  // ── DEMO-MODE handlers ─────────────────────────────────────
+  // Each demoQ_* function returns a result object with the same
+  // shape the original Q_* handlers use, but: (a) no real names,
+  // (b) no drawer-opening onclicks, (c) Q1 is controlled for
+  // level × location and weighted, (d) Q4 uses a span histogram,
+  // (e) result is tagged __demo so the renderer can flag it.
+
+  // ── Q1 — Pay equity (DEMO, controlled for level+location) ──
+  function demoQ_payEquity() {
+    const orig = "Show me our pay equity gap in EMEA at senior IC and M3 levels";
+    const eq = (stats && stats._eq) || computePayEquity(state.people);
+
+    const byLevel = eq.byLevel;
+    const headlinePct = eq.weightedGapPct;
+    const cohort = eq.cohortSize;
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> region = <span class="v">\'EMEA\'</span> ' +
+        '<span class="k">AND</span> level <span class="k">IN</span> (<span class="v">\'IC5\',\'IC6\',\'M3\'</span>) ' +
+        '<span class="k">GROUP BY</span> <span class="v">level, location, gender</span> ' +
+        '<span class="k">HAVING</span> n_women &gt;= 5 <span class="k">AND</span> n_men &gt;= 5',
+      headline:
+        '<span class="big">' + headlinePct.toFixed(1) + '%</span> &mdash; median pay gap at ' +
+        '<em>EMEA</em> senior IC and M3 levels, after controlling for ' +
+        '<em>level</em> and <em>location</em>. Cohort-weighted across ' +
+        eq.cellCount + ' qualifying cells; ' +
+        'women n=' + eq.women_n + ' · men n=' + eq.men_n + '.',
+      chartTitle: 'Median comp · women vs men · by level',
+      renderChart: (mount) => renderGroupedBars(mount, byLevel.map(b => ({
+        group: b.level,
+        bars: [
+          { label: 'Women', value: b.women_median, color: 'var(--plum)' },
+          { label: 'Men',   value: b.men_median,   color: 'var(--ink-2)' },
+        ],
+        annotation: (b.gap_pct_controlled >= 0 ? '−' : '+') + Math.abs(b.gap_pct_controlled).toFixed(1) + '%',
+      }))),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th class="num">Women</th>
+              <th class="num">Median (W)</th>
+              <th class="num">Men</th>
+              <th class="num">Median (M)</th>
+              <th class="num">Gap %</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${byLevel.map(b => `
+              <tr>
+                <td><strong>${b.level}</strong></td>
+                <td class="num">${b.women_n}</td>
+                <td class="num">${fmt.moneyShort(b.women_median)}</td>
+                <td class="num">${b.men_n}</td>
+                <td class="num">${fmt.moneyShort(b.men_median)}</td>
+                <td class="num" style="color:${b.gap_pct_controlled > 3 ? 'var(--risk-high)' : (b.gap_pct_controlled > 0 ? 'var(--ochre)' : 'var(--moss)')}; font-weight:700;">
+                  ${(b.gap_pct_controlled >= 0 ? '−' : '+')}${Math.abs(b.gap_pct_controlled).toFixed(1)}%
+                </td>
+              </tr>
+            `).join('')}
+            <tr style="background:var(--paper-deep);">
+              <td><strong>Weighted</strong></td>
+              <td class="num" colspan="4" style="text-align:right; color:var(--ink-mute);">
+                cohort-weighted across ${eq.cellCount} (level × location) cells
+              </td>
+              <td class="num" style="color:var(--risk-high); font-weight:700;">−${headlinePct.toFixed(1)}%</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Nonbinary employees (n=${eq.nb_n}) excluded from binary gap analysis; full report available on request.
+          Cells with fewer than 5 of either gender suppressed for confidentiality.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',       value: 'People Graph · 2,000 records' },
+        { label: 'As of',        value: '2026-05-13' },
+        { label: 'Cohort',       value: cohort + ' employees · EMEA · IC5/IC6/M3' },
+        { label: 'Method',       value: 'median comp_total within (level × location); gaps weighted by cell size' },
+        { label: 'Controlled for', value: 'level, location' },
+        { label: 'Confidence',   value: 'High · n>30 per level; cell-level n≥5 suppression' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q2 — Flight risk in Engineering (DEMO, anonymized) ─────
+  function demoQ_flightRiskEng() {
+    const orig = "Who's at flight risk in engineering with comp below band?";
+    const cohort = state.people.filter(p =>
+      p.department === 'Engineering' &&
+      p.comp_ratio < 0.95 &&
+      (p.flight_risk_band === 'high' || p.flight_risk_band === 'moderate')
+    ).sort((a,b) => b.flight_risk - a.flight_risk);
+
+    const high = cohort.filter(p => p.flight_risk_band === 'high');
+    const trueUpCost = cohort.reduce(
+      (s, p) => s + Math.max(0, (p.comp_band_p50 - p.comp_total)),
+      0
+    );
+
+    // Chart: cohort by team (top 6)
+    const byTeam = new Map();
+    cohort.forEach(p => {
+      if (!byTeam.has(p.team)) byTeam.set(p.team, 0);
+      byTeam.set(p.team, byTeam.get(p.team) + 1);
+    });
+    const teamRows = Array.from(byTeam.entries())
+      .map(([t, n]) => ({ team: t, n }))
+      .sort((a,b) => b.n - a.n)
+      .slice(0, 6);
+
+    const top10 = cohort.slice(0, 10);
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> department = <span class="v">\'Engineering\'</span> ' +
+        '<span class="k">AND</span> comp_ratio &lt; <span class="v">0.95</span> ' +
+        '<span class="k">AND</span> flight_risk_band <span class="k">IN</span> (<span class="v">\'moderate\',\'high\'</span>) ' +
+        '<span class="k">ORDER BY</span> flight_risk <span class="k">DESC</span>',
+      headline:
+        '<span class="big">' + cohort.length + '</span> engineers at ' +
+        '<em>moderate-to-high</em> flight risk with comp below band &mdash; an estimated ' +
+        '<strong>' + fmt.moneyShort(trueUpCost) + '</strong> to re-band to P50. ' +
+        high.length + ' of them are already in the <em>high</em> band.',
+      chartTitle: 'Cohort · by engineering team',
+      renderChart: (mount) => renderHorizontalBars(mount, teamRows.map(r => ({
+        label: r.team,
+        value: r.n,
+      })), { suffix: ' eng', color: 'var(--risk-high)' }),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead>
+            <tr>
+              <th>Engineer (anon.)</th>
+              <th>Level</th>
+              <th>Location</th>
+              <th class="num">Comp Δ</th>
+              <th class="num">Risk</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${top10.map((p, i) => `
+              <tr>
+                <td><strong>${anonName('Engineer', i)}</strong></td>
+                <td>${escapeHtml(p.level)}</td>
+                <td>${escapeHtml(p.location)}</td>
+                <td class="num" style="color:${p.comp_ratio < 0.85 ? 'var(--risk-high)' : 'var(--ochre)'}; font-weight:700;">
+                  ${(p.comp_ratio < 1 ? '−' : '+')}${Math.abs((1 - p.comp_ratio) * 100).toFixed(0)}%
+                </td>
+                <td class="num">
+                  <span class="risk-dot ${p.flight_risk_band}" style="display:inline-block; vertical-align:middle; margin-right:4px;"></span>${p.flight_risk_band}
+                </td>
+              </tr>
+            `).join('')}
+            ${cohort.length > 10
+              ? `<tr><td colspan="5" style="text-align:center; color:var(--ink-mute); font-style:italic;">+ ${cohort.length - 10} more — connect an API key to drill into individuals</td></tr>`
+              : ''
+            }
+          </tbody>
+        </table>
+      `,
+      citations: [
+        { label: 'Source',       value: 'People Graph · 2,000 records' },
+        { label: 'As of',        value: '2026-05-13' },
+        { label: 'Cohort',       value: cohort.length + ' engineers · below band · moderate-to-high risk' },
+        { label: 'Method',       value: 'engineering ∩ flight_risk_band ∈ {moderate, high} ∩ comp_ratio < 0.95' },
+        { label: 'Cost estimate',value: 'gap × comp_band_p50 × cohort, summed (true-up to P50)' },
+        { label: 'Confidence',   value: 'Moderate · attrition_v1 backtested 0.78 on 2025 leavers' },
+      ],
+      confidence: 'moderate',
+      __demo: true,
+    };
+  }
+
+  // ── Q3 — Senior eng tenure (DEMO, no PII to anonymize) ─────
+  function demoQ_seniorEngTenure() {
+    const orig = "What's the median tenure for senior engineers globally?";
+    const r = Q_tenureSeniorEngineers(orig);
+    r.__demo = true;
+    return r;
+  }
+
+  // ── Q4 — Span of control (DEMO, histogram + anonymized) ────
+  function demoQ_spanOfControl() {
+    const orig = "How does manager span of control look across teams?";
+    const mgrs = state.people.filter(p => p.is_manager && p.span_of_control > 0);
+    const overext = mgrs.filter(m => m.span_of_control >= 12)
+      .sort((a,b) => b.span_of_control - a.span_of_control);
+    const healthy = mgrs.filter(m => m.span_of_control >= 4 && m.span_of_control <= 8);
+    const medSpan = median(mgrs.map(m => m.span_of_control));
+
+    // Histogram buckets — 1-3, 4-5, 6-8, 9-11, 12-15, 16+
+    const buckets = [
+      { label: '1–3',  lo: 1,  hi: 4,   band: 'under' },
+      { label: '4–5',  lo: 4,  hi: 6,   band: 'healthy' },
+      { label: '6–8',  lo: 6,  hi: 9,   band: 'healthy' },
+      { label: '9–11', lo: 9,  hi: 12,  band: 'stretch' },
+      { label: '12–15',lo: 12, hi: 16,  band: 'over' },
+      { label: '16+',  lo: 16, hi: 999, band: 'over' },
+    ].map(b => ({ ...b, n: mgrs.filter(m => m.span_of_control >= b.lo && m.span_of_control < b.hi).length }));
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> is_manager = <span class="v">true</span> ' +
+        '<span class="k">AND</span> span_of_control &gt; <span class="v">0</span> ' +
+        '<span class="k">GROUP BY</span> <span class="v">span_bucket</span>',
+      headline:
+        '<span class="big">' + medSpan.toFixed(0) + '</span> &mdash; median span across ' +
+        '<em>' + mgrs.length + '</em> managers. ' +
+        '<strong>' + overext.length + '</strong> are over-extended (12+ reports); ' +
+        '<strong>' + healthy.length + '</strong> sit in the healthy 4–8 band.',
+      chartTitle: 'Distribution of span of control · ' + mgrs.length + ' managers',
+      renderChart: (mount) => renderSpanHistogram(mount, buckets),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead>
+            <tr>
+              <th>Manager (anon.)</th>
+              <th>Team</th>
+              <th class="num">Reports</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${overext.slice(0, 8).map((m, i) => `
+              <tr>
+                <td><strong>${anonName('Manager', i)}</strong></td>
+                <td>${escapeHtml(m.department)} · ${escapeHtml(m.team)}</td>
+                <td class="num" style="color:var(--risk-high); font-weight:700;">${m.span_of_control}</td>
+              </tr>
+            `).join('')}
+            ${overext.length > 8
+              ? `<tr><td colspan="3" style="text-align:center; color:var(--ink-mute); font-style:italic;">+ ${overext.length - 8} more over-extended</td></tr>`
+              : ''
+            }
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Healthy span = 4–8 direct reports. Over 12 signals capacity risk; below 4 signals under-utilization or org reshuffles.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',     value: 'People Graph · manager_id edges' },
+        { label: 'As of',      value: '2026-05-13' },
+        { label: 'Cohort',     value: mgrs.length + ' managers across all teams' },
+        { label: 'Method',     value: 'Direct-report count from manager_id graph; bucketed' },
+        { label: 'Guidance',   value: 'Healthy span = 4–8; >12 signals capacity risk' },
+        { label: 'Confidence', value: 'High · structural; not modeled' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q5 — Underpaid high performers (DEMO, anonymized) ──────
+  function demoQ_underpaidHighPerf() {
+    const orig = "Show me underpaid high performers";
+    const cohort = state.people.filter(p =>
+      p.performance_score >= 4.0 &&
+      p.comp_ratio < 0.85
+    ).sort((a,b) => a.comp_ratio - b.comp_ratio);
+
+    const byDept = new Map();
+    cohort.forEach(p => {
+      if (!byDept.has(p.department)) byDept.set(p.department, []);
+      byDept.get(p.department).push(p);
+    });
+    const deptRows = Array.from(byDept.entries())
+      .map(([d, list]) => ({ dept: d, list }))
+      .sort((a,b) => b.list.length - a.list.length);
+
+    const top10 = cohort.slice(0, 10);
+    const totalCost = cohort.reduce(
+      (s, p) => s + Math.max(0, (p.comp_band_p50 * 0.95 - p.comp_total)),
+      0
+    );
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> performance_score &gt;= <span class="v">4.0</span> ' +
+        '<span class="k">AND</span> comp_ratio &lt; <span class="v">0.85</span> ' +
+        '<span class="k">ORDER BY</span> comp_ratio <span class="k">ASC</span>',
+      headline:
+        '<span class="big">' + cohort.length + '</span> high performers paid below 85% of band &mdash; ' +
+        'the cohort most likely to leave. Estimated true-up to <em>95%</em> of band: ' +
+        '<strong>' + fmt.moneyShort(totalCost) + '</strong> annualized.',
+      chartTitle: 'Underpaid high performers · by department',
+      renderChart: (mount) => renderHorizontalBars(mount, deptRows.map(r => ({
+        label: r.dept, value: r.list.length,
+      })), { suffix: ' people', color: 'var(--ochre)' }),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Department</th>
+              <th>Level</th>
+              <th class="num">Comp ratio</th>
+              <th class="num">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${top10.map((p, i) => `
+              <tr>
+                <td><strong>${anonName('Employee', i)}</strong></td>
+                <td>${escapeHtml(p.department)}</td>
+                <td>${escapeHtml(p.level)}</td>
+                <td class="num" style="color:var(--risk-high); font-weight:700;">${(p.comp_ratio*100).toFixed(0)}%</td>
+                <td class="num">${p.performance_score.toFixed(1)}</td>
+              </tr>
+            `).join('')}
+            ${cohort.length > 10
+              ? `<tr><td colspan="5" style="text-align:center; color:var(--ink-mute); font-style:italic;">+ ${cohort.length - 10} more</td></tr>`
+              : ''
+            }
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          This list is computed — it should be reviewed by people analytics and the relevant manager before any action.
+          Comp ratios surface the gap; they don't tell you why it exists.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',     value: 'People Graph · perf + comp join' },
+        { label: 'As of',      value: '2026-05-13' },
+        { label: 'Cohort',     value: cohort.length + ' employees · perf ≥ 4.0 · comp_ratio < 0.85' },
+        { label: 'Method',     value: 'True-up cost = max(0, band_p50 × 0.95 − comp_total), summed' },
+        { label: 'Action',     value: 'Recommend routing through compensation workflow with manager review' },
+        { label: 'Confidence', value: 'High · deterministic over the graph; causal interpretation requires manager context' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q6 — NA new-joiner retention (DEMO) ────────────────────
+  function demoQ_naRetention() {
+    const orig = "What's our retention story for new joiners in NA?";
+    const r = Q_retentionNewJoinersNA(orig);
+    r.__demo = true;
+    return r;
+  }
+
+  // ── DISPATCH ────────────────────────────────────────────────
+  function computeAnswer(slug) {
+    switch (slug) {
+      case 'pay-equity-emea':           return demoQ_payEquity();
+      case 'flight-risk-eng':           return demoQ_flightRiskEng();
+      case 'tenure-senior-eng':         return demoQ_seniorEngTenure();
+      case 'span-of-control':           return demoQ_spanOfControl();
+      case 'underpaid-high-performers': return demoQ_underpaidHighPerf();
+      case 'na-new-joiner-retention':   return demoQ_naRetention();
+    }
+    return null;
+  }
+
+  // ── SPAN HISTOGRAM CHART (new helper) ──────────────────────
+  // Vertical bars + threshold annotations for "healthy" (4–8)
+  // and "over-extended" (12+). Sharp on 390px wide.
+  function renderSpanHistogram(mount, buckets) {
+    const w = mount.clientWidth || 540;
+    const h = 240;
+    const padL = 36, padR = 12, padT = 28, padB = 44;
+    const max = Math.max(...buckets.map(b => b.n), 1);
+    const barW = (w - padL - padR) / buckets.length;
+
+    const svg = svgNs('svg', { class: 'chart', viewBox: `0 0 ${w} ${h}`, preserveAspectRatio: 'none' });
+
+    // Y gridlines + axis labels
+    for (let i = 0; i <= 4; i++) {
+      const y = padT + (h - padT - padB) * (i/4);
+      const line = svgNs('line', { x1: padL, x2: w - padR, y1: y, y2: y, class: 'gridline' });
+      svg.appendChild(line);
+      const lbl = svgNs('text', { x: padL - 4, y: y + 4, 'text-anchor': 'end' });
+      lbl.setAttribute('font-size', '9.5');
+      lbl.setAttribute('fill', 'var(--ink-mute)');
+      lbl.textContent = Math.round(max * (1 - i/4));
+      svg.appendChild(lbl);
+    }
+
+    // Bars
+    buckets.forEach((b, i) => {
+      const x = padL + i * barW + 4;
+      const bw = barW - 8;
+      const bh = (h - padT - padB) * (b.n / max);
+      const y = h - padB - bh;
+
+      const color =
+        b.band === 'healthy' ? 'var(--moss)' :
+        b.band === 'over'    ? 'var(--risk-high)' :
+        b.band === 'stretch' ? 'var(--ochre)' :
+                               'var(--ink-3)';
+
+      const rect = svgNs('rect', {
+        x, y, width: Math.max(bw, 1), height: Math.max(bh, 1),
+        rx: 1, ry: 1,
+      });
+      rect.setAttribute('fill', color);
+      svg.appendChild(rect);
+
+      const title = svgNs('title');
+      title.textContent = b.label + ' reports: ' + b.n + ' managers';
+      rect.appendChild(title);
+
+      // Value above bar
+      const val = svgNs('text', { x: x + bw/2, y: y - 4, 'text-anchor': 'middle' });
+      val.setAttribute('font-size', '10');
+      val.setAttribute('fill', 'var(--ink)');
+      val.setAttribute('font-weight', '600');
+      val.textContent = b.n;
+      svg.appendChild(val);
+
+      // X label
+      const lbl = svgNs('text', { x: x + bw/2, y: h - padB + 14, 'text-anchor': 'middle' });
+      lbl.setAttribute('font-size', '10');
+      lbl.setAttribute('fill', 'var(--ink-2)');
+      lbl.textContent = b.label;
+      svg.appendChild(lbl);
+    });
+
+    // Annotations: healthy + over-extended labels at the bottom
+    const annHealthy = svgNs('text', { x: padL, y: h - 8, 'text-anchor': 'start' });
+    annHealthy.setAttribute('font-size', '9.5');
+    annHealthy.setAttribute('fill', 'var(--moss-deep)');
+    annHealthy.setAttribute('font-weight', '600');
+    annHealthy.textContent = '■ healthy 4–8';
+    svg.appendChild(annHealthy);
+
+    const annOver = svgNs('text', { x: w - padR, y: h - 8, 'text-anchor': 'end' });
+    annOver.setAttribute('font-size', '9.5');
+    annOver.setAttribute('fill', 'var(--risk-high)');
+    annOver.setAttribute('font-weight', '600');
+    annOver.textContent = '■ over-extended 12+';
+    svg.appendChild(annOver);
+
+    mount.innerHTML = '';
+    mount.appendChild(svg);
+  }
+
+  // ── GALLERY VIEW ────────────────────────────────────────────
+  function renderGallery() {
+    precomputeStats();
+    const mount = $('#answer-mount');
+    if (!mount) return;
+
+    const cards = SLUGS.map((s) => {
+      const st = (stats && stats[s.slug]) || { headline: '—', sub: '', cohort: 0 };
+      return `
+        <button class="demo-chip" type="button" data-slug="${s.slug}">
+          <span class="demo-chip-eyebrow">§ ${escapeHtml(s.eyebrow)}</span>
+          <span class="demo-chip-q">${escapeHtml(s.question)}</span>
+          <span class="demo-chip-stats">
+            <span class="demo-chip-headline">${st.headline}</span>
+            <span class="demo-chip-sub">${escapeHtml(st.sub)}</span>
+          </span>
+          <span class="demo-chip-kicker">${escapeHtml(s.kicker)} <span class="arr">→</span></span>
+        </button>
+      `;
+    }).join('');
+
+    mount.innerHTML = `
+      <section class="demo-gallery" aria-label="Demo gallery">
+        <div class="demo-hero">
+          <span class="demo-badge">Demo · 2,000 synthetic employees</span>
+          <h2 class="demo-hero-title">
+            Six real CHRO questions, <em>answered</em> on a synthetic 2,000-employee dataset.
+          </h2>
+          <p class="demo-hero-sub">
+            Every number below is computed live in your browser, against the same people graph the
+            full Console uses. Each answer renders the same four-section card you'd get with a
+            connected API key: <span class="dh-cap">Ask</span> · <span class="dh-cap">Answer</span>
+            · <span class="dh-cap">Inspect</span> · <span class="dh-cap">Cite</span>.
+          </p>
+          <p class="demo-hero-meta">
+            No key needed. Pick a question to see it answered.
+            <button type="button" class="demo-hero-connect" id="demo-hero-connect">
+              Or connect your own key to ask anything <span class="arr">→</span>
+            </button>
+          </p>
+        </div>
+        <div class="demo-chips">
+          ${cards}
+        </div>
+        <p class="demo-foot">
+          Synthetic data · <strong>${state.people.length.toLocaleString()}</strong> employees · ${stats?._eq?.cellCount || '—'} qualifying (level × location) cells for the equity analysis · as of 2026-05-13.
+        </p>
+      </section>
+    `;
+
+    mount.querySelectorAll('.demo-chip').forEach(btn => {
+      btn.addEventListener('click', () => runSlug(btn.dataset.slug));
+    });
+    $('#demo-hero-connect')?.addEventListener('click', () => {
+      sessionStorage.removeItem('stratum_skipped_onboarding');
+      openOnboarding();
+    });
+
+    // Hide the top "Demo mode · canned answers" banner — the
+    // gallery itself is the demo entry point now.
+    const b = $('#demo-banner');
+    if (b) b.style.display = 'none';
+    // And reset the bottom CTA banner state
+    hidePostAnswerCTA();
+  }
+
+  // ── RUN A SLUG (fake-thinking + render) ────────────────────
+  async function runSlug(slug) {
+    const def = SLUGS.find(s => s.slug === slug);
+    if (!def) return;
+
+    $('#ask-input').value = def.question;
+    const mount = $('#answer-mount');
+    if (!mount) return;
+
+    // Paint a "thinking" placeholder card
+    mount.innerHTML = `
+      <div class="answer-card answer-card--thinking" role="article" aria-busy="true">
+        <div class="answer-q">
+          <span class="answer-q-label">§ Ask · demo</span>
+          <span class="answer-q-text">${escapeHtml(def.question)}</span>
+        </div>
+        <div class="demo-thinking">
+          <div class="demo-thinking-row">
+            <span class="demo-thinking-step" data-step="route">Routing question…</span>
+            <span class="demo-thinking-step" data-step="query">Querying people graph…</span>
+            <span class="demo-thinking-step" data-step="compute">Computing cohort + cells…</span>
+            <span class="demo-thinking-step" data-step="render">Rendering chart…</span>
+          </div>
+          <div class="demo-thinking-bar"><div class="demo-thinking-fill" id="demo-thinking-fill"></div></div>
+        </div>
+      </div>
+    `;
+
+    // Random "thinking" between 600–900ms; animate the bar.
+    const totalMs = 600 + Math.floor(Math.random() * 300);
+    const fill = $('#demo-thinking-fill');
+    if (fill) {
+      // Force layout, then transition
+      fill.style.transition = 'width ' + totalMs + 'ms cubic-bezier(.4,.0,.2,1)';
+      // eslint-disable-next-line no-unused-expressions
+      fill.offsetWidth;
+      fill.style.width = '100%';
+    }
+    // Sequentially highlight the four labels
+    const steps = mount.querySelectorAll('.demo-thinking-step');
+    steps.forEach((s, i) => {
+      setTimeout(() => s.classList.add('is-active'), (i + 1) * (totalMs / 5));
+    });
+
+    await new Promise(r => setTimeout(r, totalMs));
+
+    // Compute + render
+    const result = computeAnswer(slug);
+    if (!result) {
+      mount.innerHTML = '<p>Could not compute.</p>';
+      return;
+    }
+    state.currentAnswer = result;
+    // Paint the demo result directly (Q1 controlled, Q2/Q4/Q5 anonymized,
+    // Q4 with span histogram). Bypasses the keyword router entirely
+    // so the demo overrides survive intact.
+    paintAnswer(result);
+
+    // Show the post-answer CTA banner
+    setTimeout(() => showPostAnswerCTA(), 250);
+
+    // Set a hash so the gallery is recoverable
+    if (location.hash !== '#demo') history.replaceState(null, '', '#demo');
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── PAINT a result object into the answer card (no recompute)
+  // Mirrors renderAnswer() exactly but takes the result directly
+  // so demo overrides (anonymization, controlled gap) survive.
+  function paintAnswer(result) {
+    const mount = $('#answer-mount');
+    if (!mount) return;
+    mount.innerHTML = '';
+
+    const card = el('div', { class: 'answer-card answer-card--demo', role: 'article' });
+
+    // ASK
+    const q = el('div', { class: 'answer-q' });
+    q.innerHTML = `
+      <span class="answer-q-label">§ Ask · demo</span>
+      <span class="answer-q-text">${escapeHtml(result.question)}</span>
+      <span class="answer-q-status demo">DEMO</span>
+    `;
+    card.appendChild(q);
+
+    const askSec = el('div', { class: 'answer-section' });
+    askSec.innerHTML = `
+      <div class="section-label"><span class="sigil">§1</span>Ask · interpreted as</div>
+      <div class="cohort-filter">${result.cohortFilter}</div>
+    `;
+    card.appendChild(askSec);
+
+    // ANSWER
+    const ansSec = el('div', { class: 'answer-section' });
+    ansSec.innerHTML = `
+      <div class="section-label"><span class="sigil">§2</span>Answer</div>
+      <p class="answer-headline">${result.headline}</p>
+    `;
+    card.appendChild(ansSec);
+
+    // INSPECT
+    const inspSec = el('div', { class: 'answer-section' });
+    inspSec.innerHTML = `
+      <div class="section-label"><span class="sigil">§3</span>Inspect · chart and cohort</div>
+      <div class="inspect-row">
+        <div class="inspect-chart">
+          <div class="ch-title">${escapeHtml(result.chartTitle)}</div>
+          <div id="inspect-chart-mount"></div>
+        </div>
+        <div>${result.tableHtml || ''}</div>
+      </div>
+    `;
+    card.appendChild(inspSec);
+
+    // CITE
+    const citeSec = el('div', { class: 'answer-section' });
+    citeSec.innerHTML = `
+      <div class="section-label"><span class="sigil">§4</span>Cite · methodology and provenance</div>
+      <div class="cite-grid">
+        ${result.citations.map(c => `
+          <div class="cite-chip">
+            <span class="lbl">${escapeHtml(c.label)}</span>
+            <span class="v">${escapeHtml(String(c.value))}</span>
+          </div>
+        `).join('')}
+      </div>
+    `;
+    card.appendChild(citeSec);
+
+    // ACTIONS — different from live: "Back to demo gallery" + "Ask your own"
+    const actions = el('div', { class: 'answer-actions' });
+    actions.innerHTML = `
+      <button class="btn btn-ochre" id="demo-act-connect">Ask your own question <span class="arr">→</span></button>
+      <button class="btn btn-ghost" id="demo-act-back">← Back to demo gallery</button>
+      <span style="flex:1"></span>
+      <span style="font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-mute);">
+        Confidence · <span style="color:${result.confidence === 'high' ? 'var(--moss)' : 'var(--ochre)'}; font-weight:700;">${result.confidence}</span>
+      </span>
+    `;
+    card.appendChild(actions);
+
+    mount.appendChild(card);
+
+    if (result.renderChart) {
+      result.renderChart($('#inspect-chart-mount'));
+    }
+
+    $('#demo-act-connect')?.addEventListener('click', () => openOnboarding());
+    $('#demo-act-back')?.addEventListener('click', () => renderGallery());
+  }
+
+  // ── POST-ANSWER CTA BANNER ─────────────────────────────────
+  function showPostAnswerCTA() {
+    const b = $('#demo-cta-banner');
+    if (!b) return;
+    if (LLM.settings.apiKey) return; // not in demo anymore
+    if (sessionStorage.getItem('stratum_demo_cta_dismissed') === '1') return;
+    b.hidden = false;
+    b.classList.add('is-visible');
+    // Hide the top demo-banner while the bottom CTA is visible
+    const top = $('#demo-banner');
+    if (top) top.style.display = 'none';
+  }
+  function hidePostAnswerCTA() {
+    const b = $('#demo-cta-banner');
+    if (!b) return;
+    b.hidden = true;
+    b.classList.remove('is-visible');
+  }
+
+  // ── WIRING ─────────────────────────────────────────────────
+  function init() {
+    // Compute stats once data is loaded
+    if (state.people && state.people.length) {
+      precomputeStats();
+    } else {
+      // poll until data lands
+      let tries = 0;
+      const t = setInterval(() => {
+        if (state.people && state.people.length) {
+          clearInterval(t);
+          precomputeStats();
+          maybeAutoOpen();
+        } else if (++tries > 40) {
+          clearInterval(t);
+        }
+      }, 100);
+    }
+
+    // Rewire the "Skip · stay in demo" button
+    $('#onboard-skip-demo')?.addEventListener('click', () => {
+      sessionStorage.setItem('stratum_skipped_onboarding', '1');
+      closeOnboarding();
+      // If we have data, paint the gallery now; otherwise, init() will
+      // pick it up once data lands.
+      if (state.people && state.people.length) renderGallery();
+    });
+
+    // Bottom CTA wiring
+    $('#demo-cta-connect')?.addEventListener('click', () => openOnboarding());
+    $('#demo-cta-dismiss')?.addEventListener('click', () => {
+      sessionStorage.setItem('stratum_demo_cta_dismissed', '1');
+      hidePostAnswerCTA();
+    });
+
+    maybeAutoOpen();
+  }
+
+  function maybeAutoOpen() {
+    if (!state.people || !state.people.length) return;
+    const hasKey = !!(LLM && LLM.settings.apiKey);
+    if (hasKey) return;
+    const demoParam = /[?&]demo=1/.test(location.search) || location.hash === '#demo';
+    const skipped = sessionStorage.getItem('stratum_skipped_onboarding') === '1';
+    if (demoParam || skipped) {
+      // Cancel the auto-onboarding open (set in boot()) by closing it.
+      closeOnboarding();
+      renderGallery();
+    }
+  }
+
+  return {
+    SLUGS,
+    init,
+    renderGallery,
+    runSlug,
+    maybeAutoOpen,
+    precomputeStats,
+    hidePostAnswerCTA,
+  };
+})();
+
+// ── Wire DEMO into submitQuestion() routing ───────────────────
+// Patch the submit flow so that, in demo mode:
+//   1. matched free-text questions route to the DEMO handler
+//      (so anonymization + controlled gap + histogram survive),
+//   2. unmatched free-text questions land in the gallery (not
+//      the "we're a prototype" refusal card).
+// Live mode (API key present) is untouched.
+const DEMO_SLUG_KEYWORDS = [
+  ['pay-equity-emea',           /pay\s*equity|pay\s*gap|gender\s*gap|equity\s*gap|equity.*emea/],
+  ['flight-risk-eng',           /(flight\s*risk|attrition|leaving|leave|quit).*(eng|engineer|comp|below|band)|engineer.*(flight\s*risk|attrition|risk)/],
+  ['span-of-control',           /span\s*of\s*control|manager\s*span|spans|too\s*many\s*direct/],
+  ['underpaid-high-performers', /underpaid.*(high\s*performer|top\s*performer)|high\s*performer.*underpaid|below\s*band.*high\s*perform/],
+  ['na-new-joiner-retention',   /retention|new\s*joiner|new\s*hire|first\s*year|na\s*retention|retention.*na|north\s*america.*retention/],
+  ['tenure-senior-eng',         /(median|average)\s*tenure|tenure.*engineer|senior\s*engineer.*tenure|tenure.*senior/],
+  ['flight-risk-eng',           /flight\s*risk|at\s*risk|attrition/], // fallback
+];
+
+(function () {
+  const origRenderAnswer = renderAnswer;
+  // eslint-disable-next-line no-func-assign
+  renderAnswer = function (question) {
+    if (!LLM.settings.apiKey) {
+      const ql = (question || '').toLowerCase();
+      // Try to map matched typed questions to a demo slug so the
+      // PII-safe, anonymized handlers run instead of the originals.
+      for (const [slug, re] of DEMO_SLUG_KEYWORDS) {
+        if (re.test(ql)) {
+          DEMO.runSlug(slug);
+          return;
+        }
+      }
+      // No keyword match → drop to gallery rather than refusal.
+      DEMO.renderGallery();
+      return;
+    }
+    return origRenderAnswer(question);
+  };
+})();
+
+// Initialize demo after boot has had a chance to load data
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => DEMO.init());
+} else {
+  DEMO.init();
+}
