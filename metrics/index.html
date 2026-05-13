@@ -1,0 +1,1996 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Metrics — Open operating numbers</title>
+<meta name="description" content="Stratum's public Open Metrics dashboard. Revenue, runway, headcount, eval accuracy, uptime, customers — published continuously. Most companies hide their KPIs. We dare them to start." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/metrics — Open Metrics dashboard
+   Cream paper · deep ink · ochre · moss
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   Buffer.com open metrics × GitLab handbook × Bloomberg terminal
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-bright:  #6a8054;
+  --moss-soft:    #c5cdb1;
+
+  --plum:         #6b3a4a;
+
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --hi:           #a13418;
+  --crit:         #6d1b0c;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-narrow:   min(960px, 90vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.04), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--moss-deep); }
+.nav-links a.is-current::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--moss);
+}
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOB BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width:960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .mob-bar a { color: var(--ink-3); text-decoration: none; min-height: 36px; display: flex; align-items: center; padding: 0 .25rem; }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display); font-weight: 600; font-size: 1.05rem;
+    letter-spacing: -.02em; color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col);
+  margin: 3rem auto 0;
+  padding: 2.6rem 0 3.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  position: relative;
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.6rem;
+}
+.hero-eyebrow .bar {
+  height: 1px; width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.hero-eyebrow .live-pip {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--moss);
+  display: inline-block;
+  animation: pulse 2.2s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(74, 93, 58, 0.55);
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74, 93, 58, 0.55); }
+  70%  { box-shadow: 0 0 0 10px rgba(74, 93, 58, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 93, 58, 0); }
+}
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: .94;
+  letter-spacing: -.038em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+.hero-h1 .punct { color: var(--ochre); font-style: italic; font-variation-settings: "opsz" 144, "SOFT" 100; }
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-weight: 400;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.32;
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin: 0 0 1.4rem;
+}
+.hero-sub strong { color: var(--ink); font-weight: 500; font-style: normal; }
+.hero-tagline {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.1rem;
+  margin-top: 1.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem 2.2rem;
+}
+.hero-tagline .sep { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FIVE NUMBERS ── */
+
+.fivenum {
+  width: var(--col-wide);
+  margin: 3rem auto 1rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.fivenum-tile {
+  padding: 1.7rem 1.4rem 1.4rem;
+  border-right: 1px solid var(--paper-rule-2);
+  position: relative;
+  display: flex; flex-direction: column;
+  min-height: 240px;
+}
+.fivenum-tile:last-child { border-right: 0; }
+.fivenum-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre-deep);
+  margin-bottom: .8rem;
+  display: flex; align-items: center; gap: .55rem;
+}
+.fivenum-label .pip {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--ochre);
+  display: inline-block;
+}
+.fivenum-val {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2.2rem, 3.8vw, 3.1rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: .35rem;
+  font-feature-settings: "tnum", "lnum";
+}
+.fivenum-val .unit {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: .42em;
+  color: var(--ink-3);
+  margin-left: .35rem;
+  vertical-align: .5em;
+}
+.fivenum-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 13.5px;
+  color: var(--ink-3);
+  margin-bottom: 1rem;
+  line-height: 1.35;
+}
+.fivenum-spark {
+  margin-top: auto;
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .9rem;
+}
+.fivenum-spark svg {
+  display: block;
+  width: 100%;
+  height: 38px;
+  overflow: visible;
+}
+.fivenum-spark-meta {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .35rem;
+}
+.fivenum-spark-meta .delta { color: var(--moss); }
+.fivenum-spark-meta .delta.bad { color: var(--hi); }
+
+@media (max-width: 960px) {
+  .fivenum { grid-template-columns: repeat(2, 1fr); }
+  .fivenum-tile { border-bottom: 1px solid var(--paper-rule-2); min-height: 200px; }
+  .fivenum-tile:nth-child(2n) { border-right: 0; }
+  .fivenum-tile:last-child { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .fivenum { grid-template-columns: 1fr; }
+  .fivenum-tile { border-right: 0; min-height: 180px; }
+  .fivenum-tile:last-child { grid-column: span 1; }
+}
+
+/* ─────────────────────────────────────────── SECTION CHROME ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 4.5rem 0 1rem;
+  scroll-margin-top: 80px;
+}
+.ornament {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.ornament .bar {
+  height: 1px; width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -.022em;
+  margin: 0 0 .7rem;
+  color: var(--ink);
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  color: var(--ochre);
+}
+.section-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.06rem;
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin: 0 0 2rem;
+}
+
+/* ─────────────────────────────────────────── METRIC PANEL ── */
+
+.metric-panel {
+  border-top: 1px solid var(--ink);
+  padding: 2rem 0 2.2rem;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+.metric-panel:last-child { border-bottom: 1px solid var(--ink); }
+.metric-head {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 .5rem;
+  display: flex;
+  align-items: baseline;
+  gap: .65rem;
+  flex-wrap: wrap;
+}
+.metric-head .id {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  border: 1px solid var(--ochre);
+  padding: .15rem .45rem;
+  border-radius: 2px;
+  font-weight: 500;
+  align-self: center;
+}
+.metric-desc {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 1.1rem;
+  max-width: 50ch;
+}
+.metric-snap {
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .8rem;
+  margin-top: .6rem;
+}
+.metric-snap-h {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.snap-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-feature-settings: "tnum", "lnum";
+}
+.snap-table th, .snap-table td {
+  text-align: right;
+  padding: .35rem .4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  white-space: nowrap;
+}
+.snap-table th:first-child, .snap-table td:first-child {
+  text-align: left;
+  color: var(--ink-3);
+}
+.snap-table th {
+  font-weight: 500;
+  letter-spacing: .12em;
+  color: var(--ochre-deep);
+  text-transform: uppercase;
+  font-size: 9.5px;
+  border-bottom: 1px solid var(--ink);
+}
+.snap-table td.cur { color: var(--ink); font-weight: 700; background: rgba(184,101,31,.06); }
+.source-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 13px;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: .7rem;
+  margin-top: 1.2rem;
+  line-height: 1.45;
+}
+.source-note::before {
+  content: "Source · ";
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre-deep);
+  margin-right: .4rem;
+}
+
+.metric-chart {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: 1.2rem 1.1rem 1rem;
+  position: relative;
+  min-height: 280px;
+}
+.metric-chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.chart-caption {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .8rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .8rem;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .7rem;
+}
+.chart-legend .lg {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.chart-legend .lg-swatch {
+  width: 14px; height: 3px;
+  display: inline-block;
+}
+.chart-legend .lg-swatch.dash {
+  background: repeating-linear-gradient(90deg, currentColor 0 4px, transparent 4px 7px);
+  height: 2px;
+}
+
+@media (max-width: 880px) {
+  .metric-panel { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── PARTNERS LIST ── */
+
+.partners-list {
+  font-family: var(--mono);
+  font-size: 12px;
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .8rem;
+  margin-top: .8rem;
+}
+.partner-row {
+  display: grid;
+  grid-template-columns: 1.8fr 1.2fr 1fr;
+  gap: .8rem;
+  padding: .45rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: center;
+  font-feature-settings: "tnum", "lnum";
+}
+.partner-row:last-child { border-bottom: 0; }
+.partner-row .pname { color: var(--ink); font-weight: 500; }
+.partner-row .pstage { color: var(--ink-3); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; }
+.partner-row .pdate { color: var(--ink-3); text-align: right; font-size: 10.5px; letter-spacing: .1em; }
+.partner-row .stage-paid    { color: var(--moss-deep); }
+.partner-row .stage-pilot   { color: var(--ochre-deep); }
+.partner-row .stage-design  { color: var(--ink-3); }
+.partner-row .stage-named   { color: var(--ink-mute); }
+
+/* ─────────────────────────────────────────── EDITORIAL ── */
+
+.editorial {
+  width: var(--col-narrow);
+  margin: 4rem auto 1rem;
+  padding: 2.6rem clamp(1.4rem, 3vw, 2.6rem);
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+}
+.editorial .ornament { margin-bottom: 1.4rem; }
+.editorial p {
+  font-family: var(--serif);
+  font-size: 17.5px;
+  line-height: 1.62;
+  color: var(--ink);
+  margin: 0 0 1.1rem;
+}
+.editorial p strong { font-weight: 600; }
+.editorial p:last-child { margin-bottom: 0; }
+.editorial-rule {
+  height: 1px;
+  background: var(--paper-rule);
+  margin: 1.4rem 0;
+}
+
+/* ─────────────────────────────────────────── ROADMAP ── */
+
+.roadmap {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 1rem;
+}
+.roadmap-row {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 1.6rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.roadmap-row:last-child { border-bottom: 0; }
+.roadmap-q {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 500;
+}
+.roadmap-q .now {
+  margin-left: .55rem;
+  background: var(--ochre);
+  color: var(--paper);
+  padding: .12rem .42rem;
+  border-radius: 2px;
+  font-size: 9.5px;
+  letter-spacing: .18em;
+}
+.roadmap-body {
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.roadmap-body strong { color: var(--ink); font-weight: 600; }
+.roadmap-target {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+@media (max-width: 720px) {
+  .roadmap-row { grid-template-columns: 1fr; gap: .35rem; }
+  .roadmap-target { text-align: left; }
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-narrow);
+  margin: 4.5rem auto 0;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: center;
+}
+.closing p {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0;
+  max-width: 28ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.closing p .ochre { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--paper-rule);
+  margin-top: 2rem;
+  padding: 2.6rem 0 3rem;
+  background: var(--paper-deep);
+}
+.footer-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.2rem;
+  align-items: start;
+}
+.foot-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.6rem;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .6rem;
+}
+.foot-mark .dot { color: var(--ochre); }
+.foot-tag {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--ink-3);
+  max-width: 32ch;
+  margin: 0 0 .8rem;
+}
+.foot-col-h {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre-deep);
+  margin-bottom: .8rem;
+}
+.foot-col a, .foot-col span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  padding: .25rem 0;
+  border-bottom: 0;
+}
+.foot-col a:hover { color: var(--ochre); }
+.foot-bottom {
+  width: var(--col-wide);
+  margin: 1.8rem auto 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+@media (max-width: 880px) {
+  .footer-inner { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 520px) {
+  .footer-inner { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── UTILITIES ── */
+
+.mono { font-family: var(--mono); font-feature-settings: "tnum","lnum"; }
+.muted { color: var(--ink-mute); }
+.ochre { color: var(--ochre); }
+.moss { color: var(--moss); }
+
+/* Chart helper colors */
+.c-ink   { color: var(--ink); }
+.c-ochre { color: var(--ochre); }
+.c-moss  { color: var(--moss); }
+.c-plum  { color: var(--plum); }
+
+@media print {
+  body { background: #fff; }
+  .nav, .mob-bar, .footer, .nav-cta { display: none; }
+  section, .hero, .editorial, .closing { width: 100%; padding-left: 1.2rem; padding-right: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Metrics</span>
+  <a href="../briefings/009.html" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../product/index.html#customer">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+      <a href="../trust/index.html">Trust</a>
+      <a href="../status/index.html">Status</a>
+      <a href="./index.html" class="is-current">Metrics</a>
+    </div>
+    <a href="mailto:hello@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    Open Metrics · stratum.ai/metrics
+    <span class="live-pip" aria-hidden="true"></span>
+    <span>Live</span>
+  </div>
+  <h1 class="hero-h1">Open <em>Metrics</em><span class="punct">.</span></h1>
+  <p class="hero-sub">
+    <em>Our key operating numbers, published in public. Updated continuously.
+    Last refresh:</em> <strong>T+116d</strong>.
+  </p>
+  <p class="hero-sub" style="font-style:normal;font-family:var(--serif);font-variation-settings:'opsz' 18;font-size:1.05rem;color:var(--ink-2);max-width:62ch;">
+    Most companies hide their KPIs behind investor decks and quarterly press releases.
+    We publish ours, on this page, every fortnight — the moment the <a href="../briefings/009.html">Chairman's Briefing</a>
+    goes out. Cash, runway, headcount, revenue, eval accuracy, uptime, customer count.
+    No charts smoothed. No corrections backfilled. If we miscount we publish the correction
+    alongside the original.
+  </p>
+  <div class="hero-tagline">
+    <span>More companies should do this</span>
+    <span class="sep">·</span>
+    <span>We dare them to start</span>
+    <span class="sep">·</span>
+    <span>Buffer.com / Open</span>
+    <span class="sep">·</span>
+    <span>about.gitlab.com / Handbook</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── FIVE NUMBERS ── -->
+<div class="fivenum" aria-label="The five headline numbers">
+
+  <!-- 1 · CASH -->
+  <div class="fivenum-tile">
+    <div class="fivenum-label"><span class="pip"></span> Cash</div>
+    <div class="fivenum-val">$5.32M</div>
+    <div class="fivenum-sub">cash on hand, end of fortnight T+116d</div>
+    <div class="fivenum-spark">
+      <!-- 6-point spark · 8.00 / 7.82 / 7.13 / 6.41 / 5.67 / 5.32 -->
+      <svg viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="0,4 48,8.5 96,25 144,42.8 192,60.2 240,68.5"
+                  transform="scale(1, 0.5)" fill="none" stroke="#4b5365" stroke-width="1.5" />
+        <polyline points="0,2 48,4.3 96,12.5 144,21.4 192,30.1 240,34.3"
+                  fill="none" stroke="#b8651f" stroke-width="1.8" stroke-linejoin="round" />
+        <circle cx="240" cy="34.3" r="3" fill="#b8651f" />
+      </svg>
+      <div class="fivenum-spark-meta">
+        <span>T+0 · $8.00M</span>
+        <span class="delta bad">−$2.68M</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 · RUNWAY -->
+  <div class="fivenum-tile">
+    <div class="fivenum-label"><span class="pip"></span> Runway</div>
+    <div class="fivenum-val">11<span class="unit">months</span></div>
+    <div class="fivenum-sub">at current $480K/mo burn, no revenue assumption</div>
+    <div class="fivenum-spark">
+      <!-- 26 / 24 / 22 / 20 / 14 / 11 -->
+      <svg viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="0,4 48,8 96,12 144,16 192,28 240,34"
+                  fill="none" stroke="#b8651f" stroke-width="1.8" stroke-linejoin="round" />
+        <circle cx="240" cy="34" r="3" fill="#b8651f" />
+      </svg>
+      <div class="fivenum-spark-meta">
+        <span>T+0 · 26mo</span>
+        <span class="delta bad">−15mo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 · HEADCOUNT -->
+  <div class="fivenum-tile">
+    <div class="fivenum-label"><span class="pip"></span> Headcount</div>
+    <div class="fivenum-val">8</div>
+    <div class="fivenum-sub">3 founders + 5 hires; 9 open roles in flight</div>
+    <div class="fivenum-spark">
+      <!-- 3,4,5,6,7,8 -->
+      <svg viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+        <g>
+          <rect x="0"   y="29" width="32" height="11" fill="#4a5d3a"/>
+          <rect x="40"  y="25" width="32" height="15" fill="#4a5d3a"/>
+          <rect x="80"  y="21" width="32" height="19" fill="#4a5d3a"/>
+          <rect x="120" y="17" width="32" height="23" fill="#4a5d3a"/>
+          <rect x="160" y="13" width="32" height="27" fill="#4a5d3a"/>
+          <rect x="200" y="9"  width="32" height="31" fill="#b8651f"/>
+        </g>
+      </svg>
+      <div class="fivenum-spark-meta">
+        <span>T+0 · 3</span>
+        <span class="delta">+5</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 · ARR -->
+  <div class="fivenum-tile">
+    <div class="fivenum-label"><span class="pip"></span> ARR (annualized)</div>
+    <div class="fivenum-val">$275K</div>
+    <div class="fivenum-sub">includes Cordova close projected T+118d</div>
+    <div class="fivenum-spark">
+      <!-- 0,0,0,50,130,275 -->
+      <svg viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+        <g>
+          <rect x="0"   y="40" width="32" height="0"  fill="#4a5d3a"/>
+          <rect x="40"  y="40" width="32" height="0"  fill="#4a5d3a"/>
+          <rect x="80"  y="40" width="32" height="0"  fill="#4a5d3a"/>
+          <rect x="120" y="34.5" width="32" height="5.5"  fill="#4a5d3a"/>
+          <rect x="160" y="25.7" width="32" height="14.3" fill="#4a5d3a"/>
+          <rect x="200" y="9.7"  width="32" height="30.3" fill="#b8651f"/>
+        </g>
+      </svg>
+      <div class="fivenum-spark-meta">
+        <span>T+0 · $0</span>
+        <span class="delta">+$275K</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5 · EVAL ACCURACY -->
+  <div class="fivenum-tile">
+    <div class="fivenum-label"><span class="pip"></span> Eval accuracy</div>
+    <div class="fivenum-val">96.4<span class="unit">%</span></div>
+    <div class="fivenum-sub">held-out 50-question subset; v1.0.6 release</div>
+    <div class="fivenum-spark">
+      <!-- 0.78 / 0.84 / 0.89 / 0.92 / 0.94 / 0.964 -->
+      <svg viewBox="0 0 240 40" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="0,32 48,23 96,15.5 144,11 192,8 240,4.4"
+                  fill="none" stroke="#4a5d3a" stroke-width="1.8" stroke-linejoin="round" />
+        <circle cx="240" cy="4.4" r="3" fill="#4a5d3a" />
+        <line x1="0" y1="6" x2="240" y2="6" stroke="#b8651f" stroke-width="0.6" stroke-dasharray="2 3" opacity=".7"/>
+        <text x="238" y="15" font-family="JetBrains Mono" font-size="6.5" fill="#8a4711" text-anchor="end">target 95%</text>
+      </svg>
+      <div class="fivenum-spark-meta">
+        <span>T+0 · 78.0%</span>
+        <span class="delta">+18.4 pp</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── DETAILED METRICS ── -->
+<section id="detail" aria-label="Detailed metrics">
+  <div class="ornament"><span class="bar"></span> § 01 · The numbers, individually</div>
+  <h2 class="section-h">Every metric, <em>fully shown</em> — six panels, raw rows.</h2>
+  <p class="section-dek">
+    Each panel below holds one operating story: the headline, a brief plain-English
+    explanation, a chart drawn from the same six fortnightly snapshots that drive the
+    Chairman's Briefing, and a mono table of the raw rows. If you see a number you can
+    cite anywhere in our communications, it is in one of these six panels.
+  </p>
+
+  <!-- ===================== A · CASH & RUNWAY ===================== -->
+  <article class="metric-panel" id="cash">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">A</span> Cash &amp; runway</h3>
+      <p class="metric-desc">
+        Cash on hand is the balance in our operating accounts at the end of each
+        fortnight. Burn is the trailing-30-day net cash outflow. Runway is cash
+        divided by burn, rounded down. We do not net out projected revenue when
+        we report runway — runway here is the conservative answer to <em>how
+        many months can we survive if no customer ever pays us again</em>.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots</div>
+        <table class="snap-table" aria-label="Cash and runway snapshots">
+          <thead>
+            <tr>
+              <th></th>
+              <th>T+0</th>
+              <th>T+19d</th>
+              <th>T+47d</th>
+              <th>T+75d</th>
+              <th>T+102d</th>
+              <th>T+116d</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Cash ($M)</td><td>8.00</td><td>7.82</td><td>7.13</td><td>6.41</td><td>5.67</td><td class="cur">5.32</td></tr>
+            <tr><td>Burn ($K/mo)</td><td>310</td><td>390</td><td>410</td><td>430</td><td>475</td><td class="cur">480</td></tr>
+            <tr><td>Runway (mo)</td><td>26</td><td>24</td><td>22</td><td>20</td><td>14</td><td class="cur">11</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="source-note">
+        Numbers are management accounts, not audited. We publish every fortnight at
+        the same moment as the Chairman's Briefing. Burn is reported as a 30-day
+        trailing rate. Runway treats revenue as zero — a deliberately pessimistic
+        framing.
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="Cash and burn dual-line chart">
+      <div class="chart-legend">
+        <span class="lg c-ochre"><span class="lg-swatch" style="background:#b8651f"></span> Cash on hand · $M (left)</span>
+        <span class="lg c-plum"><span class="lg-swatch" style="background:#6b3a4a"></span> Burn rate · $K/mo (right)</span>
+        <span class="lg muted"><span class="lg-swatch dash" style="color:#6c7180"></span> Runway annotation</span>
+      </div>
+
+      <!-- chart: 6 points across, dual y-axis -->
+      <svg viewBox="0 0 540 300" role="img" aria-label="Dual-axis chart showing cash on hand declining from $8.00M to $5.32M and burn rate climbing from $310K/mo to $480K/mo over six fortnightly snapshots.">
+        <!-- bg grid -->
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <!-- left axis (cash $M) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">$8.0M</text>
+          <text x="44" y="94">$7.0M</text>
+          <text x="44" y="144">$6.0M</text>
+          <text x="44" y="194">$5.0M</text>
+          <text x="44" y="244">$4.0M</text>
+        </g>
+        <!-- right axis (burn) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="start">
+          <text x="506" y="44">$600K</text>
+          <text x="506" y="94">$500K</text>
+          <text x="506" y="144">$400K</text>
+          <text x="506" y="194">$300K</text>
+          <text x="506" y="244">$200K</text>
+        </g>
+        <!-- x labels -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="50"  y="270">T+0</text>
+          <text x="140" y="270">T+19d</text>
+          <text x="230" y="270">T+47d</text>
+          <text x="320" y="270">T+75d</text>
+          <text x="410" y="270">T+102d</text>
+          <text x="500" y="270">T+116d</text>
+        </g>
+        <!-- axis baseline -->
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+
+        <!-- CASH polyline: scale $4-8M over y=240..40 (200px / 4M = 50px/M) -->
+        <!-- 8.00→40, 7.82→49, 7.13→83.5, 6.41→119.5, 5.67→156.5, 5.32→174 -->
+        <polyline points="50,40 140,49 230,83.5 320,119.5 410,156.5 500,174"
+                  fill="none" stroke="#b8651f" stroke-width="2.4" stroke-linejoin="round"/>
+        <g fill="#b8651f">
+          <circle cx="50"  cy="40"    r="3.6"/>
+          <circle cx="140" cy="49"    r="3.6"/>
+          <circle cx="230" cy="83.5"  r="3.6"/>
+          <circle cx="320" cy="119.5" r="3.6"/>
+          <circle cx="410" cy="156.5" r="3.6"/>
+          <circle cx="500" cy="174"   r="4.4"/>
+        </g>
+        <text x="500" y="166" font-family="JetBrains Mono" font-size="10" fill="#0e1626" font-weight="700" text-anchor="end">$5.32M</text>
+
+        <!-- BURN polyline: scale $200-600K over y=240..40 (200/400=0.5px/$K) -->
+        <!-- 310→185, 390→145, 410→135, 430→125, 475→102.5, 480→100 -->
+        <polyline points="50,185 140,145 230,135 320,125 410,102.5 500,100"
+                  fill="none" stroke="#6b3a4a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="0"/>
+        <g fill="#6b3a4a">
+          <circle cx="50"  cy="185" r="3"/>
+          <circle cx="140" cy="145" r="3"/>
+          <circle cx="230" cy="135" r="3"/>
+          <circle cx="320" cy="125" r="3"/>
+          <circle cx="410" cy="102.5" r="3"/>
+          <circle cx="500" cy="100" r="3.8"/>
+        </g>
+        <text x="500" y="93" font-family="JetBrains Mono" font-size="10" fill="#6b3a4a" font-weight="700" text-anchor="end">$480K/mo</text>
+
+        <!-- Runway annotation -->
+        <g>
+          <rect x="392" y="190" width="106" height="32" fill="#f4ecda" stroke="#b8651f" stroke-width="0.6"/>
+          <text x="445" y="203" font-family="JetBrains Mono" font-size="9" fill="#8a4711" letter-spacing=".12em" text-anchor="middle">RUNWAY</text>
+          <text x="445" y="217" font-family="Fraunces" font-size="14" fill="#0e1626" font-weight="500" text-anchor="middle">11 months</text>
+        </g>
+      </svg>
+
+      <div class="chart-caption">
+        <span>6 fortnightly snapshots · T+0 → T+116d</span>
+        <span>Updated 2026-05-13</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== B · REVENUE & PIPELINE ===================== -->
+  <article class="metric-panel" id="revenue">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">B</span> Revenue &amp; pipeline</h3>
+      <p class="metric-desc">
+        Recognized revenue is the trailing total of signed, paid pilot agreements
+        — counted once the customer has countersigned and the first invoice has
+        cleared. Pipeline value is the next-two-quarters' worth of active
+        discussions, shown as a low-end and high-end range weighted by stage. We
+        do not publish individual deal sizes — only the line items below.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots — recognized ARR ($K, annualized)</div>
+        <table class="snap-table" aria-label="Recognized revenue snapshots">
+          <thead>
+            <tr><th></th><th>T+0</th><th>T+19d</th><th>T+47d</th><th>T+75d</th><th>T+102d</th><th>T+116d</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Recognized ARR</td><td>0</td><td>0</td><td>0</td><td>50</td><td>130</td><td class="cur">275*</td></tr>
+            <tr><td>Paid customers</td><td>0</td><td>0</td><td>0</td><td>1</td><td>2</td><td class="cur">3*</td></tr>
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin:.4rem 0 0;letter-spacing:.08em;">
+          * T+116d figure includes Cordova signature projected for T+118d
+        </p>
+      </div>
+
+      <p class="source-note">
+        Recognized revenue = signed paid pilot agreements with first invoice
+        cleared. Pipeline = active discussions weighted by stage probability.
+        We do not break out per-customer ACV publicly until a customer
+        consents — see Customers panel below.
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="Revenue and pipeline chart">
+      <div class="chart-legend">
+        <span class="lg c-ochre"><span class="lg-swatch" style="background:#b8651f"></span> Recognized ARR</span>
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a;opacity:.45"></span> Pipeline · low</span>
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a"></span> Pipeline · high</span>
+      </div>
+
+      <svg viewBox="0 0 540 300" role="img" aria-label="Bar chart showing recognized ARR from $0 in the first three snapshots, rising to $50K, $130K, and $275K by T+116d, with weighted pipeline ranges for Q3 and Q4 2026 shown to the right.">
+        <!-- grid -->
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <!-- y axis -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">$1000K</text>
+          <text x="44" y="94">$750K</text>
+          <text x="44" y="144">$500K</text>
+          <text x="44" y="194">$250K</text>
+          <text x="44" y="244">$0</text>
+        </g>
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+
+        <!-- bars · 6 historical at x=60..360, width 40
+             scale: $0→240, $1000K→40 → 0.2px/$K, so 50→230, 130→214, 275→185 -->
+        <g>
+          <rect x="60"  y="240" width="40" height="0"   fill="#b8651f"/>
+          <rect x="110" y="240" width="40" height="0"   fill="#b8651f"/>
+          <rect x="160" y="240" width="40" height="0"   fill="#b8651f"/>
+          <rect x="210" y="230" width="40" height="10"  fill="#b8651f"/>
+          <rect x="260" y="214" width="40" height="26"  fill="#b8651f"/>
+          <rect x="310" y="185" width="40" height="55"  fill="#b8651f"/>
+        </g>
+        <!-- x labels -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="80"  y="270">T+0</text>
+          <text x="130" y="270">T+19d</text>
+          <text x="180" y="270">T+47d</text>
+          <text x="230" y="270">T+75d</text>
+          <text x="280" y="270">T+102d</text>
+          <text x="330" y="270">T+116d</text>
+        </g>
+        <!-- value labels on rightmost three bars -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#0e1626" text-anchor="middle">
+          <text x="230" y="226">$50K</text>
+          <text x="280" y="210">$130K</text>
+          <text x="330" y="181">$275K</text>
+        </g>
+
+        <!-- divider -->
+        <line x1="375" y1="40" x2="375" y2="255" stroke="#0e1626" stroke-width="0.6" stroke-dasharray="3 4"/>
+        <text x="380" y="50" font-family="JetBrains Mono" font-size="8.5" fill="#8a4711" letter-spacing=".18em">PIPELINE · NEXT 2Q</text>
+
+        <!-- Q3 range: low $400, high $720 → 240-80=160, 240-144=96 -->
+        <rect x="395" y="96" width="40" height="144" fill="#4a5d3a" opacity="0.18"/>
+        <rect x="395" y="160" width="40" height="80" fill="#4a5d3a" opacity="0.55"/>
+        <text x="415" y="92" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" font-weight="700" text-anchor="middle">$720K</text>
+        <text x="415" y="156" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" font-weight="700" text-anchor="middle">$400K</text>
+        <text x="415" y="265" font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">Q3 '26</text>
+
+        <!-- Q4 range: low $850, high $1450 → 1450 caps at 40, 850→70 -->
+        <rect x="445" y="40" width="40" height="200" fill="#4a5d3a" opacity="0.18"/>
+        <rect x="445" y="70" width="40" height="170" fill="#4a5d3a" opacity="0.55"/>
+        <text x="465" y="36" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" font-weight="700" text-anchor="middle">$1.45M</text>
+        <text x="465" y="66" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" font-weight="700" text-anchor="middle">$850K</text>
+        <text x="465" y="265" font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">Q4 '26</text>
+      </svg>
+
+      <div class="chart-caption">
+        <span>Recognized ARR (bars) + pipeline ranges (translucent)</span>
+        <span>Updated 2026-05-13</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== C · CUSTOMERS & PARTNERS ===================== -->
+  <article class="metric-panel" id="customers">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">C</span> Customers &amp; partners</h3>
+      <p class="metric-desc">
+        Design partners are companies that have signed a partnership letter and
+        committed engineering time to integration testing — these may be paid
+        or unpaid. Active commercial customers are those with a signed paid
+        agreement, first invoice cleared, and production usage in the last 14
+        days. We do not publish NPS until our base exceeds n≥10 customers.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots</div>
+        <table class="snap-table" aria-label="Customers and partners snapshots">
+          <thead>
+            <tr><th></th><th>T+0</th><th>T+19d</th><th>T+47d</th><th>T+75d</th><th>T+102d</th><th>T+116d</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Design partners</td><td>1</td><td>3</td><td>4</td><td>5</td><td>5</td><td class="cur">6</td></tr>
+            <tr><td>Paid customers</td><td>0</td><td>0</td><td>0</td><td>1</td><td>2</td><td class="cur">3*</td></tr>
+            <tr><td>NPS (target n≥10)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="cur">—</td></tr>
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin:.4rem 0 0;letter-spacing:.08em;">
+          * pending Cordova countersignature, projected T+118d
+        </p>
+      </div>
+
+      <div class="partners-list" aria-label="Named partners">
+        <div class="partner-row">
+          <span class="pname">Halcyon Bank</span>
+          <span class="pstage stage-paid">Paid pilot · live</span>
+          <span class="pdate">signed T+89d</span>
+        </div>
+        <div class="partner-row">
+          <span class="pname">Vanta Industries</span>
+          <span class="pstage stage-paid">Paid pilot · live</span>
+          <span class="pdate">signed T+101d</span>
+        </div>
+        <div class="partner-row">
+          <span class="pname">Cordova Health</span>
+          <span class="pstage stage-pilot">Paid pilot · close T+118d</span>
+          <span class="pdate">in counsel review</span>
+        </div>
+        <div class="partner-row">
+          <span class="pname">Meridian Retail</span>
+          <span class="pstage stage-design">Design partner · scoping</span>
+          <span class="pdate">signed T+114d</span>
+        </div>
+        <div class="partner-row">
+          <span class="pname">Northwind Logistics</span>
+          <span class="pstage stage-design">Design partner · integration</span>
+          <span class="pdate">signed T+47d</span>
+        </div>
+        <div class="partner-row">
+          <span class="pname">Confidential (mid-cap insurer)</span>
+          <span class="pstage stage-named">Under NDA · acknowledged</span>
+          <span class="pdate">signed T+19d</span>
+        </div>
+      </div>
+
+      <p class="source-note">
+        Customers list is updated within hours of a signing. We publish customer
+        names with consent; the named-by-default policy is opt-in at signing.
+        One partner has explicitly requested anonymity — we declare the
+        category (insurer) so the count is verifiable.
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="Customers and partners chart">
+      <div class="chart-legend">
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a"></span> Design partners (cum.)</span>
+        <span class="lg c-ochre"><span class="lg-swatch" style="background:#b8651f"></span> Paid customers (cum.)</span>
+      </div>
+
+      <svg viewBox="0 0 540 300" role="img" aria-label="Stacked area chart showing design partners growing from 1 to 6 and paid customers growing from 0 to 3 over six fortnightly snapshots.">
+        <!-- grid -->
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <!-- y axis (count 0..8 → 240..40, 25px per unit) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">8</text>
+          <text x="44" y="94">6</text>
+          <text x="44" y="144">4</text>
+          <text x="44" y="194">2</text>
+          <text x="44" y="244">0</text>
+        </g>
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+
+        <!-- x labels at 50,140,230,320,410,500 -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="50"  y="270">T+0</text>
+          <text x="140" y="270">T+19d</text>
+          <text x="230" y="270">T+47d</text>
+          <text x="320" y="270">T+75d</text>
+          <text x="410" y="270">T+102d</text>
+          <text x="500" y="270">T+116d</text>
+        </g>
+
+        <!-- Design partners: 1,3,4,5,5,6 → 215, 165, 140, 115, 115, 90 -->
+        <polyline points="50,215 140,165 230,140 320,115 410,115 500,90"
+                  fill="none" stroke="#4a5d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <g fill="#4a5d3a">
+          <circle cx="50"  cy="215" r="3.6"/>
+          <circle cx="140" cy="165" r="3.6"/>
+          <circle cx="230" cy="140" r="3.6"/>
+          <circle cx="320" cy="115" r="3.6"/>
+          <circle cx="410" cy="115" r="3.6"/>
+          <circle cx="500" cy="90"  r="4.4"/>
+        </g>
+        <text x="500" y="82" font-family="JetBrains Mono" font-size="10" fill="#4a5d3a" font-weight="700" text-anchor="end">6 partners</text>
+
+        <!-- Paid customers: 0,0,0,1,2,3 → 240,240,240,215,190,165 -->
+        <polyline points="50,240 140,240 230,240 320,215 410,190 500,165"
+                  fill="none" stroke="#b8651f" stroke-width="2.4" stroke-linejoin="round"/>
+        <g fill="#b8651f">
+          <circle cx="50"  cy="240" r="3"/>
+          <circle cx="140" cy="240" r="3"/>
+          <circle cx="230" cy="240" r="3"/>
+          <circle cx="320" cy="215" r="3.6"/>
+          <circle cx="410" cy="190" r="3.6"/>
+          <circle cx="500" cy="165" r="4.4"/>
+        </g>
+        <text x="500" y="158" font-family="JetBrains Mono" font-size="10" fill="#b8651f" font-weight="700" text-anchor="end">3 paid</text>
+      </svg>
+
+      <div class="chart-caption">
+        <span>Cumulative count · 6 snapshots</span>
+        <span>NPS pending n≥10</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== D · PRODUCT (EVAL + CONNECTORS) ===================== -->
+  <article class="metric-panel" id="product">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">D</span> Product — eval set &amp; connectors</h3>
+      <p class="metric-desc">
+        The eval set is our internal benchmark — every question we expect a
+        functioning Autonomous HCM agent to answer correctly. Eval accuracy is
+        the agent's pass rate on a held-out 50-question subset, refreshed each
+        release. Connectors live is the count of production-grade system
+        integrations (Workday, ADP, SAP, etc.) shipping in the current
+        Stratum release.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots</div>
+        <table class="snap-table" aria-label="Product snapshots">
+          <thead>
+            <tr><th></th><th>T+0</th><th>T+19d</th><th>T+47d</th><th>T+75d</th><th>T+102d</th><th>T+116d</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Eval set size</td><td>40</td><td>62</td><td>102</td><td>138</td><td>250</td><td class="cur">250</td></tr>
+            <tr><td>Eval accuracy</td><td>0.780</td><td>0.840</td><td>0.890</td><td>0.920</td><td>0.940</td><td class="cur">0.964</td></tr>
+            <tr><td>Connectors live</td><td>0</td><td>0</td><td>1</td><td>2</td><td>3</td><td class="cur">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="source-note">
+        Eval accuracy is measured on a held-out 50-question subset that
+        engineering does not see during model training — not on the public
+        200-question set linked from <a href="../eval/index.html">/eval</a>.
+        Target for v1.1 (T+150d) is eval set 300 / accuracy ≥0.97. Connectors
+        list is published live in <a href="../console/index.html">Stratum
+        Console</a>.
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="Product metrics chart">
+      <div class="chart-legend">
+        <span class="lg c-ochre"><span class="lg-swatch" style="background:#b8651f"></span> Eval set (count)</span>
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a"></span> Eval accuracy (%)</span>
+        <span class="lg c-plum"><span class="lg-swatch" style="background:#6b3a4a"></span> Connectors live</span>
+      </div>
+
+      <svg viewBox="0 0 540 300" role="img" aria-label="Triple line chart showing eval set size growing from 40 to 250, eval accuracy climbing from 78% to 96.4%, and connectors live growing from 0 to 6 over six snapshots.">
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <!-- left axis (eval set / connectors scaled to 0..300) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">300</text>
+          <text x="44" y="94">225</text>
+          <text x="44" y="144">150</text>
+          <text x="44" y="194">75</text>
+          <text x="44" y="244">0</text>
+        </g>
+        <!-- right axis (accuracy 70..100%) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="start">
+          <text x="506" y="44">100%</text>
+          <text x="506" y="94">92.5%</text>
+          <text x="506" y="144">85%</text>
+          <text x="506" y="194">77.5%</text>
+          <text x="506" y="244">70%</text>
+        </g>
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+        <!-- x labels -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="50"  y="270">T+0</text>
+          <text x="140" y="270">T+19d</text>
+          <text x="230" y="270">T+47d</text>
+          <text x="320" y="270">T+75d</text>
+          <text x="410" y="270">T+102d</text>
+          <text x="500" y="270">T+116d</text>
+        </g>
+
+        <!-- Eval set (count, scale /300): 40,62,102,138,250,250
+             y = 240 - (count/300)*200
+             40→213.3 ; 62→198.7 ; 102→172 ; 138→148 ; 250→73.3 ; 250→73.3 -->
+        <polyline points="50,213.3 140,198.7 230,172 320,148 410,73.3 500,73.3"
+                  fill="none" stroke="#b8651f" stroke-width="2.2" stroke-linejoin="round"/>
+        <g fill="#b8651f">
+          <circle cx="50" cy="213.3" r="3"/>
+          <circle cx="140" cy="198.7" r="3"/>
+          <circle cx="230" cy="172"  r="3"/>
+          <circle cx="320" cy="148"  r="3"/>
+          <circle cx="410" cy="73.3" r="3"/>
+          <circle cx="500" cy="73.3" r="4.4"/>
+        </g>
+        <text x="500" y="66" font-family="JetBrains Mono" font-size="10" fill="#b8651f" font-weight="700" text-anchor="end">250 q</text>
+
+        <!-- Accuracy (right axis, 70..100% over 240..40): 0.78→186.7 ; 0.84→154.7 ; 0.89→128 ; 0.92→112 ; 0.94→101.3 ; 0.964→88.5 -->
+        <polyline points="50,186.7 140,154.7 230,128 320,112 410,101.3 500,88.5"
+                  fill="none" stroke="#4a5d3a" stroke-width="2.4" stroke-linejoin="round"/>
+        <g fill="#4a5d3a">
+          <circle cx="50"  cy="186.7" r="3"/>
+          <circle cx="140" cy="154.7" r="3"/>
+          <circle cx="230" cy="128"   r="3"/>
+          <circle cx="320" cy="112"   r="3"/>
+          <circle cx="410" cy="101.3" r="3"/>
+          <circle cx="500" cy="88.5"  r="4.4"/>
+        </g>
+        <text x="500" y="81" font-family="JetBrains Mono" font-size="10" fill="#4a5d3a" font-weight="700" text-anchor="end">96.4%</text>
+
+        <!-- Connectors (left axis): 0,0,1,2,3,6
+             0→240 ; 1→233.3 ; 2→226.7 ; 3→220 ; 6→200 -->
+        <polyline points="50,240 140,240 230,233.3 320,226.7 410,220 500,200"
+                  fill="none" stroke="#6b3a4a" stroke-width="2" stroke-linejoin="round" stroke-dasharray="0"/>
+        <g fill="#6b3a4a">
+          <circle cx="50"  cy="240" r="2.5"/>
+          <circle cx="140" cy="240" r="2.5"/>
+          <circle cx="230" cy="233.3" r="2.5"/>
+          <circle cx="320" cy="226.7" r="2.5"/>
+          <circle cx="410" cy="220" r="2.5"/>
+          <circle cx="500" cy="200" r="3.6"/>
+        </g>
+        <text x="500" y="193" font-family="JetBrains Mono" font-size="9.5" fill="#6b3a4a" font-weight="700" text-anchor="end">6 conn.</text>
+      </svg>
+
+      <div class="chart-caption">
+        <span>Triple line · left axis count, right axis %</span>
+        <span>Target v1.1: 300 / 0.97</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== E · RELIABILITY & SECURITY ===================== -->
+  <article class="metric-panel" id="reliability">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">E</span> Reliability &amp; security</h3>
+      <p class="metric-desc">
+        Uptime is measured by independent probes from three geographic regions
+        every 30 seconds, exactly as published on <a href="../status/index.html">/status</a>.
+        SOC2 controls implemented is the count of in-scope controls with
+        evidence collected and reviewed by our auditor — we are SOC2 Type I
+        attested and on track for Type II cutover this quarter. Pen-test
+        findings are tracked against the most recent third-party engagement.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots — SOC2 controls implemented</div>
+        <table class="snap-table" aria-label="Reliability snapshots">
+          <thead>
+            <tr><th></th><th>T+0</th><th>T+19d</th><th>T+47d</th><th>T+75d</th><th>T+102d</th><th>T+116d</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SOC2 controls</td><td>24</td><td>41</td><td>56</td><td>71</td><td>79</td><td class="cur">87</td></tr>
+            <tr><td>(of 87 in scope)</td><td>27.6%</td><td>47.1%</td><td>64.4%</td><td>81.6%</td><td>90.8%</td><td class="cur">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="metric-snap" style="margin-top:1.2rem;">
+        <div class="metric-snap-h">Current — uptime &amp; incidents</div>
+        <table class="snap-table" aria-label="Uptime and incidents current">
+          <tbody>
+            <tr><td>30-day uptime</td><td colspan="6" class="cur" style="text-align:left;padding-left:.6rem;">99.97%</td></tr>
+            <tr><td>90-day uptime</td><td colspan="6" style="text-align:left;padding-left:.6rem;">99.94%</td></tr>
+            <tr><td>Customer-data incidents</td><td colspan="6" style="text-align:left;padding-left:.6rem;color:var(--moss-deep);font-weight:700;">0 (since founding)</td></tr>
+            <tr><td>Pen-test · critical</td><td colspan="6" style="text-align:left;padding-left:.6rem;">1 found / 1 resolved</td></tr>
+            <tr><td>Pen-test · moderate</td><td colspan="6" style="text-align:left;padding-left:.6rem;">5 found / 5 resolved</td></tr>
+            <tr><td>Pen-test · low</td><td colspan="6" style="text-align:left;padding-left:.6rem;">11 found / 0 resolved (in remediation)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="source-note">
+        Pulled from <a href="../status/index.html">Stratum / Status</a> for
+        transparency. SOC2 Type I report dated T+95d; Type II observation
+        window opens T+120d, attest expected Q4 2026. Pen-test by an
+        independent third-party firm — letter of attestation on the
+        <a href="../trust/index.html">Trust</a> page.
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="Reliability chart">
+      <div class="chart-legend">
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a"></span> SOC2 controls (cum. of 87)</span>
+        <span class="lg c-ochre"><span class="lg-swatch dash" style="color:#b8651f"></span> Target (100%)</span>
+      </div>
+
+      <svg viewBox="0 0 540 300" role="img" aria-label="Bar chart showing SOC2 controls implemented growing from 24 of 87 to all 87 over six fortnightly snapshots, with the 100% target line achieved at T+116d.">
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">100%</text>
+          <text x="44" y="94">75%</text>
+          <text x="44" y="144">50%</text>
+          <text x="44" y="194">25%</text>
+          <text x="44" y="244">0%</text>
+        </g>
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+        <!-- target line at 40 -->
+        <line x1="50" y1="40" x2="500" y2="40" stroke="#b8651f" stroke-width="0.8" stroke-dasharray="3 4"/>
+        <text x="496" y="35" font-family="JetBrains Mono" font-size="9" fill="#8a4711" text-anchor="end">SOC2 target · 100%</text>
+
+        <!-- x labels at x=80,140,200,260,320,380, bar width 36 -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="80"  y="270">T+0</text>
+          <text x="140" y="270">T+19d</text>
+          <text x="200" y="270">T+47d</text>
+          <text x="260" y="270">T+75d</text>
+          <text x="320" y="270">T+102d</text>
+          <text x="380" y="270">T+116d</text>
+        </g>
+
+        <!-- pct: 27.6, 47.1, 64.4, 81.6, 90.8, 100
+             y = 240 - pct*2  → 184.8 / 145.8 / 111.2 / 76.8 / 58.4 / 40 -->
+        <g>
+          <rect x="62"  y="184.8" width="36" height="55.2"  fill="#4a5d3a" opacity=".6"/>
+          <rect x="122" y="145.8" width="36" height="94.2"  fill="#4a5d3a" opacity=".7"/>
+          <rect x="182" y="111.2" width="36" height="128.8" fill="#4a5d3a" opacity=".8"/>
+          <rect x="242" y="76.8"  width="36" height="163.2" fill="#4a5d3a" opacity=".9"/>
+          <rect x="302" y="58.4"  width="36" height="181.6" fill="#4a5d3a"/>
+          <rect x="362" y="40"    width="36" height="200"   fill="#b8651f"/>
+        </g>
+        <g font-family="JetBrains Mono" font-size="9" fill="#0e1626" text-anchor="middle">
+          <text x="80"  y="180">24</text>
+          <text x="140" y="141">41</text>
+          <text x="200" y="106">56</text>
+          <text x="260" y="72">71</text>
+          <text x="320" y="54">79</text>
+          <text x="380" y="35" fill="#8a4711" font-weight="700">87 / 87</text>
+        </g>
+
+        <!-- Uptime callout -->
+        <g>
+          <rect x="420" y="60" width="80" height="78" fill="#f4ecda" stroke="#4a5d3a" stroke-width="0.6"/>
+          <text x="460" y="76" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" letter-spacing=".12em" text-anchor="middle">UPTIME 30d</text>
+          <text x="460" y="98" font-family="Fraunces" font-size="22" fill="#0e1626" font-weight="500" text-anchor="middle">99.97%</text>
+          <line x1="430" y1="108" x2="490" y2="108" stroke="#d8cdb6"/>
+          <text x="460" y="124" font-family="JetBrains Mono" font-size="8.5" fill="#4b5365" text-anchor="middle">90d · 99.94%</text>
+        </g>
+        <!-- Incidents callout -->
+        <g>
+          <rect x="420" y="148" width="80" height="60" fill="#f4ecda" stroke="#4a5d3a" stroke-width="0.6"/>
+          <text x="460" y="164" font-family="JetBrains Mono" font-size="9" fill="#4a5d3a" letter-spacing=".12em" text-anchor="middle">INCIDENTS</text>
+          <text x="460" y="186" font-family="Fraunces" font-size="22" fill="#4a5d3a" font-weight="500" text-anchor="middle">0</text>
+          <text x="460" y="200" font-family="JetBrains Mono" font-size="8" fill="#4b5365" text-anchor="middle">since founding</text>
+        </g>
+      </svg>
+
+      <div class="chart-caption">
+        <span>SOC2 buildout · 6 snapshots · 100% controls implemented</span>
+        <span>Type II cutover Q3 '26</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===================== F · PEOPLE ===================== -->
+  <article class="metric-panel" id="people">
+
+    <div class="metric-info">
+      <h3 class="metric-head"><span class="id">F</span> People</h3>
+      <p class="metric-desc">
+        Headcount is the count of full-time founders plus W-2 employees with
+        a signed offer and a start date in the past. Open roles is the count
+        of unfilled requisitions actively recruiting. Founder confidence pulse
+        is a weekly Friday self-report from each of the three founders on a
+        1–10 scale — the figure shown is the rolling mean across founders,
+        not any single individual's score.
+      </p>
+
+      <div class="metric-snap">
+        <div class="metric-snap-h">Last 6 snapshots — headcount &amp; pulse</div>
+        <table class="snap-table" aria-label="People snapshots">
+          <thead>
+            <tr><th></th><th>T+0</th><th>T+19d</th><th>T+47d</th><th>T+75d</th><th>T+102d</th><th>T+116d</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Headcount</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td class="cur">8</td></tr>
+            <tr><td>Open roles</td><td>14</td><td>13</td><td>12</td><td>11</td><td>10</td><td class="cur">9</td></tr>
+            <tr><td>Confidence pulse</td><td>8.6</td><td>8.3</td><td>8.5</td><td>8.2</td><td>8.9</td><td class="cur">9.3</td></tr>
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono);font-size:10px;color:var(--ink-mute);margin:.4rem 0 0;letter-spacing:.08em;">
+          Latest weekly pulse (between fortnights): 9.2 → 9.3
+        </p>
+      </div>
+
+      <p class="source-note">
+        Founder confidence pulse is a weekly Friday self-report on a 1–10
+        scale; published in aggregate only. Individual scores remain private.
+        Numbers we do NOT publish in this panel: salaries, equity grants,
+        underrepresented-group counts at our current n=8 (will publish in
+        aggregate at n≥25, per our handbook policy on small-sample privacy).
+      </p>
+    </div>
+
+    <div class="metric-chart" aria-label="People chart">
+      <div class="chart-legend">
+        <span class="lg c-moss"><span class="lg-swatch" style="background:#4a5d3a"></span> Headcount (bars)</span>
+        <span class="lg c-ochre"><span class="lg-swatch" style="background:#b8651f"></span> Confidence pulse (line, 0–10)</span>
+        <span class="lg c-plum"><span class="lg-swatch dash" style="color:#6b3a4a"></span> Open roles</span>
+      </div>
+
+      <svg viewBox="0 0 540 300" role="img" aria-label="Combination bar and line chart showing headcount growing from 3 to 8, confidence pulse oscillating between 8.2 and 9.3, and open roles declining from 14 to 9 over six fortnightly snapshots.">
+        <g stroke="#d8cdb6" stroke-width="0.5" stroke-dasharray="2 3">
+          <line x1="50" y1="40"  x2="500" y2="40"/>
+          <line x1="50" y1="90"  x2="500" y2="90"/>
+          <line x1="50" y1="140" x2="500" y2="140"/>
+          <line x1="50" y1="190" x2="500" y2="190"/>
+          <line x1="50" y1="240" x2="500" y2="240"/>
+        </g>
+        <!-- left axis (count 0..15) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="end">
+          <text x="44" y="44">15</text>
+          <text x="44" y="94">11.25</text>
+          <text x="44" y="144">7.5</text>
+          <text x="44" y="194">3.75</text>
+          <text x="44" y="244">0</text>
+        </g>
+        <!-- right axis (pulse 0..10) -->
+        <g font-family="JetBrains Mono" font-size="9" fill="#6c7180" text-anchor="start">
+          <text x="506" y="44">10</text>
+          <text x="506" y="94">7.5</text>
+          <text x="506" y="144">5</text>
+          <text x="506" y="194">2.5</text>
+          <text x="506" y="244">0</text>
+        </g>
+        <line x1="50" y1="240" x2="500" y2="240" stroke="#0e1626" stroke-width="0.8"/>
+
+        <g font-family="JetBrains Mono" font-size="9" fill="#4b5365" text-anchor="middle">
+          <text x="80"  y="270">T+0</text>
+          <text x="140" y="270">T+19d</text>
+          <text x="200" y="270">T+47d</text>
+          <text x="260" y="270">T+75d</text>
+          <text x="320" y="270">T+102d</text>
+          <text x="380" y="270">T+116d</text>
+        </g>
+
+        <!-- Headcount bars (count/15 scale, 200px range): 3→200, 4→186.7, 5→173.3, 6→160, 7→146.7, 8→133.3
+             height = 240 - y -->
+        <g>
+          <rect x="62"  y="200"   width="36" height="40"   fill="#4a5d3a" opacity=".55"/>
+          <rect x="122" y="186.7" width="36" height="53.3" fill="#4a5d3a" opacity=".65"/>
+          <rect x="182" y="173.3" width="36" height="66.7" fill="#4a5d3a" opacity=".75"/>
+          <rect x="242" y="160"   width="36" height="80"   fill="#4a5d3a" opacity=".85"/>
+          <rect x="302" y="146.7" width="36" height="93.3" fill="#4a5d3a" opacity=".95"/>
+          <rect x="362" y="133.3" width="36" height="106.7" fill="#4a5d3a"/>
+        </g>
+        <g font-family="JetBrains Mono" font-size="9" fill="#f4ecda" text-anchor="middle" font-weight="700">
+          <text x="80"  y="217">3</text>
+          <text x="140" y="217">4</text>
+          <text x="200" y="217">5</text>
+          <text x="260" y="217">6</text>
+          <text x="320" y="217">7</text>
+          <text x="380" y="217">8</text>
+        </g>
+
+        <!-- Confidence pulse line (right axis, scale 0..10 over 240..40, 20px per unit):
+             8.6→68 ; 8.3→74 ; 8.5→70 ; 8.2→76 ; 8.9→62 ; 9.3→54 -->
+        <polyline points="80,68 140,74 200,70 260,76 320,62 380,54"
+                  fill="none" stroke="#b8651f" stroke-width="2.4" stroke-linejoin="round"/>
+        <g fill="#b8651f">
+          <circle cx="80"  cy="68" r="3"/>
+          <circle cx="140" cy="74" r="3"/>
+          <circle cx="200" cy="70" r="3"/>
+          <circle cx="260" cy="76" r="3"/>
+          <circle cx="320" cy="62" r="3"/>
+          <circle cx="380" cy="54" r="4.4"/>
+        </g>
+        <text x="380" y="47" font-family="JetBrains Mono" font-size="10" fill="#b8651f" font-weight="700" text-anchor="end">9.3</text>
+
+        <!-- Open roles dashed (left axis, count/15): 14→53.3, 13→66.7, 12→80, 11→93.3, 10→106.7, 9→120 -->
+        <polyline points="80,53.3 140,66.7 200,80 260,93.3 320,106.7 380,120"
+                  fill="none" stroke="#6b3a4a" stroke-width="1.8" stroke-dasharray="4 3" stroke-linejoin="round"/>
+        <g fill="#6b3a4a">
+          <circle cx="80"  cy="53.3"  r="2.5"/>
+          <circle cx="140" cy="66.7"  r="2.5"/>
+          <circle cx="200" cy="80"    r="2.5"/>
+          <circle cx="260" cy="93.3"  r="2.5"/>
+          <circle cx="320" cy="106.7" r="2.5"/>
+          <circle cx="380" cy="120"   r="3.6"/>
+        </g>
+        <text x="380" y="135" font-family="JetBrains Mono" font-size="9.5" fill="#6b3a4a" font-weight="700" text-anchor="end">9 open</text>
+
+        <!-- callout -->
+        <g>
+          <rect x="420" y="80" width="80" height="60" fill="#f4ecda" stroke="#b8651f" stroke-width="0.6"/>
+          <text x="460" y="96" font-family="JetBrains Mono" font-size="8.5" fill="#8a4711" letter-spacing=".12em" text-anchor="middle">FOUNDER PULSE</text>
+          <text x="460" y="118" font-family="Fraunces" font-size="20" fill="#0e1626" font-weight="500" text-anchor="middle">9.3 / 10</text>
+          <text x="460" y="132" font-family="JetBrains Mono" font-size="8" fill="#4b5365" text-anchor="middle">↑ from 8.6 at T+0</text>
+        </g>
+      </svg>
+
+      <div class="chart-caption">
+        <span>Headcount + pulse + open roles · 6 snapshots</span>
+        <span>Pulse refreshes weekly</span>
+      </div>
+    </div>
+  </article>
+
+</section>
+
+<!-- ─────────────────────────────────────────── PUBLICATION ETHICS ── -->
+<section id="ethics">
+  <div class="ornament"><span class="bar"></span> § 02 · Publication ethics</div>
+  <h2 class="section-h">Why we publish, and <em>what we will not</em>.</h2>
+  <p class="section-dek">
+    Open metrics are only credible if you can also see the boundaries of the
+    openness. This is the editorial policy that governs this page.
+  </p>
+
+  <div class="editorial">
+    <div class="ornament" style="margin:0 0 1rem;"><span class="bar"></span> Editorial policy · v1.0 · 2026-05-13</div>
+
+    <p>
+      We publish these numbers because <strong>the alternative is asking our
+      customers, candidates, and the press to trust us on the basis of
+      nothing</strong>. Every company says it is doing well. Most can't prove
+      it. We would rather show our work — including the parts that make us
+      look weaker than the version on the website — than ask anyone to take
+      our word for it.
+    </p>
+
+    <div class="editorial-rule"></div>
+
+    <p>
+      <strong>We do not adjust numbers retroactively.</strong> If we miscount,
+      we publish the correction alongside the original. Past snapshots on
+      this page are exactly the numbers we published on the day of the
+      corresponding Chairman's Briefing — even where we have since refined
+      our methodology. Methodology changes are noted in the source note of
+      the affected metric.
+    </p>
+
+    <div class="editorial-rule"></div>
+
+    <p>
+      <strong>Numbers we do not publish here:</strong> individual employee
+      salaries, customer names without consent, prospective customer
+      pipelines by name, anything subject to NDA, headcount demographics at
+      n &lt; 25 (small-sample privacy), individual founder confidence scores,
+      vendor contracts, and per-customer ACV. We name the categories we
+      withhold; we do not simply leave a hole.
+    </p>
+
+    <div class="editorial-rule"></div>
+
+    <p>
+      <strong>Frequency.</strong> Every fortnight, at the moment of the
+      Chairman's Briefing. Some metrics update faster: uptime, incidents,
+      and pen-test status are pulled live from <a href="../status/index.html">/status</a>;
+      eval accuracy refreshes on each Stratum release. The "Last refresh"
+      timestamp at the top of this page is the most recent fortnight cutover
+      — individual line items may be more recent.
+    </p>
+
+    <div class="editorial-rule"></div>
+
+    <p>
+      <strong>Audit trail.</strong> An archive of every fortnight's
+      snapshot is mirrored in the public
+      <a href="../ledger/index.html">Ledger</a> and signed with a
+      git-style hash, so external observers can verify that what we publish
+      today matches what we published two months ago. We expect a corrected
+      snapshot, on average, every other quarter — and when one happens we
+      will say so on this page, in this color, with this prominence.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── WHAT'S NEXT ── -->
+<section id="next">
+  <div class="ornament"><span class="bar"></span> § 03 · What's next</div>
+  <h2 class="section-h">The numbers we are <em>aiming at</em>.</h2>
+  <p class="section-dek">
+    Forward-looking targets, set quarterly. We publish these so you can hold
+    us to them — and so that if we miss, the miss is visible in the same
+    place as the target.
+  </p>
+
+  <div class="roadmap">
+
+    <div class="roadmap-row">
+      <span class="roadmap-q">Q3 2026 <span class="now">NOW</span></span>
+      <div class="roadmap-body">
+        Push <strong>ARR to $400K</strong> · grow <strong>headcount to 12</strong> ·
+        complete <strong>SOC2 Type II cutover</strong>. Two more paid pilots
+        (Meridian conversion + one new logo). Eval set to 300, accuracy
+        ≥0.97 with v1.1 release.
+      </div>
+      <span class="roadmap-target">target · close T+210d</span>
+    </div>
+
+    <div class="roadmap-row">
+      <span class="roadmap-q">Q4 2026</span>
+      <div class="roadmap-body">
+        <strong>Public GA</strong> · target <strong>$1M ARR</strong> ·
+        <strong>headcount 18</strong> · <strong>EU residency live</strong>
+        (Frankfurt region). SOC2 Type II attestation. First five-figure
+        renewal.
+      </div>
+      <span class="roadmap-target">target · close T+300d</span>
+    </div>
+
+    <div class="roadmap-row">
+      <span class="roadmap-q">Q1 2027</span>
+      <div class="roadmap-body">
+        <strong>Series A close</strong> · target <strong>$25M @ $120M
+        pre-money</strong> · <strong>headcount 28</strong>. Reset runway to
+        24+ months. ISO 27001 in process.
+      </div>
+      <span class="roadmap-target">target · close T+390d</span>
+    </div>
+
+    <div class="roadmap-row">
+      <span class="roadmap-q">End 2027</span>
+      <div class="roadmap-body">
+        <strong>ARR target $5M</strong> · <strong>headcount 38</strong>.
+        Two enterprise reference deployments at &gt;5,000 seats. UK + EU +
+        AU regional footprints. Independent third-party model evals (DeepEval,
+        Promptfoo) baked into the public release cadence.
+      </div>
+      <span class="roadmap-target">target · close T+685d</span>
+    </div>
+
+  </div>
+
+  <p style="font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--ink-3);max-width:62ch;margin:1.4rem 0 0;">
+    These are targets, not forecasts. When we miss, the miss is published
+    here on the day we discover it — flagged in the same field as the
+    target. We do not relocate misses to a separate page.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<aside class="closing" aria-label="Closing remark">
+  <p>
+    "You cannot manage what you cannot count<span class="ochre">.</span>
+    You cannot trust what you cannot see<span class="ochre">.</span>"
+  </p>
+</aside>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <div>
+      <div class="foot-mark">Stratum<span class="dot">.</span></div>
+      <p class="foot-tag">
+        Autonomous HCM, published in public. <br/>
+        We owe our customers, candidates, and investors the courtesy of
+        evidence.
+      </p>
+      <p class="foot-tag" style="font-style:normal;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre-deep);">
+        Open metrics · v1.0 · 2026-05-13
+      </p>
+    </div>
+    <div class="foot-col">
+      <div class="foot-col-h">Surface</div>
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/index.html">Customers</a>
+      <a href="../pricing/index.html">Pricing</a>
+      <a href="../console/index.html">Console</a>
+      <a href="../eval/index.html">Eval</a>
+    </div>
+    <div class="foot-col">
+      <div class="foot-col-h">Evidence</div>
+      <a href="./index.html">Open Metrics</a>
+      <a href="../status/index.html">Status</a>
+      <a href="../trust/index.html">Trust</a>
+      <a href="../security/index.html">Security</a>
+      <a href="../ledger/index.html">Ledger</a>
+    </div>
+    <div class="foot-col">
+      <div class="foot-col-h">Editorial</div>
+      <a href="../briefings/009.html">Chairman's Briefing</a>
+      <a href="../library/">The Library</a>
+      <a href="../essays/index.html">Essays</a>
+      <a href="../handbook/index.html">Handbook</a>
+      <a href="../press/index.html">Press</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Stratum, Inc. · Made in San Francisco, Berlin, Mexico City.</span>
+    <span>stratum.ai/metrics · last fortnight T+116d · next T+130d</span>
+  </div>
+</footer>
+
+<!-- ─────────────────────────────────────────── RT-STAMP ── -->
+<div class="rt-stamp" data-t0="2026-05-13T09:50:00-04:00" data-this="2026-05-13T11:14:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+11:14:00.000</strong> · <span style="opacity:.6">2026-05-13T15:14:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<script>
+// Nav scroll style
+(function(){
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function(){
+    if (window.scrollY > 8) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

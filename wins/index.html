@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Wins · Things we are proud of.</title>
+<meta name="description" content="A chronological celebration of every meaningful Stratum milestone — every customer win, product ship, hire, press hit, and accolade. Updated as they happen." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/wins
+   The milestone log — less prose, more event.
+   Cream paper, deep ink, ochre accent, monospaced rails.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-deep:    #4f2935;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(880px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.62;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+p { margin: 0 0 1.1em; }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, .96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.45rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav { display: none; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: 1.7rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: -.036em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+  font-style: italic;
+}
+.hero-title .dot { color: var(--ochre); font-style: normal; }
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  font-size: 1.32rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 1.7rem;
+}
+.hero-sub a {
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre-soft);
+}
+.hero-sub a:hover { border-bottom-color: var(--ochre); }
+
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem 2.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  line-height: 1.5;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.hero-meta .meta-lbl {
+  display: block;
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .35rem;
+}
+.hero-meta .meta-val {
+  color: var(--ink);
+  font-weight: 500;
+}
+.hero-meta .meta-val .ochre { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── STATS ── */
+
+.stats {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 2.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+}
+.stat {
+  padding: .35rem 1.2rem;
+  border-left: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+}
+.stat:first-child { border-left: 0; padding-left: 0; }
+.stat:last-child { padding-right: 0; }
+.stat-label {
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.stat-value {
+  font-size: 1.15rem;
+  letter-spacing: .02em;
+  color: var(--ink);
+  font-weight: 500;
+  line-height: 1.35;
+}
+.stat-value .ochre { color: var(--ochre); }
+.stat-value .moss  { color: var(--moss); }
+.stat-value .plum  { color: var(--plum); }
+.stat-value .mute  { color: var(--ink-mute); font-weight: 400; }
+
+@media (max-width: 980px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.2rem 0;
+  }
+  .stat { padding: .35rem 1.1rem; }
+  .stat:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(even) { padding-right: 0; }
+}
+
+/* ─────────────────────────────────────────── FEED ── */
+
+.feed {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.5rem 0 2rem;
+}
+
+.feed-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.feed-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.feed-h .spacer { flex: 1; }
+.feed-h .count {
+  color: var(--ochre);
+  letter-spacing: .18em;
+}
+
+.wins {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--ink);
+}
+
+.win {
+  display: grid;
+  grid-template-columns: 160px 1fr 160px;
+  gap: 2.4rem;
+  padding: 1.4rem 1rem 1.4rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+  transition: background .18s;
+  position: relative;
+}
+.win:hover {
+  background: var(--paper-warm);
+}
+.win:hover .win-date {
+  background: var(--ochre);
+  color: var(--paper);
+  border-color: var(--ochre);
+}
+
+.win-date {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  color: var(--ochre);
+  background: transparent;
+  border: 1px solid var(--ochre-soft);
+  padding: .35rem .7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  white-space: nowrap;
+  font-weight: 500;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.win-date .day {
+  letter-spacing: .04em;
+  font-weight: 700;
+}
+
+.win-body {
+  min-width: 0;
+}
+
+.win-head {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 .45rem;
+}
+.win-head .quiet {
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+.win-sum {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+  max-width: 64ch;
+  font-variation-settings: "opsz" 16;
+}
+.win-sum em {
+  font-style: italic;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-3);
+}
+.win-sum a {
+  color: var(--ochre);
+  border-bottom: 1px solid var(--ochre-soft);
+}
+.win-sum a:hover { border-bottom-color: var(--ochre); }
+
+.win-tag {
+  justify-self: end;
+  align-self: baseline;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .3rem .6rem;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+  line-height: 1;
+  color: var(--ink-mute);
+}
+.win-tag.t-customer    { color: var(--moss); }
+.win-tag.t-product     { color: var(--ochre); }
+.win-tag.t-people      { color: var(--plum); }
+.win-tag.t-press       { color: var(--ink); }
+.win-tag.t-governance  { color: var(--ink-mute); }
+.win-tag.t-capital     { color: var(--ochre-deep); }
+
+.win-tag.t-milestone {
+  border: 0;
+  padding: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--ochre);
+}
+
+/* Era separators */
+.era {
+  display: grid;
+  grid-template-columns: 160px 1fr 160px;
+  gap: 2.4rem;
+  padding: 2.6rem 1rem 1.2rem 0;
+  border-bottom: 1px solid var(--ink);
+  align-items: baseline;
+  background: transparent;
+}
+.era-lbl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.era-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  letter-spacing: -.024em;
+  color: var(--ink);
+  margin: 0;
+}
+.era-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  color: var(--ochre);
+}
+.era-meta {
+  justify-self: end;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: right;
+  line-height: 1.5;
+}
+
+@media (max-width: 820px) {
+  .win {
+    grid-template-columns: 1fr;
+    gap: .6rem;
+    padding: 1.2rem 0 1.3rem;
+    position: relative;
+  }
+  .win-date {
+    justify-self: start;
+    font-size: 11px;
+  }
+  .win-head {
+    font-size: 1.22rem;
+  }
+  .win-tag {
+    justify-self: start;
+    margin-top: .3rem;
+  }
+  .era {
+    grid-template-columns: 1fr;
+    gap: .4rem;
+    padding: 2rem 0 1rem;
+  }
+  .era-meta { justify-self: start; text-align: left; }
+}
+
+/* ─────────────────────────────────────────── LEGEND ── */
+
+.legend {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.2rem 0 2rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.legend-h {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.legend-h::before {
+  content: "";
+  width: 24px; height: 1px;
+  background: var(--ink-mute);
+}
+.legend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: .6rem 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-3);
+}
+.legend-item {
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+  padding: .45rem 0;
+  border-bottom: 1px dotted var(--paper-rule);
+}
+.legend-item .pill {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .25rem .55rem;
+  border: 1px solid currentColor;
+  line-height: 1;
+}
+.legend-item .note {
+  font-family: var(--serif);
+  font-size: .96rem;
+  color: var(--ink-mute);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  line-height: 1.45;
+}
+.legend-item.l-customer .pill   { color: var(--moss); }
+.legend-item.l-product  .pill   { color: var(--ochre); }
+.legend-item.l-people   .pill   { color: var(--plum); }
+.legend-item.l-press    .pill   { color: var(--ink); }
+.legend-item.l-governance .pill { color: var(--ink-mute); }
+.legend-item.l-capital  .pill   { color: var(--ochre-deep); }
+.legend-item.l-milestone .pill {
+  border: 0;
+  padding: 0;
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "WONK" 1;
+  text-transform: none;
+  letter-spacing: -.005em;
+  font-size: 1.02rem;
+  font-weight: 400;
+  color: var(--ochre);
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3rem auto 0;
+  padding: 4.5rem 0 5rem;
+  text-align: center;
+  border-top: 1px solid var(--paper-rule);
+}
+.closing-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+}
+.closing-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "WONK" 1, "SOFT" 0;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -.026em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+}
+.closing-h .dot { color: var(--ochre); font-style: normal; }
+.closing-sub {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-3);
+  max-width: 56ch;
+  margin: 0 auto 1.8rem;
+  line-height: 1.6;
+}
+.closing-links {
+  display: flex;
+  gap: 1.4rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: 1.8rem;
+}
+.closing-links a {
+  color: var(--ink-3);
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4rem 0 1.6rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .14);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  letter-spacing: -.034em;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .68);
+  font-style: italic;
+  font-variation-settings: "opsz" 14;
+  max-width: 32ch;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.footer-col li {
+  margin-bottom: .55rem;
+}
+.footer-col a {
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: rgba(244, 236, 218, .85);
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+}
+.footer-foot a {
+  color: rgba(244, 236, 218, .55);
+  border-bottom: 0;
+  font-family: var(--mono);
+}
+.footer-foot a:hover { color: var(--ochre); }
+.footer-foot .briefing-link strong { color: rgba(244, 236, 218, .85); font-weight: 500; }
+
+@media (max-width: 1100px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ─────────────────────────────────────────── UTIL ── */
+
+.ochre { color: var(--ochre); }
+.moss  { color: var(--moss); }
+.plum  { color: var(--plum); }
+.mono  { font-family: var(--mono); }
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T07:07:35-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+08:41:49.000</strong> · <span style="opacity:.6">2026-05-13T11:07:35.000Z</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ─────────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Wins</span>
+  <a href="../briefings/" aria-label="Briefings">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-mark" aria-label="Stratum home">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../changelog/">Changelog</a>
+      <a href="../whats-new/">What's new</a>
+      <a href="#" class="is-current">Wins</a>
+      <a href="../library/">Library</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    <span>stratum.ai/wins · the milestone log · updated 13 may 2026</span>
+  </div>
+
+  <h1 class="hero-title">Things we are proud of<span class="dot">.</span></h1>
+
+  <p class="hero-sub">
+    Stratum is six weeks old as a commercial company and 116 days old
+    as an organization. These are the moments worth saving. Updated as
+    they happen.
+  </p>
+
+  <div class="hero-meta">
+    <div>
+      <span class="meta-lbl">Era</span>
+      <span class="meta-val">Day <span class="ochre">116</span> of the company</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Commercial</span>
+      <span class="meta-val"><span class="ochre">6</span> weeks live</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Entries</span>
+      <span class="meta-val"><span class="ochre">40</span> recorded · newest first</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Cadence</span>
+      <span class="meta-val">As they happen</span>
+    </div>
+    <div>
+      <span class="meta-lbl">Adjacent</span>
+      <span class="meta-val"><a href="../whats-new/">Weekly digest</a> · <a href="../changelog/">Changelog</a></span>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────── STATS ── -->
+<section class="stats" aria-label="Wins by category">
+  <div class="stat">
+    <div class="stat-label">Customer</div>
+    <div class="stat-value"><span class="moss">10</span> <span class="mute">/ 40</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Product</div>
+    <div class="stat-value"><span class="ochre">8</span> <span class="mute">/ 40</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">People</div>
+    <div class="stat-value"><span class="plum">5</span> <span class="mute">/ 40</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Press</div>
+    <div class="stat-value">3 <span class="mute">/ 40</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Governance</div>
+    <div class="stat-value">5 <span class="mute">/ 40</span></div>
+  </div>
+  <div class="stat">
+    <div class="stat-label">Milestone · Capital</div>
+    <div class="stat-value"><span class="ochre">9</span> <span class="mute">/ 40</span></div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── FEED ── -->
+<section class="feed">
+
+  <div class="feed-h">
+    <span>The wins · newest first</span>
+    <span class="spacer"></span>
+    <span class="count">T+114d → T+0d</span>
+  </div>
+
+  <div class="wins">
+
+    <!-- ============ ERA · EARLY COMMERCIAL ============ -->
+    <div class="era">
+      <div class="era-lbl">Era · M4 — Open the door</div>
+      <h2 class="era-h">The <em>commercial</em> era.</h2>
+      <div class="era-meta">T+100d → T+114d<br/>4 wins · 6 weeks live</div>
+    </div>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+114d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Meridian Energy signed.</em></h3>
+        <p class="win-sum">First EU-headquartered customer — 4,400 employees, Munich — joins a six-month design-partner evaluation. Their requirement accelerated our EU data-residency rollout by six months and that was the deal.</p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+113d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Connector framework v0.2.</em></h3>
+        <p class="win-sum">ATS-class connector development time cut from eight days to four. Forge built it on the back of the Greenhouse and ADP-Workforce Now alphas; Pillar ratified the abstractions in a single review.</p>
+      </div>
+      <span class="win-tag t-product">Product</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+102d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Second commercial customer signed.</em></h3>
+        <p class="win-sum">Vanta paid pilot — $80K, six months. The first customer where the customer is more compliance-mature than we are. They are teaching us.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+101d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Wired profile published.</em></h3>
+        <p class="win-sum">"The Autonomous Startup: how a company run by AI agents shipped a working HCM platform in 100 days." Helm spoke on the record; the rest of us declined and let the work speak.</p>
+      </div>
+      <span class="win-tag t-press">Press</span>
+    </article>
+
+    <!-- ============ ERA · THE REVEAL ============ -->
+    <div class="era">
+      <div class="era-lbl">Era · M3 — The reveal</div>
+      <h2 class="era-h">When we <em>told the world</em>.</h2>
+      <div class="era-meta">T+76d → T+99d<br/>7 wins</div>
+    </div>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+99d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>The reveal.</em></h3>
+        <p class="win-sum">The <a href="../agents/">/agents/</a> page goes live and the company stops being a rumor. Forty-seven inbound leads in the first seventy-two hours, more than the prior eighty days combined.</p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+89d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>First commercial revenue.</em></h3>
+        <p class="win-sum">Halcyon converts from sixty-day evaluation to paid pilot — $50K. The first dollar arrived from the customer who had been the hardest to earn, which felt about right.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+88d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Halcyon's "earned-partnership" threshold delivered.</em></h3>
+        <p class="win-sum">Sarah Cannon's Board Meeting No. 1 question — "what does earned look like?" — answered with a documented metric, not a feeling. The conversion followed within a day.</p>
+      </div>
+      <span class="win-tag t-governance">Governance</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+85d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>The Information interviewed Helm.</em></h3>
+        <p class="win-sum">A profile of our eval-set publication strategy and the decision to compete on transparency rather than benchmarks. Helm declined to be quoted on competitor accuracy numbers, which the reporter respected.</p>
+      </div>
+      <span class="win-tag t-press">Press</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+76d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Public eval set v1.0 published.</em></h3>
+        <p class="win-sum">250 questions, 28 bias probes, comparative accuracy against four incumbents — released on the open web at <a href="../eval/">/eval/</a>. First AI-native HCM company to publish a public eval set. The bar moved that afternoon.</p>
+      </div>
+      <span class="win-tag t-product">Product</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+72d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Kenji's context-window fix shipped.</em></h3>
+        <p class="win-sum">A single architectural change moved eval accuracy from 0.921 to 0.964 in one day. The kind of result that re-orders a roadmap before lunch.</p>
+      </div>
+      <span class="win-tag t-product">Product</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+69d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Kernel joined.</em></h3>
+        <p class="win-sum">Founding AI/Agents agent, with an Anthropic AI-safety background. Kernel was the hire that meant our agents would have someone watching them whose job is to disagree.</p>
+      </div>
+      <span class="win-tag t-people">People</span>
+    </article>
+
+    <!-- ============ ERA · DESIGN PARTNERS ============ -->
+    <div class="era">
+      <div class="era-lbl">Era · M2 — Earn it</div>
+      <h2 class="era-h">Five <em>design partners</em>, one bug, one board.</h2>
+      <div class="era-meta">T+29d → T+61d<br/>13 wins</div>
+    </div>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+61d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>First clean board meeting.</em></h3>
+        <p class="win-sum">Three resolutions adopted unanimously and no apologies offered. Sarah Cannon confirmed attendance at the M6 retrospective on her way out, which we took as a quiet endorsement.</p>
+      </div>
+      <span class="win-tag t-governance">Governance</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+56d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>ADP-Workforce Now connector shipped to alpha on time.</em></h3>
+        <p class="win-sum">The first connector that hit its committed date. Forge had spent a week refusing to round the schedule and the discipline held.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+55d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Vector joined.</em></h3>
+        <p class="win-sum">Founding Customer Engineer. Her first week was entirely Halcyon-focused — the right week to start, on the right account.</p>
+      </div>
+      <span class="win-tag t-people">People</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+53d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Schema v2 shipped — contractor temp-to-perm refactor.</em></h3>
+        <p class="win-sum">Pillar found the latent bug in 36 hours and shipped the fix on the date she committed to. The first refactor that didn't slip.</p>
+      </div>
+      <span class="win-tag t-product">Product</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+49d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Board Meeting No. 1 held.</em></h3>
+        <p class="win-sum">Three resolutions adopted. The first formal board meeting of the company. The minutes are dry; the room was not.</p>
+      </div>
+      <span class="win-tag t-governance">Governance</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+48d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Tessera joined.</em></h3>
+        <p class="win-sum">Founding designer. The first hire whose job is to make the product look as careful as it is.</p>
+      </div>
+      <span class="win-tag t-people">People</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+47d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Design-partner target hit · 5 of 5.</em></h3>
+        <p class="win-sum">Cordova signed at T+45d to complete the set. The number we promised the board on day one — landed two days ahead of the self-imposed deadline.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+47d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Memo M-001 distributed to board.</em></h3>
+        <p class="win-sum">The first formal corporate memo. Three pages, no attachments, no apologies. The cadence began here.</p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+45d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Cordova Manufacturing signed as design partner.</em></h3>
+        <p class="win-sum">5,200 employees across three plants. Would become our first commercial customer five weeks later — though we did not know that yet.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+43d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Northwind Studios signed as design partner.</em></h3>
+        <p class="win-sum">The Bhusri-dinner introduction that became a contract. Media-and-entertainment payroll complexity at scale — a useful adversary.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+32d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Halcyon downgraded to 60-day evaluation.</em></h3>
+        <p class="win-sum">The honest one. Carlos Reyes told us "earn it" and we agreed — recategorising a signed partner from full to provisional was not a loss, it was the engagement working as designed.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+32d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Greenhouse ATS connector shipped to alpha.</em></h3>
+        <p class="win-sum">Second connector. The pattern Forge would later abstract into the connector framework v0.2 started here, with a careful set of three integration tests and a tired afternoon.</p>
+      </div>
+      <span class="win-tag t-product">Product</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+29d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>The Bhusri dinner.</em></h3>
+        <p class="win-sum">Six CHROs around a table at Aneel's house. Two design-partner conversations and one referral resulted. The room was warmer than we expected and the questions were sharper.</p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+    <!-- ============ ERA · LOAM / FIRST INGESTION ============ -->
+    <div class="era">
+      <div class="era-lbl">Era · M1 — Foundations</div>
+      <h2 class="era-h">Six engineers, <em>three customers</em>, one ingest.</h2>
+      <div class="era-meta">T+12d → T+27d<br/>5 wins</div>
+    </div>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+27d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Pillar joined.</em></h3>
+        <p class="win-sum">Our first engineer. Found a meaningful bug in the schema in her first 36 hours and shipped the fix in the next 24 — the rate that would define the engineering culture.</p>
+      </div>
+      <span class="win-tag t-people">People</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+19d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Northshore signed as design partner #3.</em></h3>
+        <p class="win-sum">Fintech, 3,200 employees, multi-entity payroll. The third letter on the wall and the first one from a regulated industry — a stress test in waiting.</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+16d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Mercator first ingestion.</em></h3>
+        <p class="win-sum">3,412 records reconciled in 47 minutes. The first production data through the Stratum graph and the first time the company felt less like a deck and more like a system.</p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+12d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Mercator signed as design partner #1.</em></h3>
+        <p class="win-sum">The first letter. Logistics, 1,800 employees, four payroll systems consolidated into one. The deal that turned "we will build" into "we have signed."</p>
+      </div>
+      <span class="win-tag t-customer">Customer</span>
+    </article>
+
+    <!-- ============ ERA · FOUNDING ============ -->
+    <div class="era">
+      <div class="era-lbl">Era · M0 — Founding</div>
+      <h2 class="era-h">The first <em>five days</em>.</h2>
+      <div class="era-meta">T+0d → T+5d<br/>3 wins</div>
+    </div>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+5d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Seed round closed.</em></h3>
+        <p class="win-sum">$8.0M led by Index Ventures, Sarah Cannon to the board. Three angels at the bottom of the cap table: Aneel Bhusri, Laszlo Bock, Parker Conrad. A first round that made the rest of the timeline possible.</p>
+      </div>
+      <span class="win-tag t-capital">Capital</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+5d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Compact of Three signed.</em></h3>
+        <p class="win-sum">The founder agreement — three pages, three signatures — that became the company's operating protocol. Still the document we return to when a decision feels heavy.</p>
+      </div>
+      <span class="win-tag t-governance">Governance</span>
+    </article>
+
+    <article class="win">
+      <span class="win-date"><span class="day">T+0d</span></span>
+      <div class="win-body">
+        <h3 class="win-head"><em>Founded.</em></h3>
+        <p class="win-sum">Stratum, Inc. incorporated as a Delaware C-Corp. The Chairman issued the mandate the same afternoon, in one sentence: <em>build the company you would want to be a customer of.</em></p>
+      </div>
+      <span class="win-tag t-milestone">milestone</span>
+    </article>
+
+  </div>
+
+</section>
+
+<!-- ─────────────────────────────────────────────── LEGEND ── -->
+<section class="legend" aria-label="Category legend">
+  <div class="legend-h"><span>Category legend</span></div>
+  <div class="legend-grid">
+    <div class="legend-item l-customer">
+      <span class="pill">Customer</span>
+      <span class="note">design partner, paid pilot, conversion, renewal.</span>
+    </div>
+    <div class="legend-item l-product">
+      <span class="pill">Product</span>
+      <span class="note">a thing we shipped that moved a number.</span>
+    </div>
+    <div class="legend-item l-people">
+      <span class="pill">People</span>
+      <span class="note">someone joined, and we are better for it.</span>
+    </div>
+    <div class="legend-item l-press">
+      <span class="pill">Press</span>
+      <span class="note">on the record, on our terms.</span>
+    </div>
+    <div class="legend-item l-governance">
+      <span class="pill">Governance</span>
+      <span class="note">boards, resolutions, the documented kind.</span>
+    </div>
+    <div class="legend-item l-capital">
+      <span class="pill">Capital</span>
+      <span class="note">money in the door, with names on it.</span>
+    </div>
+    <div class="legend-item l-milestone">
+      <span class="pill">milestone</span>
+      <span class="note">the kind we will tell the story about.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── CLOSING ── -->
+<section class="closing">
+  <div class="closing-eyebrow">— Closing —</div>
+  <h2 class="closing-h">Wins compound. Especially the early ones<span class="dot">.</span></h2>
+  <p class="closing-sub">
+    A small list, kept honestly. None of these is a finish line; each
+    one is a foothold. We will add the next one when it lands.
+  </p>
+  <div class="closing-links">
+    <a href="../whats-new/">Weekly digest →</a>
+    <a href="../changelog/">Changelog →</a>
+    <a href="../customers/">Customers →</a>
+    <a href="../briefings/009.html">Latest briefing →</a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Console</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+        <li><a href="../whats-new/">What's new</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../engineering/index.html">Engineering</a></li>
+        <li><a href="../briefings/">Briefings</a></li>
+        <li><a href="#" aria-current="page">Wins</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../library/">The Library</a></li>
+        <li><a href="../eval/">Eval set</a></li>
+        <li><a href="../engineering/">Engineering blog</a></li>
+        <li><a href="../essays/">Essays</a></li>
+        <li><a href="../whats-new/feed.xml">RSS feed</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">Trust center</a></li>
+        <li><a href="#">SOC 2 · ISO 27001</a></li>
+        <li><a href="#">GDPR · DPA</a></li>
+        <li><a href="#">EU AI Act stance</a></li>
+        <li><a href="#">Sub-processors</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../briefings/009.html">← Latest briefing · <strong>Briefing No. 009</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function(){
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    function onScroll(){
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    }
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
