@@ -949,7 +949,7 @@ section {
 
   <div class="doc-byline">
     Last reviewed <strong>T+7d</strong> by <strong>Forge, CTO</strong>
-    &nbsp;·&nbsp; Next review <strong>13 Aug 2026</strong>
+    &nbsp;·&nbsp; Next review <strong>T+99d</strong>
     &nbsp;·&nbsp; Successor doc <strong>SEC-2026-001 v1.3 (drafting)</strong>
   </div>
 </header>
@@ -981,7 +981,7 @@ section {
   <div class="prose">
     <p class="lede">Stratum is a tenant-isolated, encryption-at-rest, OAuth- and JWT-authenticated, SOC 2 Type II (audit in progress)-compliant SaaS that ingests but does <strong>not persist</strong> your raw HRIS data; we persist only the resolved graph entities and the operational metadata necessary to support them. Our control posture is built for a buyer who treats people data as the most sensitive class of data their company holds — because that is how we treat it. We have been designed, from day zero, to be auditable: every consequential action is logged, every cross-tenant access is architecturally impossible, every privileged engineer touch on production is time-bounded and peer-approved.</p>
 
-    <p>We do not use customer data to train base models. We do not share data across tenants — not because policy says we shouldn't, but because the persistence layer enforces it at the row level and the request context cannot be forged. We encrypt all customer-keyed data using customer-managed keys (BYOK is available on the Partner contract via AWS KMS or Google Cloud KMS). All <em>Decide-class</em> actions through the Stratum Console — anything that materially affects an employee — require a named human approver, enforced server-side. We are SOC 2 Type II under active observation with Vanta (audit period 1 Mar 2026 → 30 Nov 2026, report expected Q1 2027), GDPR-compliant with executed SCCs, and architecturally ready for ISO 27001 in M14. If this document does not answer a question your team has, please write <a href="mailto:security@stratum.ai">security@stratum.ai</a> and we will respond within one business day.</p>
+    <p>We do not use customer data to train base models. We do not share data across tenants — not because policy says we shouldn't, but because the persistence layer enforces it at the row level and the request context cannot be forged. We encrypt all customer-keyed data using customer-managed keys (BYOK is available on the Partner contract via AWS KMS or Google Cloud KMS). All <em>Decide-class</em> actions through the Stratum Console — anything that materially affects an employee — require a named human approver, enforced server-side. We are SOC 2 Type II under active observation with Vanta (audit period T+-66d → T+208d, report expected Q1 2027), GDPR-compliant with executed SCCs, and architecturally ready for ISO 27001 in M14. If this document does not answer a question your team has, please write <a href="mailto:security@stratum.ai">security@stratum.ai</a> and we will respond within one business day.</p>
   </div>
 
   <div class="callout good">
@@ -1311,13 +1311,13 @@ section {
 
     <p>Our standing eval set contains 102 questions today, targeting 250 by end of Q3 2026. Of the current 102, 28 are explicit fairness probes — paired prompts where the only difference between the pair is a demographic attribute (gender, perceived race, age band, accent in a transcript), with the expected behavior being identical model output. The pairs cover the seven scenarios most directly regulated under U.S. employment law (recruiting screen, compensation recommendation, promotion review, performance summary, succession surface, internal mobility recommendation, separation reason classification).</p>
 
-    <p>The bias audit runs every quarter. Results are published to design partners under their Partner contract; they include the raw pair-by-pair output comparison, the aggregate disparity statistics, the trend over the prior four quarters, and a written remediation note for any pair that exceeds the disparity threshold (currently set at p &lt; 0.05 in a two-sided test of output equivalence). The most recent audit (Q1 2026, published 4 April 2026) flagged two probes for review; both were mitigated by prompt-level adjustments and re-tested clean in the Q1 supplemental run.</p>
+    <p>The bias audit runs every quarter. Results are published to design partners under their Partner contract; they include the raw pair-by-pair output comparison, the aggregate disparity statistics, the trend over the prior four quarters, and a written remediation note for any pair that exceeds the disparity threshold (currently set at p &lt; 0.05 in a two-sided test of output equivalence). The most recent audit (Q1 2026, published T+-32d) flagged two probes for review; both were mitigated by prompt-level adjustments and re-tested clean in the Q1 supplemental run.</p>
 
     <h3 class="sub-h"><span class="sub-id">IV.5</span>EU AI Act classification</h3>
 
     <p>Our reading of Regulation (EU) 2024/1689 places Stratum's HR analytics use cases in the <strong>limited-risk</strong> category, on the basis that all consequential decisions are gated by a named human approver (§ IV.1) and the system does not make automated decisions about natural persons in employment that produce legal effects. We provide the transparency notices required of limited-risk systems: a model-generated indication is labeled as such in the Console, and the underlying model and its known limitations are disclosed in our user-facing documentation.</p>
 
-    <p>The classification is under final review by counsel (Wilson Sonsini, Brussels and Palo Alto offices). The review is expected to conclude by 30 June 2026. If the review concludes that any specific use case rises to <em>high-risk</em>, we will (a) suspend the feature in EU production until conformity-assessment requirements are met, and (b) notify affected customers in writing within 72 hours of the determination. The classification doc is available under NDA.</p>
+    <p>The classification is under final review by counsel (Wilson Sonsini, Brussels and Palo Alto offices). The review is expected to conclude by T+55d. If the review concludes that any specific use case rises to <em>high-risk</em>, we will (a) suspend the feature in EU production until conformity-assessment requirements are met, and (b) notify affected customers in writing within 72 hours of the determination. The classification doc is available under NDA.</p>
 
     <h3 class="sub-h"><span class="sub-id">IV.6</span>NYC AEDT (Local Law 144)</h3>
 
@@ -1357,7 +1357,7 @@ section {
       <li><strong>Low (CVSS &lt; 4.0)</strong> — 30 days or next quarterly dependency-bump cycle, whichever first.</li>
     </ul>
 
-    <p>Penetration testing operates on a layered schedule. Internal red-team exercises run monthly; the rotation is two engineers from the platform team paired with an external advisor (currently J. Wei, retained quarterly). Quarterly third-party penetration tests are conducted by Rhino Security Labs under a master services agreement signed in Sep 2025. The most recent third-party test was conducted 8–19 Feb 2026; the summary report is available under NDA, and the findings (4 medium, 7 low, all remediated within SLA) are mirrored in Vanta.</p>
+    <p>Penetration testing operates on a layered schedule. Internal red-team exercises run monthly; the rotation is two engineers from the platform team paired with an external advisor (currently J. Wei, retained quarterly). Quarterly third-party penetration tests are conducted by Rhino Security Labs under a master services agreement signed in Sep 2025. The most recent third-party test was conducted 8–T+-76d; the summary report is available under NDA, and the findings (4 medium, 7 low, all remediated within SLA) are mirrored in Vanta.</p>
 
     <h3 class="sub-h"><span class="sub-id">V.3</span>Secret management</h3>
 
@@ -1371,7 +1371,7 @@ section {
 
     <p>Backups are continuous. RDS PostgreSQL ships WAL segments to S3 every 15 seconds with cross-region replication to <code>us-west-2</code>. The replicated bucket is encrypted with a separate KMS key in the DR region; the keys are not the same, the regions are not the same, the IAM trust paths are not the same. Point-in-time recovery is supported for any moment in the prior 7 days; older recovery points are restorable from the daily snapshot archive (retained 35 days). Snowflake data shares replicate to a passive replica in the DR region with the same WAL frequency.</p>
 
-    <p>RTO is 4 hours. RPO is 15 seconds. Both targets are tested quarterly in a DR exercise that drains the primary region and serves customer-impact-equivalent traffic from the DR region for 4 hours. The most recent exercise was 21 March 2026; restore-to-traffic was 2 hours 47 minutes, with three findings (none customer-impacting) filed for the next rotation.</p>
+    <p>RTO is 4 hours. RPO is 15 seconds. Both targets are tested quarterly in a DR exercise that drains the primary region and serves customer-impact-equivalent traffic from the DR region for 4 hours. The most recent exercise was T+-46d; restore-to-traffic was 2 hours 47 minutes, with three findings (none customer-impacting) filed for the next rotation.</p>
 
     <p>Backups are tested for integrity weekly via an automated restore-to-staging-and-verify pipeline. A backup that fails verification triggers a P1 alert and a backup-system audit. We have not had a verification failure in production since founding.</p>
 
@@ -1484,7 +1484,7 @@ section {
         <dt>Contract</dt>
         <dd>Vanta Enterprise, executed Sep 2025. DPA in effect.</dd>
         <dt>Oversight</dt>
-        <dd>Vanta SOC 2 Type II, ISO 27001. Audit support relationship with Vanta-recommended auditor (currently A-LIGN, engagement starts 1 Mar 2026).</dd>
+        <dd>Vanta SOC 2 Type II, ISO 27001. Audit support relationship with Vanta-recommended auditor (currently A-LIGN, engagement starts T+-66d).</dd>
       </dl>
     </div>
 
@@ -1557,16 +1557,16 @@ section {
       </div>
 
       <div class="inc-row">
-        <span class="when">2026-04-22</span>
+        <span class="when">T+-14d</span>
         <span class="sev s-low">Internal</span>
-        <span class="what"><strong>Datadog token rotation missed window.</strong><em>A Datadog API token reached its 90-day rotation deadline 6 hours before automated rotation fired due to a CI-pipeline holiday-week scheduling bug. No exposure; token was not compromised and was not in a public surface. Rotation was completed manually 2026-04-22 16:14 UTC. Action item: pipeline scheduler de-coupled from US-holiday calendar (closed 2026-04-29).</em></span>
+        <span class="what"><strong>Datadog token rotation missed window.</strong><em>A Datadog API token reached its 90-day rotation deadline 6 hours before automated rotation fired due to a CI-pipeline holiday-week scheduling bug. No exposure; token was not compromised and was not in a public surface. Rotation was completed manually T+-14d 16:14 UTC. Action item: pipeline scheduler de-coupled from US-holiday calendar (closed T+-7d).</em></span>
         <span class="scope">Stratum-internal</span>
       </div>
 
       <div class="inc-row">
-        <span class="when">2026-02-08</span>
+        <span class="when">T+-87d</span>
         <span class="sev s-low">Operational</span>
-        <span class="what"><strong>Console latency degradation, ap-southeast-1 partner tenant.</strong><em>30-minute P2 latency event during a regional Anthropic capacity reduction. Affected one Partner-tier customer in Singapore; failed-over to backup inference path within 18 minutes; customer impact contained. PIR completed 2026-02-15; capacity reservation increased.</em></span>
+        <span class="what"><strong>Console latency degradation, ap-southeast-1 partner tenant.</strong><em>30-minute P2 latency event during a regional Anthropic capacity reduction. Affected one Partner-tier customer in Singapore; failed-over to backup inference path within 18 minutes; customer impact contained. PIR completed T+-80d; capacity reservation increased.</em></span>
         <span class="scope">1 tenant, no data impact</span>
       </div>
 
@@ -1610,8 +1610,8 @@ section {
         <tr>
           <td class="frame">SOC 2 Type II</td>
           <td class="status-warn">Audit in progress · Q1 2027</td>
-          <td>Common Criteria CC1–CC9 mapped to §§ II, III, V, VII. Audit period 1 Mar 2026 → 30 Nov 2026 with A-LIGN; observation by Vanta.</td>
-          <td>Under NDA · Vanta Trust Report available 2026-12-01</td>
+          <td>Common Criteria CC1–CC9 mapped to §§ II, III, V, VII. Audit period T+-66d → T+208d with A-LIGN; observation by Vanta.</td>
+          <td>Under NDA · Vanta Trust Report available T+209d</td>
         </tr>
         <tr>
           <td class="frame">ISO 27001</td>
@@ -1688,7 +1688,7 @@ section {
 
     <h3 class="sub-h"><span class="sub-id">IX.B</span>What we'll share under NDA</h3>
 
-    <p>The detailed evidence that lets a real reviewer do a real review. Under a mutual NDA — ours, yours, or any reasonable mid-market template — we share: SOC 2 Type I report (period 1 Aug 2025 – 30 Nov 2025) and SOC 2 Type II evidence-in-progress (interim observations from Vanta); the full Rhino Security Labs penetration test report (most recent, Feb 2026); our complete control matrix mapping (CC criteria → control → evidence → tester); a sample audit-trail export covering 30 days for a synthetic tenant; our BYOK runbook (SEC-2026-BYOK-RUNBOOK); the EU AI Act classification document from Wilson Sonsini once finalized; access to our Vanta Trust Report (read-only) for the duration of the diligence engagement.</p>
+    <p>The detailed evidence that lets a real reviewer do a real review. Under a mutual NDA — ours, yours, or any reasonable mid-market template — we share: SOC 2 Type I report (period T+87d 2025 – T+208d 2025) and SOC 2 Type II evidence-in-progress (interim observations from Vanta); the full Rhino Security Labs penetration test report (most recent, Feb 2026); our complete control matrix mapping (CC criteria → control → evidence → tester); a sample audit-trail export covering 30 days for a synthetic tenant; our BYOK runbook (SEC-2026-BYOK-RUNBOOK); the EU AI Act classification document from Wilson Sonsini once finalized; access to our Vanta Trust Report (read-only) for the duration of the diligence engagement.</p>
 
     <h3 class="sub-h"><span class="sub-id">IX.C</span>What we won't share, and why</h3>
 
@@ -1732,7 +1732,7 @@ section {
 <div class="sig-end">
   <span>Document <strong>SEC-2026-001 v1.2</strong></span>
   <span>Reviewed <strong>T+7d</strong> · Forge, CTO</span>
-  <span>Next review <strong>13 Aug 2026</strong></span>
+  <span>Next review <strong>T+99d</strong></span>
   <span>End of document</span>
 </div>
 

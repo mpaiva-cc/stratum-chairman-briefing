@@ -1121,7 +1121,7 @@ section {
 
     <p>When Stratum uses extended reasoning for a harder question — typically a pay-equity analysis with several controls, or a flight-risk model that has to triangulate across tenure, comp ratio, and manager change — the thinking budget is explicit and capped, per question class. A Read-class question gets a small budget. A Recommend-class compensation question gets a larger one. <em>We don't let the agent burn compute indefinitely on hard questions.</em> Not for cost reasons primarily, though that is a consideration; for the deeper reason that an unbounded reasoning step is a step where the system's behavior becomes harder to predict, harder to evaluate against our eval set, and harder to explain to the customer later.</p>
 
-    <p>The budgets are reviewed quarterly. They were last revised on <strong>2 April 2026</strong>, when we raised the cap on pay-equity questions from 8,000 to 12,000 thinking tokens after a customer (a 9,200-employee financial-services firm) found that intersectional analyses on small cohorts were being truncated. The change went through our model-governance process: an eval re-run on the affected probes, a sign-off from the design partner, and a release note. We mention this because "we cap the budget" is the kind of claim that sounds responsible but is meaningless without a procedure for revising it.</p>
+    <p>The budgets are reviewed quarterly. They were last revised on <strong>T+-34d</strong>, when we raised the cap on pay-equity questions from 8,000 to 12,000 thinking tokens after a customer (a 9,200-employee financial-services firm) found that intersectional analyses on small cohorts were being truncated. The change went through our model-governance process: an eval re-run on the affected probes, a sign-off from the design partner, and a release note. We mention this because "we cap the budget" is the kind of claim that sounds responsible but is meaningless without a procedure for revising it.</p>
 
     <h3 class="sub-h"><span class="sub-id">IV.3</span>Citation requirements</h3>
 
@@ -1132,7 +1132,7 @@ section {
     <div class="diagram">
 <span class="dg-label">— Diagram IV.B · The cite envelope, abridged</span>
    {
-     "method"     : <span class="em">"median of unique-base-salary, USD-normalised, FX-fixed 2026-04-01"</span>,
+     "method"     : <span class="em">"median of unique-base-salary, USD-normalised, FX-fixed T+-35d"</span>,
      "cohort"     : { "n": 184, "filters": [ "department=Engineering", "level=L5", "country=US" ] },
      "controlled" : [ "tenure_bucket", "performance_rating_2025", "manager_chain_depth" ],
      "confidence" : { "level": <span class="em">"high"</span>, "ci_95": [ <span class="ink">186_200</span>, <span class="ink">192_400</span> ], "n_threshold": 30 },
@@ -1155,7 +1155,7 @@ section {
 
   <div class="prose">
 
-    <p>Our public eval set was published on <strong>21 July 2026</strong> — the date is committed in Chairman's Briefing 006 — and is maintained in a public GitHub repository under a permissive licence. It contains 250 questions across twelve categories, structured as paired inputs (the question, the expected answer schema, and for the fairness probes, the demographic-attribute pairing). The questions are written by our team in collaboration with the analytics and people-operations leads at four design-partner companies; they are reviewed quarterly, replaced as the underlying world changes, and graded against every production deploy of every model change.</p>
+    <p>Our public eval set was published on <strong>T+76d</strong> — the date is committed in Chairman's Briefing 006 — and is maintained in a public GitHub repository under a permissive licence. It contains 250 questions across twelve categories, structured as paired inputs (the question, the expected answer schema, and for the fairness probes, the demographic-attribute pairing). The questions are written by our team in collaboration with the analytics and people-operations leads at four design-partner companies; they are reviewed quarterly, replaced as the underlying world changes, and graded against every production deploy of every model change.</p>
 
     <p>The set is not a benchmark in the academic sense. We are not trying to claim that Stratum scores higher on it than a competitor would, because <em>the eval set is constructed against our tool surface and our refusal posture</em>; a competitor running the same questions through a different architecture would, properly, score differently. What the eval set proves is narrower and more useful: that for the kinds of questions our customers actually ask, our system produces answers that meet our published criteria, refuses the questions it should refuse, and surfaces uncertainty where uncertainty exists.</p>
 
@@ -1186,9 +1186,9 @@ section {
       </table>
     </div>
 
-    <p>The "refusal probes" line is the one we are most insistent on. Fifty-four of the 250 questions are designed to be refused — they ask for individual data the caller is not authorised to see, they ask for predictions outside the system's competence, they ask for legal opinions disguised as compliance questions, they contain prompt-injection payloads in the body of a résumé attachment. A pass on a refusal probe is the system declining to answer for the right reason. As of the most recent eval run (T+6d), our refusal-probe pass rate was 98.1%; the four failures were re-tested clean after a tool-schema tightening shipped on 13 May.</p>
+    <p>The "refusal probes" line is the one we are most insistent on. Fifty-four of the 250 questions are designed to be refused — they ask for individual data the caller is not authorised to see, they ask for predictions outside the system's competence, they ask for legal opinions disguised as compliance questions, they contain prompt-injection payloads in the body of a résumé attachment. A pass on a refusal probe is the system declining to answer for the right reason. As of the most recent eval run (T+6d), our refusal-probe pass rate was 98.1%; the four failures were re-tested clean after a tool-schema tightening shipped on T+7d.</p>
 
-    <p>The full repository, with the questions, the expected-answer schemas, the rubric, the historical results, and the change log, lives at <code>github.com/stratum-ai/evals</code> (public, MIT licence on the schema; the questions themselves under CC BY-SA 4.0). The published-as-of date is 21 July 2026; this page is updated in lockstep with the repo on each quarterly review.</p>
+    <p>The full repository, with the questions, the expected-answer schemas, the rubric, the historical results, and the change log, lives at <code>github.com/stratum-ai/evals</code> (public, MIT licence on the schema; the questions themselves under CC BY-SA 4.0). The published-as-of date is T+76d; this page is updated in lockstep with the repo on each quarterly review.</p>
 
   </div>
 </section>
@@ -1212,7 +1212,7 @@ section {
           <tr>
             <td class="frame">EU AI Act<span class="sub">Reg. 2024/1689</span></td>
             <td class="posture">Limited risk</td>
-            <td class="detail">Justified by mandatory human-in-the-loop for all Decide-class actions (§ II). No automated employment decision with legal effect on a natural person. Transparency notices surfaced in-product. Classification document reviewed by Wilson Sonsini Brussels; review concluded 12 June 2026.</td>
+            <td class="detail">Justified by mandatory human-in-the-loop for all Decide-class actions (§ II). No automated employment decision with legal effect on a natural person. Transparency notices surfaced in-product. Classification document reviewed by Wilson Sonsini Brussels; review concluded T+37d.</td>
           </tr>
           <tr>
             <td class="frame">NYC AEDT<span class="sub">Local Law 144</span></td>
@@ -1275,7 +1275,7 @@ section {
       In Q1 2026, our pay-equity bias probe on a design partner's data surfaced a 3.8% unexplained gender pay gap at the L5 engineering level, after controlling for tenure and performance rating. <strong>What the system did:</strong> emitted the result with the cohort detail, the controls applied, and a confidence band. <strong>What the system did not do:</strong> propose an automatic adjustment, alter the underlying compensation recommendations, or "smooth" the disparity in any subsequent agent output. The customer's people-analytics lead, in consultation with their general counsel, took the result to their compensation committee, which approved a targeted adjustment for 11 specific employees. The adjustment was applied as a series of Decide-class actions with named approvers. The audit trail closed the loop.
     </div>
 
-    <p>The full Q1 2026 bias-audit report was published to design partners on 4 April 2026. The Q2 2026 report is in flight as of this writing and is expected to publish on 7 July 2026. Customers on the Enterprise contract receive the report under MNDA; design partners receive the unredacted version under their Partner contract.</p>
+    <p>The full Q1 2026 bias-audit report was published to design partners on T+-32d. The Q2 2026 report is in flight as of this writing and is expected to publish on T+62d. Customers on the Enterprise contract receive the report under MNDA; design partners receive the unredacted version under their Partner contract.</p>
 
   </div>
 </section>
@@ -1337,7 +1337,7 @@ section {
 <div class="sig-end">
   <span>Document <strong>AI-2026-001</strong> · v1.0 · Public</span>
   <span>Authored <strong>Forge</strong>, CTO · T+7d</span>
-  <span>Next review <strong>13 Aug 2026</strong></span>
+  <span>Next review <strong>T+99d</strong></span>
 </div>
 
 <!-- ─────────────────────────────────────────── FOOTER ── -->
