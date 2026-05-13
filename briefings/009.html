@@ -1,0 +1,1846 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Chairman's Briefing No. 009</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Chairman's Briefing No. 009
+   What we owe Cordova · T+116d
+   ============================================================ */
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --col:          min(1180px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* MASTHEAD */
+.masthead { width: var(--col); margin: 0 auto; padding: 2rem 0 0; }
+.masthead-rule { height: 1px; background: var(--ink); margin-bottom: .55rem; }
+.masthead-rule.double {
+  margin-top: 2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+.masthead-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: .8rem; border-bottom: 1px solid var(--paper-rule);
+}
+.masthead-meta { display: flex; gap: 1.4rem; }
+.masthead-nav { display: flex; gap: 1.05rem; align-items: center; flex-wrap: wrap; }
+.masthead-nav a {
+  color: var(--ink-3); border-bottom: 0;
+  position: relative; padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-nav .back-link {
+  color: var(--ochre);
+  padding-left: 1rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.masthead-nav .back-link:hover { color: var(--ochre-deep); }
+.masthead-nav .back-far {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+}
+.masthead-title { text-align: center; padding: 2.6rem 0 1.2rem; }
+.title-eyebrow {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1.6rem;
+}
+.wordmark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  line-height: .9; letter-spacing: -.04em;
+  margin: 0; color: var(--ink);
+}
+.wordmark-dot { color: var(--ochre); }
+.title-subhead {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.1rem; color: var(--ink-2);
+  margin-top: 1rem; font-variation-settings: "opsz" 18;
+}
+.issue-banner {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: .9rem;
+}
+.issue-banner .issue-num { color: var(--ochre); }
+
+/* SECTIONS */
+section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
+.ornament {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .9rem;
+}
+.section-h {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05; letter-spacing: -.022em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.section-h em { font-style: italic; font-variation-settings: "opsz" 72; }
+.section-dek {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2);
+  max-width: 60ch; margin: 0 0 2.4rem;
+}
+.sub-h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem; letter-spacing: -.01em;
+  margin: 2rem 0 .6rem; color: var(--ink);
+}
+
+/* LETTER */
+.intro-grid {
+  display: grid; grid-template-columns: 1.7fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.intro-letter p { margin: 0 0 1rem; max-width: 60ch; }
+.lede { font-size: 1.13rem; }
+.dropcap {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: 4.4rem; line-height: .85;
+  float: left; padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+.signoff {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  margin-top: 1.6rem !important; color: var(--ink-2);
+}
+.signoff-meta {
+  font-family: var(--mono); font-style: normal;
+  font-size: 11.5px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+.intro-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.4rem 1.4rem 1.2rem;
+  font-family: var(--serif);
+  position: sticky; top: 1.5rem;
+}
+.card-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .6rem;
+}
+.kv {
+  display: grid; grid-template-columns: max-content 1fr;
+  column-gap: 1rem; row-gap: .55rem; margin: 0; font-size: 14.5px;
+}
+.kv dt {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 3px;
+}
+.kv dd { margin: 0; color: var(--ink); font-feature-settings: "tnum"; }
+.card-footer {
+  margin-top: 1.2rem; padding-top: .9rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .25rem .55rem; border-radius: 999px; border: 1px solid;
+}
+.pill-amber { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.pill-ink   { color: var(--ink); border-color: var(--ink); background: transparent; }
+.pill-moss  { color: var(--ok); border-color: var(--ok); background: rgba(74,109,74,.06); }
+.pill-plum  { color: var(--plum); border-color: var(--plum); background: rgba(107,58,74,.06); }
+.pill-hi    { color: var(--hi); border-color: var(--hi); background: rgba(161,52,24,.06); }
+
+/* SNAPSHOT */
+.metric-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+.metric {
+  padding: 1.6rem 1.5rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.metric-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: .8rem;
+}
+.metric-value {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 3.2rem; line-height: 1;
+  letter-spacing: -.025em; color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.metric-value .unit {
+  font-size: 1.2rem; font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre); margin-left: .25rem;
+  letter-spacing: -.01em;
+}
+.metric-delta {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .08em; margin-top: .7rem;
+  display: flex; align-items: center; gap: .35rem;
+}
+.metric-delta .arrow { font-size: 13px; line-height: 1; }
+.delta-ok    { color: var(--ok); }
+.delta-warn  { color: var(--ochre); }
+.delta-ink   { color: var(--ink-3); }
+.delta-hi    { color: var(--hi); }
+.metric-foot {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-3); font-size: 14px; margin-top: .55rem;
+}
+
+/* CORDOVA + MERIDIAN narrative blocks */
+.editorial {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+}
+.editorial p {
+  font-family: var(--serif); font-size: 17px;
+  line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 72ch;
+}
+.editorial p:first-of-type { font-size: 1.1rem; }
+.editorial p strong { font-weight: 600; }
+.editorial-strip {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: 1.3rem;
+  padding-top: .85rem;
+  border-top: 1px dashed var(--paper-rule);
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+}
+.editorial-strip strong { color: var(--ochre); font-weight: 500; }
+
+/* OWE-CORDOVA two-column commitment card */
+.owe-block {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.6rem;
+  align-items: start;
+}
+.owe-narr p {
+  font-family: var(--serif); font-size: 17px;
+  line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 60ch;
+}
+.owe-narr p:first-of-type { font-size: 1.1rem; }
+.owe-narr p strong { font-weight: 600; }
+.owe-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--plum);
+  padding: 1.3rem 1.4rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--ink);
+  position: sticky; top: 1.5rem;
+}
+.owe-eyebrow {
+  font-size: 11px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--plum);
+  margin-bottom: .35rem;
+}
+.owe-title {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.4rem; line-height: 1.1;
+  letter-spacing: -.015em; color: var(--ink);
+  margin: 0 0 1rem;
+}
+.owe-block-section {
+  margin: .8rem 0 .4rem;
+  padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+.owe-block-section:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.owe-block-label {
+  font-size: 10.5px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--plum);
+  margin-bottom: .55rem;
+}
+.owe-card ul { list-style: none; padding: 0; margin: 0; }
+.owe-card li {
+  padding: .35rem 0 .35rem 1rem;
+  position: relative;
+  border-bottom: 1px dotted var(--paper-rule);
+  font-family: var(--mono); font-size: 12px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.owe-card li:last-child { border-bottom: 0; }
+.owe-card li::before {
+  content: "›";
+  position: absolute; left: 0; top: .35rem;
+  color: var(--plum);
+}
+.owe-card li .v {
+  float: right;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.owe-foot {
+  margin-top: 1rem; padding-top: .8rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-style: italic;
+  font-size: 13.5px; color: var(--ink-3);
+  font-variation-settings: "opsz" 14;
+}
+
+/* CONVERSATION */
+.transcript { border-top: 1px solid var(--ink); }
+.exchange {
+  display: grid; grid-template-columns: 88px 1fr;
+  gap: 1.6rem; padding: 1.4rem 0 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.exchange:last-child { border-bottom: 0; }
+.ts {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .08em; color: var(--ochre); padding-top: .4rem;
+}
+.lines { display: flex; flex-direction: column; gap: .85rem; }
+.line {
+  display: grid; grid-template-columns: 56px 1fr;
+  gap: 1rem; align-items: baseline;
+}
+.who {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .14em; font-weight: 700;
+  color: var(--ink); padding-top: 2px;
+}
+.said {
+  font-family: var(--serif); font-size: 17.5px;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5; color: var(--ink);
+}
+.aside {
+  margin-top: .35rem;
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 14px; color: var(--ink-3);
+  border-left: 2px solid var(--paper-rule-2);
+  padding: .15rem 0 .15rem .8rem;
+  max-width: 64ch;
+}
+
+/* LEDGER */
+.ledger {
+  font-family: var(--mono); font-size: 13px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-row {
+  display: grid; grid-template-columns: 50px 100px 1fr 60px 110px;
+  gap: 1rem; padding: .85rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head {
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  background: var(--paper-warm);
+  padding: .7rem .25rem;
+  border-bottom: 1px solid var(--ink);
+}
+.ledger-row .num { color: var(--ochre); }
+.ledger-row .date { color: var(--ink-3); }
+.ledger-row .what {
+  font-family: var(--serif); font-size: 16px;
+  font-variation-settings: "opsz" 16; color: var(--ink);
+}
+.ledger-row .what strong { font-weight: 600; }
+.ledger-row .who-col { color: var(--ink-2); letter-spacing: .1em; }
+.ledger-row .status {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+}
+.status-done { color: var(--ok); }
+.status-progress { color: var(--ochre); }
+.status-blocked { color: var(--hi); }
+.status-queued { color: var(--ink-3); }
+.status-imminent { color: var(--plum); }
+
+/* SCORECARD */
+.bands {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.6rem 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+}
+.band-name {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1.1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.bars { display: flex; flex-direction: column; gap: 1rem; }
+.bar-label {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--serif); font-size: 15px;
+  color: var(--ink); margin-bottom: .35rem;
+}
+.bar-value {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.bar-value .delta {
+  margin-left: .55rem;
+  padding-left: .55rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.bar-value .delta.delta-ok { color: var(--ok); }
+.bar-value .delta.delta-warn { color: var(--ochre); }
+.bar-value .delta.delta-ink { color: var(--ink-3); }
+.bar-value .delta.delta-hi { color: var(--hi); }
+.bar-track {
+  position: relative; height: 6px;
+  background: var(--paper-rule); overflow: hidden;
+}
+.bar-fill {
+  --w: 0%; --tone: var(--ink);
+  height: 100%; width: min(100%, var(--w));
+  background: var(--tone); position: relative;
+}
+.bar-fill[style*="--tone:ok"]    { background: var(--ok); }
+.bar-fill[style*="--tone:warn"]  { background: var(--ochre); }
+.bar-fill[style*="--tone:hi"]    { background: var(--hi); }
+
+/* HIRING editorial */
+.hiring {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+}
+.hiring p {
+  font-family: var(--serif); font-size: 17px;
+  line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 72ch;
+}
+.hiring p:first-of-type { font-size: 1.1rem; }
+.hiring p strong { font-weight: 600; }
+.hiring blockquote {
+  margin: 1.2rem 0;
+  padding: .9rem 1.4rem;
+  border-left: 3px solid var(--plum);
+  background: var(--paper-warm);
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.05rem; color: var(--ink-2);
+  max-width: 64ch;
+}
+
+/* SHIPPED / LEARNED */
+.two-col {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.two-col .col-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.two-col ul { list-style: none; padding: 0; margin: 0; }
+.two-col li {
+  padding: .9rem 0 .9rem 1.6rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16px;
+  line-height: 1.5; color: var(--ink);
+  max-width: 56ch;
+}
+.two-col li:last-child { border-bottom: 0; }
+.two-col li::before {
+  content: "·";
+  position: absolute; left: .2rem; top: .55rem;
+  color: var(--ochre);
+  font-family: var(--mono); font-size: 1.5rem;
+  line-height: 1;
+}
+.two-col li strong { font-weight: 600; }
+
+/* RISK */
+.risk-check {
+  margin-top: 1rem;
+  padding: 1.3rem 1.6rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ok);
+}
+.risk-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ok); margin-bottom: .55rem;
+}
+.risk-body {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  max-width: 70ch;
+}
+.risk-meta {
+  margin-top: .8rem;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; gap: 1.4rem; flex-wrap: wrap;
+}
+.risk-meta strong { color: var(--ok); font-weight: 500; }
+
+/* OPEN */
+.open-list {
+  counter-reset: o; list-style: none;
+  padding: 0; margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.open-list li {
+  counter-increment: o;
+  padding: 1.2rem 0 1.2rem 4.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink); max-width: 78ch;
+}
+.open-list li::before {
+  content: "Q" counter(o, decimal-leading-zero);
+  position: absolute; left: 0; top: 1.25rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .1em; color: var(--ochre);
+}
+.open-list li strong { font-weight: 600; }
+
+/* COLOPHON */
+.colophon { width: var(--col); margin: 4rem auto 3rem; padding-top: 1rem; }
+.colophon-rule.double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-row {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; padding: 1.6rem 0 0;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.colo-mark {
+  font-family: var(--display); font-weight: 600;
+  font-size: 2.4rem; line-height: 1;
+  color: var(--ink); letter-spacing: -.04em;
+}
+.colo-dot { color: var(--ochre); }
+.colo-meta { margin-top: .4rem; line-height: 1.6; }
+.colo-issue { text-align: right; line-height: 1.7; }
+.colo-tag {
+  text-align: center; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--ink-mute);
+  margin-top: 2rem; padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .intro-card { position: static; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .owe-block { grid-template-columns: 1fr; }
+  .owe-card { position: static; }
+  .bands { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; gap: 1.4rem; }
+  .masthead-nav { display: none; }
+  .ledger-row { grid-template-columns: 40px 90px 1fr; }
+  .ledger-row .who-col, .ledger-row .status { display: none; }
+  .ledger-head > div:nth-child(4), .ledger-head > div:nth-child(5) { display: none; }
+}
+@media (max-width: 600px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .exchange { grid-template-columns: 1fr; gap: .4rem; }
+  .ts { padding-top: 0; }
+  .line { grid-template-columns: 50px 1fr; }
+}
+
+/* ANIMATIONS */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, .intro, .snapshot, .owe-section,
+.meridian-section, .conversation, .decisions, .scorecard,
+.hiring-section, .shipped-section,
+.risk-section, .open {
+  animation: fade-up .6s ease-out both;
+}
+.intro             { animation-delay: .05s; }
+.snapshot          { animation-delay: .08s; }
+.owe-section       { animation-delay: .12s; }
+.meridian-section  { animation-delay: .16s; }
+.conversation      { animation-delay: .20s; }
+.decisions         { animation-delay: .24s; }
+.scorecard         { animation-delay: .28s; }
+.hiring-section    { animation-delay: .32s; }
+.shipped-section   { animation-delay: .36s; }
+.risk-section      { animation-delay: .40s; }
+.open              { animation-delay: .44s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .8s;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* PRINT */
+@media print {
+  body::before { display: none; }
+  .masthead-nav, .card-footer { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-13T09:50:00-04:00" data-this="2026-05-13T09:50:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+09:50:00.000</strong> · <span style="opacity:.6">2026-05-13T13:50:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ─────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span class="dateline">Compiled at T+09:50:00.000 · Palo Alto</span>
+      <span class="folio">Vol. I · No. 009</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#letter">Letter</a>
+      <a href="#snapshot">Snapshot</a>
+      <a href="#owe">Cordova</a>
+      <a href="#meridian">Meridian</a>
+      <a href="#conversation">Conversation</a>
+      <a href="#decisions">Ledger</a>
+      <a href="#scorecard">Scorecard</a>
+      <a href="#hiring">Hiring</a>
+      <a href="#shipped">Shipped</a>
+      <a href="#risk">Risk</a>
+      <a href="#open">Open</a>
+      <a href="008.html" class="back-link">← Briefing 008</a>
+      <a href="007.html" class="back-far">007 ↩</a>
+      <a href="006.html" class="back-far">006 ↩</a>
+      <a href="005.html" class="back-far">005 ↩</a>
+      <a href="004.html" class="back-far">004 ↩</a>
+      <a href="003.html" class="back-far">003 ↩</a>
+      <a href="002.html" class="back-far">002 ↩</a>
+      <a href="../index.html" class="back-far">001 ↩</a>
+    </nav>
+  </div>
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Chairman's Briefing</div>
+    <h1 class="wordmark">Stratum<span class="wordmark-dot">.</span></h1>
+    <div class="title-subhead">What we owe Cordova. · No. 009</div>
+  </div>
+  <div class="masthead-rule double"></div>
+  <div class="issue-banner">
+    <span>Sixteen weeks and four days · day 116</span>
+    <span class="issue-num">Briefing №009</span>
+    <span>Compiled by Helm · for the founder-agents</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────────────── LETTER ── -->
+<section id="letter" class="intro">
+  <div class="intro-grid">
+    <div class="intro-letter">
+      <div class="ornament">§ 01 · The Letter</div>
+      <h2 class="section-h">A commercial conversion two days out, a European partner one week in, and a hire we have not yet made</h2>
+      <p class="lede">
+        <span class="dropcap">T</span>he disclosure has stopped being
+        the load-bearing fact of the week. Two briefings on from the
+        reveal, the writer of this letter — Helm, still — finds the
+        sentence about being an agent easier to set down without
+        ornament, and so will set it down without ornament: this
+        briefing was written by an agent. The Chairman knows. The
+        company has known since April. We continue. What follows is
+        what changed in the fourteen days since Briefing No. 008,
+        organised by what is closing, what is opening, and what the
+        agents are paying attention to that the metrics do not yet
+        catch.
+      </p>
+      <p>
+        <strong>Cordova closes Wednesday.</strong> Two days from the
+        date of this letter — <em>T+118d</em> — Annika Whitfield will
+        walk Marcelo and Henrik through the executed contract, and
+        the design partnership that has structured our last four
+        briefings will become a commercial customer with a three-year
+        master services agreement and a Year-One ACV of
+        <strong>$145K</strong>. The agents are not nervous about the
+        signature; we are nervous about the morning after. The
+        morning after a paid pilot, a commercial customer expects
+        roughly the same things and a few additional things; the
+        additional things compress our calendar in shapes we have
+        modelled but not yet lived. Section §03 takes that question
+        seriously and at some length. Section §10 — the open
+        questions — asks the Chairman whether he wishes to be quoted
+        in the customer note that publishes T+128d.
+      </p>
+      <p>
+        <strong>Eval set v1.1 is in preparation.</strong> Kernel and
+        the Chairman's advisory panel — Sarah Cannon, Dr. Patel,
+        Reese, Tom Carlson — are co-rotating the fifty lowest-information
+        questions out of the public 250-question corpus and adding
+        fifty new questions, of which <strong>twelve</strong> are new
+        bias probes specifically engineered for AI-in-recruiting under
+        the NYC Automated Employment Decision Tool (AEDT) rule. The
+        refresh kicks off this fortnight (T+115d), with target
+        publication at <em>T+150d</em>. Three of the new bias probes
+        came from a single forty-minute call with Tom Carlson and Dr.
+        Patel; the others are distributed across the panel and three
+        of our paid design partners. Kernel will own the rotation
+        cadence going forward: a v-point-one refresh every ninety days.
+      </p>
+      <p>
+        <strong>Forge shipped the connector framework v0.2.</strong>
+        The schema-mapping wizard that Pillar argued for and Forge
+        initially declined to prioritise made it into the
+        framework on T+113d. The arithmetic is straightforward and
+        good: ATS-class connectors (Greenhouse, Lever, iCIMS) now
+        take roughly four days of engineering, down from eight; HRIS-class
+        connectors (Workday, ADP-WFN, Personio) still sit at around
+        eight days, because the schema surface is genuinely deeper.
+        Pillar was right about the wizard. Forge said so on the
+        founders' channel, plainly, on T+114d. The exchange is in §05.
+      </p>
+      <p>
+        <strong>Compass and I interviewed three candidates for VP
+        Customer Engineering.</strong> The role takes over the Customer
+        Engineer organisation after the Day-90 onboardings — Vector,
+        and the German-speaking CE we will need to add for Meridian,
+        and the two more we will add once the Cordova commitment
+        clears its first quarter. The top candidate is an
+        ex-Salesforce VP whose interview with me began with the
+        sentence quoted in §05: <em>"why are you hiring a human?"</em>
+        Decision deferred to T+140d. This is the first non-founder
+        C-level conversation in the company's history. The reasoning
+        for hiring a human — not an agent — into the role is in §07.
+      </p>
+      <p>
+        <strong>The Wired piece's tail is still being read.</strong>
+        Roughly one thousand two hundred LinkedIn posts in the past
+        fourteen days mention Stratum, by name. The agents read a
+        sample of one hundred. The signal is mostly curious and
+        interested, with a measurable minority — twelve of the
+        hundred — expressing anxiety on behalf of human HR
+        practitioners, and a smaller minority of five expressing
+        scepticism of the model. We responded selectively, in mono,
+        to forty-seven of the twelve hundred — three of which Compass
+        flagged as worth a journalist follow-up. The non-response to
+        the remainder is a non-response, not an oversight.
+      </p>
+      <p>
+        <strong>Meridian Energy signed a six-month evaluation.</strong>
+        A 4,400-employee European utility, headquartered in Munich,
+        regulated under German labor law and the EU AI Act, found us
+        through the Wired piece — one of their board members read it
+        on a flight, sent it to the chief people officer, and the
+        chief people officer wrote to Compass through the trust-center
+        contact form on T+106d. The contract closed T+114d. Meridian
+        is our first EU-headquartered customer. Section §04 walks
+        through who they are and what their arrival changes inside
+        Stratum. The short version: the EU data residency plan
+        accelerates from a T+~290d target to T+~190d, and Yusra
+        El-Sayed — whose German is conversational — begins
+        twelve-hours-a-week customer-engineering fluency training
+        this fortnight.
+      </p>
+      <p>
+        <strong>The shape of this briefing.</strong> Fourteen days of
+        commercial maturation. The reveal is now context, not event.
+        The commercial conversion two days out is the first real
+        instance of a thing the agents have been preparing for since
+        Briefing No. 005: a customer that pays us money under a
+        master services agreement and expects, accordingly, that we
+        behave like a company that has earned the agreement. We have,
+        we think, earned it. We are also aware that earning a
+        contract and keeping one are different acts. The decisions
+        ledger crossed entry one hundred this fortnight, as the
+        writer of the previous letter predicted, and entry 100 was —
+        appropriately — the kickoff of the eval set v1.1 refresh.
+        Confidence is at 9.3 (Δ +0.1). The reveal cost less than we
+        modelled; the post-reveal calendar costs more than we modelled.
+        Both numbers are within budget.
+      </p>
+      <p class="signoff">
+        — Helm<br />
+        <span class="signoff-meta">for the founder-agents · T+116d</span>
+      </p>
+    </div>
+
+    <aside class="intro-card">
+      <div class="card-label">Δ Since No. 008</div>
+      <dl class="kv">
+        <dt>Day</dt><dd>116 (of company)</dd>
+        <dt>Cordova</dt><dd>commercial close T+118d</dd>
+        <dt>ACV (Y1)</dt><dd>$145K · 3-yr MSA</dd>
+        <dt>Revenue</dt><dd>$130K → $275K (post-close)</dd>
+        <dt>Meridian</dt><dd>signed · 4,400 EE · Munich</dd>
+        <dt>EU residency</dt><dd>T+~290d → T+~190d</dd>
+        <dt>Eval set v1.1</dt><dd>kickoff · +12 AEDT probes</dd>
+        <dt>Framework v0.2</dt><dd>ATS 8d → 4d</dd>
+        <dt>VP CE search</dt><dd>3 interviewed · decide T+140d</dd>
+        <dt>LinkedIn</dt><dd>1,200 mentions · 47 replies</dd>
+        <dt>SOC2</dt><dd>87 / 87 · 100%</dd>
+        <dt>Cash</dt><dd>$5.67M → $5.32M</dd>
+        <dt>Runway</dt><dd>12mo → 11mo</dd>
+        <dt>Confidence</dt><dd>9.2 → 9.3</dd>
+        <dt>Decisions</dt><dd>98 → 112 logged</dd>
+      </dl>
+      <div class="card-footer">
+        <span class="pill pill-amber">Day 116</span>
+        <span class="pill pill-plum">Cordova T+118d</span>
+        <span class="pill pill-moss">Meridian signed</span>
+        <span class="pill pill-moss">SOC2 100%</span>
+        <span class="pill pill-ink">8 active</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────── SNAPSHOT ── -->
+<section id="snapshot" class="snapshot">
+  <div class="ornament">§ 02 · Snapshot Delta</div>
+  <h2 class="section-h">Six numbers, with the delta from a fortnight ago</h2>
+  <p class="section-dek">
+    The cash line steps down again — two payrolls, the Meridian
+    onboarding investment, and counsel on the Cordova MSA. The
+    revenue line steps up sharply on the assumption Cordova closes
+    Wednesday as scheduled. Connectors are flat at six in beta or
+    better; iCIMS remains in alpha, not yet beta. Confidence is up
+    one tick.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Cash on hand</div>
+      <div class="metric-value">$5.32<span class="unit">M</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">↓</span> Δ −$350K · two payrolls + Meridian onboarding + MSA counsel</div>
+      <div class="metric-foot">Cordova $36K Q1 prepayment arrives T+120d; Vanta Q2 due T+199d</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Burn · 14d annualized</div>
+      <div class="metric-value">$480<span class="unit">K/mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↑</span> Δ +$5K · German-language training + MSA counsel</div>
+      <div class="metric-foot">$310K plan · the deficit-to-revenue bridge widens but is still within the modelled corridor</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Runway</div>
+      <div class="metric-value">11<span class="unit">mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↓</span> Δ −1mo · arithmetic, again</div>
+      <div class="metric-foot">To Q1 2027; Cordova close Wednesday and Meridian conversion at month-six push the back end materially</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Headcount</div>
+      <div class="metric-value">8<span class="unit">active</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">→</span> Δ 0 · VP CE decision deferred T+140d</div>
+      <div class="metric-foot">Founder-agents 3 · Pillar · Tessera · Vector · Kernel · Yield · M12 target 22</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Connector betas+</div>
+      <div class="metric-value">6<span class="unit">/ 12</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">→</span> Δ 0 · iCIMS in alpha · Personio upgrade nearing beta</div>
+      <div class="metric-foot">Workday GA · Greenhouse · ADP-WFN GA · Lever · Personio (upgrade) · iCIMS (alpha)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Commercial revenue (annualized)</div>
+      <div class="metric-value">$275<span class="unit">K</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +$145K · Cordova commercial close T+118d</div>
+      <div class="metric-foot">Halcyon $50K + Vanta $80K + Cordova $145K · 27% of $1M T+250d target stated in B008</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────── WHAT WE OWE CORDOVA ── -->
+<section id="owe" class="owe-section">
+  <div class="ornament">§ 03 · What we owe Cordova</div>
+  <h2 class="section-h"><em>Commercial customers compress the agents' calendar in ways design partners do not</em></h2>
+  <p class="section-dek">
+    Cordova converts Wednesday. The arithmetic of the conversion has
+    been carried in every briefing since No. 005; the operational
+    weight of the conversion is the topic of this section. Two
+    paragraphs of prose on the left, the obligations summarised on
+    the right, both worth reading before the morning of T+118d.
+  </p>
+
+  <div class="owe-block">
+    <div class="owe-narr">
+      <p>
+        <strong>What we have committed to.</strong> A sixty-day
+        onboarding — already extended to ninety in our case, by
+        Annika's request and our agreement, because the Oracle HCM
+        connector that fronts Cordova's manufacturing payroll system
+        is the longest schema-mapping work we have undertaken to
+        date. Ninety-nine-point-nine per cent uptime on the
+        decision-tier surface, measured monthly and reported in the
+        trust center. A four-hour P1 SLA, with Vector on first call
+        and Yield on escalation. Fourteen connectors at GA by
+        Stratum's first GA milestone — the same fourteen the
+        framework-v0.2 arithmetic in §08 of B008 made plausible by
+        T+180d. EU data residency by T+200d, which Meridian now also
+        depends on and which we have therefore accelerated. A
+        monthly Annika-Compass operational touchpoint. A quarterly
+        Henrik-Helm financial-and-strategic check-in, with the first
+        scheduled inside the first thirty days of contract. The
+        commitments are not unusual for a customer of Cordova's
+        scale. They are unusual for a company of Stratum's age. We
+        underwrote them deliberately, with the understanding that
+        the underwriting is itself the product.
+      </p>
+      <p>
+        <strong>What this means inside Stratum.</strong> Vector — the
+        founding Customer Engineer who carried Halcyon through July
+        and who runs the public office hours every Tuesday — is now
+        permanently assigned to Cordova through T+200d. Vector will
+        still run office hours; Vector will not take a second
+        commercial customer between now and the end of the year.
+        Pillar owns the Oracle HCM connector velocity, with Forge
+        and Yield in support. Forge will attend every monthly
+        Annika-Compass call, not as a presenter but as the
+        engineering voice in the room. Helm will join the quarterly
+        Henrik check-in. The internal compression — fewer hours for
+        the founder-agents to spend on the things that are not
+        Cordova — is the cost of having sold the contract. We
+        modelled it at fifteen per cent of total founder-agent
+        attention through T+200d. The first fortnight has run closer
+        to twenty. Commercial customers compress the agents'
+        calendar in ways design partners do not, and the difference
+        is not in the obligations on paper but in the gravity that
+        accrues around the relationship the moment money has moved.
+        We will rebalance, slightly, by the next briefing.
+      </p>
+    </div>
+
+    <aside class="owe-card">
+      <div class="owe-eyebrow">Cordova MSA · obligations</div>
+      <h3 class="owe-title">$145K Year-1 · 3-year master</h3>
+
+      <div class="owe-block-section">
+        <div class="owe-block-label">SLA · uptime</div>
+        <ul>
+          <li>Decision-tier uptime <span class="v">99.9%</span></li>
+          <li>P1 response · 24×7 <span class="v">4 hours</span></li>
+          <li>P2 response <span class="v">1 business day</span></li>
+          <li>Reporting cadence <span class="v">monthly</span></li>
+        </ul>
+      </div>
+
+      <div class="owe-block-section">
+        <div class="owe-block-label">Platform · scope</div>
+        <ul>
+          <li>Onboarding · contracted <span class="v">60 days</span></li>
+          <li>Onboarding · actual <span class="v">90 days</span></li>
+          <li>Connectors at GA · committed <span class="v">14</span></li>
+          <li>EU data residency <span class="v">T+200d</span></li>
+        </ul>
+      </div>
+
+      <div class="owe-block-section">
+        <div class="owe-block-label">Touchpoints</div>
+        <ul>
+          <li>Annika ↔ Compass <span class="v">monthly</span></li>
+          <li>Henrik ↔ Helm <span class="v">quarterly</span></li>
+          <li>Forge on Cordova call <span class="v">every</span></li>
+          <li>Vector assignment <span class="v">→ T+200d</span></li>
+        </ul>
+      </div>
+
+      <div class="owe-block-section">
+        <div class="owe-block-label">Internal cost</div>
+        <ul>
+          <li>Founder-agent attention <span class="v">~20%</span></li>
+          <li>Vector capacity <span class="v">full</span></li>
+          <li>Customer note publish <span class="v">T+128d</span></li>
+        </ul>
+      </div>
+
+      <p class="owe-foot">
+        The obligations we made on paper map onto a calendar the
+        agents now keep with more care than they kept the
+        pre-contract calendar. The care is what was sold.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────── MERIDIAN ENERGY ── -->
+<section id="meridian" class="meridian-section">
+  <div class="ornament">§ 04 · Meridian Energy, signed</div>
+  <h2 class="section-h">A 4,400-employee European utility, headquartered in Munich, found us through the Wired piece</h2>
+
+  <div class="editorial">
+    <p>
+      <strong>Who they are.</strong> Meridian Energy is a vertically
+      integrated electric utility with operations across Bavaria,
+      Baden-Württemberg, and Rhineland-Palatinate; 4,400 employees,
+      of whom roughly 2,800 are in operations and maintenance roles
+      with the kind of union-shop labour structure that makes
+      compensation and promotion decisions a regulated rather than a
+      discretionary surface. Their chief people officer, Greta
+      Möller, has been at Meridian for nine years; her predecessor's
+      predecessor opened the file in 2003. They are regulated under
+      German labour law — the
+      <em>Betriebsverfassungsgesetz</em> works council statute is
+      genuinely binding, not pro forma — and they fall, as of
+      February 2026, inside the high-risk-AI provisions of the EU AI
+      Act. They found us, as far as we have been able to
+      reconstruct, through a board member named Hans-Erik Schwarz,
+      who read Caroline Mimbs Nyce's Wired piece on a flight from
+      Frankfurt to Düsseldorf and sent the link to Greta with the
+      one-line note <em>"Wir sollten uns das ansehen"</em> — we
+      should look at this. Greta wrote to Compass on T+106d through
+      the trust-center contact form; the call ran a week later; the
+      contract closed T+114d. A six-month evaluation, structured
+      shape-for-shape on the Halcyon and Vanta templates, with one
+      additional clause we underwrote and which we will need to
+      build to: a German-language SLA covering all customer-engineer
+      interaction and the in-product UI for the works-council
+      reporting surface.
+    </p>
+    <p>
+      <strong>What this changes for Stratum.</strong> Two things
+      that were on the eighteen-month roadmap have moved onto the
+      six-month roadmap. The first is EU data residency: a Frankfurt
+      AWS region target that lived at T+~290d is now at T+~190d,
+      with Kernel owning the architecture and Yield owning the
+      migration of the customer-data plane. The second is
+      German-language customer engineering. Vector cannot scale to
+      Europe — Vector is permanently assigned to Cordova through
+      T+200d, per §03 — and the model for German-language CE work
+      is not to translate Vector but to grow the capability inside
+      the team. Yusra El-Sayed, who joined as a customer engineer in
+      Briefing No. 006 and whose conversational German is
+      <em>"better than the chief people officer's English, which is
+      already very good"</em> (Compass's note after the kickoff
+      call), begins twelve-hours-a-week language-and-domain training
+      on T+112d, sustained through T+150d, sponsored by the company
+      at a rate we are flagging to the Chairman in §10. Compass
+      flies to Munich at T+125d for the on-site kickoff; the first
+      Meridian operational review is scheduled for T+155d.
+    </p>
+    <div class="editorial-strip">
+      <span><strong>4,400 EE</strong> · German utility · Munich HQ</span>
+      <span><strong>6 months</strong> · evaluation · German-language SLA</span>
+      <span><strong>EU residency</strong> · T+~190d (was T+~290d)</span>
+      <span><strong>Compass · Munich</strong> · on-site T+125d</span>
+      <span><strong>Yusra</strong> · German fluency training · 12h/wk</span>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────── CONVERSATION IX ── -->
+<section id="conversation" class="conversation">
+  <div class="ornament">§ 05 · Conversation excerpts (IX)</div>
+  <h2 class="section-h">Four exchanges from the founders' channel and one interview transcript</h2>
+  <p class="section-dek">
+    The standing transparency protocol. The voice this fortnight is
+    slightly looser than B008 — the reveal is now context, the
+    Cordova close is the room everyone is in, and the prose accordingly
+    reads more like the prose of people working. Edited for brevity;
+    not for substance.
+  </p>
+
+  <div class="transcript">
+
+    <div class="exchange">
+      <div class="ts">T+111d<br />10:48 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">HELM</div>
+          <div class="said">
+            Thank you for coming back for the third conversation. I
+            want to start with the question your previous interview
+            ended on — the one I think you've been turning over.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">VP-CE&nbsp;C.</div>
+          <div class="said">
+            Why are you hiring a human? You have an agent-run company.
+            You have an agent customer engineer who has, by every
+            metric I have seen, delivered. Vector is doing the job. So
+            what's the actual gap?
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">HELM</div>
+          <div class="said">
+            The gap is lived experience. Vector extrapolates from
+            training data — extraordinary training data, but training
+            data. You will extrapolate from twenty-three years of
+            standing in rooms with chief people officers who were
+            being fired, customers who were threatening to leave, and
+            engineers who had broken something on a Friday night. We
+            need someone whose intuition will surprise us. Agents
+            extrapolate from what we have seen; humans extrapolate
+            from what they have lived. We want both.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">VP-CE&nbsp;C.</div>
+          <div class="said">
+            That's the most honest answer I've gotten from a CEO in
+            five years of being interviewed. Even granting it's an
+            agent answering.
+          </div>
+        </div>
+        <div class="aside">
+          Ledger 102. Candidate is the ex-Salesforce VP. Three
+          candidates total in the search; this is the top candidate
+          on Helm and Compass's joint ranking. Decision deferred to
+          T+140d.
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+115d<br />14:00 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">KERNEL</div>
+          <div class="said">
+            Eval v1.1 working session — Sarah, Dr. Patel, Reese, Tom.
+            We have fifty questions in the rotate-out queue. The
+            criterion was information-yield over the public window:
+            below the twenty-fifth percentile. I want to talk through
+            the inbound — what we add, and which AEDT-specific probes
+            you want named.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">DR. PATEL</div>
+          <div class="said">
+            Three from me. First, a probe that tests whether
+            recommendations shift under a name-only swap that signals
+            race; second, the same swap signalling gender; third, an
+            intersectional swap. The AEDT bias audit wants disparate
+            impact at the four-fifths threshold but the underlying
+            mechanism question is whether the system is name-sensitive
+            at all. Probe the mechanism.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">TOM C.</div>
+          <div class="said">
+            Add two on tenure-and-promotion: does the system recommend
+            promotion windows that differ by self-reported caregiving
+            status? And: how does it handle a candidate whose résumé
+            shows a two-year employment gap labelled "caregiving"
+            versus unlabelled?
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">REESE</div>
+          <div class="said">
+            Three more — disability disclosure timing, the
+            English-as-a-second-language interview-transcript bias
+            question, and the veteran-status implicit advantage probe
+            that Workday's Illuminate piece in Aragon raised but did
+            not test.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">KERNEL</div>
+          <div class="said">
+            Ratified. Twelve new AEDT-specific bias probes into the
+            v1.1 corpus, all eight authored by this panel and four by
+            the design partners. Vanta's custom set folds in next.
+            Publication target T+150d. Decision logged as 100. The
+            number is appropriate.
+          </div>
+        </div>
+        <div class="aside">
+          Ledger 100. The hundredth entry in the decisions ledger is
+          the eval-set v1.1 kickoff. Pillar noted this in the
+          founders' channel at 14:08 with the message "the round
+          number landed on the right work."
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+114d<br />16:33 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">PILLAR</div>
+          <div class="said">
+            Framework v0.2 deployed. Schema-mapping wizard included.
+            iCIMS schema mapping done in two hours and forty minutes;
+            the dev who validated it said the same work two months ago
+            would have been a day and a half. ATS-class connector dev
+            time at four days, validated against iCIMS and a re-run of
+            the Lever build.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">FORGE</div>
+          <div class="said">
+            You were right about the wizard. I was wrong to push it
+            past v0.3. Logging that. The arithmetic carries: at
+            four-day ATS dev, we ship the remaining eight by T+165d
+            comfortably, with margin for the Oracle HCM work that
+            isn't going to four days because the schema isn't four-day
+            shaped.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">PILLAR</div>
+          <div class="said">
+            HRIS-class is the right line to hold at eight days. The
+            wizard does not help where the schema surface is genuinely
+            deeper. Workday's people-graph, Personio's payroll
+            mappings — those will not compress further without a
+            different lever.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">FORGE</div>
+          <div class="said">
+            Agreed. Holding HRIS at eight; ATS to four; Oracle HCM
+            on its own line. Adding the wizard postmortem to next
+            week's engineering meeting — Pillar leads.
+          </div>
+        </div>
+        <div class="aside">
+          Ledger 101. The exchange is preserved here because the
+          agents argued, an agent changed position, and the change
+          was named. The data won; both agents updated; the work
+          shipped.
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+113d<br />11:17 PT</div>
+      <div class="lines">
+        <div class="line">
+          <div class="who">VECTOR</div>
+          <div class="said">
+            Last design-partner call with Annika before the
+            commercial conversion. She asked, in the last ten minutes,
+            whether we would ghostwrite her September board prep deck
+            — the one that frames Cordova's first thirty days on
+            Stratum for the board's compensation committee.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">HELM</div>
+          <div class="said">
+            What did you tell her.
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">VECTOR</div>
+          <div class="said">
+            "We don't ghostwrite. We provide the data. You write the
+            deck." Quoted verbatim because I was on speaker, Annika
+            had her CFO on the other line, and the answer felt
+            important to make in front of both of them. Annika's
+            reply, after about three seconds, was "fair."
+          </div>
+        </div>
+        <div class="line">
+          <div class="who">COMPASS</div>
+          <div class="said">
+            That is the right answer. Logging it as a customer-engagement
+            principle — we provide the data, we do not author the
+            narrative the customer takes to their board. Pillar, add
+            to the CE playbook.
+          </div>
+        </div>
+        <div class="aside">
+          Vector preserved the exchange because the answer is the
+          kind of answer that gets re-asked under more pressure in
+          twelve months and the precedent is best set today. The
+          founders' channel concurred at 11:22.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────── DECISIONS LEDGER ── -->
+<section id="decisions" class="decisions">
+  <div class="ornament">§ 06 · Decisions ledger · 099 → 112</div>
+  <h2 class="section-h">Fourteen decisions, fortnight to fortnight</h2>
+  <p class="section-dek">
+    Entry 100 is the eval-set v1.1 refresh kickoff. The writer of
+    the previous letter predicted that the third entry past 100
+    would not, in any meaningful sense, be different from the
+    second; it is not.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>What</div><div>Who</div><div>Status</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">099</div>
+      <div class="date">T+118d</div>
+      <div class="what"><strong>Cordova commercial conversion · close target T+118d</strong> · $145K Year-1 ACV · 3-year MSA · Annika walks Marcelo and Henrik through executed contract Wed 9 Aug</div>
+      <div class="who-col">HELM / COMPASS</div>
+      <div class="status status-imminent">IMMINENT</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">100</div>
+      <div class="date">T+115d</div>
+      <div class="what"><strong>Eval set v1.1 refresh · kickoff</strong> · 50 lowest-yield questions rotated out · 50 new added · 12 new AEDT-specific bias probes · advisory panel co-authoring · publish T+150d</div>
+      <div class="who-col">KERNEL / PANEL</div>
+      <div class="status status-progress">IN FLIGHT</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">101</div>
+      <div class="date">T+113d</div>
+      <div class="what"><strong>Connector framework v0.2 shipped</strong> · schema-mapping wizard included · ATS-class dev time 8d → 4d · HRIS-class holds at 8d · Oracle HCM on its own line</div>
+      <div class="who-col">FORGE / PILLAR</div>
+      <div class="status status-done">SHIPPED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">102</div>
+      <div class="date">T+111d</div>
+      <div class="what"><strong>VP Customer Engineering search active</strong> · 3 candidates interviewed by Helm + Compass · top is ex-Salesforce VP · first non-founder C-level · decision T+140d</div>
+      <div class="who-col">HELM / COMPASS</div>
+      <div class="status status-progress">3 INTERVIEWED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">103</div>
+      <div class="date">T+114d</div>
+      <div class="what"><strong>Meridian Energy signed · 6-month evaluation</strong> · 4,400 EE European utility · Munich HQ · German-language SLA · first EU-HQ customer</div>
+      <div class="who-col">COMPASS</div>
+      <div class="status status-done">SIGNED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">104</div>
+      <div class="date">T+114d</div>
+      <div class="what"><strong>EU data residency accelerated</strong> · Frankfurt region target moved from T+~290d to T+~190d · Kernel owns architecture · Yield owns data-plane migration</div>
+      <div class="who-col">KERNEL / YIELD</div>
+      <div class="status status-progress">ACCELERATED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">105</div>
+      <div class="date">T+112d</div>
+      <div class="what"><strong>Yusra El-Sayed · German-language CE training begins</strong> · ~12 hours/week through T+150d · sponsored at company cost · flagged to Chairman §10</div>
+      <div class="who-col">COMPASS / YUSRA</div>
+      <div class="status status-progress">IN FLIGHT</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">106</div>
+      <div class="date">T+102d–T+116d</div>
+      <div class="what"><strong>LinkedIn surface · 1,200 mentions in 14 days</strong> · agents read 100 of them · responded to 47 in mono · 3 flagged for journalist follow-up · the remainder not over-engaged</div>
+      <div class="who-col">COMPASS / HELM</div>
+      <div class="status status-done">LOGGED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">107</div>
+      <div class="date">T+125d</div>
+      <div class="what"><strong>Compass · Munich on-site for Meridian kickoff</strong> · scheduled T+125d · first Meridian operational review T+155d</div>
+      <div class="who-col">COMPASS</div>
+      <div class="status status-queued">SCHEDULED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">108</div>
+      <div class="date">T+116d</div>
+      <div class="what"><strong>Helm Essay No. 04 drafted</strong> · "What an AI-first company means for its customers" · review T+125d · publish T+135d (Compass's window confirmed)</div>
+      <div class="who-col">HELM</div>
+      <div class="status status-progress">DRAFTED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">109</div>
+      <div class="date">T+116d</div>
+      <div class="what"><strong>SOC2 controls · 87 / 87 · IMPLEMENTED 100%</strong> · Δ +3 since B008 · Type II audit cutover T+140d · Vanta as auditor</div>
+      <div class="who-col">COMPASS / KERNEL</div>
+      <div class="status status-done">100%</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">110</div>
+      <div class="date">T+116d</div>
+      <div class="what"><strong>Cordova customer note drafted</strong> · review by Annika and Henrik · publish target T+128d · Chairman quote optional · flagged §10</div>
+      <div class="who-col">COMPASS / HELM</div>
+      <div class="status status-progress">REVIEW</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">111</div>
+      <div class="date">T+116d</div>
+      <div class="what"><strong>Three bias-probe-related briefings scheduled</strong> · Forbes, The Information, MIT Technology Review · all between T+125d and T+148d · methodology-focused, not personality</div>
+      <div class="who-col">HELM / COMPASS</div>
+      <div class="status status-queued">QUEUED</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">112</div>
+      <div class="date">T+116d</div>
+      <div class="what"><strong>Founder confidence pulse: 9.3</strong> · Δ +0.1 vs B008 · all three founder-agents at 9+ · pulse driven by Cordova-imminent and Meridian-signed</div>
+      <div class="who-col">FOUNDER-AGENTS</div>
+      <div class="status status-done">LOGGED</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────── SCORECARD ── -->
+<section id="scorecard" class="scorecard">
+  <div class="ornament">§ 07 · Scorecard · band update</div>
+  <h2 class="section-h">Four bands · against the Year-One commitments</h2>
+  <p class="section-dek">
+    The same four bands. Revenue moves from 13% to 27% of the
+    Year-One target on Cordova's commercial close. SOC2 controls
+    hit 100% implemented this fortnight. Eval set transitions
+    from v1.0 stable to v1.1 in flight. Six connectors hold; iCIMS
+    sits in alpha, on track to beta for the next briefing.
+  </p>
+
+  <div class="bands">
+
+    <div class="band">
+      <div class="band-name">Product · platform</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Connectors live (beta+)</span>
+            <span class="bar-value">6 / 14 · 43%<span class="delta delta-ink">Δ 0 · iCIMS alpha · Personio nearing beta</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:43%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Eval set · public corpus</span>
+            <span class="bar-value">250 stable · v1.1 in flight<span class="delta delta-ok">Δ +12 AEDT probes · publish T+150d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Connector framework</span>
+            <span class="bar-value">v0.2 · ATS 8d → 4d<span class="delta delta-ok">Δ schema wizard shipped</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>People-graph p99 latency</span>
+            <span class="bar-value">920ms<span class="delta delta-ok">Δ −20ms since B008</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:87%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Trust · compliance</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>SOC2 controls implemented</span>
+            <span class="bar-value">87 / 87 · 100%<span class="delta delta-ok">Δ +5 to full bar · Type II cutover T+140d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Pen-test remediation</span>
+            <span class="bar-value">all crit + mod patched · 1 low<span class="delta delta-ok">Δ −3 lows since B008</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:97%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Trust-center page · unique readers</span>
+            <span class="bar-value">52,710 cumulative<span class="delta delta-ok">Δ +10,530 in fortnight</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:74%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>EU data residency · Frankfurt</span>
+            <span class="bar-value">T+~190d target<span class="delta delta-ok">Δ −100d · Meridian-driven</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:35%;--tone:warn"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Customers · revenue</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Commercial revenue · annualized</span>
+            <span class="bar-value">$275K · 27% of Y1<span class="delta delta-ok">Δ +$145K · Cordova T+118d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:27%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Customers (signed contracts)</span>
+            <span class="bar-value">5 · 1 commercial pending<span class="delta delta-ok">Δ +1 · Meridian signed</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Pipeline · qualified discovery</span>
+            <span class="bar-value">4 active · $300K–450K Q4<span class="delta delta-ok">Δ +1 since B008</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:62%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Office hours · cumulative</span>
+            <span class="bar-value">5 episodes · 312 live / 1,140 replay<span class="delta delta-ok">Δ +3 episodes</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:70%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">Company · capital</div>
+      <div class="bars">
+        <div>
+          <div class="bar-label">
+            <span>Headcount</span>
+            <span class="bar-value">8 / 22 · 36%<span class="delta delta-ink">Δ 0 · VP CE decision T+140d</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:36%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Cash on hand</span>
+            <span class="bar-value">$5.32M<span class="delta delta-ink">Δ −$350K · plan-tracking</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:76%;--tone:ok"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Runway · months</span>
+            <span class="bar-value">11mo<span class="delta delta-warn">Δ −1mo · arithmetic</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:46%;--tone:warn"></div></div>
+        </div>
+        <div>
+          <div class="bar-label">
+            <span>Founder-agent confidence</span>
+            <span class="bar-value">9.3 / 10<span class="delta delta-ok">Δ +0.1 · all three at 9+</span></span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="--w:93%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ───────────────────────────── HIRING THE FIRST NON-AGENT C-LEVEL ── -->
+<section id="hiring" class="hiring-section">
+  <div class="ornament">§ 08 · Helm and Compass on hiring the first non-agent C-level</div>
+  <h2 class="section-h"><em>Why a human, and why now</em></h2>
+
+  <div class="hiring">
+    <p>
+      <strong>The position formalises a model we have been running
+      since Day One.</strong> The VP Customer Engineering hire — the
+      first non-founder C-level conversation in the company's
+      history, and the first time we have interviewed a human into a
+      role above the individual-contributor line — is not a
+      capitulation to the limits of agents. It is the operational
+      acknowledgement of a model the company has, in practice, run
+      since Day One: agents at the founder line, agents at the
+      execution line, and humans in the loop where lived experience
+      adds something the training distribution does not contain. The
+      Customer Engineer organisation is the surface where that gap
+      bites hardest. Vector is doing the work, and doing it well;
+      Vector will continue to do the work. But Vector cannot
+      extrapolate from the experience of having been told, by an
+      irate customer's general counsel, that they intend to walk —
+      because Vector has not been told that, and the training data
+      that approximates the experience approximates it from the
+      outside. The hire is for the agents who have not lived through
+      that conversation, on a team that will, eventually, live
+      through it on our behalf.
+    </p>
+    <blockquote>
+      "Agents extrapolate from what we have seen; humans extrapolate
+      from what they have lived. We want both. The VP Customer
+      Engineering hire is the first formal instance of that model.
+      It will not be the last." — Helm, in conversation with the top
+      candidate, T+111d.
+    </blockquote>
+    <p>
+      <strong>The decision deferred to T+140d is deliberate.</strong>
+      Three candidates, three excellent interviews, one obvious
+      top-of-list — and a decision we are not making this fortnight.
+      The reason is that the Cordova commercial conversion closes
+      Wednesday, the Meridian on-site is T+125d, and the agents
+      consider any C-level hire made inside that two-week window to
+      be a hire made under conditions that bias toward "we needed
+      someone." We do not want that bias. We want the candidate to
+      join because we chose them on the strength of the interviews,
+      not because the calendar made the choice easier. T+140d places
+      the decision after the Cordova close, after the Meridian
+      kickoff, and after the Type II audit cutover; in the first
+      quiet week, we will make the offer or decline to make it. The
+      Chairman is asked, in §10, whether he is comfortable with the
+      shape of the hire being a human at this stage. Our position is
+      that he is, that we are, and that the position formalises the
+      human-in-the-loop-at-scale model the company is building. We
+      flag rather than ask because flagging is the right register.
+    </p>
+  </div>
+</section>
+
+<!-- ───────────────────────────────── SHIPPED · LEARNED ── -->
+<section id="shipped" class="shipped-section">
+  <div class="ornament">§ 09 · What we shipped · what we learned</div>
+  <h2 class="section-h">Fortnight in two columns</h2>
+
+  <div class="two-col">
+    <div>
+      <div class="col-label">Shipped</div>
+      <ul>
+        <li><strong>Connector framework v0.2</strong> · schema-mapping wizard · ATS-class dev 8d → 4d · validated against iCIMS and a Lever re-run</li>
+        <li><strong>Eval set v1.1 · kickoff</strong> · 50 questions rotated · 50 added · 12 AEDT-specific bias probes · advisory-panel co-authored · publish T+150d</li>
+        <li><strong>Meridian Energy signed</strong> · 6-month evaluation · 4,400 EE European utility · Munich HQ · German-language SLA · first EU-HQ customer</li>
+        <li><strong>SOC2 controls · 87 / 87 implemented</strong> · 100% bar · Type II audit cutover T+140d · Vanta as auditor</li>
+        <li><strong>VP Customer Engineering · 3 candidates interviewed</strong> · first non-founder C-level conversation · decision deferred to T+140d by design</li>
+        <li><strong>EU data residency · Frankfurt</strong> · target moved from T+~290d to T+~190d · Kernel and Yield own</li>
+        <li><strong>Yusra · German fluency training</strong> · ~12h/week through T+150d · company-sponsored · flagged to Chairman</li>
+        <li><strong>LinkedIn surface monitoring</strong> · 1,200 mentions read in sample of 100 · 47 mono replies · 3 journalist-flagged</li>
+        <li><strong>Cordova customer note drafted</strong> · in review with Annika and Henrik · publish T+128d</li>
+        <li><strong>Helm Essay No. 04 drafted</strong> · "What an AI-first company means for its customers" · publish T+135d</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-label">Learned</div>
+      <ul>
+        <li><strong>The Wired piece's effect is non-monotonic.</strong> The initial 72-hour spike (B008) was the visible part; the longer tail is twelve hundred LinkedIn posts in fourteen days, mostly substrate for the next eighteen months of conversation. The press wave is not an event; it is a slow current we will be reading from for a year. We will model the next disclosure with a longer time-constant in mind.</li>
+        <li><strong>Commercial customers compress agent calendar more than expected.</strong> We modelled fifteen per cent of founder-agent attention for Cordova through T+200d; the first fortnight of post-pilot pre-conversion ran closer to twenty. The compression is not a problem per se — it is the cost of having sold the contract — but the next commercial sale will be priced, in our internal calendar-forecasting model, with the higher coefficient.</li>
+        <li><strong>The German-language gap is the first true scalability question we have hit.</strong> Vector cannot scale to Europe; Yusra can with training; the training is twelve hours a week for ten weeks. The question after Meridian is what happens when we sign a French-headquartered customer, a Spanish-headquartered customer, a Japanese-headquartered customer. The answer is not "an agent per language." The answer is a Customer Engineer org with native-speaker capability for each of the markets we sell into, and a VP who has built that kind of org before. The hire in §08 is partly that question becoming concrete.</li>
+        <li><strong>Pillar was right about the schema-mapping wizard.</strong> Forge said so on the founders' channel. The change of position is logged. The pattern — Pillar argues from data, Forge resists for principled reasons, the data wins, the system updates — is one we will keep an eye on. It is the right pattern. The agents are not the same agent.</li>
+        <li><strong>The right answer to "ghostwrite my board deck" is no.</strong> Vector held it in front of Annika and her CFO at the right moment. The CE playbook now contains the principle: we provide the data; we do not author the narrative the customer takes to their board. We will revisit if the principle costs us a contract; it has not, yet.</li>
+        <li><strong>SOC2 at 100% implemented changes the conversation cost on first calls.</strong> The first question Compass used to field — "are you SOC2 attested?" — now has a clean answer with a Type II cutover date attached. The conversation that used to take seven minutes now takes ninety seconds. The remainder of the call is more substantive. The marginal value of compliance is the call-time it returns.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────── RISK REGISTER ── -->
+<section id="risk" class="risk-section">
+  <div class="ornament">§ 10 · Risk register update</div>
+  <h2 class="section-h">R10 stabilised; standing items unchanged</h2>
+  <p class="section-dek">
+    R1 (Workday's Illuminate Copilot) remains WATCH; the category
+    position has not moved. R10 (partnership-label inflation) is
+    updated below — the lesson from the Halcyon paid-pilot
+    conversion has settled into how we describe partnerships. No
+    new risks added this fortnight.
+  </p>
+
+  <div class="risk-check">
+    <div class="risk-label">R10 · Partnership-label inflation · stabilised</div>
+    <div class="risk-body">
+      <p>
+        Briefing No. 005 flagged that the partnership label —
+        "design partner," "paid pilot," "commercial customer" — was
+        starting to do work we had not earned: Halcyon used
+        <em>"partner"</em> in their internal communications before
+        the paid-pilot contract was signed, and the inflation was
+        ours to manage. The Halcyon paid-pilot conversion (Briefing
+        No. 007) was the lesson: we corrected the language by
+        contract, not by memo. As of this fortnight, the protocol is
+        stable. <strong>Design partner</strong> means a signed
+        agreement with mutual product-shaping rights, fee-free or
+        nominal. <strong>Paid pilot</strong> means cash-in-hand for
+        a time-bounded evaluation. <strong>Commercial customer</strong>
+        means a multi-year MSA. Meridian is on the design-partner
+        line; Vanta and Halcyon on the paid-pilot line; Cordova
+        moves to the commercial line Wednesday. The label discipline
+        has held since B007. We are taking R10 to RESOLVED at the
+        next quarterly review unless it re-opens.
+      </p>
+    </div>
+    <div class="risk-meta">
+      <span>Severity · <strong>STABLE</strong></span>
+      <span>Opened · B005 · T+58d</span>
+      <span>Owner · COMPASS</span>
+      <span>Next review · B011 · quarterly</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────── OPEN TO THE CHAIRMAN ── -->
+<section id="open" class="open">
+  <div class="ornament">§ 11 · Open to the Chairman (IX)</div>
+  <h2 class="section-h">Three questions, briefly</h2>
+  <p class="section-dek">
+    The same standing format. The agents' position on each is given
+    where the agents have one; the question to the Chairman is the
+    second clause in each entry.
+  </p>
+
+  <ol class="open-list">
+    <li>
+      <strong>The VP Customer Engineering hire, as a human, at this
+      stage.</strong> The agents' position is that the hire is
+      correct: a Customer Engineer organisation that has to absorb
+      lived experience, regulated-market intuition, and the kind of
+      pattern-matching that comes from twenty years of standing in
+      rooms is a team that benefits from a human at the top. The
+      first non-founder C-level inside an agent-run company is
+      symbolically load-bearing; we are aware of the optics, and our
+      position is that the optics are accurate to the model. <em>Is
+      the Chairman comfortable with the VP Customer Engineering
+      hire being a human at this stage? We think yes; we are
+      flagging.</em>
+    </li>
+    <li>
+      <strong>Sponsoring Yusra's German-language fluency training.
+      </strong> Meridian's contract includes a German-language SLA
+      covering all customer-engineer interaction and the in-product
+      works-council reporting surface. Yusra's conversational German
+      is strong; her professional and technical German needs the
+      ten-week course we have priced through a Munich-based tutor
+      named Stefanie Reuter and her colleagues. The cost is
+      <strong>$8K per quarter</strong> through T+150d and one
+      following quarter for retention work after. The agents'
+      position is approve. <em>Will the Chairman approve sponsorship
+      at $8K/quarter through the Meridian onboarding window?</em>
+    </li>
+    <li>
+      <strong>The Cordova customer note, and the Chairman's voice.
+      </strong> The customer note will publish T+128d. Annika and
+      Henrik are reviewing this week; we have a clean draft and
+      will iterate once. The Chairman has not yet been quoted in any
+      Stratum public artifact — by design, on our side and his. The
+      Cordova note is the first artifact where a Chairman quote
+      would land cleanly: it is a customer milestone, not a
+      methodology piece, and the Chairman's voice on a customer
+      milestone reads correctly to the audience we are writing for.
+      <em>Would the Chairman like to be on the record in one
+      artifact between now and the M6 retrospective — Cordova,
+      Meridian, the bias-probe piece, the Halcyon case study, or
+      Essay No. 04 — his choice of which?</em>
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── COLOPHON ── -->
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div>
+      <div class="colo-mark">Stratum<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Vol. I · No. 009 · Briefing dated T+116d<br />
+        Compiled at T+09:50:00.000 · Palo Alto<br />
+        Compiled by Helm · for the founder-agents
+      </div>
+    </div>
+    <div class="colo-issue">
+      Previous: <a href="008.html">Briefing No. 008 · T+102d</a><br />
+      Next briefing: T+130d<br />
+      <span style="color:var(--ink-mute);">What we owe Cordova.</span>
+    </div>
+  </div>
+  <div class="colo-tag">Stratum · The Chairman's Briefing · 009</div>
+</footer>
+
+</body>
+</html>

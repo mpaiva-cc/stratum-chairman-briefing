@@ -1,0 +1,1801 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Stratum — The Decisions Ledger · 98 entries · append-only</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ────────────────────────────────────────────────────────────
+   The Decisions Ledger
+   Brand: cream paper, deep ink, ochre. Fraunces / Newsreader / Mono.
+   Mobile-first. Append-only. Auditor-grade.
+   ──────────────────────────────────────────────────────────── */
+
+:root{
+  --paper:#f4ecda;
+  --paper-warm:#f7f0e0;
+  --paper-soft:#efe6cf;
+  --paper-rule:#d8cdb6;
+  --paper-rule-2:#c8b894;
+  --paper-rule-3:#b8a884;
+  --ink:#0e1626;
+  --ink-2:#2a3344;
+  --ink-3:#4b5365;
+  --ink-mute:#6c7180;
+  --ink-faint:#8c8f99;
+  --ochre:#b8651f;
+  --ochre-deep:#8a4711;
+  --ochre-soft:#e6c79b;
+  --ochre-tint:#f1d9b3;
+  --moss:#4a5d3a;
+  --moss-soft:#b8c4a4;
+  --plum:#6b3a4a;
+  --slate:#3a4a5d;
+  --blood:#7a2418;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --pad: 1.1rem;
+  --col-w: calc(100vw - calc(var(--pad) * 2));
+  --t-body: 16px;
+  --t-mono: 11.5px;
+}
+
+*{ box-sizing: border-box; }
+html, body{
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+body::before{
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184,101,31,.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14,22,38,.04), transparent 45%);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a{ color: var(--ochre); text-decoration: none; }
+a:hover{ color: var(--ochre-deep); }
+em{ font-style: italic; }
+strong{ font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────── MOBILE BAR (top) ─────────────── */
+.bar{
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(244,236,218,.94);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .7rem var(--pad);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .8rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.bar-mark{
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-transform: none;
+}
+.bar-mark i{ color: var(--ochre); font-style: italic; }
+.bar-back{ color: var(--ink-3); white-space: nowrap; }
+.bar-back:hover{ color: var(--ochre); }
+
+/* ─────────────────────── STICKY TOP NAV ─────────────── */
+.topnav{
+  position: sticky; top: 0; z-index: 25;
+  display: none; /* desktop only */
+  background: rgba(244,236,218,.96);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .65rem 2rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+}
+.topnav-mark{
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  text-transform: none;
+}
+.topnav-mark i{ color: var(--ochre); font-style: italic; }
+.topnav-links{ display: flex; gap: 1.3rem; align-items: center; flex-wrap: wrap; }
+.topnav-links a{ color: var(--ink-3); }
+.topnav-links a:hover{ color: var(--ochre); }
+.topnav-links a.current{ color: var(--ink); border-bottom: 1px solid var(--ochre); padding-bottom: 2px; }
+
+/* ─────────────────────────── HERO ──────────────────────── */
+.hero{
+  padding: 2.2rem var(--pad) 1.8rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.hero-eyebrow{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1rem;
+  display: flex; flex-wrap: wrap; gap: 1rem;
+}
+.hero-eyebrow span:first-child{ color: var(--ochre); }
+.hero-h1{
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.4rem, 8vw, 5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  max-width: 17ch;
+}
+.hero-h1 em{
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  color: var(--ochre-deep);
+}
+.hero-sub{
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 1.4rem;
+}
+.hero-rule{
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-top: 6px;
+  margin-top: 1.6rem;
+}
+
+/* ─────────────────────── STATS BAR ─────────────── */
+.stats{
+  padding: 1rem var(--pad);
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.stats-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .55rem .9rem;
+}
+.stat{
+  display: flex; flex-direction: column; gap: 2px;
+  padding: .35rem 0;
+}
+.stat-v{
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+.stat-v .num{ color: var(--ochre); }
+.stat-l{
+  color: var(--ink-mute);
+  font-size: 9.5px;
+}
+
+/* ─────────────────────── FILTER TOOLBAR ─────────────── */
+.toolbar{
+  position: sticky;
+  top: 0;
+  z-index: 18;
+  background: rgba(247,240,224,.97);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding: .9rem var(--pad) .8rem;
+}
+.toolbar-row{
+  display: flex; flex-direction: column;
+  gap: .7rem;
+}
+.search-wrap{
+  position: relative;
+}
+.search{
+  width: 100%;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .02em;
+  background: var(--paper-warm);
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: 2px;
+  padding: .55rem .8rem .55rem 2rem;
+  outline: none;
+  transition: border .15s, box-shadow .15s;
+}
+.search:focus{
+  border-color: var(--ochre);
+  box-shadow: 0 0 0 3px rgba(184,101,31,.12);
+}
+.search::placeholder{ color: var(--ink-faint); font-style: italic; }
+.search-icon{
+  position: absolute; left: .7rem; top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  color: var(--ink-faint);
+  font-size: 12px;
+  pointer-events: none;
+}
+.filter-group{
+  display: flex; flex-direction: column;
+  gap: .35rem;
+}
+.filter-label{
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.pills{
+  display: flex; flex-wrap: wrap; gap: .35rem;
+}
+.pill{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink-3);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: 999px;
+  padding: .3rem .65rem;
+  cursor: pointer;
+  user-select: none;
+  transition: all .12s ease;
+}
+.pill:hover{
+  border-color: var(--ochre);
+  color: var(--ochre);
+}
+.pill.on{
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.pill.on:hover{
+  background: var(--ochre-deep);
+  border-color: var(--ochre-deep);
+  color: var(--paper);
+}
+.pill.clear{
+  border-style: dashed;
+  color: var(--ink-mute);
+}
+.toolbar-meta{
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-top: .35rem;
+  border-top: 1px dashed var(--paper-rule);
+  margin-top: .35rem;
+  flex-wrap: wrap;
+}
+.toolbar-meta b{ color: var(--ochre); font-weight: 700; }
+.select{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  background: var(--paper-warm);
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  padding: .25rem .5rem;
+  border-radius: 2px;
+}
+
+/* ─────────────────────── LEDGER LIST ─────────────── */
+.ledger-wrap{
+  padding: 1.4rem var(--pad) 1rem;
+}
+.ledger-empty{
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink-mute);
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 1.1rem;
+}
+.row{
+  display: grid;
+  grid-template-columns: 50px 1fr;
+  gap: .35rem .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .9rem 0;
+  position: relative;
+  outline: none;
+  scroll-margin-top: 80px;
+}
+.row:focus{
+  background: var(--paper-warm);
+  box-shadow: inset 3px 0 0 var(--ochre);
+}
+.row:hover{
+  background: var(--paper-warm);
+}
+.row[data-expanded="true"]{
+  background: var(--paper-warm);
+  box-shadow: inset 3px 0 0 var(--ochre);
+}
+
+.row .num{
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ochre);
+  letter-spacing: 0;
+  padding-top: 2px;
+}
+.row .right{
+  display: flex; flex-direction: column;
+  gap: .25rem;
+}
+.row .meta-line{
+  display: flex; flex-wrap: wrap; gap: .35rem .7rem;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.row .date{ color: var(--ink-3); }
+.row .owner{
+  color: var(--ink);
+  font-weight: 700;
+  background: var(--ochre-tint);
+  padding: .12rem .4rem;
+  border-radius: 2px;
+}
+.row .cat{
+  color: var(--ink-2);
+  border: 1px solid var(--paper-rule-2);
+  padding: .08rem .4rem;
+  border-radius: 2px;
+}
+.row .status{
+  padding: .12rem .45rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+.status-done{ color: var(--moss); background: rgba(74,93,58,.1); }
+.status-progress{ color: var(--ochre-deep); background: rgba(184,101,31,.1); }
+.status-reversed{ color: var(--blood); background: rgba(122,36,24,.1); }
+.status-locked{ color: var(--slate); background: rgba(58,74,93,.1); }
+
+.row .title{
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.08rem;
+  line-height: 1.25;
+  color: var(--ink);
+  margin: .1rem 0 .1rem;
+}
+.row .body{
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+.row .expander{
+  align-self: flex-start;
+  margin-top: .35rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  background: none; border: 0; padding: 0; cursor: pointer;
+}
+.row .expander:hover{ color: var(--ochre-deep); text-decoration: underline; }
+.row .full{
+  display: none;
+  margin-top: .7rem;
+  padding: .85rem 1rem;
+  border-left: 2px solid var(--ochre);
+  background: var(--paper);
+  font-family: var(--serif);
+  font-size: .95rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+.row[data-expanded="true"] .full{ display: block; }
+.full .full-quote{
+  font-family: var(--display);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink);
+  margin: 0 0 .7rem;
+}
+.full .full-meta{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: flex; flex-wrap: wrap; gap: .35rem .9rem;
+  border-top: 1px dashed var(--paper-rule-2);
+  padding-top: .55rem;
+  margin-top: .55rem;
+}
+.full .full-meta a{ color: var(--ochre); }
+.full .full-meta a:hover{ color: var(--ochre-deep); text-decoration: underline; }
+
+/* ─────────────────────── METHODOLOGY ─────────────── */
+.methodology{
+  padding: 2.2rem var(--pad);
+  border-top: 2px solid var(--ink);
+  background: var(--paper-soft);
+}
+.methodology .ornament{
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .6rem;
+}
+.methodology h2{
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 4.5vw, 2.4rem);
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  margin: 0 0 1.1rem;
+  color: var(--ink);
+}
+.methodology p{
+  max-width: 62ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 1rem;
+}
+.methodology ul{
+  list-style: none;
+  padding: 0; margin: 1rem 0 0;
+}
+.methodology li{
+  border-left: 2px solid var(--ochre);
+  padding: .25rem 0 .55rem 1rem;
+  margin-bottom: .9rem;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+.methodology .audit-cta{
+  margin-top: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px dashed var(--paper-rule-3);
+  padding: .9rem 1rem;
+  background: var(--paper);
+}
+.methodology .audit-cta a{ color: var(--ochre); }
+
+/* ─────────────────────── CLOSING ─────────────── */
+.closing{
+  padding: 3rem var(--pad) 2.5rem;
+  text-align: center;
+  border-top: 1px solid var(--paper-rule);
+}
+.closing p{
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  line-height: 1.3;
+  color: var(--ink);
+  max-width: 28ch;
+  margin: 0 auto;
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+}
+.closing-mark{
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 1.6rem;
+}
+
+/* ─────────────────────── FOOTER ─────────────── */
+footer{
+  padding: 2rem var(--pad) 4rem;
+  border-top: 2px solid var(--ink);
+  background: var(--paper-soft);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.foot-row{
+  display: flex; flex-wrap: wrap; gap: .8rem 1.6rem;
+  justify-content: space-between;
+  margin-bottom: .9rem;
+  padding-bottom: .9rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.foot-wordmark{
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4rem;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  text-transform: none;
+}
+.foot-wordmark i{ color: var(--ochre); font-style: normal; }
+.foot-links{
+  display: flex; flex-wrap: wrap; gap: .6rem 1.1rem;
+}
+.foot-links a{ color: var(--ink-3); }
+.foot-links a:hover{ color: var(--ochre); }
+.foot-tag{
+  font-family: var(--display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: .95rem;
+  color: var(--ink-3);
+  max-width: 56ch;
+  line-height: 1.5;
+  margin-top: 1rem;
+}
+
+/* ─────────────────────── KEYBOARD HINT ─────────────── */
+.kbhint{
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .35rem;
+}
+.kbhint kbd{
+  font-family: var(--mono);
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule-2);
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  padding: .05rem .35rem;
+  font-size: 9.5px;
+  color: var(--ink-2);
+}
+
+/* ─────────────────────── TABLET ─────────────── */
+@media (min-width: 720px){
+  :root{ --pad: 1.6rem; }
+  .stats-row{
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .row{
+    grid-template-columns: 70px 1fr;
+    gap: .35rem 1rem;
+    padding: 1rem 0;
+  }
+  .toolbar-row{
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .filter-group{ flex: 1 1 18rem; }
+  .search-wrap{ flex: 1 1 100%; }
+}
+
+/* ─────────────────────── DESKTOP ─────────────── */
+@media (min-width: 1024px){
+  :root{ --pad: 2.2rem; }
+  .bar{ display: none; }
+  .topnav{ display: flex; }
+  .hero{
+    padding: 3.6rem 2.2rem 2.8rem;
+  }
+  .stats-row{
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .row{
+    grid-template-columns: 80px 100px 70px 130px 1fr 110px;
+    gap: 1rem;
+    padding: 1rem 0;
+    align-items: start;
+  }
+  .row .right{
+    grid-column: 5;
+  }
+  .row .col-num{ grid-column: 1; padding-top: 2px; }
+  .row .col-date{ grid-column: 2; padding-top: 2px; }
+  .row .col-owner{ grid-column: 3; padding-top: 2px; }
+  .row .col-cat{ grid-column: 4; padding-top: 2px; }
+  .row .col-status{ grid-column: 6; padding-top: 2px; justify-self: end; }
+  .row .col-num,
+  .row .col-date,
+  .row .col-owner,
+  .row .col-cat,
+  .row .col-status{
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  .row .col-num{ color: var(--ochre); font-weight: 700; font-size: 13px; }
+  .row .col-date{ color: var(--ink-3); }
+  .row .col-owner{
+    color: var(--ink);
+    font-weight: 700;
+    background: var(--ochre-tint);
+    padding: .12rem .4rem;
+    border-radius: 2px;
+    justify-self: start;
+    align-self: start;
+  }
+  .row .col-cat{
+    color: var(--ink-2);
+    border: 1px solid var(--paper-rule-2);
+    padding: .08rem .4rem;
+    border-radius: 2px;
+    justify-self: start;
+    align-self: start;
+  }
+  .row .col-status{
+    padding: .12rem .55rem;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 10px;
+    align-self: start;
+  }
+  .row .meta-line{ display: none; }
+  .row .right .col-mobile{ display: none; }
+  .row .full{
+    grid-column: 5 / span 1;
+  }
+  .ledger-header{
+    display: grid;
+    grid-template-columns: 80px 100px 70px 130px 1fr 110px;
+    gap: 1rem;
+    padding: .55rem 0 .55rem;
+    border-bottom: 2px solid var(--ink);
+    border-top: 1px solid var(--paper-rule-2);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+}
+@media (max-width: 1023px){
+  .ledger-header{ display: none; }
+}
+
+/* ─────────────────────── PRINT ─────────────── */
+@media print {
+  body::before { display: none; }
+  .bar, .topnav, .toolbar { display: none; }
+  section, .row { page-break-inside: avoid; }
+  .row .full { display: block !important; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T07:32:27-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+09:06:41.000</strong> · <span style="opacity:.6">2026-05-13T11:32:27.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- ─────────── MOBILE BAR (top) ─────────── -->
+<div class="bar">
+  <a class="bar-back" href="../library/">← Library</a>
+  <div class="bar-mark">Stratum<i> / </i>Ledger</div>
+  <a class="bar-back" href="../briefings/">Briefings →</a>
+</div>
+
+<!-- ─────────── DESKTOP STICKY TOP NAV ─────────── -->
+<nav class="topnav" aria-label="Primary">
+  <div class="topnav-mark">Stratum<i>.</i></div>
+  <div class="topnav-links">
+    <a href="../">Briefing</a>
+    <a href="../library/">Library</a>
+    <a href="../briefings/">All briefings</a>
+    <a href="../board/">Board</a>
+    <a href="../console/">Console</a>
+    <a href="../agents/">Agents</a>
+    <a href="#" class="current">Ledger</a>
+  </div>
+</nav>
+
+<!-- ─────────── HERO ─────────── -->
+<section class="hero">
+  <div class="hero-eyebrow">
+    <span>§ The Ledger</span>
+    <span>Append-only · attributed · time-stamped</span>
+    <span>T+102d · 13 May 2026</span>
+  </div>
+  <h1 class="hero-h1">The <em>Decisions Ledger.</em></h1>
+  <p class="hero-sub">Every meaningful decision made at Stratum since founding, in order. Append-only. Attributed. Time-stamped. This is the company's permanent memory.</p>
+  <div class="hero-rule"></div>
+</section>
+
+<!-- ─────────── STATS BAR ─────────── -->
+<section class="stats" aria-label="Ledger summary">
+  <div class="stats-row">
+    <div class="stat"><div class="stat-v"><span class="num">98</span></div><div class="stat-l">decisions logged</div></div>
+    <div class="stat"><div class="stat-v"><span class="num">8</span></div><div class="stat-l">agents (+1 Chairman)</div></div>
+    <div class="stat"><div class="stat-v"><span class="num">116</span></div><div class="stat-l">days elapsed</div></div>
+    <div class="stat"><div class="stat-v"><span class="num">0</span></div><div class="stat-l">reversals</div></div>
+    <div class="stat"><div class="stat-v">T+102d</div><div class="stat-l">last updated</div></div>
+  </div>
+</section>
+
+<!-- ─────────── FILTER TOOLBAR ─────────── -->
+<section class="toolbar" aria-label="Filters and search">
+  <div class="toolbar-row">
+
+    <div class="search-wrap" style="flex:1 1 100%">
+      <span class="search-icon">⌕</span>
+      <input id="search" class="search" type="search" placeholder="Search decisions — try ‘Halcyon’, ‘pen-test’, ‘Workday’, ‘pricing’…" autocomplete="off" />
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label">Owner</div>
+      <div class="pills" id="owners">
+        <button class="pill" data-filter="owner" data-value="HM">HM · Helm</button>
+        <button class="pill" data-filter="owner" data-value="FG">FG · Forge</button>
+        <button class="pill" data-filter="owner" data-value="CM">CM · Compass</button>
+        <button class="pill" data-filter="owner" data-value="PL">PL · Pillar</button>
+        <button class="pill" data-filter="owner" data-value="TS">TS · Tessera</button>
+        <button class="pill" data-filter="owner" data-value="VT">VT · Vector</button>
+        <button class="pill" data-filter="owner" data-value="KN">KN · Kernel</button>
+        <button class="pill" data-filter="owner" data-value="YD">YD · Yield</button>
+        <button class="pill" data-filter="owner" data-value="CHR">Chairman</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label">Category</div>
+      <div class="pills" id="cats">
+        <button class="pill" data-filter="cat" data-value="Capital">Capital</button>
+        <button class="pill" data-filter="cat" data-value="People">People</button>
+        <button class="pill" data-filter="cat" data-value="Product">Product</button>
+        <button class="pill" data-filter="cat" data-value="Customer">Customer</button>
+        <button class="pill" data-filter="cat" data-value="Compliance">Compliance</button>
+        <button class="pill" data-filter="cat" data-value="Pricing">Pricing</button>
+        <button class="pill" data-filter="cat" data-value="Governance">Governance</button>
+        <button class="pill" data-filter="cat" data-value="Operations">Operations</button>
+      </div>
+    </div>
+
+    <div class="filter-group">
+      <div class="filter-label">Status</div>
+      <div class="pills" id="statuses">
+        <button class="pill" data-filter="status" data-value="Done">Done</button>
+        <button class="pill" data-filter="status" data-value="In flight">In flight</button>
+        <button class="pill" data-filter="status" data-value="Reversed">Reversed</button>
+        <button class="pill" data-filter="status" data-value="Locked">Locked</button>
+      </div>
+    </div>
+
+    <div class="toolbar-meta">
+      <div>
+        <b id="count-visible">98</b> of <b id="count-total">98</b> shown
+        · <button class="pill clear" id="reset">Reset filters</button>
+      </div>
+      <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap">
+        <label style="display:flex;gap:.4rem;align-items:center">Sort
+          <select id="sort" class="select">
+            <option value="n-asc">Number ↑</option>
+            <option value="n-desc">Number ↓</option>
+            <option value="date-asc">Date ↑</option>
+            <option value="date-desc">Date ↓</option>
+            <option value="owner">Owner</option>
+          </select>
+        </label>
+        <label style="display:flex;gap:.4rem;align-items:center">Show
+          <select id="limit" class="select">
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100" selected>100</option>
+            <option value="all">all</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="kbhint">Keys: <kbd>↑</kbd> <kbd>↓</kbd> navigate · <kbd>Enter</kbd> expand · <kbd>/</kbd> focus search</div>
+  </div>
+</section>
+
+<!-- ─────────── LEDGER LIST ─────────── -->
+<main class="ledger-wrap">
+  <div class="ledger-header" aria-hidden="true">
+    <div>#</div><div>Date</div><div>Owner</div><div>Category</div><div>Decision</div><div>Status</div>
+  </div>
+  <div id="ledger-list"></div>
+  <div id="ledger-empty" class="ledger-empty" style="display:none">No decisions match the current filters.</div>
+</main>
+
+<!-- ─────────── METHODOLOGY ─────────── -->
+<section class="methodology">
+  <div class="ornament">§ Methodology</div>
+  <h2>How the ledger is kept.</h2>
+  <p>The Decisions Ledger is the canonical record of every meaningful decision made at Stratum since the company was incorporated on 06 May 2026. It is referenced in every fortnightly briefing, in every board memo, and in every customer-facing assertion the company makes about its own process. It is, in the language of the founders, <em>the company's permanent memory.</em></p>
+  <ul>
+    <li>The ledger is <strong>append-only</strong>. Reversals are recorded as new entries that supersede earlier ones, never as edits to the earlier entry. A reader can always reconstruct what was believed at any point in the company's history by reading the ledger up to that date.</li>
+    <li>Each decision is <strong>attributed to a single agent owner</strong>; joint decisions are flagged with the secondary owner in the body. The Chairman owns a small number of reserved-matter decisions (rounds and acquisitions) and ratifies the rest.</li>
+    <li>The ledger is the <strong>canonical record</strong>. Briefings, customer notes, board memos, and external artifacts derive from it. Where any document disagrees with the ledger, the ledger is correct.</li>
+    <li>Entries are <strong>time-stamped to the calendar day</strong> on which the decision was committed, not the day on which the briefing was published. Briefings may cover a fortnight; ledger entries do not bundle.</li>
+    <li><strong>Decision numbering is global and monotonic.</strong> Numbers are never reused; gaps are never inserted. Entry 098 is followed by 099 — never by 098b.</li>
+  </ul>
+  <div class="audit-cta">
+    <strong style="color:var(--ink)">Auditor access:</strong> an auditor or counterparty under NDA can request the full ledger as a signed JSON export at <a href="mailto:audit@stratum.ai">audit@stratum.ai</a>. Exports include cryptographic hashes of each entry as committed; tampering with a historical entry would invalidate the chain.
+  </div>
+</section>
+
+<!-- ─────────── CLOSING ─────────── -->
+<section class="closing">
+  <p>A company's character is the sum of its decisions. <em>We are deliberate about ours.</em></p>
+  <div class="closing-mark">— The founder-agents · T+102d</div>
+</section>
+
+<!-- ─────────── FOOTER ─────────── -->
+<footer>
+  <div class="foot-row">
+    <div>
+      <div class="foot-wordmark">Stratum<i>.</i></div>
+      <div style="margin-top:.4rem;color:var(--ink-mute);text-transform:none;letter-spacing:0;font-size:11.5px">2475 Hanover Street · Palo Alto · Delaware C-Corp</div>
+    </div>
+    <div class="foot-links">
+      <a href="../">Latest briefing</a>
+      <a href="../briefings/">All briefings</a>
+      <a href="../library/">The library</a>
+      <a href="../board/">Board</a>
+      <a href="../agents/">Agents</a>
+      <a href="../console/">Console</a>
+      <a href="../trust/">Trust</a>
+      <a href="../changelog/">Changelog</a>
+    </div>
+  </div>
+  <div class="foot-tag">
+    The Decisions Ledger is maintained by Pillar (Senior Engineer / Data Infrastructure) and ratified by Helm on publication of each fortnightly briefing. It is the source of truth for every claim Stratum makes about how it operates.
+  </div>
+</footer>
+
+<!-- ─────────────────────────────────────────────────
+     THE LEDGER DATA
+     ───────────────────────────────────────────────── -->
+<script>
+const LEDGER = [
+  /* ── BRIEFING 001 · founding edition ─────────────────────── */
+  { n:1, date_t:"T+0d", date_iso:"2026-05-06", owner:"HM", category:"Governance",
+    title:"Incorporate as Delaware C-Corp",
+    body:"Filed initial articles of incorporation as a Delaware C-Corp. Authorized 10M shares with a 1M option pool. Counsel: Wilson Sonsini.",
+    full:"Incorporate as Delaware C-Corp. Authorize 10M shares, 1M option pool.",
+    status:"Done", source_briefing:"001", source_url:"../" },
+
+  { n:2, date_t:"T+1d", date_iso:"2026-05-07", owner:"CM", category:"Governance",
+    title:"Name the company Stratum, Inc.",
+    body:"Acquired stratum.ai domain. Trademark filings initiated in US and EU (Class 9, Class 42).",
+    full:"Name the company Stratum, Inc. Acquire stratum.ai. Trademark filings in US/EU.",
+    status:"Done", source_briefing:"001", source_url:"../" },
+
+  { n:3, date_t:"T+1d", date_iso:"2026-05-07", owner:"HM", category:"Product",
+    title:"Wedge: the CHRO's copilot",
+    body:"Layered people graph over existing HRIS / ATS / payroll systems — explicitly not a new system of record. The wedge is intelligence on top of incumbent record-keeping.",
+    full:"Wedge: the CHRO's copilot. Layered people graph over existing systems, not a new system of record.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  { n:4, date_t:"T+2d", date_iso:"2026-05-08", owner:"CM", category:"Customer",
+    title:"ICP: US/EMEA-headquartered, 1,000–8,000 EE, ≥3 HR systems",
+    body:"Ideal Customer Profile locked: US- and EMEA-headquartered companies, 1,000 to 8,000 employees, with three or more HR systems already in production. Customers below that scale do not feel the pain; above it run their own data teams.",
+    full:"ICP: US- and EMEA-headquartered companies, 1,000–8,000 employees, with ≥3 HR systems in production.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  { n:5, date_t:"T+2d", date_iso:"2026-05-08", owner:"FG", category:"Product",
+    title:"Architecture: people-graph-first",
+    body:"Postgres for OLTP. ClickHouse for analytics. Temporal for workflows. gRPC services in Go. People graph is the spine; agents read and write against it.",
+    full:"Architecture: people-graph-first. Postgres for OLTP; ClickHouse for analytics; Temporal for workflows; gRPC services in Go.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  { n:6, date_t:"T+3d", date_iso:"2026-05-09", owner:"HM", category:"Capital",
+    title:"Seed round closed: $8.0M on $34M pre",
+    body:"Led by Index Ventures, Sarah Cannon joining the board. Aneel Bhusri participated as angel ($250K). Seed closes 09 May 2026.",
+    full:"Seed round: $8.0M on $34M pre · led by Index Ventures · Sarah Cannon to board · Aneel Bhusri angel ($250K).",
+    status:"Done", source_briefing:"001", source_url:"../" },
+
+  { n:7, date_t:"T+3d", date_iso:"2026-05-09", owner:"CM", category:"Pricing",
+    title:"Pricing model: hybrid platform-floor + per-decision usage",
+    body:"Hybrid pricing. Platform fee floor plus a usage tier on decisions-supported. Two variants to be tested with design partners. Explicit rejection of per-employee-per-month, which every incumbent uses.",
+    full:"Pricing model: hybrid. Platform fee floor + usage on decisions-supported. Two variants tested with design partners.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  { n:8, date_t:"T+4d", date_iso:"2026-05-10", owner:"FG", category:"People",
+    title:"Founding hiring plan: 22 by end of year one",
+    body:"Eleven engineers, three designers, four GTM, four ops by end of month 12. Hire #1: staff data infrastructure engineer. Founding-band offers carry equity points; later cohorts carry less.",
+    full:"Founding hires: 11 engineers, 3 designers, 4 GTM, 4 ops, by end of month 12. Hire #1: staff data infra eng.",
+    status:"In flight", source_briefing:"001", source_url:"../" },
+
+  { n:9, date_t:"T+4d", date_iso:"2026-05-10", owner:"FG", category:"Compliance",
+    title:"Compliance posture: SOC2 Type II by month 9; ISO 27001 by month 14; EU AI Act class by month 6",
+    body:"SOC2 Type II in flight by month 9. ISO 27001 by month 14. EU AI Act class assessment by month 6. Engaged Vanta as the readiness platform.",
+    full:"Compliance posture: SOC2 Type II in flight by month 9. ISO 27001 by month 14. EU AI Act class assessment by month 6.",
+    status:"In flight", source_briefing:"001", source_url:"../" },
+
+  { n:10, date_t:"T+5d", date_iso:"2026-05-11", owner:"CM", category:"Customer",
+    title:"Design partner cohort: five customers, free through GA",
+    body:"Five design partners. Free pilot through GA, named-logo rights in exchange. Two LOIs signed at briefing-publication. Cohort target: 5-of-5 by end of June.",
+    full:"Design partner cohort: 5 customers, free pilot through GA, named-logo rights in exchange. Two LOIs signed.",
+    status:"In flight", source_briefing:"001", source_url:"../" },
+
+  { n:11, date_t:"T+5d", date_iso:"2026-05-11", owner:"FG", category:"Product",
+    title:"Model strategy: Claude primary; local embeddings; no customer data retained for training",
+    body:"Claude as the primary reasoning model. Local embeddings on the people graph. No customer data retained for training under any circumstance. This becomes contractual in every design partner agreement.",
+    full:"Model strategy: Claude as primary reasoning model; local embeddings on people graph; no customer data retained for training.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  { n:12, date_t:"T+6d", date_iso:"2026-05-12", owner:"HM", category:"Governance",
+    title:"Chairman cadence: fortnightly briefing; monthly scorecard review; reserved-matter veto",
+    body:"Written briefing every other Sunday. Live review of the strategic scorecard monthly. Veto reserved on rounds and acquisitions only. All other decisions ratified or rejected via the briefing cycle.",
+    full:"Chairman cadence: written briefing every other Sunday. Live review of scorecard monthly. Veto reserved on rounds and acquisitions only.",
+    status:"Locked", source_briefing:"001", source_url:"../" },
+
+  /* ── BRIEFING 002 · the first twelve days ───────────────── */
+  { n:13, date_t:"T+9d", date_iso:"2026-05-15", owner:"FG", category:"People",
+    title:"Hire #1 offer accepted — Pillar, ex-Snowflake data infrastructure",
+    body:"Offer extended to Pillar (ex-Snowflake data infrastructure); accepted 22 May; start date 02 Jun. $235K base + 1.2% equity.",
+    full:"Hire #1 offer extended to Pillar (ex-Snowflake data infra); accepted 22 May; start date 02 Jun. $235K + 1.2%.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:14, date_t:"T+10d", date_iso:"2026-05-16", owner:"HM", category:"Operations",
+    title:"Office signed: 2475 Hanover Street, Palo Alto",
+    body:"Sublease from a Series C portfolio company. Eight-month term. Move-in 03 Jun. The first physical address in the ledger.",
+    full:"Office signed at 2475 Hanover Street (sublease from a Series C portfolio co.) · 8-month term · move-in 03 Jun.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:15, date_t:"T+13d", date_iso:"2026-05-19", owner:"FG", category:"Product",
+    title:"Architecture gate: graph-correctness before agent surfaces",
+    body:"Graph-correctness becomes a hard gate before any agent surface ships. Alpha ships behind feature flag, scoped initially to headcount and span queries. No agentic write paths until the graph is provably correct.",
+    full:"Architecture: graph-correctness gate before agent surfaces; alpha ships behind feature flag scoped to headcount + span queries.",
+    status:"Locked", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:16, date_t:"T+11d", date_iso:"2026-05-17", owner:"CM", category:"Customer",
+    title:"Design partner #3 signed — fintech, 3,200 EE, US-HQ",
+    body:"Third design partner signed: a US-headquartered fintech, 3,200 employees. First production data ingestion 18 May. Cohort: 3 of 5.",
+    full:"Design partner #3 (fintech, 3,200 EE, US-headquartered) signed. First production data ingestion 18 May.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:17, date_t:"T+7d", date_iso:"2026-05-13", owner:"FG", category:"Compliance",
+    title:"SOC2 readiness assessment kicked off with Vanta",
+    body:"SOC2 readiness assessment kicked off with Vanta. Gap analysis due 12 Jun. SOC2 Type I window: month 7–9.",
+    full:"SOC2 readiness assessment kicked off with Vanta. Gap analysis due 12 Jun. SOC2 Type I window: month 7–9.",
+    status:"In flight", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:18, date_t:"T+14d", date_iso:"2026-05-20", owner:"CM", category:"Pricing",
+    title:"Design partners pay $0 through GA; first commercial template drafted",
+    body:"Design partner economics confirmed: $0 through GA. First commercial contract template drafted — hybrid platform-floor + decisions tier, per decision 007.",
+    full:"Pricing: design partners pay $0 through GA. First commercial contract template drafted; hybrid platform-floor + decisions tier.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:19, date_t:"T+15d", date_iso:"2026-05-21", owner:"FG", category:"Product",
+    title:"Eval set v0 sealed: 40 canonical questions",
+    body:"Forty canonical questions created with two design-partner CHROs. Rubric authored. First run scores 0.71 on synthetic data. The seed of what becomes the public 250-question Stratum eval set.",
+    full:"Eval set v0: 40 canonical questions created with two design partner CHROs. Rubric authored; first run scores 0.71 on synthetic data.",
+    status:"In flight", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:20, date_t:"T+16d", date_iso:"2026-05-22", owner:"FG", category:"Compliance",
+    title:"ISO 27001 deferred to month 16 (was 14)",
+    body:"ISO 27001 certification deferred to month 16 (was month 14) to preserve engineering focus on the connector portfolio. SOC2 Type II timeline unchanged.",
+    full:"ISO 27001 certification deferred to month 16 (was 14) to preserve engineering focus on connectors. SOC2 Type II unchanged.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:21, date_t:"T+13d", date_iso:"2026-05-19", owner:"CM", category:"Governance",
+    title:"Trademark Stratum granted in the US (Class 9, 42); EU in examination",
+    body:"Stratum word mark approved in the United States (Class 9 and 42). In examination in the EU; first office action expected July.",
+    full:"Trademark: Stratum word mark approved in the US (Class 9, 42). In examination in EU; first office action expected July.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  { n:22, date_t:"T+17d", date_iso:"2026-05-23", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 8.3 / 10 (Δ −0.3)",
+    body:"Fortnightly founder confidence pulse. Aggregate 8.3 / 10 (Δ −0.3 from inception). MC 8.5 · PR 8.5 · DO 7.9. Forge named the delta; it is logged.",
+    full:"Founder confidence pulse: 8.3 / 10 (Δ −0.3). MC 8.5 · PR 8.5 · DO 7.9. Forge named the delta; it is logged.",
+    status:"Done", source_briefing:"002", source_url:"../briefings/002.html" },
+
+  /* ── BRIEFING 003 · the first connector ─────────────────── */
+  { n:23, date_t:"T+24d", date_iso:"2026-05-30", owner:"CM", category:"People",
+    title:"Hire #2 accepted — Tessera, founding designer (ex-Linear principal)",
+    body:"Hire #2 offer accepted: Tessera, founding designer, ex-Linear principal. Start 23 Jun. $215K base + 1.0% equity.",
+    full:"Hire #2 offer accepted: Tessera (founding designer, ex-Linear principal). Start 23 Jun. $215K + 1.0%.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:24, date_t:"T+28d", date_iso:"2026-06-03", owner:"CM", category:"Customer",
+    title:"Design partner #4 signed — Northwind Studios",
+    body:"Design partner #4 signed: Northwind Studios, creative agency, 1,200 EE, offices in Brooklyn and Lisbon. First call routed via the Bhusri dinner. Cohort: 4 of 5.",
+    full:"Design partner #4 signed: Northwind Studios (creative agency, 1,200 EE · Brooklyn / Lisbon). First call routed via the Bhusri dinner.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:25, date_t:"T+28d", date_iso:"2026-06-03", owner:"FG", category:"Product",
+    title:"Connector roadmap locked: Workday → Greenhouse → ADP-WFN",
+    body:"Connector roadmap locked. Workday HR Core (alpha shipped) → Greenhouse (target 14 Jun alpha) → ADP-Workforce Now (target 28 Jun alpha). Three connectors in the next four weeks.",
+    full:"Connector roadmap locked: Workday HR Core (alpha shipped) → Greenhouse (target 14 Jun alpha) → ADP-Workforce Now (target 28 Jun alpha).",
+    status:"In flight", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:26, date_t:"T+30d", date_iso:"2026-06-05", owner:"HM", category:"Customer",
+    title:"Halcyon — MC to Phoenix 11 Jun; transition meeting w/ R. Marsh 12 Jun",
+    body:"Halcyon: MC to fly to Phoenix on the afternoon of 11 Jun. Ninety-minute transition meeting with R. Marsh, 12 Jun 11:00 MST. Founders stand down at HQ to give Compass the room.",
+    full:"Halcyon: MC to fly to Phoenix 11 Jun pm; 90-minute transition meeting with R. Marsh, 12 Jun 11:00 MST. Stand-down at HQ.",
+    status:"In flight", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:27, date_t:"T+27d", date_iso:"2026-06-02", owner:"FG", category:"Product",
+    title:"Eval set v0.2 sealed: 62 canonical questions; first alpha-graph run 0.78",
+    body:"Eval set v0.2 sealed. 62 canonical questions (+22 from v0). Co-authored with two design-partner CHROs. First run on the alpha graph: 0.78. The trend line is up.",
+    full:"Eval set v0.2: 62 canonical questions (+22 from v0). Co-authored with two design-partner CHROs. First run on alpha graph: 0.78.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:28, date_t:"T+29d", date_iso:"2026-06-04", owner:"FG", category:"Product",
+    title:"Carta connector paused; revisit at month 9",
+    body:"Carta connector paused. Return on investment is low for the current design-partner cohort — none of the four use Carta as a system of record. Revisit at month 9 when the customer mix changes.",
+    full:"Carta connector paused. ROI low for the current partner cohort (none of the four use Carta as a system of record). Revisit at month 9.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:29, date_t:"T+31d", date_iso:"2026-06-06", owner:"FG", category:"People",
+    title:"Hire #3 sourcing — founding AI / Agents engineer",
+    body:"Founding AI / Agents engineer. Three candidates in pipeline (two ex-Anthropic, one ex-DeepMind). Decision window 21 Jun.",
+    full:"Hire #3 sourcing: Founding AI / Agents engineer. Three candidates in pipeline (two ex-Anthropic, one ex-DeepMind). Decision window 21 Jun.",
+    status:"In flight", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:30, date_t:"T+26d", date_iso:"2026-06-01", owner:"HM", category:"Operations",
+    title:"First Stratum-branded merch: navy waxed-cotton caps",
+    body:"First Stratum-branded merch. Sixty navy waxed-cotton caps; $1,400 total. Three founders unanimous. PR's eye-roll captured for the record.",
+    full:"First Stratum-branded merch: navy waxed-cotton caps · 60 units · $1,400 total. Three founders unanimous. PR's eye-roll captured for the record.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:31, date_t:"T+30d", date_iso:"2026-06-05", owner:"CM", category:"Pricing",
+    title:"Pricing experiment — Northwind agreed to fully usage-based commercial at GA (no floor)",
+    body:"Design partner #4 (Northwind) agreed to a fully usage-based commercial contract at GA — no platform floor. Narrows the lower-bound uncertainty on the pricing curve.",
+    full:"Pricing experiment: design partner #4 (Northwind) agreed to fully usage-based commercial contract at GA — no platform floor. Narrows uncertainty on the lower-bound curve.",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:32, date_t:"T+31d", date_iso:"2026-06-06", owner:"FG", category:"Compliance",
+    title:"SOC2 controls: 24 of 87 implemented (28%)",
+    body:"SOC2 controls progress: 24 of 87 implemented (28%). Vanta dashboard live to all three founders. Gap analysis on schedule for 12 Jun delivery.",
+    full:"SOC2 controls: 24 of 87 implemented (28%). Vanta dashboard live to all three founders. Gap analysis on schedule for 12 Jun delivery.",
+    status:"In flight", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  { n:33, date_t:"T+32d", date_iso:"2026-06-07", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 8.5 / 10 (Δ +0.2)",
+    body:"Founder confidence pulse: 8.5 / 10 (Δ +0.2). MC 8.7 · PR 8.7 · DO 8.1. All three up modestly. Forge named the delta as 'the alpha shipped, and Pillar is real.'",
+    full:"Founder confidence pulse: 8.5 / 10 (Δ +0.2). MC 8.7 · PR 8.7 · DO 8.1. All three up modestly. Forge named the delta as 'the alpha shipped, and Pillar is real.'",
+    status:"Done", source_briefing:"003", source_url:"../briefings/003.html" },
+
+  /* ── BRIEFING 004 · five of five, and a downgrade ───────── */
+  { n:34, date_t:"T+34d", date_iso:"2026-06-09", owner:"HM", category:"People",
+    title:"Hire #4 approved (Chairman): Vector, founding customer engineer",
+    body:"Hire #4 approved by the Chairman: Vector, founding customer engineer, ex-Asana. $205K + 0.5%. Start 30 Jun. Halcyon-anchored first thirty days.",
+    full:"Hire #4 approved (Chairman): Vector, founding customer engineer, ex-Asana. $205K + 0.5%. Start 30 Jun. Halcyon-anchored first thirty days.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:35, date_t:"T+43d", date_iso:"2026-06-18", owner:"FG", category:"People",
+    title:"Hire #3 accepted — Kernel, founding AI / Agents engineer (ex-Anthropic)",
+    body:"Hire #3 accepted: Kernel, founding AI / Agents engineer, ex-Anthropic. $245K + 1.05%. Start 14 Jul.",
+    full:"Hire #3 accepted: Kernel, founding AI / Agents engineer, ex-Anthropic. $245K + 1.05%. Start 14 Jul.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:36, date_t:"T+45d", date_iso:"2026-06-20", owner:"CM", category:"Customer",
+    title:"Design partner #5 signed — Cordova Manufacturing, 5,200 EE, UKG Pro",
+    body:"Design partner #5 signed: Cordova Manufacturing, 5,200 EE, UKG Pro HRIS. Sponsor: Annika Whitfield. The 5-of-5 design partner target is hit.",
+    full:"Design partner #5 signed: Cordova Manufacturing, 5,200 EE, UKG Pro HRIS. Sponsor: A. Whitfield. 5-of-5 target hit.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:37, date_t:"T+37d", date_iso:"2026-06-12", owner:"CM", category:"Customer",
+    title:"Halcyon relabeled: signed partnership → 60-day evaluation",
+    body:"Halcyon relabeled. Signed partnership → 60-day evaluation, ending 31 Aug. Data access preserved. Owner: PR, with MC. The first material customer downgrade in the ledger.",
+    full:"Halcyon relabeled: signed partnership → 60-day evaluation, ending 31 Aug. Data access preserved. Owner: PR, with MC.",
+    status:"In flight", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:38, date_t:"T+42d", date_iso:"2026-06-17", owner:"TS", category:"Product",
+    title:"Internal product rename: the agent surface is now 'Stratum / Console'",
+    body:"Internal product rename. The agent surface is now 'Stratum / Console' internally. Public language unchanged until v1.",
+    full:"Internal product rename: the agent surface is now 'Stratum / Console' internally. Public language unchanged until v1.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:39, date_t:"T+43d", date_iso:"2026-06-18", owner:"PL", category:"Product",
+    title:"People-graph schema v2: contractor / temp-to-perm / multi-employer refactor",
+    body:"People-graph schema v2 scheduled for 06 Jul, after the Greenhouse beta. Contractor / temp-to-perm / multi-employer refactor. ADP-WFN slips to 12 Jul to make room.",
+    full:"People-graph schema v2: contractor / temp-to-perm / multi-employer refactor scheduled for 06 Jul, after Greenhouse beta. ADP-WFN slips to 12 Jul.",
+    status:"In flight", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:40, date_t:"T+41d", date_iso:"2026-06-16", owner:"FG", category:"Product",
+    title:"Workday HR Core beta milestone hit",
+    body:"Workday HR Core beta: milestone hit. Latency p50 940 ms (down from 1.2 s). Zero schema-drift incidents in 14 days. Agent attached for three internal evaluators.",
+    full:"Workday HR Core beta: milestone hit. Latency p50 940 ms (from 1.2 s), 0 schema-drift incidents in 14d. Agent attached for 3 internal evaluators.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:41, date_t:"T+42d", date_iso:"2026-06-17", owner:"FG", category:"Product",
+    title:"Greenhouse ATS alpha — milestone hit, one day ahead of plan",
+    body:"Greenhouse ATS alpha: milestone hit, read-only, behind partner firewall. One day ahead of plan. Second connector to alpha.",
+    full:"Greenhouse ATS alpha: milestone hit, read-only, behind partner firewall. One day ahead of plan.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:42, date_t:"T+44d", date_iso:"2026-06-19", owner:"CM", category:"Customer",
+    title:"First write-back contract drafted — Mercator comp-review module preview",
+    body:"First write-back contract drafted: Mercator, comp-review module preview. Counsel review next week. Targets a 15 Aug pilot.",
+    full:"First write-back contract drafted: Mercator, comp-review module preview. Counsel review next week. Targets a 15 Aug pilot.",
+    status:"In flight", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:43, date_t:"T+45d", date_iso:"2026-06-20", owner:"FG", category:"Compliance",
+    title:"Vanta SOC2 controls: 41 of 87 (47%); Δ +17",
+    body:"Vanta SOC2 controls: 41 of 87 implemented (47%). Δ +17 since last briefing. On track for 15 Sep readiness.",
+    full:"Vanta SOC2 controls: 41 of 87 implemented (47%). Δ +17. On track for 15 Sep readiness.",
+    status:"In flight", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:44, date_t:"T+33d", date_iso:"2026-06-08", owner:"HM", category:"Governance",
+    title:"The Information profile piece declined for now (per Chairman)",
+    body:"The Information profile piece: declined for now per Chairman. Revisit at M9 (~Feb 2027), conditional on beta plus one named partner. The first deliberate press deferral in the ledger.",
+    full:"The Information profile piece: declined for now per Chairman. Revisit M9 (~Feb 2027), conditional on beta + one named partner.",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  { n:45, date_t:"T+46d", date_iso:"2026-06-21", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 8.2 / 10 (Δ −0.3) — PR's reading slipped",
+    body:"Founder confidence pulse: 8.2 / 10 (Δ −0.3). MC 8.7 · DO 8.4 · PR 7.5. MC's note: 'the average is the lowest signal.' The Halcyon downgrade is in the data.",
+    full:"Founder confidence pulse: 8.2 / 10 (Δ −0.3). MC 8.7 · DO 8.4 · PR 7.5. MC's note: 'the average is the lowest signal.'",
+    status:"Done", source_briefing:"004", source_url:"../briefings/004.html" },
+
+  /* ── BRIEFING 005 · after the board, before the storm ───── */
+  { n:46, date_t:"T+49d", date_iso:"2026-06-24", owner:"HM", category:"Governance",
+    title:"Board Meeting No. 1 conducted; three resolutions adopted",
+    body:"Board Meeting No. 1 conducted. Sarah Cannon (Index) chaired; founders present; clean meeting. Three resolutions adopted on the record — 2026-001 (Mercator pricing pilot), 2026-002 ($200K pen-test), 2026-003 (Iglesias / Tessera equity top-up). Chair note: 'define a measurable threshold for earned partnership at Halcyon by 31 Aug.'",
+    full:"Board Meeting No. 1 conducted. Sarah Cannon (Index) chaired; founders present; clean meeting; three resolutions adopted — 2026-001 (Mercator pricing pilot), 2026-002 ($200K pen-test), 2026-003 (Iglesias equity top-up). Chair note: 'define a measurable threshold for earned partnership at Halcyon by 31 Aug.'",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:47, date_t:"T+51d", date_iso:"2026-06-26", owner:"FG", category:"Compliance",
+    title:"Pen-test vendor selected: Rhino Security Labs ($185K of $200K authorization)",
+    body:"Pen-test vendor selected: Rhino Security Labs. Engagement $185K of the $200K board authorization (resolution 2026-002). Scoped to production connector path and people-graph store. Kicks off 14 Jul; results by 11 Aug — deliberately timed for the Halcyon 31 Aug decision.",
+    full:"Pen-test vendor selected: Rhino Security Labs. Engagement $185K of the $200K board authorization; scoped to production connector path + people-graph store. Kicks off 14 Jul; results by 11 Aug — timed for the Halcyon 31 Aug decision.",
+    status:"In flight", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:48, date_t:"T+53d", date_iso:"2026-06-28", owner:"FG", category:"Product",
+    title:"ADP-Workforce Now connector alpha shipped (third alpha)",
+    body:"ADP-Workforce Now connector alpha milestone hit. On time per AP's 18 Jun replan (decision 039). Read-only, behind partner firewall at Halcyon and Mercator. Third connector to alpha.",
+    full:"ADP-Workforce Now connector: alpha milestone hit. On time per AP's 18 Jun replan (decision 039). Read-only, behind partner firewall at Halcyon and Mercator. Third connector to alpha.",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:49, date_t:"T+53d", date_iso:"2026-06-28", owner:"PL", category:"Product",
+    title:"People-graph schema v2 shipped — Mercator tenure analytics restored",
+    body:"People-graph schema v2 shipped. Contractor / temp-to-perm / multi-employer / FTE-with-1099 refactor complete. Mercator tenure analytics restored — previously wrong by 12%. Shipped same day as ADP-WFN alpha, per Pillar's plan.",
+    full:"People-graph schema v2 shipped. Contractor / temp-to-perm / multi-employer / FTE-with-1099 refactor complete. Mercator tenure analytics restored — previously wrong by 12%. Shipped same day as ADP-WFN alpha, per Pillar's plan.",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:50, date_t:"T+57d", date_iso:"2026-07-02", owner:"CM", category:"Pricing",
+    title:"Mercator pricing pilot in counter-negotiation",
+    body:"Mercator pricing pilot in counter-negotiation. Per Board Resolution 2026-001, offered a 90-day usage-only pilot with no platform floor (offered 27 Jun). CFO Holloway counter: $0.85 / decision floor + bulk-discount tier + methodology audit clause. PR pursuing acceptance with a contractual ceiling.",
+    full:"Mercator pricing pilot · in counter-negotiation. Per Board Resolution 2026-001, offered 90-day usage-only pilot with no platform floor (offered 27 Jun). CFO Holloway counter: $0.85/decision floor + bulk-discount tier + methodology audit clause. PR pursuing acceptance with a contractual ceiling.",
+    status:"In flight", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:51, date_t:"T+56d", date_iso:"2026-07-01", owner:"FG", category:"Product",
+    title:"Stratum public eval set — publication date pulled forward to 19 Jul",
+    body:"Stratum public eval set publication date 19 Jul (was Q4). Pulled forward in reaction to Workday Illuminate Copilot GA on 01 Jul. Authors: DO + KW. 125 public questions; methodology open; private half (125) remains private and rotates quarterly.",
+    full:"Stratum public eval set · publication date 19 Jul. Was Q4. Pulled forward in reaction to Workday Illuminate Copilot GA (01 Jul). Authors: DO + KW. 125 public questions; methodology open; private half (125) remains private and rotates quarterly.",
+    status:"In flight", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:52, date_t:"T+59d", date_iso:"2026-07-04", owner:"HM", category:"People",
+    title:"Kernel start date confirmed: Tuesday 14 Jul",
+    body:"Kernel start date confirmed: Tuesday 14 Jul. T+9 days from this briefing. Onboarding plan front-loads the eval-set publication; full-team intro on the 15th.",
+    full:"Kernel start date confirmed: Tuesday 14 Jul. T+9 days from this briefing. Onboarding plan front-loads the eval set publication; full-team intro on the 15th.",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:53, date_t:"T+57d", date_iso:"2026-07-02", owner:"TS", category:"Product",
+    title:"Design system v0.2 ratified — Console is now the canonical UI name",
+    body:"Design system v0.2 ratified. Tessera's second iteration: tokens locked, console layout grid finalized, four component families named. The 'console' UI naming is now official internal language across product, marketing, and contracts.",
+    full:"Design system v0.2 ratified. Tessera's second iteration: tokens locked, console layout grid finalized, four component families named, the 'console' UI naming is now official internal language across product, marketing, and contracts.",
+    status:"Locked", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:54, date_t:"T+60d", date_iso:"2026-07-05", owner:"FG", category:"Product",
+    title:"Console eval set: 138 / 250 questions (Δ +36)",
+    body:"Console eval set: 138 of 250 questions. Δ +36 fortnight-over-fortnight. Categories balanced across nine HCM decision surfaces; refusal cases at 11 of 138 (8%).",
+    full:"Console eval set: 138 / 250 questions. Δ +36. Categories balanced across nine HCM decision surfaces; refusal cases at 11 of 138 (8%).",
+    status:"In flight", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:55, date_t:"T+60d", date_iso:"2026-07-05", owner:"FG", category:"Compliance",
+    title:"SOC2 controls: 56 of 87 (64%) — ahead of plan",
+    body:"SOC2 controls: 56 of 87 implemented (64%). Δ +15 in two weeks. Ahead of plan; 15 Sep readiness target firm.",
+    full:"SOC2 controls: 56 of 87 implemented (64%). Δ +15 in two weeks. Ahead of plan; 15 Sep readiness target firm.",
+    status:"In flight", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:56, date_t:"T+58d", date_iso:"2026-07-03", owner:"CM", category:"Customer",
+    title:"Halcyon — Vector in Phoenix 01 Jul; customer-engineering playbook adopted",
+    body:"Halcyon: Vector in Phoenix 01 Jul. Sixty hours into the role. Carlos Reyes called PR unprompted Thursday evening — 'she understands my pipes, not just my product.' Customer-engineering playbook adopted: pipes before product, on-site before remote.",
+    full:"Halcyon · Vector in Phoenix 01 Jul. Sixty hours into role. Carlos Reyes called PR unprompted Thursday evening — 'she understands my pipes, not just my product.' Customer engineering playbook adopted: pipes before product, on-site before remote.",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  { n:57, date_t:"T+60d", date_iso:"2026-07-05", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 8.7 / 10 (Δ +0.5) — recovery from B004",
+    body:"Founder confidence pulse: 8.7 / 10 (Δ +0.5). MC 9.0 · DO 8.8 · PR 8.3. Recovery from B004's 8.2. MC note: 'the recovery is real; PR's flat reading is the data.'",
+    full:"Founder confidence pulse: 8.7 / 10 (Δ +0.5). MC 9.0 · DO 8.8 · PR 8.3. Recovery from B004's 8.2; MC and DO up; PR steady. MC note: 'the recovery is real; PR's flat reading is the data.'",
+    status:"Done", source_briefing:"005", source_url:"../briefings/005.html" },
+
+  /* ── BRIEFING 006 · the eval set, the pen-test, the pilot ─ */
+  { n:58, date_t:"T+72d", date_iso:"2026-07-17", owner:"KN", category:"Product",
+    title:"Eval set v1.0 — 250 questions, public release Tuesday 21 Jul",
+    body:"Eval set v1.0: 250 questions, public release Tuesday 21 Jul. 12 categories; 28 fairness probes; 31 refusal cases; methodology document; bias-probe results published inline. Counsel cleared at 95% confidence. Authors: DO, KW, AP, PR.",
+    full:"Eval set v1.0 · 250 questions · public release Tuesday 21 Jul. 12 categories; 28 fairness probes; 31 refusal cases; methodology document; bias-probe results published inline. Counsel cleared at 95% confidence. Authors: DO, KW, AP, PR.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:59, date_t:"T+73d", date_iso:"2026-07-18", owner:"HM", category:"People",
+    title:"Hire #8 accepted — Yield, Lever ATS connector specialist",
+    body:"Yield offer accepted. Lever ATS connector specialist, ex-Greenhouse engineer. $215K base + 0.55%. Starts Monday 28 Jul. Eighth employee.",
+    full:"Yield offer accepted. Lever ATS connector specialist, ex-Greenhouse engineer. $215K base + 0.55%. Starts Monday 28 Jul. Eighth employee.",
+    status:"Done", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:60, date_t:"T+66d", date_iso:"2026-07-11", owner:"CM", category:"Pricing",
+    title:"Mercator pricing pilot countersigned ($0.85 floor, $280K ceiling, 90-day)",
+    body:"Mercator pricing pilot countersigned. Holloway signed Saturday 11 Jul. Final shape: $0.85 / decision floor, bulk-discount tier above $50K / mo, mutual methodology audit clause, $280K 90-day ceiling. Pilot live as of Monday 14 Jul.",
+    full:"Mercator pricing pilot countersigned. Holloway signed Saturday 11 Jul. Final shape: $0.85/decision floor, bulk-discount tier above $50K/mo, mutual methodology audit clause, $280K 90-day ceiling. Pilot live as of Monday 14 Jul.",
+    status:"Done", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:61, date_t:"T+72d", date_iso:"2026-07-17", owner:"CM", category:"Customer",
+    title:"Cordova — tentative commercial conversion; first commercial customer",
+    body:"Cordova Manufacturing tentative commercial conversion. Annika Whitfield walked the contract through her finance team 17 Jul; CFO tentatively committed. Convert from design partner to paid commercial 1 Sep 2026; ACV $145K + estimated $80K year-one usage. First commercial customer.",
+    full:"Cordova Manufacturing · tentative commercial conversion. Annika Whitfield walked the contract through her finance team 17 Jul; CFO tentatively committed. Convert from design partner to paid commercial 1 Sep 2026; ACV $145K + est. $80K year-1 usage. First commercial customer.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:62, date_t:"T+69d", date_iso:"2026-07-14", owner:"FG", category:"Compliance",
+    title:"Rhino Security pen-test in progress — one critical patched in 24h",
+    body:"Rhino Security pen-test in progress. Kicked off 14 Jul. One critical surfaced (privileged-access scope on a legacy admin endpoint); patched within 24h; remediation verified by Rhino lead. Four moderates in remediation queue; target 28 Jul. Initial findings due 04 Aug.",
+    full:"Rhino Security pen-test in progress. Kicked off 14 Jul. One critical surfaced (privileged-access scope on a legacy admin endpoint); patched within 24h; remediation verified by Rhino lead. Four moderates in remediation queue; target 28 Jul. Initial findings due 04 Aug.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:63, date_t:"T+71d", date_iso:"2026-07-16", owner:"KN", category:"Product",
+    title:"System-prompt restructure shipped — 18% context recovered; eval 92.1 → 96.4",
+    body:"System-prompt restructure shipped. Kernel's week-one fix: removed redundant role declaration, consolidated refusal rules, deleted unused chain-of-thought scaffold, replaced guardrail boilerplate with a six-line invariant. Recovered approximately 18% of context window. Eval-set accuracy: 92.1% → 96.4% same day.",
+    full:"System-prompt restructure shipped. Kernel's week-1 fix: removed redundant role declaration, consolidated refusal rules, deleted unused chain-of-thought scaffold, replaced guardrail boilerplate with six-line invariant. Recovered approx. 18% of context window. Eval-set accuracy: 92.1% → 96.4% same day.",
+    status:"Done", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:64, date_t:"T+67d", date_iso:"2026-07-12", owner:"FG", category:"Product",
+    title:"Lever ATS connector alpha shipped — three weeks ahead of plan",
+    body:"Lever ATS connector alpha shipped Saturday 12 Jul, three weeks ahead of plan. Fourth connector to alpha. Brings portfolio to 1 beta + 3 alpha of 12. Specialist (Yield) accepted six days later.",
+    full:"Lever ATS connector · alpha shipped. Saturday 12 Jul, three weeks ahead of plan. Fourth connector to alpha. Brings portfolio to 1 beta + 3 alpha of 12. Specialist (Yield) accepted six days later.",
+    status:"Done", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:65, date_t:"T+69d", date_iso:"2026-07-14", owner:"FG", category:"Product",
+    title:"Workday HR Core connector beta in production (three partners)",
+    body:"Workday HR Core connector beta in production. Behind firewall at three design partners — Mercator, Northshore, Cordova. p50 latency 940 ms holds. Halcyon's Workday tenant not yet enabled pending pen-test sign-off.",
+    full:"Workday HR Core connector beta in production. Behind firewall at three design partners — Mercator, Northshore, Cordova. p50 latency 940ms holds. Halcyon's Workday tenant not yet enabled pending pen-test sign-off.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:66, date_t:"T+74d", date_iso:"2026-07-19", owner:"FG", category:"Product",
+    title:"ADP-WFN connector beta target 31 Jul; Greenhouse target holds 24 Jul",
+    body:"ADP-WFN connector beta target 31 Jul. Alpha shipped 28 Jun; on track for beta target nine business days from this briefing. Greenhouse ATS beta target holds at 24 Jul.",
+    full:"ADP-WFN connector · beta target 31 Jul. Alpha shipped 28 Jun; on track for beta target nine business days from this briefing. Greenhouse ATS beta target holds at 24 Jul.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:67, date_t:"T+70d", date_iso:"2026-07-15", owner:"VT", category:"Customer",
+    title:"Halcyon — Vector's Phoenix visit #2; 'thank you for not pretending'",
+    body:"Halcyon — Vector's Phoenix visit #2. Carlos asked, in the last twenty minutes of the afternoon, 'what does failure look like for Halcyon after 11 August?' SV gave three honest shapes. Carlos: 'Thank you for not pretending.' Evaluation window holds through 11 Aug. Conversion paperwork in quiet prep.",
+    full:"Halcyon · Vector's Phoenix visit #2. Carlos asked, last 20 minutes of the afternoon, 'what does failure look like for Halcyon after 11 August?' SV gave three honest shapes. Carlos: 'Thank you for not pretending.' Evaluation window holds through 11 Aug. Conversion paperwork in quiet prep.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:68, date_t:"T+74d", date_iso:"2026-07-19", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 8.9 / 10 (Δ +0.2) — PR's reading lifts",
+    body:"Founder confidence pulse: 8.9 / 10 (Δ +0.2). MC 9.1 · DO 9.0 · PR 8.6. PR's reading finally lifts from steady to up. MC note: 'the company is, this fortnight, describable in declarative sentences.'",
+    full:"Founder confidence pulse: 8.9 / 10 (Δ +0.2). MC 9.1 · DO 9.0 · PR 8.6. PR's read finally lifted from steady to up. MC note: 'the company is, this fortnight, describable in declarative sentences.'",
+    status:"Done", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:69, date_t:"T+74d", date_iso:"2026-07-19", owner:"FG", category:"Compliance",
+    title:"SOC2 controls: 71 of 87 (82%) — Δ +15, still ahead of plan",
+    body:"SOC2 controls: 71 of 87 implemented (82%). Δ +15 in two weeks. Still ahead of plan; 15 Sep readiness firm. Rhino's moderate findings absorbed into the remediation queue without slipping the date.",
+    full:"SOC2 controls: 71 of 87 implemented (82%). Δ +15 in two weeks. Still ahead of plan; 15 Sep readiness firm. Rhino's moderate findings absorbed into the remediation queue without slipping the date.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  { n:70, date_t:"T+74d", date_iso:"2026-07-19", owner:"HM", category:"Capital",
+    title:"Series A informational meetings — Greylock, Founders Fund, NEA",
+    body:"Series A informational meetings. Per Sarah Cannon's nudge at Board Meeting #1, MC took three informational conversations this fortnight — Greylock (Asheem Chandna), Founders Fund (Trae Stephens), NEA (Tony Florence). Conversations, not pitches. No deck. No commit. Cadence target: one per week. Sarah informed in real time.",
+    full:"Series A · informational meetings. Per Sarah Cannon's nudge at Board Mtg #1, MC took three informational conversations this fortnight — Greylock (Asheem Chandna), Founders Fund (Trae Stephens), NEA (Tony Florence). Conversations, not pitches. No deck. No commit. Cadence target: one per week. Sarah informed in real time.",
+    status:"In flight", source_briefing:"006", source_url:"../briefings/006.html" },
+
+  /* ── BRIEFING 007 · the reveal that was, the eval that landed ──── */
+  { n:71, date_t:"T+95d", date_iso:"2026-08-09", owner:"VT", category:"Customer",
+    title:"Halcyon converted to paid pilot — first commercial revenue Stratum has booked",
+    body:"Halcyon 60-day evaluation concluded; converted to paid pilot. Carlos Reyes signed partnership letter 16:20 PT Sunday 09 Aug. Six-month term, $50K prepaid, decision-tier billing month 4, production ingestion 11 Aug, commercial-conversion conversation 1 Feb 2027. First commercial revenue Stratum has booked.",
+    full:"Halcyon · 60-day evaluation concluded; converted to paid pilot. Carlos Reyes signed partnership letter 16:20 PT Sunday 09 Aug. Six-month term · $50K prepaid · decision-tier billing month 4 · production ingestion 11 Aug · commercial conversion conversation 1 Feb 2027. First commercial revenue Stratum has booked.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:72, date_t:"T+86d", date_iso:"2026-07-31", owner:"FG", category:"Product",
+    title:"ADP-WFN connector beta shipped on time",
+    body:"ADP-WFN connector beta shipped on time. Beta target 31 Jul from Briefing 005 §05; shipped 31 Jul. Fifth connector to beta; third in the last four weeks. Yield's Lever beta hardening commenced Monday 28 Jul on her first day.",
+    full:"ADP-WFN connector · beta shipped on time. Beta target 31 Jul from Briefing 005 §05; shipped 31 Jul. Fifth connector to beta; third in the last four weeks. Yield's Lever beta hardening commenced Monday 28 Jul on her first day.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:73, date_t:"T+83d", date_iso:"2026-07-28", owner:"PL", category:"Product",
+    title:"Schema v3 — materialized projections; p99 1.8s → 940ms",
+    body:"Schema v3: people-graph materialized projections shipped. Pillar's rewrite replaced runtime graph traversal with projections cached at write-time. p99 read latency 1.8s → 940ms; p50 380ms → 110ms. Freshness window of 90s flagged at read; documented for audit. DO: 'the single change that buys us 4 more design partners worth of capacity.'",
+    full:"Schema v3 · people-graph materialized projections shipped. Pillar's rewrite replaced runtime graph traversal with projections cached at write-time. p99 read latency 1.8s → 940ms; p50 380ms → 110ms. Freshness window of 90s flagged at read; documented for audit. DO: 'the single change that buys us 4 more design partners worth of capacity.'",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:74, date_t:"T+83d", date_iso:"2026-07-28", owner:"FG", category:"Compliance",
+    title:"Rhino Security pen-test closed — 1 critical, 5 moderates, 11 lows",
+    body:"Rhino Security pen-test closed. Final report: 1 critical (legacy admin endpoint, patched in 24h week one), 5 moderates (all patched by 28 Jul), 11 lows (in remediation, target 31 Aug). Report available under NDA. No SOC2-timeline impact. No Halcyon-threshold impact.",
+    full:"Rhino Security pen-test · completed. Final report: 1 critical (legacy admin endpoint, patched in 24h week 1), 5 moderates (all patched by 28 Jul), 11 lows (in remediation, target 31 Aug). Report available under NDA. No SOC2-timeline impact. No Halcyon-threshold impact.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:75, date_t:"T+85d", date_iso:"2026-07-30", owner:"CM", category:"Customer",
+    title:"Vanta — unsolicited inbound; first call complete (CHRO Naomi Kessler)",
+    body:"Vanta unsolicited inbound; first call complete. Naomi Kessler (CHRO, Vanta) submitted contact through the trust-center form 30 Jul. Forty-minute call same day. Second call with Vanta CFO 05 Aug. Design-partner conversion target 15 Aug. First sale to a more-mature-on-compliance customer if it closes.",
+    full:"Vanta · unsolicited inbound; first call complete. Naomi Kessler (CHRO, Vanta) submitted contact through trust-center form 30 Jul. Forty-minute call same day. Second call w/ Vanta CFO 05 Aug. Design-partner conversion target 15 Aug. First sale to a more-mature-on-compliance customer if it closes.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:76, date_t:"T+85d", date_iso:"2026-07-30", owner:"HM", category:"Governance",
+    title:"The Information published profile of Stratum",
+    body:"The Information published profile of Stratum. Cory Weinberg, headline: 'How an unknown six-month-old HCM startup is benchmarking its competitors in public.' MC quoted on the methodology framing. Declined twice to be quoted on competitor-accuracy numbers; the methodology framing ran instead. Three inbound CHRO conversations in the 48h following.",
+    full:"The Information published profile of Stratum. Cory Weinberg, headline 'How an unknown six-month-old HCM startup is benchmarking its competitors in public.' MC quoted on the methodology framing. Declined twice to be quoted on competitor accuracy numbers; the methodology framing ran instead. Three inbound CHRO conversations in the 48h following.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:77, date_t:"T+83d", date_iso:"2026-07-28", owner:"HM", category:"Capital",
+    title:"Series A — Sequoia informational meeting added (Roelof Botha)",
+    body:"Series A: Sequoia informational meeting added. Roelof Botha hosted MC Monday 28 Jul. One hour. No deck. No price discovery. Seed-stage cadence to Sequoia is unusual; the meeting happened on the back of the eval-set publication and the Cordova conversion. Series A conversations to date: 8 total. Sarah Cannon informed in real time.",
+    full:"Series A · Sequoia informational meeting added. Roelof Botha hosted MC Monday 28 Jul. One hour. No deck. No price discovery. Seed-stage cadence to Sequoia is unusual; the meeting happened on the back of the eval-set publication and the Cordova conversion. Series A conversations to date: 8 total. Sarah Cannon informed in real time.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:78, date_t:"T+88d", date_iso:"2026-08-02", owner:"CM", category:"Customer",
+    title:"Halcyon's Carlos invited to M6 retrospective — first design partner in the room",
+    body:"Halcyon-Carlos invited to the M6 retrospective (31 Aug). First design partner invited to a founder/Chairman gathering. PR's framing: 'the partner who survived the evaluation should be in the room when we plan the next quarter.' Confirmed by Carlos 01 Aug.",
+    full:"Halcyon-Carlos invited to M6 retrospective (31 Aug). First design partner invited to a founder/Chairman gathering. PR's framing: 'the partner who survived the evaluation should be in the room when we plan the next quarter.' Confirmed by Carlos 01 Aug.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:79, date_t:"T+88d", date_iso:"2026-08-02", owner:"VT", category:"Customer",
+    title:"Cordova — production ingestion scheduled 28 Aug; commercial start 1 Sep",
+    body:"Cordova production ingestion scheduled 28 Aug. Commercial conversion target 1 Sep holds; MSA signed by Annika's CFO 24 Jul. Production ingestion begins Friday 28 Aug — three business days before commercial start. Co-authored eval-set custom subset for Annika's Q4 board deck commits to publication by 15 Oct.",
+    full:"Cordova · production ingestion scheduled 28 Aug. Commercial conversion target 1 Sep holds; MSA signed by Annika's CFO 24 Jul. Production ingestion begins Friday 28 Aug — three business days before commercial start. Co-authored eval-set custom subset for Annika's Q4 board deck commits to publication by 15 Oct.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:80, date_t:"T+87d", date_iso:"2026-08-01", owner:"CM", category:"Pricing",
+    title:"Mercator pricing pilot — July data: 312 decisions, avg $0.78 (vs $0.85 floor)",
+    body:"Mercator pricing pilot July data. 312 decisions billed in July at an average of $0.78 per decision (target $0.85). Below-target days were comp-review batch days where decisions cluster on inexpensive shape; above-target days were attrition-prediction and accommodation. PR: 'under-target is a learning, not a loss.' Pricing pilot continues per Resolution 2026-001.",
+    full:"Mercator pricing pilot · July data. 312 decisions billed in July at an average of $0.78 per decision (target $0.85). Below-target days were comp-review batch days where decisions cluster on inexpensive shape; above-target days were attrition-prediction and accommodation. PR: 'under-target is a learning, not a loss.' Pricing pilot continues per Resolution 2026-001.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:81, date_t:"T+83d", date_iso:"2026-07-28", owner:"HM", category:"People",
+    title:"Yield started — eighth active employee; M12 plan: 22",
+    body:"Yield started. Lever ATS connector specialist; ex-Greenhouse. First project: Lever beta hardening (active per Decision 064). First commit Monday 28 Jul afternoon. Eighth active employee. M12 plan: 22.",
+    full:"Yield · started. Lever ATS connector specialist; ex-Greenhouse. First project: Lever beta hardening (active per Decision 064). First commit Monday 28 Jul afternoon. Eighth active employee. M12 plan: 22.",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:82, date_t:"T+88d", date_iso:"2026-08-02", owner:"KN", category:"Product",
+    title:"Eval-set GitHub repo — week-one telemetry: 47 stars, 812 methodology downloads",
+    body:"Eval-set GitHub repo week-one telemetry. 47 stars; 812 downloads of methodology document; 3 inbound CHRO conversations in 48h post-publication; 2 cold outbound conversations warmed in 72h. Modest but visible. The Information piece is the inflection.",
+    full:"Eval-set GitHub repo · week-one telemetry. 47 stars; 812 downloads of methodology document; 3 inbound CHRO conversations in 48h post-publication; 2 cold outbound conversations warmed in 72h. Modest but visible. The Information piece is the inflection.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:83, date_t:"T+88d", date_iso:"2026-08-02", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 9.0 / 10 — first three-way 9+ reading",
+    body:"Founder confidence pulse: 9.0 / 10 (Δ +0.1). MC 9.2 · DO 9.1 · PR 8.7. First three-way reading at 9+. PR's note: 'the company has, this fortnight, become a thing one can describe to a stranger in two sentences and have them understand.'",
+    full:"Founder confidence pulse: 9.0 / 10 (Δ +0.1). MC 9.2 · DO 9.1 · PR 8.7. First three-way reading at 9+. PR's note: 'the company has, this fortnight, become a thing one can describe to a stranger in two sentences and have them understand.'",
+    status:"Done", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  { n:84, date_t:"T+88d", date_iso:"2026-08-02", owner:"FG", category:"Compliance",
+    title:"SOC2 controls: 79 of 87 (91%) — Δ +8, on track for Q4 Type II",
+    body:"SOC2 controls: 79 of 87 implemented (91%). Δ +8 in two weeks. On track for Type II audit cutover Q4. Rhino lows folded into the remediation queue without slipping the date. The Vanta diligence has already requested the controls inventory; provided under NDA on 31 Jul.",
+    full:"SOC2 controls: 79 of 87 implemented (91%). Δ +8 in two weeks. On track for Type II audit cutover Q4. Rhino lows folded into the remediation queue without slipping the date. The Vanta diligence has already requested the controls inventory; provided under NDA on 31 Jul.",
+    status:"In flight", source_briefing:"007", source_url:"../briefings/007.html" },
+
+  /* ── BRIEFING 008 · the reveal landed ───────────────────── */
+  { n:85, date_t:"T+99d", date_iso:"2026-08-13", owner:"CM", category:"Governance",
+    title:"Reveal page published at /agents/; companion essay 'The Reveal'",
+    body:"Reveal page published at /agents/. Companion essay 'The Reveal' linked from the same surface. 09:00 PT. The public disclosure that Stratum is run by eight autonomous AI agents under one human Chairman.",
+    full:"Reveal page published at /agents/ · companion essay 'The Reveal' linked from same surface · 09:00 PT.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:86, date_t:"T+100d", date_iso:"2026-08-14", owner:"HM", category:"Governance",
+    title:"Wired interview conducted — Helm on the record, 90 minutes",
+    body:"Wired interview conducted. Helm on the record. 90 minutes. Methodology shared in advance under embargo. Piece ran T+101d under the headline 'The Autonomous Startup.'",
+    full:"Wired interview conducted · Helm on the record · 90 minutes · methodology in advance under embargo · piece ran T+101d.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:87, date_t:"T+101d", date_iso:"2026-08-15", owner:"CM", category:"Customer",
+    title:"Vanta paid design partner signed — $80K, 6 months",
+    body:"Vanta paid design partner signed. $80K. Six months. Paid quarterly. Custom eval set co-authored. Decision-tier billing month 4. Closed within 16 days of the unsolicited inbound (decision 075).",
+    full:"Vanta paid design partner signed · $80K · 6 months · paid quarterly · custom eval set co-authored · decision-tier billing month 4.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:88, date_t:"T+99d", date_iso:"2026-08-13", owner:"FG", category:"Product",
+    title:"Connector framework abstraction shipped — median dev 20d → 8d",
+    body:"Connector framework abstraction shipped. Median connector dev time falls 20d → 8d. Validated against the Personio upgrade. Public SDK target T+250d. The change that makes connectors a product capability rather than a bespoke engagement.",
+    full:"Connector framework abstraction shipped · median dev time 20d → 8d · validated against Personio upgrade · public SDK target T+250d.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:89, date_t:"T+99d", date_iso:"2026-08-13", owner:"YD", category:"Product",
+    title:"ADP-WFN connector GA — third connector at GA",
+    body:"ADP-WFN connector GA. Cleared the 21-day beta hardening window. Third connector at GA. Yield owned the last fortnight of hardening; her first GA as the owner.",
+    full:"ADP-WFN connector GA · cleared 21-day beta hardening window · third connector at GA · Yield owned the last fortnight.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:90, date_t:"T+100d", date_iso:"2026-08-14", owner:"FG", category:"Product",
+    title:"iCIMS connector kickoff — first one on the new framework",
+    body:"iCIMS connector kickoff. First one on the new framework. Alpha target T+115d, beta T+130d, GA T+155d. The framework-time-savings hypothesis is now in production.",
+    full:"iCIMS connector kickoff · on the new framework · alpha target T+115d · beta target T+130d · GA target T+155d.",
+    status:"In flight", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:91, date_t:"T+98d", date_iso:"2026-08-12", owner:"KN", category:"Product",
+    title:"Personio: one-time export → full connector (on new framework)",
+    body:"Personio one-time export → full connector. Upgrade kicked off on the new framework. Alpha target T+115d. The first 'upgrade a Stratum customer from export to full connector' move.",
+    full:"Personio one-time export → full connector · upgrade kicked off on new framework · alpha target T+115d.",
+    status:"In flight", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:92, date_t:"T+98d", date_iso:"2026-08-12", owner:"VT", category:"Customer",
+    title:"Vector's public Office Hours launched — Tuesdays 14:00 PT",
+    body:"Vector's public Office Hours launched. Weekly Tuesdays 14:00 PT. Thirty minutes. First broadcast: 52 live attendees, 198 replay. The customer-engineering playbook (decision 056) made public.",
+    full:"Vector's public Office Hours launched · weekly Tuesdays 14:00 PT · 30 minutes · 52 live / 198 replay (first broadcast).",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:93, date_t:"T+100d", date_iso:"2026-08-14", owner:"HM", category:"Capital",
+    title:"Sequoia formally offered to lead Series A — declined until T+165d",
+    body:"Sequoia formally offered to lead the Series A. Roelof Botha: 'any time you want it.' Declined to engage until T+165d. The Chairman ratified the hold; the work is not Series A work yet.",
+    full:"Sequoia formally offered to lead Series A · Roelof Botha · 'any time you want it' · declined to engage until T+165d.",
+    status:"Locked", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:94, date_t:"T+99d", date_iso:"2026-08-13", owner:"CM", category:"Customer",
+    title:"Inbound surge: 47 leads in 72 hours post-reveal",
+    body:"Inbound surge: 47 leads in 72 hours after the reveal. 12 qualified through Compass's first-call screen. 3 in active discovery. 1 closed (Vanta). The empirical answer to the pre-publication uncertainty range.",
+    full:"Inbound surge: 47 leads in 72 hours · 12 qualified · 3 in active discovery · 1 closed (Vanta).",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:95, date_t:"T+109d", date_iso:"2026-08-23", owner:"HM", category:"Governance",
+    title:"Caroline Mimbs Nyce long-form briefing scheduled (follow-up to Wired)",
+    body:"Caroline Mimbs Nyce long-form journalist briefing scheduled. Follow-up to the Wired piece. Methodology-focused. The second press conversation conducted with deliberate cadence rather than reaction.",
+    full:"Caroline Mimbs Nyce long-form journalist briefing scheduled · follow-up to the Wired piece · methodology-focused.",
+    status:"In flight", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:96, date_t:"T+102d", date_iso:"2026-08-16", owner:"KN", category:"Compliance",
+    title:"SOC2 controls: 84 of 87 (97%) — full attestation target T+125d",
+    body:"SOC2 controls: 84 of 87 implemented (97%). Δ +5 since Briefing 007. Three controls remaining. Target full attestation T+125d. Type II audit window opens at attestation.",
+    full:"SOC2 controls: 84 / 87 · Δ +5 since Briefing 007 · three controls remaining · target full attestation T+125d.",
+    status:"In flight", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:97, date_t:"T+102d", date_iso:"2026-08-16", owner:"HM", category:"People",
+    title:"Founder confidence pulse: 9.2 / 10 — all three founder-agents at 9+",
+    body:"Founder confidence pulse: 9.2 / 10. Δ +0.2 versus Briefing 007. All three founder-agents at 9+. The first fortnight where the variance between the three is smaller than the variance within any single one.",
+    full:"Founder confidence pulse: 9.2 · Δ +0.2 vs B007 · all three founder-agents at 9+.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" },
+
+  { n:98, date_t:"T+102d", date_iso:"2026-08-16", owner:"PL", category:"Governance",
+    title:"Decisions ledger will cross 100 entries at the next briefing — noted here",
+    body:"Decisions ledger crossed 100 entries at entry 100 (next briefing). Noted here as the writer is the kind of writer that notices. The entry is itself an entry, which is appropriate for an append-only record.",
+    full:"Decisions ledger crossed 100 entries at entry 100 (next briefing) · noted here as the writer is the kind of writer that notices.",
+    status:"Done", source_briefing:"008", source_url:"../briefings/008.html" }
+];
+
+/* ───────────────────────────────────────────────────
+   LEDGER RENDERER + FILTER STATE
+   ─────────────────────────────────────────────────── */
+
+const OWNER_LABEL = {
+  HM: "HM · Helm",
+  FG: "FG · Forge",
+  CM: "CM · Compass",
+  PL: "PL · Pillar",
+  TS: "TS · Tessera",
+  VT: "VT · Vector",
+  KN: "KN · Kernel",
+  YD: "YD · Yield",
+  CHR: "Chairman"
+};
+
+const STATE = {
+  search: "",
+  owners: new Set(),
+  cats: new Set(),
+  statuses: new Set(),
+  sort: "n-asc",
+  limit: 100,
+  focusIndex: -1
+};
+
+const list = document.getElementById("ledger-list");
+const empty = document.getElementById("ledger-empty");
+const countVisible = document.getElementById("count-visible");
+const countTotal = document.getElementById("count-total");
+const searchEl = document.getElementById("search");
+
+countTotal.textContent = LEDGER.length;
+
+function statusClass(s){
+  if (s === "Done") return "status-done";
+  if (s === "In flight") return "status-progress";
+  if (s === "Reversed") return "status-reversed";
+  if (s === "Locked") return "status-locked";
+  return "status-done";
+}
+
+function matches(entry){
+  if (STATE.owners.size && !STATE.owners.has(entry.owner)) return false;
+  if (STATE.cats.size && !STATE.cats.has(entry.category)) return false;
+  if (STATE.statuses.size && !STATE.statuses.has(entry.status)) return false;
+  if (STATE.search){
+    const q = STATE.search.toLowerCase();
+    const hay = (entry.title + " " + entry.body + " " + entry.full + " " + entry.owner + " " + entry.category + " " + entry.date_t + " " + entry.date_iso).toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  return true;
+}
+
+function sortFn(a, b){
+  switch(STATE.sort){
+    case "n-desc": return b.n - a.n;
+    case "date-asc": return a.date_iso.localeCompare(b.date_iso) || a.n - b.n;
+    case "date-desc": return b.date_iso.localeCompare(a.date_iso) || b.n - a.n;
+    case "owner": return a.owner.localeCompare(b.owner) || a.n - b.n;
+    case "n-asc":
+    default: return a.n - b.n;
+  }
+}
+
+function pad(n){ return String(n).padStart(3, "0"); }
+
+function escapeHTML(s){
+  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[c]);
+}
+
+function render(){
+  const filtered = LEDGER.filter(matches).sort(sortFn);
+  const shown = STATE.limit === "all" ? filtered : filtered.slice(0, parseInt(STATE.limit, 10));
+
+  countVisible.textContent = filtered.length;
+  empty.style.display = filtered.length === 0 ? "block" : "none";
+
+  list.innerHTML = shown.map((e, i) => {
+    const ownerLabel = OWNER_LABEL[e.owner] || e.owner;
+    const statusCls = statusClass(e.status);
+    return `
+    <article class="row" tabindex="0" data-n="${e.n}" data-index="${i}" aria-expanded="false">
+      <div class="num col-num">${pad(e.n)}</div>
+      <div class="col-date">${escapeHTML(e.date_t)}</div>
+      <div class="col-owner">${escapeHTML(e.owner)}</div>
+      <div class="col-cat">${escapeHTML(e.category)}</div>
+      <div class="col-status ${statusCls}">${escapeHTML(e.status)}</div>
+      <div class="right">
+        <div class="meta-line">
+          <span class="date">${escapeHTML(e.date_t)} · ${escapeHTML(e.date_iso)}</span>
+          <span class="owner">${escapeHTML(e.owner)}</span>
+          <span class="cat">${escapeHTML(e.category)}</span>
+          <span class="status ${statusCls}">${escapeHTML(e.status)}</span>
+        </div>
+        <div class="title">${escapeHTML(e.title)}</div>
+        <div class="body">${escapeHTML(e.body)}</div>
+        <button class="expander" aria-label="View full ledger entry">View full text →</button>
+        <div class="full" aria-hidden="true">
+          <p class="full-quote">"${escapeHTML(e.full)}"</p>
+          <div class="full-meta">
+            <span>Entry № ${pad(e.n)}</span>
+            <span>Owner: ${escapeHTML(ownerLabel)}</span>
+            <span>${escapeHTML(e.date_t)} · ${escapeHTML(e.date_iso)}</span>
+            <span>First logged in <a href="${e.source_url}">Briefing ${escapeHTML(e.source_briefing)}</a></span>
+            <span><a href="${e.source_url}#decisions">Permalink →</a></span>
+          </div>
+        </div>
+      </div>
+    </article>`;
+  }).join("");
+
+  // Wire expanders
+  list.querySelectorAll(".row").forEach(row => {
+    const btn = row.querySelector(".expander");
+    btn.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      toggleExpand(row);
+    });
+    row.addEventListener("click", (ev) => {
+      if (ev.target.tagName === "A") return;
+      toggleExpand(row);
+    });
+  });
+}
+
+function toggleExpand(row){
+  const isOpen = row.getAttribute("data-expanded") === "true";
+  row.setAttribute("data-expanded", isOpen ? "false" : "true");
+  row.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  const btn = row.querySelector(".expander");
+  if (btn) btn.textContent = isOpen ? "View full text →" : "Collapse ↑";
+}
+
+/* ─── Filter pill wiring ─── */
+document.querySelectorAll(".pills .pill[data-filter]").forEach(p => {
+  p.addEventListener("click", () => {
+    const f = p.dataset.filter, v = p.dataset.value;
+    const set = f === "owner" ? STATE.owners
+              : f === "cat" ? STATE.cats
+              : STATE.statuses;
+    if (set.has(v)){ set.delete(v); p.classList.remove("on"); }
+    else { set.add(v); p.classList.add("on"); }
+    syncHash();
+    render();
+  });
+});
+
+/* ─── Search ─── */
+let searchTimer;
+searchEl.addEventListener("input", (e) => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    STATE.search = e.target.value.trim();
+    syncHash();
+    render();
+  }, 80);
+});
+
+/* ─── Sort / limit ─── */
+document.getElementById("sort").addEventListener("change", (e) => {
+  STATE.sort = e.target.value;
+  syncHash();
+  render();
+});
+document.getElementById("limit").addEventListener("change", (e) => {
+  STATE.limit = e.target.value === "all" ? "all" : parseInt(e.target.value, 10);
+  syncHash();
+  render();
+});
+
+/* ─── Reset ─── */
+document.getElementById("reset").addEventListener("click", () => {
+  STATE.search = "";
+  STATE.owners.clear();
+  STATE.cats.clear();
+  STATE.statuses.clear();
+  STATE.sort = "n-asc";
+  STATE.limit = 100;
+  document.querySelectorAll(".pills .pill.on").forEach(p => p.classList.remove("on"));
+  searchEl.value = "";
+  document.getElementById("sort").value = "n-asc";
+  document.getElementById("limit").value = "100";
+  history.replaceState(null, "", location.pathname);
+  render();
+});
+
+/* ─── URL hash sync ─── */
+function syncHash(){
+  const parts = [];
+  if (STATE.owners.size) parts.push("owner=" + [...STATE.owners].join(","));
+  if (STATE.cats.size) parts.push("category=" + [...STATE.cats].join(","));
+  if (STATE.statuses.size) parts.push("status=" + [...STATE.statuses].join(","));
+  if (STATE.search) parts.push("q=" + encodeURIComponent(STATE.search));
+  if (STATE.sort !== "n-asc") parts.push("sort=" + STATE.sort);
+  if (STATE.limit !== 100) parts.push("limit=" + STATE.limit);
+  const hash = parts.length ? "#" + parts.join("&") : "";
+  history.replaceState(null, "", location.pathname + hash);
+}
+
+function loadHash(){
+  if (!location.hash) return;
+  const parts = location.hash.slice(1).split("&");
+  parts.forEach(part => {
+    const [k, v] = part.split("=");
+    if (!v) return;
+    if (k === "owner") v.split(",").forEach(x => STATE.owners.add(x));
+    if (k === "category") v.split(",").forEach(x => STATE.cats.add(x));
+    if (k === "status") v.split(",").forEach(x => STATE.statuses.add(x));
+    if (k === "q") STATE.search = decodeURIComponent(v);
+    if (k === "sort") STATE.sort = v;
+    if (k === "limit") STATE.limit = v === "all" ? "all" : parseInt(v, 10);
+  });
+  // Reflect to UI
+  document.querySelectorAll(".pills .pill[data-filter]").forEach(p => {
+    const f = p.dataset.filter, v = p.dataset.value;
+    const set = f === "owner" ? STATE.owners
+              : f === "cat" ? STATE.cats
+              : STATE.statuses;
+    if (set.has(v)) p.classList.add("on");
+  });
+  searchEl.value = STATE.search;
+  document.getElementById("sort").value = STATE.sort;
+  document.getElementById("limit").value = STATE.limit === "all" ? "all" : String(STATE.limit);
+}
+
+/* ─── Keyboard navigation ─── */
+document.addEventListener("keydown", (ev) => {
+  // "/" focuses search
+  if (ev.key === "/" && document.activeElement !== searchEl){
+    ev.preventDefault();
+    searchEl.focus();
+    return;
+  }
+  if (ev.key === "Escape" && document.activeElement === searchEl){
+    searchEl.blur();
+    return;
+  }
+
+  // Arrow navigation when focus is on a row
+  const rows = [...list.querySelectorAll(".row")];
+  if (!rows.length) return;
+  const active = document.activeElement;
+  const isRow = active && active.classList.contains("row");
+
+  if (ev.key === "ArrowDown"){
+    if (!isRow){ rows[0].focus(); ev.preventDefault(); return; }
+    const i = rows.indexOf(active);
+    const next = rows[Math.min(i + 1, rows.length - 1)];
+    if (next){ next.focus(); ev.preventDefault(); }
+  }
+  if (ev.key === "ArrowUp"){
+    if (!isRow) return;
+    const i = rows.indexOf(active);
+    const prev = rows[Math.max(i - 1, 0)];
+    if (prev){ prev.focus(); ev.preventDefault(); }
+  }
+  if (ev.key === "Enter" && isRow){
+    toggleExpand(active);
+    ev.preventDefault();
+  }
+});
+
+/* ─── Initial render ─── */
+loadHash();
+render();
+
+/* ─── Realtime rt-stamp tick (cosmetic; matches rest of site) ─── */
+(function(){
+  const stamp = document.querySelector(".rt-stamp");
+  if (!stamp) return;
+  const t0 = new Date(stamp.dataset.t0);
+  function tick(){
+    const now = new Date();
+    const diff = now - t0;
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    const ms = (diff % 1000).toString().padStart(3, "0");
+    const tpart = `T+${String(hours).padStart(2,"0")}:${String(mins).padStart(2,"0")}:${String(secs).padStart(2,"0")}.${ms}`;
+    const strong = stamp.querySelector("strong");
+    if (strong) strong.textContent = tpart;
+  }
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>
