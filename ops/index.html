@@ -1,0 +1,1700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum · Ops · Day 26</title>
+<meta name="description" content="The Stratum operating dashboard — live state of the company. Updated nightly. Day 26 since founding." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · OPS — War-room dashboard
+   Deep ink ground, ochre signal, mono everywhere.
+   ============================================================ */
+
+:root {
+  --ink:        #0e1626;
+  --ink-2:      #141d31;
+  --ink-3:      #1c2640;
+  --ink-4:      #2a3656;
+  --rule:       rgba(244, 236, 218, 0.10);
+  --rule-strong:rgba(244, 236, 218, 0.22);
+  --rule-faint: rgba(244, 236, 218, 0.05);
+
+  --paper:      #f4ecda;
+  --paper-mute: #c8c0ad;
+  --mute:       #8d96aa;
+  --mute-2:     #5e6781;
+
+  --ochre:      #d68d3f;
+  --ochre-soft: #e6c79b;
+  --ochre-deep: #a06321;
+  --moss:       #7a9968;
+  --red:        #d35a47;
+  --green:      #6da46f;
+  --blue:       #6f8db5;
+
+  --display:    "Fraunces", Georgia, serif;
+  --serif:      "Newsreader", Georgia, serif;
+  --mono:       "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --pad:        18px;
+  --gap:        14px;
+  --radius:     2px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "tnum", "lnum";
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 12% 5%, rgba(214, 141, 63, .06), transparent 45%),
+    radial-gradient(ellipse at 92% 95%, rgba(122, 153, 104, .04), transparent 50%),
+    var(--ink);
+  background-attachment: fixed;
+}
+
+a { color: var(--ochre); text-decoration: none; }
+a:hover { color: var(--ochre-soft); }
+
+/* ─────────────────────────────────────────── TOP BAR ── */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(14, 22, 38, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule-strong);
+  padding: 12px 24px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+  font-variation-settings: "opsz" 72;
+}
+.brand .slash {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+}
+.brand .ops {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+  color: var(--paper);
+  padding-top: 4px;
+}
+.brand .dot {
+  width: 6px; height: 6px;
+  background: var(--ochre);
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 4px;
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.topbar-center {
+  display: flex;
+  gap: 22px;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--paper-mute);
+  background: rgba(244, 236, 218, 0.02);
+}
+.pill .pip {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--mute);
+  display: inline-block;
+}
+.pill.green  .pip { background: var(--green); box-shadow: 0 0 6px rgba(109, 164, 111, .6); }
+.pill.ochre  .pip { background: var(--ochre); box-shadow: 0 0 6px rgba(214, 141, 63, .5); animation: pulse 2.6s ease-in-out infinite; }
+.pill.red    .pip { background: var(--red); }
+.pill.ochre  { color: var(--ochre-soft); }
+.pill.green  { color: #b9d4ba; }
+.pill.red    { color: #efb1a6; }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--mono);
+}
+.clock {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+}
+.clock .ampm { font-size: 10px; color: var(--mute); margin-left: 3px; }
+.day-counter {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--ochre);
+  border-left: 1px solid var(--rule-strong);
+  padding-left: 18px;
+}
+
+/* ─────────────────────────────────────────── LAYOUT ── */
+
+.board {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 24px 40px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+}
+
+.panel {
+  background: var(--ink-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: var(--pad);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.panel-title {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--paper);
+  font-weight: 500;
+}
+.panel-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: var(--mute);
+  text-transform: uppercase;
+}
+
+/* Column spans */
+.span-2  { grid-column: span 2; }
+.span-3  { grid-column: span 3; }
+.span-4  { grid-column: span 4; }
+.span-5  { grid-column: span 5; }
+.span-6  { grid-column: span 6; }
+.span-7  { grid-column: span 7; }
+.span-8  { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+
+/* ─────────────────────────────────────────── KPI STRIP ── */
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+}
+.kpi-strip .panel-header { display: none; }
+
+.kpi {
+  padding: 18px 20px 16px;
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+}
+.kpi:last-child { border-right: 0; }
+
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mute);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.kpi-label .delta {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: none;
+}
+.delta.up    { color: var(--green); }
+.delta.down  { color: var(--red); }
+.delta.flat  { color: var(--mute); }
+.delta.ochre { color: var(--ochre); }
+
+.kpi-value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+.kpi-value .unit {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--ochre);
+  margin-left: 4px;
+  font-weight: 500;
+}
+.kpi-value .sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--mute);
+  margin-left: 6px;
+}
+
+.kpi-spark { height: 28px; width: 100%; }
+.kpi-foot {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--mute-2);
+}
+
+/* ─────────────────────────────────────────── CONNECTORS ── */
+
+.connector {
+  display: grid;
+  grid-template-columns: 130px 80px 1fr 36px 70px;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-size: 11.5px;
+}
+.connector:last-child { border-bottom: 0; }
+.connector .name { color: var(--paper); letter-spacing: 0.04em; }
+.connector .status {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.connector .status .pip {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--mute);
+  display: inline-block;
+  flex-shrink: 0;
+}
+.status.alpha    { color: var(--green); }
+.status.alpha .pip { background: var(--green); }
+.status.indev    { color: var(--ochre); }
+.status.indev .pip { background: var(--ochre); animation: pulse 2.4s ease-in-out infinite; }
+.status.paused   { color: var(--red); }
+.status.paused .pip { background: var(--red); }
+.status.notstarted { color: var(--mute-2); }
+.status.notstarted .pip { background: var(--mute-2); }
+
+.connector .pct {
+  font-size: 10.5px;
+  color: var(--paper-mute);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.connector .owner {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--mute);
+  text-align: right;
+}
+
+.barline {
+  height: 4px;
+  background: rgba(244, 236, 218, 0.06);
+  border-radius: 1px;
+  overflow: hidden;
+  position: relative;
+}
+.barline-fill {
+  height: 100%;
+  background: var(--ochre);
+  transform-origin: left center;
+  animation: bar-grow 1.4s cubic-bezier(.2,.7,.2,1) both;
+}
+.barline-fill.green  { background: var(--green); }
+.barline-fill.ochre  { background: var(--ochre); }
+.barline-fill.red    { background: var(--red); }
+.barline-fill.mute   { background: var(--mute-2); }
+
+/* ─────────────────────────────────────────── FUNNEL ── */
+
+.funnel-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0;
+}
+.funnel-stage {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+}
+.funnel-stage .lbl {
+  color: var(--paper-mute);
+  letter-spacing: 0.08em;
+  text-align: right;
+  font-size: 10.5px;
+  text-transform: uppercase;
+}
+.funnel-stage .bar {
+  height: 26px;
+  background: linear-gradient(90deg, var(--ochre-deep), var(--ochre));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 1px;
+  transform-origin: center;
+  animation: bar-grow-h 1.0s cubic-bezier(.2,.7,.2,1) both;
+}
+.funnel-stage .conv {
+  color: var(--mute);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* ─────────────────────────────────────────── EVALS ── */
+
+.eval-hero {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.eval-big {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 48px;
+  line-height: 1;
+  color: var(--paper);
+  letter-spacing: -0.025em;
+}
+.eval-of {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--mute);
+  letter-spacing: 0.1em;
+}
+.eval-pct {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ochre);
+  letter-spacing: 0.1em;
+}
+
+.eval-stacked {
+  display: flex;
+  height: 10px;
+  background: rgba(244, 236, 218, 0.05);
+  border-radius: 1px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.eval-stacked > span {
+  height: 100%;
+  display: block;
+  animation: bar-grow 1.6s cubic-bezier(.2,.7,.2,1) both;
+  transform-origin: left center;
+}
+
+.eval-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 40px;
+  gap: 10px;
+  align-items: center;
+  padding: 5px 0;
+  font-size: 11px;
+  border-bottom: 1px dashed var(--rule);
+}
+.eval-row:last-child { border-bottom: 0; }
+.eval-row .cat { color: var(--paper-mute); letter-spacing: 0.06em; font-size: 10.5px; text-transform: uppercase; }
+.eval-row .n { text-align: right; font-family: var(--mono); color: var(--paper); font-variant-numeric: tabular-nums; font-size: 11.5px; }
+
+/* ─────────────────────────────────────────── BURN CHART ── */
+
+.burn-chart { width: 100%; height: 160px; display: block; }
+.burn-annotate {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--mute);
+}
+.burn-annotate .actual { color: var(--ochre); }
+.burn-annotate .plan { color: var(--mute-2); }
+.burn-delta {
+  font-family: var(--mono);
+  color: var(--ochre);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* ─────────────────────────────────────────── COMPLIANCE ── */
+
+.compliance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+}
+.comp-item {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px 10px 0;
+  border-bottom: 1px dashed var(--rule);
+  border-right: 1px dashed var(--rule);
+  font-size: 11.5px;
+}
+.comp-item:nth-child(2n) { border-right: 0; padding-right: 0; padding-left: 12px; }
+.comp-item:nth-last-child(-n+2) { border-bottom: 0; }
+
+.comp-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--mute-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.comp-icon.ok    { border-color: var(--green); color: var(--green); background: rgba(109, 164, 111, .1); }
+.comp-icon.warn  { border-color: var(--ochre); color: var(--ochre); background: rgba(214, 141, 63, .1); }
+.comp-item.warn  .comp-icon { animation: pulse 2.8s ease-in-out infinite; }
+.comp-icon.none  { border-color: var(--mute-2); color: var(--mute-2); }
+
+.comp-label {
+  color: var(--paper-mute);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.comp-value {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--paper);
+}
+.comp-value.warn  { color: var(--ochre); }
+.comp-value.ok    { color: var(--green); }
+.comp-value.none  { color: var(--mute-2); }
+
+/* Ring SVG */
+.ring { width: 36px; height: 36px; }
+
+/* ─────────────────────────────────────────── LEDGER FEED ── */
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-height: 360px;
+  overflow: hidden;
+}
+.feed-row {
+  display: grid;
+  grid-template-columns: 36px 70px 1fr 50px;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--rule);
+  font-size: 11.5px;
+  align-items: baseline;
+}
+.feed-row:last-child { border-bottom: 0; }
+.feed-row .dn { color: var(--ochre); font-family: var(--mono); font-size: 11px; }
+.feed-row .dt { color: var(--mute); font-size: 10px; letter-spacing: 0.04em; }
+.feed-row .tx {
+  color: var(--paper-mute);
+  line-height: 1.45;
+  font-family: var(--serif);
+  font-size: 14px;
+  font-variation-settings: "opsz" 14;
+}
+.feed-row .tx strong { color: var(--paper); font-weight: 600; }
+.feed-row .ow {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--mute);
+  text-align: right;
+  letter-spacing: 0.1em;
+}
+.feed-row.fresh .dn { color: var(--ochre); }
+.feed-row.fresh::before {
+  content: "";
+  position: absolute;
+}
+.feed-row.fresh { position: relative; }
+.feed-row.fresh::after {
+  content: "";
+  position: absolute;
+  left: -8px; top: 14px;
+  width: 4px; height: 4px;
+  background: var(--ochre);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────── HIRING ── */
+
+.hiring-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.hiring-table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding: 6px 8px 8px 0;
+  font-weight: 500;
+  border-bottom: 1px solid var(--rule);
+}
+.hiring-table th.r, .hiring-table td.r { text-align: right; padding-right: 0; }
+.hiring-table td {
+  padding: 7px 8px 7px 0;
+  border-bottom: 1px dashed var(--rule);
+  color: var(--paper-mute);
+  font-size: 11px;
+}
+.hiring-table tr:last-child td { border-bottom: 0; }
+.hiring-table .role { color: var(--paper); letter-spacing: 0.02em; }
+.hiring-table .stage {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.stage.done   { color: var(--green); }
+.stage.flight { color: var(--ochre); }
+.stage.open   { color: var(--paper-mute); }
+.stage.queued { color: var(--mute-2); }
+.hiring-table .n { font-family: var(--mono); color: var(--paper); font-variant-numeric: tabular-nums; }
+.hiring-table .checked { color: var(--green); }
+
+/* ─────────────────────────────────────────── PARTNERS ── */
+
+.partner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.partner-card {
+  border: 1px solid var(--rule);
+  background: var(--ink-3);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  position: relative;
+}
+.partner-card.warn { border-color: rgba(214, 141, 63, 0.4); }
+.partner-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  color: var(--paper);
+}
+.partner-meta {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.partner-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--mute);
+  border-top: 1px dashed var(--rule);
+  padding-top: 5px;
+}
+.partner-row .v { color: var(--paper-mute); font-family: var(--mono); font-size: 10.5px; }
+.partner-pill {
+  position: absolute;
+  top: 10px; right: 10px;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  border: 1px solid var(--ochre);
+  background: rgba(214, 141, 63, 0.1);
+  padding: 2px 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.partner-pill .pip {
+  width: 5px; height: 5px;
+  background: var(--ochre);
+  border-radius: 50%;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────── WEATHER ── */
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.weather-tile {
+  border: 1px solid var(--rule);
+  background: var(--ink-3);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.weather-who {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ochre);
+}
+.weather-state {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+.weather-state.steady   { color: var(--green); }
+.weather-state.tailwind { color: var(--green); }
+.weather-state.headwind { color: var(--ochre); }
+.weather-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  font-variation-settings: "opsz" 14;
+  color: var(--paper-mute);
+  line-height: 1.45;
+}
+
+/* ─────────────────────────────────────────── COMMITMENTS ── */
+
+.commit-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+.commit-col:last-child { margin-bottom: 0; }
+.commit-who {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--ochre);
+  margin-bottom: 5px;
+}
+.commit-item {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--paper-mute);
+  font-family: var(--serif);
+  font-variation-settings: "opsz" 14;
+  line-height: 1.4;
+  padding: 3px 0;
+}
+.cbox {
+  width: 13px;
+  height: 13px;
+  border: 1px solid var(--mute-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+  font-size: 10px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.cbox.done {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+  font-weight: 700;
+}
+.commit-item.done { color: var(--mute-2); text-decoration: line-through; text-decoration-color: var(--mute-2); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 24px 36px;
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.footer .mid { color: var(--paper-mute); letter-spacing: 0.3em; text-align: center; }
+.footer a { color: var(--ochre); }
+.footer .right { text-align: right; }
+
+/* ─────────────────────────────────────────── ANIMATIONS ── */
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.85); }
+}
+
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes bar-grow-h {
+  from { transform: scaleY(0.4); opacity: 0; }
+  to   { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes spark-draw {
+  from { stroke-dashoffset: 400; }
+  to   { stroke-dashoffset: 0; }
+}
+.spark-line {
+  stroke-dasharray: 400;
+  animation: spark-draw 1.6s ease-out both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.panel { animation: fade-up 0.45s ease-out both; }
+.panel:nth-child(1)  { animation-delay: 0.02s; }
+.panel:nth-child(2)  { animation-delay: 0.05s; }
+.panel:nth-child(3)  { animation-delay: 0.08s; }
+.panel:nth-child(4)  { animation-delay: 0.11s; }
+.panel:nth-child(5)  { animation-delay: 0.14s; }
+.panel:nth-child(6)  { animation-delay: 0.17s; }
+.panel:nth-child(7)  { animation-delay: 0.20s; }
+.panel:nth-child(8)  { animation-delay: 0.23s; }
+.panel:nth-child(9)  { animation-delay: 0.26s; }
+.panel:nth-child(10) { animation-delay: 0.29s; }
+.panel:nth-child(11) { animation-delay: 0.32s; }
+.panel:nth-child(12) { animation-delay: 0.35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1200px) {
+  .board { grid-template-columns: repeat(8, 1fr); }
+  .span-2  { grid-column: span 4; }
+  .span-3  { grid-column: span 4; }
+  .span-4  { grid-column: span 4; }
+  .span-5  { grid-column: span 8; }
+  .span-6  { grid-column: span 8; }
+  .span-7  { grid-column: span 8; }
+  .span-8  { grid-column: span 8; }
+  .span-12 { grid-column: span 8; }
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .kpi:nth-child(3) { border-right: 0; }
+  .kpi:nth-child(1), .kpi:nth-child(2), .kpi:nth-child(3) { border-bottom: 1px solid var(--rule); }
+  .partner-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .topbar { grid-template-columns: 1fr; gap: 10px; padding: 12px 16px; }
+  .topbar-center { justify-content: flex-start; }
+  .topbar-right { justify-content: flex-start; }
+  .board { grid-template-columns: 1fr; padding: 12px; gap: 10px; }
+  .span-2, .span-3, .span-4, .span-5, .span-6, .span-7, .span-8, .span-12 { grid-column: span 1; }
+  .kpi-strip { grid-template-columns: 1fr 1fr; }
+  .kpi { border-right: 0; border-bottom: 1px solid var(--rule); }
+  .compliance-grid { grid-template-columns: 1fr; }
+  .comp-item, .comp-item:nth-child(2n) { border-right: 0; padding: 10px 0; }
+  .partner-grid { grid-template-columns: 1fr; }
+  .weather-grid { grid-template-columns: 1fr; }
+  .hiring-table { font-size: 10.5px; }
+  .footer { grid-template-columns: 1fr; text-align: left; }
+  .footer .right { text-align: left; }
+  .connector { grid-template-columns: 100px 1fr 40px; }
+  .connector .status, .connector .owner { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ TOP BAR ═══ -->
+<header class="topbar" role="banner">
+  <div class="brand">
+    <span>STRATUM</span>
+    <span class="slash">/</span>
+    <span class="ops">OPS<span class="dot"></span></span>
+  </div>
+
+  <div class="topbar-center">
+    <span class="pill ochre"><span class="pip"></span>SOC2-PREP · 28 %</span>
+    <span class="pill green"><span class="pip"></span>CONNECTORS · 4 LIVE</span>
+    <span class="pill ochre"><span class="pip"></span>COPILOT-DEV · ALPHA</span>
+    <span class="pill green"><span class="pip"></span>COMPLIANCE · ON-TRACK</span>
+  </div>
+
+  <div class="topbar-right">
+    <span class="clock" id="clock" aria-live="off">--:--:--<span class="ampm">PT</span></span>
+    <span class="day-counter">DAY 26 · 2026-06-01</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════ BOARD ═══ -->
+<main class="board" id="board">
+
+  <!-- ─────────────────────────────── HERO KPI STRIP ── -->
+  <section class="panel kpi-strip span-12" aria-label="Hero KPIs">
+
+    <div class="kpi">
+      <div class="kpi-label">CASH ON HAND <span class="delta down">−$340K · 14D</span></div>
+      <div class="kpi-value">$7.49<span class="unit">M</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#d68d3f" stroke-width="1.5"
+          points="0,4 9,5 18,5 27,7 36,8 45,10 54,11 63,13 72,14 81,16 90,18 99,19 108,21 120,22" />
+        <circle cx="120" cy="22" r="2" fill="#d68d3f" />
+      </svg>
+      <div class="kpi-foot">SEED · CLOSED 12 MAY · LEAD: SUTTER HILL</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">RUNWAY <span class="delta ochre">−0.4 MO</span></div>
+      <div class="kpi-value">22.0<span class="unit">MO</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#d68d3f" stroke-width="1.5"
+          points="0,3 10,3 20,4 30,5 40,5 50,7 60,8 70,10 80,12 90,14 100,16 110,18 120,20" />
+        <circle cx="120" cy="20" r="2" fill="#d68d3f" />
+      </svg>
+      <div class="kpi-foot">PLAN · 24 MO TO SERIES A · BURN $340K / MO</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">HEADCOUNT <span class="delta up">+2 · TARGET 22</span></div>
+      <div class="kpi-value">5<span class="sub">→ 22</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#7a9968" stroke-width="1.5"
+          points="0,24 18,24 18,22 36,22 36,20 54,20 54,18 72,18 72,14 90,14 90,10 108,10 108,6 120,6" />
+        <circle cx="120" cy="6" r="2" fill="#7a9968" />
+      </svg>
+      <div class="kpi-foot">14 ROLES OPEN · 1 IN FLIGHT · 11 QUEUED</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">DESIGN PARTNERS <span class="delta up">+1 · 17 MAY</span></div>
+      <div class="kpi-value">4<span class="sub">/ 5</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#7a9968" stroke-width="1.5"
+          points="0,24 24,24 24,20 48,20 48,16 72,16 72,12 96,12 96,8 120,8" />
+        <circle cx="120" cy="8" r="2" fill="#7a9968" />
+      </svg>
+      <div class="kpi-foot">8 PILOT CONVOS · NEXT TARGET: HEALTHCARE OPS</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">CONNECTOR ALPHAS <span class="delta ochre">PACE: −2 vs PLAN</span></div>
+      <div class="kpi-value">1<span class="sub">/ 12</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#d68d3f" stroke-width="1.5"
+          points="0,26 30,26 60,26 90,26 90,22 105,22 105,12 120,12" />
+        <circle cx="120" cy="12" r="2" fill="#d68d3f" />
+      </svg>
+      <div class="kpi-foot">WORKDAY HR CORE · ALPHA · 31 MAY · GREENHOUSE NEXT</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-label">FOUNDER CONFIDENCE <span class="delta up">+0.2 W/W</span></div>
+      <div class="kpi-value">8.5<span class="sub">/ 10</span></div>
+      <svg class="kpi-spark" viewBox="0 0 120 28" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="spark-line" fill="none" stroke="#7a9968" stroke-width="1.5"
+          points="0,12 12,11 24,14 36,12 48,15 60,18 72,15 84,13 96,11 108,9 120,8" />
+        <circle cx="120" cy="8" r="2" fill="#7a9968" />
+      </svg>
+      <div class="kpi-foot">MC 8.7 · PR 8.7 · DO 8.1 · LOGGED WEEKLY (DEC-022)</div>
+    </div>
+
+  </section>
+
+  <!-- ─────────────────────────────── CONNECTOR PROGRESS ── -->
+  <section class="panel span-6">
+    <div class="panel-header">
+      <span class="panel-title">Connector roadmap · 12 systems</span>
+      <span class="panel-meta">M0 → M14 · OWNER · DAVID OYELOWO</span>
+    </div>
+
+    <div class="connector">
+      <span class="name">Workday HR Core</span>
+      <span class="status alpha"><span class="pip"></span>Alpha</span>
+      <div class="barline"><div class="barline-fill green" style="width:100%;"></div></div>
+      <span class="pct">100 %</span>
+      <span class="owner">DO · ASHA</span>
+    </div>
+    <div class="connector">
+      <span class="name">Greenhouse ATS</span>
+      <span class="status indev"><span class="pip"></span>In dev</span>
+      <div class="barline"><div class="barline-fill ochre" style="width:62%;"></div></div>
+      <span class="pct">62 %</span>
+      <span class="owner">DO · ASHA</span>
+    </div>
+    <div class="connector">
+      <span class="name">ADP Workforce Now</span>
+      <span class="status indev"><span class="pip"></span>In dev</span>
+      <div class="barline"><div class="barline-fill ochre" style="width:24%;"></div></div>
+      <span class="pct">24 %</span>
+      <span class="owner">DO · TBD</span>
+    </div>
+    <div class="connector">
+      <span class="name">Carta</span>
+      <span class="status paused"><span class="pip"></span>Paused</span>
+      <div class="barline"><div class="barline-fill red" style="width:14%;"></div></div>
+      <span class="pct">14 %</span>
+      <span class="owner">DO</span>
+    </div>
+    <div class="connector">
+      <span class="name">Rippling</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">Q3</span>
+    </div>
+    <div class="connector">
+      <span class="name">BambooHR</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">Q3</span>
+    </div>
+    <div class="connector">
+      <span class="name">Lever ATS</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">Q4</span>
+    </div>
+    <div class="connector">
+      <span class="name">SuccessFactors</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">Q4</span>
+    </div>
+    <div class="connector">
+      <span class="name">UKG Pro</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">M9</span>
+    </div>
+    <div class="connector">
+      <span class="name">Okta</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">M8</span>
+    </div>
+    <div class="connector">
+      <span class="name">Snowflake</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">M10</span>
+    </div>
+    <div class="connector">
+      <span class="name">Slack / MS Teams</span>
+      <span class="status notstarted"><span class="pip"></span>Not started</span>
+      <div class="barline"><div class="barline-fill mute" style="width:0;"></div></div>
+      <span class="pct">—</span>
+      <span class="owner">M11</span>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── PIPELINE FUNNEL ── -->
+  <section class="panel span-3">
+    <div class="panel-header">
+      <span class="panel-title">Design-partner funnel</span>
+      <span class="panel-meta">SINCE 06 MAY</span>
+    </div>
+    <div class="funnel-wrap">
+      <div class="funnel-stage" style="--w: 100%;">
+        <span class="lbl">CHRO discovery</span>
+        <span class="bar" style="width: 240px;">47</span>
+        <span class="conv">100 %</span>
+      </div>
+      <svg width="14" height="10" aria-hidden="true"><polyline fill="none" stroke="rgba(244,236,218,.18)" stroke-width="1" points="0,0 7,9 14,0"/></svg>
+      <div class="funnel-stage" style="--w: 72%;">
+        <span class="lbl">Qualified intro</span>
+        <span class="bar" style="width: 180px;">22</span>
+        <span class="conv">47 %</span>
+      </div>
+      <svg width="14" height="10" aria-hidden="true"><polyline fill="none" stroke="rgba(244,236,218,.18)" stroke-width="1" points="0,0 7,9 14,0"/></svg>
+      <div class="funnel-stage" style="--w: 50%;">
+        <span class="lbl">Demo done</span>
+        <span class="bar" style="width: 130px;">14</span>
+        <span class="conv">64 %</span>
+      </div>
+      <svg width="14" height="10" aria-hidden="true"><polyline fill="none" stroke="rgba(244,236,218,.18)" stroke-width="1" points="0,0 7,9 14,0"/></svg>
+      <div class="funnel-stage" style="--w: 32%;">
+        <span class="lbl">Pilot conversation</span>
+        <span class="bar" style="width: 90px;">8</span>
+        <span class="conv">57 %</span>
+      </div>
+      <svg width="14" height="10" aria-hidden="true"><polyline fill="none" stroke="rgba(244,236,218,.18)" stroke-width="1" points="0,0 7,9 14,0"/></svg>
+      <div class="funnel-stage" style="--w: 18%;">
+        <span class="lbl">Design partner</span>
+        <span class="bar" style="width: 56px;">4</span>
+        <span class="conv">50 %</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── EVAL SETS ── -->
+  <section class="panel span-3">
+    <div class="panel-header">
+      <span class="panel-title">Eval set · v0.4</span>
+      <span class="panel-meta">TARGET 250 BY GA</span>
+    </div>
+    <div class="eval-hero">
+      <span class="eval-big">62</span>
+      <span class="eval-of">/ 250</span>
+      <span class="eval-pct">24.8 %</span>
+    </div>
+    <div class="eval-stacked" role="img" aria-label="Eval set composition">
+      <span style="width: 7.2%; background: #d68d3f;"></span>
+      <span style="width: 4.8%; background: #e6c79b;"></span>
+      <span style="width: 3.6%; background: #7a9968;"></span>
+      <span style="width: 4.4%; background: #6f8db5;"></span>
+      <span style="width: 4.8%; background: #d35a47;"></span>
+      <span style="width: 75.2%; background: rgba(244,236,218,0.08);"></span>
+    </div>
+
+    <div class="eval-row"><span class="cat" style="color:#d68d3f;">Talent</span>
+      <div class="barline"><div class="barline-fill ochre" style="width: 36%;"></div></div>
+      <span class="n">18</span></div>
+    <div class="eval-row"><span class="cat" style="color:#e6c79b;">Compensation</span>
+      <div class="barline"><div class="barline-fill" style="width: 24%; background: #e6c79b;"></div></div>
+      <span class="n">12</span></div>
+    <div class="eval-row"><span class="cat" style="color:#7a9968;">Performance</span>
+      <div class="barline"><div class="barline-fill green" style="width: 18%;"></div></div>
+      <span class="n">9</span></div>
+    <div class="eval-row"><span class="cat" style="color:#d35a47;">Compliance</span>
+      <div class="barline"><div class="barline-fill" style="width: 22%; background: #d35a47;"></div></div>
+      <span class="n">11</span></div>
+    <div class="eval-row"><span class="cat" style="color:#6f8db5;">Operations</span>
+      <div class="barline"><div class="barline-fill" style="width: 24%; background: #6f8db5;"></div></div>
+      <span class="n">12</span></div>
+  </section>
+
+  <!-- ─────────────────────────────── BURN ── -->
+  <section class="panel span-4">
+    <div class="panel-header">
+      <span class="panel-title">Burn · 14D · annualized run-rate</span>
+      <span class="panel-meta">PLAN $4.08M · ACT $4.16M</span>
+    </div>
+    <svg class="burn-chart" viewBox="0 0 480 160" preserveAspectRatio="none" aria-hidden="true">
+      <!-- gridlines -->
+      <g stroke="rgba(244,236,218,0.06)" stroke-width="1">
+        <line x1="0" y1="20"  x2="480" y2="20"/>
+        <line x1="0" y1="60"  x2="480" y2="60"/>
+        <line x1="0" y1="100" x2="480" y2="100"/>
+        <line x1="0" y1="140" x2="480" y2="140"/>
+      </g>
+      <!-- y-axis labels -->
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#5e6781" letter-spacing="0.05em">
+        <text x="6" y="18">$4.4M</text>
+        <text x="6" y="58">$4.2M</text>
+        <text x="6" y="98">$4.0M</text>
+        <text x="6" y="138">$3.8M</text>
+      </g>
+
+      <!-- PLAN (dashed) -->
+      <polyline class="spark-line" fill="none" stroke="#5e6781" stroke-width="1.4" stroke-dasharray="4,3"
+        points="50,108 80,106 110,104 140,102 170,100 200,98 230,96 260,94 290,92 320,90 350,88 380,86 410,84 460,82" />
+
+      <!-- ACTUAL (solid ochre) -->
+      <polyline class="spark-line" fill="none" stroke="#d68d3f" stroke-width="2"
+        points="50,110 80,108 110,104 140,100 170,96 200,94 230,90 260,84 290,80 320,76 350,72 380,68 410,64 460,60" />
+
+      <!-- fill area between -->
+      <path d="M 200,94 L 200,98 L 460,82 L 460,60 Z" fill="rgba(214,141,63,0.08)" />
+
+      <!-- delta annotation -->
+      <line x1="460" y1="60" x2="460" y2="82" stroke="#d68d3f" stroke-width="1"/>
+      <circle cx="460" cy="60" r="3" fill="#d68d3f"/>
+      <circle cx="460" cy="82" r="3" fill="#5e6781"/>
+      <text x="408" y="48" font-family="JetBrains Mono, monospace" font-size="10" fill="#d68d3f" letter-spacing="0.05em">+$80K vs plan</text>
+
+      <!-- x-axis -->
+      <g font-family="JetBrains Mono, monospace" font-size="9" fill="#5e6781">
+        <text x="48"  y="155">19 MAY</text>
+        <text x="200" y="155">25 MAY</text>
+        <text x="360" y="155">31 MAY</text>
+      </g>
+    </svg>
+    <div class="burn-annotate">
+      <span class="actual">— ACTUAL $4.16M ARR</span>
+      <span class="plan">- - PLAN $4.08M ARR</span>
+      <span class="burn-delta">Δ +1.96 %</span>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── COMPLIANCE ── -->
+  <section class="panel span-5">
+    <div class="panel-header">
+      <span class="panel-title">Compliance posture</span>
+      <span class="panel-meta">SOC2 TYPE I · M7–9 WINDOW</span>
+    </div>
+    <div class="compliance-grid">
+
+      <div class="comp-item">
+        <span class="comp-icon warn">
+          <svg class="ring" viewBox="0 0 36 36" aria-hidden="true">
+            <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(214,141,63,0.18)" stroke-width="3"/>
+            <circle cx="18" cy="18" r="14" fill="none" stroke="#d68d3f" stroke-width="3"
+              stroke-dasharray="88" stroke-dashoffset="63" transform="rotate(-90 18 18)" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <div>
+          <div class="comp-label">SOC2 controls implemented</div>
+        </div>
+        <span class="comp-value warn">24 / 87</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon none">○</span>
+        <div><div class="comp-label">ISO 27001 readiness</div></div>
+        <span class="comp-value none">Deferred · M16</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon ok">✓</span>
+        <div><div class="comp-label">GDPR DPO assigned</div></div>
+        <span class="comp-value ok">M. Sandhu</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon ok">✓</span>
+        <div><div class="comp-label">Pen-test scheduled</div></div>
+        <span class="comp-value ok">15 JUL</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon ok">✓</span>
+        <div><div class="comp-label">Privileged-access reviews</div></div>
+        <span class="comp-value ok">Weekly</span>
+      </div>
+
+      <div class="comp-item warn">
+        <span class="comp-icon warn">!</span>
+        <div><div class="comp-label">Data residency</div></div>
+        <span class="comp-value warn">US-only · EU M14</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon warn">~</span>
+        <div><div class="comp-label">EU AI Act classification</div></div>
+        <span class="comp-value warn">In progress</span>
+      </div>
+
+      <div class="comp-item">
+        <span class="comp-icon warn">~</span>
+        <div><div class="comp-label">Customer data retention</div></div>
+        <span class="comp-value warn">Drafted</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── DECISIONS FEED ── -->
+  <section class="panel span-5">
+    <div class="panel-header">
+      <span class="panel-title">Decisions ledger · live feed</span>
+      <span class="panel-meta">LATEST 8 · TOTAL 33</span>
+    </div>
+    <div class="feed">
+      <div class="feed-row fresh">
+        <span class="dn">033</span>
+        <span class="dt">2026-05-31</span>
+        <span class="tx"><strong>Halcyon Bank</strong> sponsor change · escalated to PR. Recovery plan due 03 Jun.</span>
+        <span class="ow">PR</span>
+      </div>
+      <div class="feed-row fresh">
+        <span class="dn">032</span>
+        <span class="dt">2026-05-30</span>
+        <span class="tx"><strong>Hire #2</strong> Tomás Garcia (ex-Greenhouse PM) accepted · start 09 Jun · $215K + 0.9 %.</span>
+        <span class="ow">PR</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">031</span>
+        <span class="dt">2026-05-29</span>
+        <span class="tx"><strong>Eval v0.4</strong>: corpus expanded to 62 questions across 5 categories; rubric score 0.78.</span>
+        <span class="ow">DO</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">030</span>
+        <span class="dt">2026-05-28</span>
+        <span class="tx"><strong>Carta connector</strong> paused — auth model under review; resume target M4.</span>
+        <span class="ow">DO</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">029</span>
+        <span class="dt">2026-05-27</span>
+        <span class="tx"><strong>Bhusri dinner</strong>: warm intros to 2 CHROs (Sequoia portfolio); LOI risk now de-risked through Q3.</span>
+        <span class="ow">PR</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">028</span>
+        <span class="dt">2026-05-26</span>
+        <span class="tx"><strong>AI/Agents Eng</strong> req opened · 3 candidates in pipeline (avg 11 days TTI).</span>
+        <span class="ow">DO</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">027</span>
+        <span class="dt">2026-05-25</span>
+        <span class="tx"><strong>Workday HR Core</strong> connector hit alpha · feature-flagged to headcount + span queries.</span>
+        <span class="ow">DO</span>
+      </div>
+      <div class="feed-row">
+        <span class="dn">026</span>
+        <span class="dt">2026-05-24</span>
+        <span class="tx"><strong>Vanta gap analysis</strong> draft received · 14 controls flagged P0, 22 P1, remediation ETA 4 wks.</span>
+        <span class="ow">DO</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── HIRING TRACKER ── -->
+  <section class="panel span-7">
+    <div class="panel-header">
+      <span class="panel-title">Hiring tracker · 14 roles · M0–M14</span>
+      <span class="panel-meta">2 FILLED · 1 IN FLIGHT · 11 QUEUED</span>
+    </div>
+    <table class="hiring-table">
+      <thead>
+        <tr>
+          <th style="width:30%;">Role</th>
+          <th style="width:18%;">Stage</th>
+          <th style="width:22%;">Candidate</th>
+          <th class="r" style="width:14%;">Pipeline</th>
+          <th class="r" style="width:16%;">Days in</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="role">Data Infra Lead</td>
+          <td><span class="stage done">✓ Filled</span></td>
+          <td>Asha Pillai · ex-Snowflake</td>
+          <td class="r n">—</td>
+          <td class="r n">Start 02 Jun</td>
+        </tr>
+        <tr>
+          <td class="role">Founding PM, Connectors</td>
+          <td><span class="stage done">✓ Filled</span></td>
+          <td>Tomás Garcia · ex-Greenhouse</td>
+          <td class="r n">—</td>
+          <td class="r n">Start 09 Jun</td>
+        </tr>
+        <tr>
+          <td class="role">AI / Agents Engineer</td>
+          <td><span class="stage flight">▸ In flight</span></td>
+          <td>3 candidates · 1 onsite scheduled</td>
+          <td class="r n">3</td>
+          <td class="r n">11</td>
+        </tr>
+        <tr>
+          <td class="role">Senior Frontend (design eng)</td>
+          <td><span class="stage open">○ Open</span></td>
+          <td>Sourcing · 12 outreaches</td>
+          <td class="r n">—</td>
+          <td class="r n">4</td>
+        </tr>
+        <tr>
+          <td class="role">Graph Infra Engineer</td>
+          <td><span class="stage open">○ Open</span></td>
+          <td>Sourcing · ex-Neo4j priority</td>
+          <td class="r n">—</td>
+          <td class="r n">2</td>
+        </tr>
+        <tr>
+          <td class="role">Eval / ML Researcher</td>
+          <td><span class="stage open">○ Open</span></td>
+          <td>JD posted · 6 inbound</td>
+          <td class="r n">—</td>
+          <td class="r n">1</td>
+        </tr>
+        <tr>
+          <td class="role">Founding Designer</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Posting drafts · open M2</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Compliance / Security Lead</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Targeted referrals · open M3</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">GTM Lead (founding AE)</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M4 post-design-partners</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Solutions Engineer #1</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M5 with first commercial</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Backend Engineer (connectors)</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M3 alongside ADP</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Backend Engineer (graph)</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M4</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Customer Success Lead</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M6</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+        <tr>
+          <td class="role">Finance / Ops Lead</td>
+          <td><span class="stage queued">⋯ Queued</span></td>
+          <td>Open M7</td>
+          <td class="r n">—</td>
+          <td class="r n">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ─────────────────────────────── CUSTOMER HEALTH ── -->
+  <section class="panel span-5">
+    <div class="panel-header">
+      <span class="panel-title">Design partners · early health</span>
+      <span class="panel-meta">4 SIGNED · 1 IN COURTSHIP</span>
+    </div>
+    <div class="partner-grid">
+
+      <div class="partner-card">
+        <div class="partner-meta">DP-001 · TECH</div>
+        <div class="partner-name">Meridian Labs</div>
+        <div class="partner-row"><span>EE</span><span class="v">2,800</span></div>
+        <div class="partner-row"><span>Ingest</span><span class="v" style="color:#7a9968;">Live</span></div>
+        <div class="partner-row"><span>Last touch</span><span class="v">29 May</span></div>
+        <div class="partner-row"><span>Next</span><span class="v" style="color:#d68d3f;">Demo · 04 Jun</span></div>
+      </div>
+
+      <div class="partner-card warn">
+        <span class="partner-pill"><span class="pip"></span>Attention</span>
+        <div class="partner-meta">DP-002 · FINSERV</div>
+        <div class="partner-name">Halcyon Bank</div>
+        <div class="partner-row"><span>EE</span><span class="v">11,400</span></div>
+        <div class="partner-row"><span>Ingest</span><span class="v" style="color:#d68d3f;">Pending</span></div>
+        <div class="partner-row"><span>Last touch</span><span class="v">28 May</span></div>
+        <div class="partner-row"><span>Next</span><span class="v" style="color:#d68d3f;">Sponsor change · 03 Jun</span></div>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-meta">DP-003 · FINTECH</div>
+        <div class="partner-name">Northshore Capital</div>
+        <div class="partner-row"><span>EE</span><span class="v">3,200</span></div>
+        <div class="partner-row"><span>Ingest</span><span class="v" style="color:#7a9968;">Live · 18 May</span></div>
+        <div class="partner-row"><span>Last touch</span><span class="v">30 May</span></div>
+        <div class="partner-row"><span>Next</span><span class="v">Quarterly review</span></div>
+      </div>
+
+      <div class="partner-card">
+        <div class="partner-meta">DP-004 · BIOTECH</div>
+        <div class="partner-name">Lattice Bio</div>
+        <div class="partner-row"><span>EE</span><span class="v">1,650</span></div>
+        <div class="partner-row"><span>Ingest</span><span class="v" style="color:#d68d3f;">Provisioning</span></div>
+        <div class="partner-row"><span>Last touch</span><span class="v">31 May</span></div>
+        <div class="partner-row"><span>Next</span><span class="v">Kickoff · 05 Jun</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── FOUNDERS' WEATHER ── -->
+  <section class="panel span-4">
+    <div class="panel-header">
+      <span class="panel-title">Founders' weather · W22</span>
+      <span class="panel-meta">SELF-REPORTED · MONDAY 09:00</span>
+    </div>
+    <div class="weather-grid">
+
+      <div class="weather-tile">
+        <div class="weather-who">MC · CEO</div>
+        <div class="weather-state steady">Steady</div>
+        <div class="weather-note">Boardroom rhythm holds. Office moves in this week — distraction risk, not material.</div>
+      </div>
+
+      <div class="weather-tile">
+        <div class="weather-who">DO · CTO</div>
+        <div class="weather-state headwind">Headwind</div>
+        <div class="weather-note">Architecture decisions, recovering. Carta auth model burned three days; back on track Wed.</div>
+      </div>
+
+      <div class="weather-tile">
+        <div class="weather-who">PR · CPO</div>
+        <div class="weather-state tailwind">Tailwind</div>
+        <div class="weather-note">Bhusri dinner delivered — two warm CHRO intros. DP-005 conversation opens Tuesday.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── COMMITMENTS ── -->
+  <section class="panel span-4">
+    <div class="panel-header">
+      <span class="panel-title">This week's commitments</span>
+      <span class="panel-meta">WK STARTING 01 JUN · CHECKED IN OPS-STANDUP</span>
+    </div>
+
+    <div class="commit-col">
+      <div class="commit-who">MC · CEO</div>
+      <div class="commit-item done"><span class="cbox done">✓</span><span>Hand-deliver office keys · close 8-month sublease.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>Board prep deck for 12 Jun observer call.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>Sign DP-005 LOI by Friday COB.</span></div>
+    </div>
+
+    <div class="commit-col">
+      <div class="commit-who">DO · CTO</div>
+      <div class="commit-item done"><span class="cbox done">✓</span><span>Workday HR Core alpha behind feature flag.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>Greenhouse connector ship to 70 %.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>SOC2 P0 controls — 4 of 14 closed this week.</span></div>
+    </div>
+
+    <div class="commit-col">
+      <div class="commit-who">PR · CPO</div>
+      <div class="commit-item done"><span class="cbox done">✓</span><span>Tomás offer accepted · start 09 Jun.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>Halcyon sponsor recovery plan delivered.</span></div>
+      <div class="commit-item"><span class="cbox"></span><span>Run DP-001 demo at Meridian on 04 Jun.</span></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────── OPS HEALTH STRIP ── -->
+  <section class="panel span-4">
+    <div class="panel-header">
+      <span class="panel-title">Ops health · system signals</span>
+      <span class="panel-meta">ROLLING 24H</span>
+    </div>
+
+    <div class="connector">
+      <span class="name">Graph correctness gate</span>
+      <span class="status alpha"><span class="pip"></span>Passing</span>
+      <div class="barline"><div class="barline-fill green" style="width:96%;"></div></div>
+      <span class="pct">96.1 %</span>
+      <span class="owner">DO</span>
+    </div>
+    <div class="connector">
+      <span class="name">Ingest pipeline uptime</span>
+      <span class="status alpha"><span class="pip"></span>Healthy</span>
+      <div class="barline"><div class="barline-fill green" style="width:99.7%;"></div></div>
+      <span class="pct">99.7 %</span>
+      <span class="owner">SRE</span>
+    </div>
+    <div class="connector">
+      <span class="name">Copilot latency p95</span>
+      <span class="status indev"><span class="pip"></span>Watch</span>
+      <div class="barline"><div class="barline-fill ochre" style="width:74%;"></div></div>
+      <span class="pct">2.4 s</span>
+      <span class="owner">DO</span>
+    </div>
+    <div class="connector">
+      <span class="name">Audit log integrity</span>
+      <span class="status alpha"><span class="pip"></span>Verified</span>
+      <div class="barline"><div class="barline-fill green" style="width:100%;"></div></div>
+      <span class="pct">100 %</span>
+      <span class="owner">SEC</span>
+    </div>
+    <div class="connector">
+      <span class="name">Vendor SLA breaches</span>
+      <span class="status alpha"><span class="pip"></span>None</span>
+      <div class="barline"><div class="barline-fill green" style="width:100%;"></div></div>
+      <span class="pct">0</span>
+      <span class="owner">OPS</span>
+    </div>
+    <div class="connector">
+      <span class="name">Eval drift (rolling)</span>
+      <span class="status indev"><span class="pip"></span>+0.4 σ</span>
+      <div class="barline"><div class="barline-fill ochre" style="width:38%;"></div></div>
+      <span class="pct">σ 0.41</span>
+      <span class="owner">DO</span>
+    </div>
+    <div class="connector">
+      <span class="name">Open P0 incidents</span>
+      <span class="status alpha"><span class="pip"></span>None</span>
+      <div class="barline"><div class="barline-fill green" style="width:100%;"></div></div>
+      <span class="pct">0</span>
+      <span class="owner">SRE</span>
+    </div>
+    <div class="connector">
+      <span class="name">PR review backlog</span>
+      <span class="status indev"><span class="pip"></span>Elevated</span>
+      <div class="barline"><div class="barline-fill ochre" style="width:62%;"></div></div>
+      <span class="pct">8 open</span>
+      <span class="owner">DO</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════════════ FOOTER ═══ -->
+<footer class="footer">
+  <div class="left">
+    Auto-generated nightly · last build 2026-06-01 03:14 PT · source: ledger, capital-account, vanta, greenhouse, internal eval store
+  </div>
+  <div class="mid">STRATUM · OPS · DAY 26 · INTERNAL</div>
+  <div class="right">
+    <a href="../index.html">CHAIRMAN'S BRIEFING ↗</a> &nbsp;·&nbsp;
+    <a href="../intel/index.html">INTEL ↗</a>
+  </div>
+</footer>
+
+<script>
+/* ────────────────── live clock ────────────────── */
+(function () {
+  var el = document.getElementById('clock');
+  if (!el) return;
+  function tick() {
+    var d = new Date();
+    var h = d.getHours();
+    var m = d.getMinutes();
+    var s = d.getSeconds();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var hh = ((h % 12) || 12).toString().padStart(2, '0');
+    var mm = m.toString().padStart(2, '0');
+    var ss = s.toString().padStart(2, '0');
+    el.innerHTML = hh + ':' + mm + ':' + ss + '<span class="ampm">' + ampm + ' PT</span>';
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+
+/* ────────────────── animated count-up for KPIs ────────────────── */
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var values = document.querySelectorAll('.kpi-value');
+  values.forEach(function (v) {
+    v.style.opacity = '0';
+    v.style.transform = 'translateY(4px)';
+    v.style.transition = 'opacity .6s ease, transform .6s ease';
+  });
+  requestAnimationFrame(function () {
+    values.forEach(function (v, i) {
+      setTimeout(function () {
+        v.style.opacity = '1';
+        v.style.transform = 'translateY(0)';
+      }, 120 + i * 70);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1372 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Chairman's Briefing No. 003</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Chairman's Briefing No. 003
+   The first connector, the first wobble · 07 Jun 2026
+   ============================================================ */
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+  --warn:         #b8651f;
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --col:          min(1180px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* MASTHEAD */
+.masthead { width: var(--col); margin: 0 auto; padding: 2rem 0 0; }
+.masthead-rule { height: 1px; background: var(--ink); margin-bottom: .55rem; }
+.masthead-rule.double {
+  margin-top: 2rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+.masthead-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; text-transform: uppercase; color: var(--ink-3);
+  padding-bottom: .8rem; border-bottom: 1px solid var(--paper-rule);
+}
+.masthead-meta { display: flex; gap: 1.4rem; }
+.masthead-nav { display: flex; gap: 1.05rem; align-items: center; }
+.masthead-nav a {
+  color: var(--ink-3); border-bottom: 0;
+  position: relative; padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-nav .back-link {
+  color: var(--ochre);
+  padding-left: 1rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.masthead-nav .back-link:hover { color: var(--ochre-deep); }
+.masthead-nav .back-far {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+}
+.masthead-title { text-align: center; padding: 2.6rem 0 1.2rem; }
+.title-eyebrow {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1.6rem;
+}
+.wordmark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  line-height: .9; letter-spacing: -.04em;
+  margin: 0; color: var(--ink);
+}
+.wordmark-dot { color: var(--ochre); }
+.title-subhead {
+  font-family: var(--serif); font-style: italic;
+  font-size: 1.1rem; color: var(--ink-2);
+  margin-top: 1rem; font-variation-settings: "opsz" 18;
+}
+.issue-banner {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: .9rem;
+}
+.issue-banner .issue-num { color: var(--ochre); }
+
+/* SECTIONS */
+section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
+.ornament {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .9rem;
+}
+.section-h {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
+  line-height: 1.05; letter-spacing: -.022em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.section-h em { font-style: italic; font-variation-settings: "opsz" 72; }
+.section-dek {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2);
+  max-width: 60ch; margin: 0 0 2.4rem;
+}
+.sub-h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem; letter-spacing: -.01em;
+  margin: 2rem 0 .6rem; color: var(--ink);
+}
+
+/* LETTER */
+.intro-grid {
+  display: grid; grid-template-columns: 1.7fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.intro-letter p { margin: 0 0 1rem; max-width: 60ch; }
+.lede { font-size: 1.13rem; }
+.dropcap {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: 4.4rem; line-height: .85;
+  float: left; padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+.signoff {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  margin-top: 1.6rem !important; color: var(--ink-2);
+}
+.signoff-meta {
+  font-family: var(--mono); font-style: normal;
+  font-size: 11.5px; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--ink-mute);
+}
+.intro-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.4rem 1.4rem 1.2rem;
+  font-family: var(--serif);
+  position: sticky; top: 1.5rem;
+}
+.card-label {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .6rem;
+}
+.kv {
+  display: grid; grid-template-columns: max-content 1fr;
+  column-gap: 1rem; row-gap: .55rem; margin: 0; font-size: 14.5px;
+}
+.kv dt {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 3px;
+}
+.kv dd { margin: 0; color: var(--ink); font-feature-settings: "tnum"; }
+.card-footer {
+  margin-top: 1.2rem; padding-top: .9rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.pill {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  padding: .25rem .55rem; border-radius: 999px; border: 1px solid;
+}
+.pill-amber { color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.pill-ink   { color: var(--ink); border-color: var(--ink); background: transparent; }
+.pill-moss  { color: var(--ok); border-color: var(--ok); background: rgba(74,109,74,.06); }
+.pill-plum  { color: var(--plum); border-color: var(--plum); background: rgba(107,58,74,.06); }
+
+/* SNAPSHOT */
+.metric-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+.metric {
+  padding: 1.6rem 1.5rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  background: linear-gradient(to bottom, var(--paper-warm), transparent 100%);
+}
+.metric-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: .8rem;
+}
+.metric-value {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 3.2rem; line-height: 1;
+  letter-spacing: -.025em; color: var(--ink);
+  font-feature-settings: "tnum", "lnum";
+}
+.metric-value .unit {
+  font-size: 1.2rem; font-weight: 400;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre); margin-left: .25rem;
+  letter-spacing: -.01em;
+}
+.metric-delta {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .08em; margin-top: .7rem;
+  display: flex; align-items: center; gap: .35rem;
+}
+.metric-delta .arrow { font-size: 13px; line-height: 1; }
+.delta-ok    { color: var(--ok); }
+.delta-warn  { color: var(--ochre); }
+.delta-ink   { color: var(--ink-3); }
+.delta-hi    { color: var(--hi); }
+.metric-foot {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  color: var(--ink-3); font-size: 14px; margin-top: .55rem;
+}
+
+/* CONNECTOR */
+.connector-grid {
+  display: grid; grid-template-columns: 1.55fr 1fr;
+  gap: 2.6rem; align-items: start;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.connector-narr p { max-width: 58ch; margin: 0 0 1rem; }
+.connector-narr p:first-of-type { font-size: 1.08rem; }
+.connector-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ochre);
+  padding: 1.4rem 1.5rem 1.3rem;
+  position: sticky; top: 1.5rem;
+}
+.cc-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .35rem;
+}
+.cc-title {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.6rem; line-height: 1.1;
+  letter-spacing: -.015em; color: var(--ink);
+  margin: 0 0 .8rem;
+}
+.cc-status {
+  display: inline-block;
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .18em; text-transform: uppercase;
+  padding: .25rem .6rem; border-radius: 999px;
+  border: 1px solid var(--ochre); color: var(--ochre);
+  background: rgba(184,101,31,.07);
+  margin-bottom: 1.1rem;
+}
+.cc-kv {
+  display: grid; grid-template-columns: max-content 1fr;
+  column-gap: 1rem; row-gap: .55rem; margin: 0;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1rem;
+}
+.cc-kv dt {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); padding-top: 3px;
+}
+.cc-kv dd {
+  margin: 0; color: var(--ink);
+  font-family: var(--mono); font-size: 13px;
+  font-feature-settings: "tnum";
+}
+.cc-foot {
+  margin-top: 1.1rem; padding-top: .9rem;
+  border-top: 1px dashed var(--paper-rule);
+  font-family: var(--serif); font-style: italic;
+  font-size: 13.5px; color: var(--ink-3);
+}
+
+/* CONVERSATION */
+.transcript { border-top: 1px solid var(--ink); }
+.exchange {
+  display: grid; grid-template-columns: 88px 1fr;
+  gap: 1.6rem; padding: 1.4rem 0 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.exchange:last-child { border-bottom: 0; }
+.ts {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .08em; color: var(--ochre); padding-top: .4rem;
+}
+.lines { display: flex; flex-direction: column; gap: .85rem; }
+.line {
+  display: grid; grid-template-columns: 44px 1fr;
+  gap: 1rem; align-items: baseline;
+}
+.who {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .14em; font-weight: 700;
+  color: var(--ink); padding-top: 2px;
+}
+.said {
+  font-family: var(--serif); font-size: 17.5px;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5; color: var(--ink);
+}
+.aside {
+  margin-top: .35rem;
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 14;
+  font-size: 14px; color: var(--ink-3);
+  border-left: 2px solid var(--paper-rule-2);
+  padding: .15rem 0 .15rem .8rem;
+  max-width: 64ch;
+}
+
+/* LEDGER */
+.ledger {
+  font-family: var(--mono); font-size: 13px;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.ledger-row {
+  display: grid; grid-template-columns: 50px 100px 1fr 60px 110px;
+  gap: 1rem; padding: .85rem .25rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-head {
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--ink-3);
+  background: var(--paper-warm);
+  padding: .7rem .25rem;
+  border-bottom: 1px solid var(--ink);
+}
+.ledger-row .num { color: var(--ochre); }
+.ledger-row .date { color: var(--ink-3); }
+.ledger-row .what {
+  font-family: var(--serif); font-size: 16px;
+  font-variation-settings: "opsz" 16; color: var(--ink);
+}
+.ledger-row .what strong { font-weight: 600; }
+.ledger-row .who-col { color: var(--ink-2); letter-spacing: .1em; }
+.ledger-row .status {
+  font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+}
+.status-done { color: var(--ok); }
+.status-progress { color: var(--ochre); }
+.status-blocked { color: var(--hi); }
+.status-queued { color: var(--ink-3); }
+
+/* SCORECARD */
+.bands {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.6rem 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 2rem;
+}
+.band-name {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1.1rem;
+  padding-bottom: .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.bars { display: flex; flex-direction: column; gap: 1rem; }
+.bar-label {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--serif); font-size: 15px;
+  color: var(--ink); margin-bottom: .35rem;
+}
+.bar-value {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.bar-value .delta {
+  margin-left: .55rem;
+  padding-left: .55rem;
+  border-left: 1px solid var(--paper-rule-2);
+}
+.bar-value .delta.delta-ok { color: var(--ok); }
+.bar-value .delta.delta-warn { color: var(--ochre); }
+.bar-value .delta.delta-ink { color: var(--ink-3); }
+.bar-value .delta.delta-hi { color: var(--hi); }
+.bar-track {
+  position: relative; height: 6px;
+  background: var(--paper-rule); overflow: hidden;
+}
+.bar-fill {
+  --w: 0%; --tone: var(--ink);
+  height: 100%; width: min(100%, var(--w));
+  background: var(--tone); position: relative;
+}
+.bar-fill[style*="--tone:ok"]    { background: var(--ok); }
+.bar-fill[style*="--tone:warn"]  { background: var(--ochre); }
+.bar-fill[style*="--tone:hi"]    { background: var(--hi); }
+.bar-empty { background: repeating-linear-gradient(90deg, var(--paper-rule) 0 4px, transparent 4px 8px); }
+
+/* SITUATION */
+.situation {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.4rem;
+  align-items: start;
+}
+.situation p { font-family: var(--serif); font-size: 16.5px; line-height: 1.55; color: var(--ink); margin: 0 0 1rem; max-width: 56ch; }
+.situation .meta-strip {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3); margin-top: .9rem;
+  padding-top: .75rem;
+  border-top: 1px dashed var(--paper-rule);
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+}
+.situation .meta-strip strong { color: var(--ochre); font-weight: 500; }
+
+/* DINNER */
+.dinner {
+  border-top: 1px solid var(--ink);
+  padding-top: 1.6rem;
+}
+.dinner p {
+  font-family: var(--serif); font-size: 16.5px; line-height: 1.55;
+  color: var(--ink); margin: 0 0 1rem; max-width: 68ch;
+}
+.pull-quote {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem; line-height: 1.25;
+  letter-spacing: -.012em; color: var(--ink);
+  border-left: 3px solid var(--ochre);
+  padding: .2rem 0 .2rem 1.2rem;
+  margin: 1.4rem 0 1.4rem;
+  max-width: 60ch;
+  font-style: italic;
+}
+.pull-quote .attrib {
+  display: block;
+  font-family: var(--mono); font-style: normal;
+  font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink-3);
+  margin-top: .9rem;
+}
+
+/* QUEUED */
+.queued {
+  margin-top: 2rem;
+  padding: 1.3rem 1.6rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+}
+.queued-label {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: .55rem;
+}
+.queued-body {
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink);
+  max-width: 70ch;
+}
+
+/* OPEN */
+.open-list {
+  counter-reset: o; list-style: none;
+  padding: 0; margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.open-list li {
+  counter-increment: o;
+  padding: 1.2rem 0 1.2rem 4.5rem;
+  position: relative;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-size: 16.5px;
+  line-height: 1.55; color: var(--ink); max-width: 78ch;
+}
+.open-list li::before {
+  content: "Q" counter(o, decimal-leading-zero);
+  position: absolute; left: 0; top: 1.25rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .1em; color: var(--ochre);
+}
+.open-list li strong { font-weight: 600; }
+
+/* COLOPHON */
+.colophon {
+  width: var(--col); margin: 4rem auto 3rem; padding-top: 1rem;
+}
+.colophon-rule.double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+.colophon-row {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; padding: 1.6rem 0 0;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .04em; color: var(--ink-3);
+}
+.colo-mark {
+  font-family: var(--display); font-weight: 600;
+  font-size: 2.4rem; line-height: 1;
+  color: var(--ink); letter-spacing: -.04em;
+}
+.colo-dot { color: var(--ochre); }
+.colo-meta { margin-top: .4rem; line-height: 1.6; }
+.colo-issue { text-align: right; line-height: 1.7; }
+.colo-tag {
+  text-align: center; font-family: var(--mono);
+  font-size: 11px; letter-spacing: .4em;
+  text-transform: uppercase; color: var(--ink-mute);
+  margin-top: 2rem; padding-top: 1rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+
+/* RESPONSIVE */
+@media (max-width: 960px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .intro-card { position: static; }
+  .metric-grid { grid-template-columns: repeat(2, 1fr); }
+  .connector-grid { grid-template-columns: 1fr; }
+  .connector-card { position: static; }
+  .bands { grid-template-columns: 1fr; }
+  .situation { grid-template-columns: 1fr; gap: 1rem; }
+  .masthead-nav { display: none; }
+  .ledger-row { grid-template-columns: 40px 90px 1fr; }
+  .ledger-row .who-col, .ledger-row .status { display: none; }
+  .ledger-head > div:nth-child(4), .ledger-head > div:nth-child(5) { display: none; }
+}
+@media (max-width: 600px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .exchange { grid-template-columns: 1fr; gap: .4rem; }
+  .ts { padding-top: 0; }
+  .line { grid-template-columns: 38px 1fr; }
+  .pull-quote { font-size: 1.25rem; }
+}
+
+/* ANIMATIONS */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.masthead, .intro, .snapshot, .connector,
+.conversation, .decisions, .scorecard,
+.situation-section, .dinner-section, .queued-section, .open {
+  animation: fade-up .6s ease-out both;
+}
+.intro            { animation-delay: .05s; }
+.snapshot         { animation-delay: .10s; }
+.connector        { animation-delay: .15s; }
+.conversation     { animation-delay: .20s; }
+.decisions        { animation-delay: .25s; }
+.scorecard        { animation-delay: .30s; }
+.situation-section{ animation-delay: .35s; }
+.dinner-section   { animation-delay: .40s; }
+.queued-section   { animation-delay: .45s; }
+.open             { animation-delay: .50s; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+.bar-fill {
+  transform-origin: left center;
+  animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: .8s;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* PRINT */
+@media print {
+  body::before { display: none; }
+  .masthead-nav, .card-footer { display: none; }
+  section { page-break-inside: avoid; padding: 1.5rem 0; }
+  body { font-size: 11pt; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span class="dateline">Sunday, 07 June 2026 · Palo Alto</span>
+      <span class="folio">Vol. I · No. 003</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#letter">Letter</a>
+      <a href="#snapshot">Snapshot</a>
+      <a href="#connector">Connector</a>
+      <a href="#conversation">Conversation</a>
+      <a href="#decisions">Ledger</a>
+      <a href="#scorecard">Scorecard</a>
+      <a href="#situation">Halcyon</a>
+      <a href="#dinner">Dinner</a>
+      <a href="#open">Open</a>
+      <a href="002.html" class="back-link">← Briefing 002</a>
+      <a href="../index.html" class="back-far">Briefing 001 ↩</a>
+    </nav>
+  </div>
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Chairman's Briefing</div>
+    <h1 class="wordmark">Stratum<span class="wordmark-dot">.</span></h1>
+    <div class="title-subhead">The first connector, the first wobble · No. 003</div>
+  </div>
+  <div class="masthead-rule double"></div>
+  <div class="issue-banner">
+    <span>Four weeks since founding</span>
+    <span class="issue-num">Briefing №003</span>
+    <span>Compiled by M. Chen</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────────────────── LETTER ── -->
+<section id="letter" class="intro">
+  <div class="intro-grid">
+    <div class="intro-letter">
+      <div class="ornament">§ 01 · The Letter</div>
+      <h2 class="section-h">The company has texture now</h2>
+      <p class="lede">
+        <span class="dropcap">T</span>he last briefing was about a plan
+        beginning to bend. This one is about what the bend made of us.
+        Four weeks in, the company is no longer an outline filled with
+        intentions; it has surfaces — a connector, an alpha milestone,
+        an employee on her first week, a partner I will fly to see on
+        Thursday because their sponsor was promoted out of our deal.
+        I will name each in turn.
+      </p>
+      <p>
+        <strong>Asha's first week.</strong> She started on 02 June at
+        eight in the morning and by Thursday lunch she had found a bug
+        in our graph schema that none of the three of us would have
+        found in a quarter. The bug is small to write and large to
+        live with: <em>the contractor identity model treats temp-to-perm
+        transitions as new entities, breaking tenure analytics</em>.
+        A worker hired as a contractor in March and converted to a
+        full-time employee in May appears in our graph as two people
+        with no edge between them — and therefore as a person with
+        zero months of tenure on the day she should have been counted
+        toward retention. We were going to ship this. Asha caught it
+        in thirty-six hours. The cost of her offer paid for itself
+        before her badge worked at the door.
+      </p>
+      <p>
+        <strong>The first connector hit alpha on 04 June.</strong>
+        Five days late against the bent plan, four days earlier than
+        the briefing-002 trajectory would have predicted, which means
+        we have started to recover. Workday HR Core is now reading
+        live data from design partner #3 behind their firewall, in
+        read-only mode, with no agent attached. It is not a product.
+        It is a quiet brown box that resolves 3,412 employees, 47
+        contractors, and 11 service accounts into a coherent people
+        graph. I have left a longer note about it in §03; I will spare
+        you the lyric here.
+      </p>
+      <p>
+        <strong>A fourth design partner signed</strong> — and not the
+        one any of us would have predicted. Northwind Studios is a
+        creative agency, 1,200 employees, headquartered in Brooklyn
+        and Lisbon, with the kind of org chart that does not look
+        like the kind of org chart our pitch deck draws. Their COO
+        called Priya from a layover in Newark and asked if we would
+        let her sign before we changed our minds. We said yes. We
+        are leaning into this one — for reasons I will get to in the
+        dinner readout, because they overlap.
+      </p>
+      <p>
+        <strong>The Halcyon situation.</strong> Our second design
+        partner — Halcyon Health, 4,400 employees, the CHRO who was
+        the most enthusiastic person on every call we had with her —
+        has been promoted to Chief People &amp; Strategy Officer with
+        a seat on the executive committee. Wonderful for her; a
+        problem for us. Her COO, Reuben Marsh, inherits the Stratum
+        project along with three other things he did not ask for.
+        I do not know him yet. I will Thursday. §07 has more.
+      </p>
+      <p>
+        <strong>The Bhusri dinner happened on 04 June.</strong> Six
+        CHROs, three of whom we knew, three of whom we did not. Two
+        new design-partner conversations started before the cheese
+        arrived. One of those — Annika Whitfield, at a 5,200-employee
+        manufacturer called Cordova — is worth flagging, and §08
+        does. David remains, in private, slightly unconvinced we
+        should have gone. He was right to be cautious; he was, I
+        believe, wrong on the merits. We can talk about it.
+      </p>
+      <p>
+        Net: the company has texture now. Plans converted into
+        objects you can touch. One of those objects is a wobble, and
+        the wobble is honest, and we will handle it. The other
+        objects are better than I dared write to you on the 24th.
+      </p>
+      <p class="signoff">
+        — M. Chen<br />
+        <span class="signoff-meta">for the founders · 07 June 2026</span>
+      </p>
+    </div>
+
+    <aside class="intro-card">
+      <div class="card-label">Δ Since No. 002</div>
+      <dl class="kv">
+        <dt>Day</dt><dd>29 (of company)</dd>
+        <dt>Headcount</dt><dd>4 → 5</dd>
+        <dt>Partners</dt><dd>3 → 4 of 5 signed</dd>
+        <dt>Connectors</dt><dd>1 in dev → 1 alpha · 1 in dev</dd>
+        <dt>Discovery</dt><dd>28 → 47 calls</dd>
+        <dt>Cash</dt><dd>$7.82M → $7.49M</dd>
+        <dt>Runway</dt><dd>24mo → 22mo</dd>
+        <dt>Confidence</dt><dd>8.3 → 8.5</dd>
+        <dt>Decisions</dt><dd>22 → 33 logged</dd>
+        <dt>Risks</dt><dd>R1–R9 → unchanged</dd>
+      </dl>
+      <div class="card-footer">
+        <span class="pill pill-amber">Day 29</span>
+        <span class="pill pill-moss">Alpha shipped</span>
+        <span class="pill pill-plum">One wobble</span>
+        <span class="pill pill-ink">Pre-product</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────── SNAPSHOT ── -->
+<section id="snapshot" class="snapshot">
+  <div class="ornament">§ 02 · Snapshot Delta</div>
+  <h2 class="section-h">Six numbers, with the delta from a fortnight ago</h2>
+  <p class="section-dek">
+    The same six lines as Briefing 002. Four moved in the direction we
+    wanted, two moved more than the plan predicted, none moved wrongly.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Cash on hand</div>
+      <div class="metric-value">$7.49<span class="unit">M</span></div>
+      <div class="metric-delta delta-ink"><span class="arrow">↓</span> Δ −$330K · expected ramp</div>
+      <div class="metric-foot">First payroll, sublease deposit cleared, two retainers</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Burn · 14d annualized</div>
+      <div class="metric-value">$410<span class="unit">K/mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↑</span> Δ +$20K · recruiter + sublease</div>
+      <div class="metric-foot">$310K plan; bend continues; not yet a fracture</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Runway</div>
+      <div class="metric-value">22<span class="unit">mo</span></div>
+      <div class="metric-delta delta-warn"><span class="arrow">↓</span> Δ −2mo from No. 002</div>
+      <div class="metric-foot">To Q2 2028 at the current trajectory</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Headcount</div>
+      <div class="metric-value">5<span class="unit">FTE</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +1 · Iglesias accepted Fri</div>
+      <div class="metric-foot">3 founders · Pillai · Iglesias starts 23 Jun</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Design partners signed</div>
+      <div class="metric-value">4<span class="unit">/5</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +1 · Northwind, 1.2K EE</div>
+      <div class="metric-foot">Within striking distance of the original target</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">CHRO discovery (cumulative)</div>
+      <div class="metric-value">47<span class="unit">total</span></div>
+      <div class="metric-delta delta-ok"><span class="arrow">↑</span> Δ +19 · two via the dinner</div>
+      <div class="metric-foot">Priya now carries 36 of these herself</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────── CONNECTOR ── -->
+<section id="connector" class="connector">
+  <div class="ornament">§ 03 · The First Connector</div>
+  <h2 class="section-h"><em>A quiet brown box, behind a customer's firewall</em></h2>
+  <p class="section-dek">
+    On 04 June, at 11:43 PT, the Workday HR Core connector resolved its
+    first production schema into our staging graph. It is not a product.
+    It is the first surface the company has.
+  </p>
+
+  <div class="connector-grid">
+    <div class="connector-narr">
+      <p>
+        Alpha, for us, means something very specific. It means
+        read-only — we do not write anything back to Workday. It means
+        behind the customer's firewall — the connector runs in their
+        VPC, not ours. It means no agent — the copilot surface is not
+        attached to this data and will not be for sixty days. And it
+        means manual schema mapping — Asha and David sat in a room on
+        Wednesday for six hours mapping fourteen fields by hand, the
+        last three of which involved opening a Workday support ticket
+        none of us had hoped to file in 2026.
+      </p>
+      <p>
+        On Thursday morning, less than thirty-six hours after her
+        badge worked at the door, Asha pulled a coffee from the
+        kitchen and said, quietly, that she thought our contractor
+        identity model was wrong. The example she walked David through
+        was the temp-to-perm transition: an engineering contractor at
+        the fintech partner, converted to FTE on 14 May, who in our
+        graph appeared as two distinct people with zero edges between
+        them. <em>Tenure analytics break,</em> she said. <em>Span of
+        control breaks. Anything that pivots on retention breaks. We
+        are going to need to write a resolver and a backfill and we
+        need them both before any agent sees this data.</em> David did
+        not argue. He asked when she could have it written. She said
+        Wednesday. She means this Wednesday.
+      </p>
+      <p>
+        What shipping the first connector felt like, in honesty, was
+        less euphoric than I had expected and more procedural. There
+        was no champagne. David and Asha took a screenshot of the
+        record count and put it in a Slack channel called
+        <code style="font-family:var(--mono);font-size:.9em;color:var(--ochre)">#graph-things</code>
+        that has six members and no emoji reactions. Priya was on a
+        call with Northwind. I was reviewing a contract redline. The
+        cheers came later, at dinner, and they were the right shape.
+        We had earned the next ten weeks of work, not the next ten
+        months of confidence.
+      </p>
+    </div>
+
+    <aside class="connector-card">
+      <div class="cc-eyebrow">Connector · ID-001</div>
+      <h3 class="cc-title">Workday HR Core</h3>
+      <div class="cc-status">Alpha · read-only</div>
+      <dl class="cc-kv">
+        <dt>Shipped</dt><dd>2026-06-04</dd>
+        <dt>Customer</dt><dd>Partner #3 · fintech</dd>
+        <dt>Deployment</dt><dd>customer VPC</dd>
+        <dt>Latency p50</dt><dd>1.2 s</dd>
+        <dt>Latency p95</dt><dd>4.1 s</dd>
+        <dt>Employees</dt><dd>3,412</dd>
+        <dt>Contractors</dt><dd>47</dd>
+        <dt>Agents / svc</dt><dd>11</dd>
+        <dt>Schema drift</dt><dd>0 incidents</dd>
+        <dt>Agent surface</dt><dd>not attached</dd>
+        <dt>Writes</dt><dd>disabled</dd>
+        <dt>Schema map</dt><dd>manual · v0.2</dd>
+      </dl>
+      <p class="cc-foot">
+        Next: Greenhouse (target 14 Jun alpha) · ADP-Workforce Now
+        (target 28 Jun alpha) · then automation of the schema map.
+      </p>
+    </aside>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── CONVERSATION ── -->
+<section id="conversation" class="conversation">
+  <div class="ornament">§ 04 · Conversation, III</div>
+  <h2 class="section-h">Four exchanges, the week of 02 June</h2>
+  <p class="section-dek">
+    A Wednesday standup that turned into a roadmap argument; an offline
+    note from the designer-who-has-not-started-yet; a hallway moment on
+    Halcyon; an unexpected piece of good news from a Newark airport.
+    Edited; nothing reordered.
+  </p>
+
+  <div class="transcript">
+
+    <div class="exchange">
+      <div class="ts">Wed 03 Jun<br />09:14</div>
+      <div class="lines">
+        <div class="line"><span class="who">DO</span><span class="said">I want to fast-follow Workday with payroll. ADP-Workforce Now. The reason is graph completeness — if we have HRIS but not compensation, half the questions a CHRO asks return half-answers. Payroll is the missing edge in every span-of-control query that actually matters.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">I disagree. We promised three partners that Greenhouse alpha lands by 14 June. Two of those three are interviewing seven thousand candidates between now and Labour Day. If we slip Greenhouse to push payroll, we lose the right to be in their week.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Greenhouse is a thinner integration. Two weeks of engineering. Payroll is six.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">Then ship Greenhouse first because it is two weeks. Payroll moves to 28 June. Asha and I agreed this morning, before standup, and I should have flagged it then.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Logged 025. Greenhouse → ADP. We hold the line.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Thu 04 Jun<br />11:00<br />remote · Madrid</div>
+      <div class="lines">
+        <div class="line"><span class="who">MC</span><span class="said">Before we begin, I want to say — Tomás Iglesias, who accepted on Tuesday and is in this room from his kitchen in Madrid, is observing only. He has not started. We invited him because he asked.</span></div>
+        <div class="line"><span class="who">TI</span><span class="said">— [observes; does not speak]</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Walking through the alpha surface. The copilot answer surface — the right pane — is where headcount queries, span-of-control queries, attrition queries, and the system status all land. Same panel.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">Same panel. With the source citations underneath. And the toggle for the eval-set flag, which is — yes, also there.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">[continues for fourteen minutes]</span></div>
+        <div class="aside">
+          Offline note from TI to MC, 04 Jun 23:12 CET, with permission to quote: <em>"The copilot answer surface is doing eleven jobs. I counted. I would like to talk about this before I start, because it will be cheaper to talk about it now than after the second connector lands. — T."</em>
+        </div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Fri 05 Jun<br />16:32<br />hallway</div>
+      <div class="lines">
+        <div class="line"><span class="who">DO</span><span class="said">Maya — Reuben Marsh's office just sent the calendar invite. Phoenix, Thursday, 11 a.m., his office, ninety minutes.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Good. I will fly out Wednesday night. I want to be in the building before he is.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Do you want company?</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">No. He inherited four things he did not ask for. If two of us walk in, we look like we are selling. If I walk in alone, I look like I am listening. I will listen for an hour, talk for thirty minutes, leave him with one decision to make this month and nothing else.</span></div>
+        <div class="line"><span class="who">DO</span><span class="said">Understood.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">Fri 05 Jun<br />18:47<br />Newark · gate B23</div>
+      <div class="lines">
+        <div class="line"><span class="who">PR</span><span class="said">I have ten seconds before they board me. Northwind's COO — the one who signed Wednesday — just introduced us to her cousin. Her cousin is the COO of a six-thousand-attorney law firm in Chicago, Wymer &amp; Brooks. She said, and I quote, <em>"my cousin will sit through anything I tell her to sit through, and she has a Tuesday afternoon problem you have never seen at this scale."</em> Call is on the calendar for Monday.</span></div>
+        <div class="line"><span class="who">MC</span><span class="said">Go board. Tell me everything tomorrow.</span></div>
+        <div class="line"><span class="who">PR</span><span class="said">One more thing. She said her cousin's nickname for the partners' weekly meeting is "the carnival." That's the buyer.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────── LEDGER ── -->
+<section id="decisions" class="decisions">
+  <div class="ornament">§ 05 · Decisions Ledger, continued</div>
+  <h2 class="section-h">Entries 023 – 033</h2>
+  <p class="section-dek">
+    Eleven decisions over fourteen days. The rhythm of Briefing 002
+    held; the spread (hiring, partners, infra, brand, compliance,
+    pricing, finance) widened. One eye-roll is logged for completeness.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>Decision</div><div>Owner</div><div>Status</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">023</div>
+      <div class="date">2026-05-30</div>
+      <div class="what"><strong>Hire #2</strong> offer accepted: Tomás Iglesias (founding designer, ex-Linear principal). Start 23 Jun. $215K + 1.0%.</div>
+      <div class="who-col">PR</div>
+      <div class="status status-done">Accepted</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">024</div>
+      <div class="date">2026-06-03</div>
+      <div class="what"><strong>Design partner #4</strong> signed: Northwind Studios (creative agency, 1,200 EE · Brooklyn / Lisbon). First call routed via the Bhusri dinner.</div>
+      <div class="who-col">PR</div>
+      <div class="status status-done">Signed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">025</div>
+      <div class="date">2026-06-03</div>
+      <div class="what"><strong>Connector roadmap</strong> locked: Workday HR Core (alpha shipped) → Greenhouse (target 14 Jun alpha) → ADP-Workforce Now (target 28 Jun alpha).</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">In flight</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">026</div>
+      <div class="date">2026-06-05</div>
+      <div class="what"><strong>Halcyon</strong>: MC to fly to Phoenix 11 Jun pm; 90-minute transition meeting with R. Marsh, 12 Jun 11:00 MST. Stand-down at HQ.</div>
+      <div class="who-col">MC</div>
+      <div class="status status-progress">Scheduled</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">027</div>
+      <div class="date">2026-06-02</div>
+      <div class="what"><strong>Eval set v0.2</strong>: 62 canonical questions (+22 from v0). Co-authored with two design-partner CHROs. First run on alpha graph: 0.78.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-done">Sealed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">028</div>
+      <div class="date">2026-06-04</div>
+      <div class="what"><strong>Carta connector paused.</strong> ROI low for the current partner cohort (none of the four use Carta as a system of record). Revisit at month 9.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-done">Paused</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">029</div>
+      <div class="date">2026-06-06</div>
+      <div class="what"><strong>Hire #3 sourcing</strong>: Founding AI / Agents engineer. Three candidates in pipeline (two ex-Anthropic, one ex-DeepMind). Decision window 21 Jun.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">Sourcing</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">030</div>
+      <div class="date">2026-06-01</div>
+      <div class="what"><strong>First Stratum-branded merch</strong>: navy waxed-cotton caps · 60 units · $1,400 total. Three founders unanimous. PR's eye-roll captured for the record.</div>
+      <div class="who-col">MC</div>
+      <div class="status status-done">Ordered</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">031</div>
+      <div class="date">2026-06-05</div>
+      <div class="what"><strong>Pricing experiment</strong>: design partner #4 (Northwind) agreed to fully usage-based commercial contract at GA — no platform floor. Narrows uncertainty on the lower-bound curve.</div>
+      <div class="who-col">PR</div>
+      <div class="status status-done">Signed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">032</div>
+      <div class="date">2026-06-06</div>
+      <div class="what"><strong>SOC2 controls</strong>: 24 of 87 implemented (28%). Vanta dashboard live to all three founders. Gap analysis on schedule for 12 Jun delivery.</div>
+      <div class="who-col">DO</div>
+      <div class="status status-progress">On track</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">033</div>
+      <div class="date">2026-06-07</div>
+      <div class="what"><strong>Founder confidence pulse</strong>: 8.5 / 10 (Δ +0.2). MC 8.7 · PR 8.7 · DO 8.1. All three up modestly. David named the delta as "the alpha shipped, and Asha is real."</div>
+      <div class="who-col">MC</div>
+      <div class="status status-done">Logged</div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── SCORECARD ── -->
+<section id="scorecard" class="scorecard">
+  <div class="ornament">§ 06 · Scorecard Update</div>
+  <h2 class="section-h">Twelve indicators, four bands · fortnight 2</h2>
+  <p class="section-dek">
+    Two bars crossed thresholds we had quietly worried about: design
+    partners (4 of 5, target near) and connectors (1 alpha · 1 in dev,
+    not zero anymore). Burn continues to bend; we are watching it.
+  </p>
+
+  <div class="bands">
+
+    <div class="band">
+      <div class="band-name">I · Capital</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Runway (months)</span><span class="bar-value">22 / 24 target<span class="delta delta-warn">Δ −2</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:92%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Burn vs. plan</span><span class="bar-value">$410K / $310K plan<span class="delta delta-warn">Δ +32%</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:58%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder ownership</span><span class="bar-value">68% · unchanged<span class="delta delta-ink">Δ 0</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:68%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">II · Product</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Connectors shipped / in dev</span><span class="bar-value">1 alpha · 1 in dev / 12 target<span class="delta delta-ok">Δ +1 alpha</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:14%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>People-graph schema</span><span class="bar-value">v0.5 · resolver in flight<span class="delta delta-ok">Δ +v0.1</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:42%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Copilot eval set</span><span class="bar-value">62 / 250 questions<span class="delta delta-ok">Δ +22</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:25%;--tone:warn"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">III · Customer</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Design partners signed</span><span class="bar-value">4 / 5<span class="delta delta-ok">Δ +1</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:80%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>CHRO discovery / fortnight</span><span class="bar-value">19 · target 10<span class="delta delta-ok">Δ +90%</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>First production ingestion</span><span class="bar-value">Alpha · 04 Jun<span class="delta delta-ok">Δ matured</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:35%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">IV · Organization</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Headcount</span><span class="bar-value">5 / 22 by M12<span class="delta delta-ok">Δ +1</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:23%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>SOC2 Type II</span><span class="bar-value">24 / 87 controls implemented<span class="delta delta-ok">Δ +24</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:28%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder confidence index</span><span class="bar-value">8.5 / 10 · pulse 07 Jun<span class="delta delta-ok">Δ +0.2</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:85%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────── HALCYON ── -->
+<section id="situation" class="situation-section">
+  <div class="ornament">§ 07 · The Halcyon Situation</div>
+  <h2 class="section-h">Our most enthusiastic sponsor was promoted out</h2>
+  <p class="section-dek">
+    Worth its own sub-section because it is the first real test the
+    company has of whether early enthusiasm survives organizational
+    change. Risk, not loss. Tracked, not panicked.
+  </p>
+
+  <div class="situation">
+    <div>
+      <p>
+        Halcyon Health is a 4,400-employee specialty health system
+        headquartered in Phoenix, two campuses in California, one in
+        Reno. They signed as design partner #2 on 09 May. The sponsor
+        was <strong>Deepa Anand</strong>, then CHRO — by some distance
+        the most enthusiastic person on every call we had with her,
+        the one who introduced us to the others at the Bhusri dinner,
+        the one who once said, on a Wednesday, that she would build
+        her board deck on top of our copilot the day we shipped it.
+        On 02 June, Halcyon's CEO promoted Deepa to Chief People &amp;
+        Strategy Officer with a seat on the executive committee. We
+        are happy for her. We are also less covered.
+      </p>
+      <p>
+        The Stratum project has been re-assigned to <strong>Reuben
+        Marsh</strong>, the COO, who inherits it along with their
+        Epic upgrade, a new Phoenix bed-tower programme, and a labour
+        action at one of the California campuses. He is, by
+        reputation, more skeptical than Deepa, more measured, and
+        more allergic to vendors than to problems. None of that is
+        bad. None of that is what Deepa was.
+      </p>
+    </div>
+    <div>
+      <p>
+        The honest read: this is a risk, not yet a loss. Deepa remains
+        an advocate at the executive level — she has volunteered, in
+        writing, to attend the first Marsh meeting alongside me — and
+        the Halcyon data flow is not in production, so we have not
+        lost ground we have built. The cost is calendar. Marsh will
+        want a different conversation than Deepa did, and that
+        conversation will start in his office, not ours. I am flying
+        to Phoenix Wednesday evening and meeting him Thursday at 11
+        MST. I will listen for an hour. I will speak for thirty
+        minutes. I will leave him with one decision to make this
+        month and nothing else. If we lose the partner, we lose it
+        in the open, with a paper trail; if we keep them, we keep
+        them because Marsh chose to, not because Deepa lobbied for it.
+      </p>
+      <div class="meta-strip">
+        <span><strong>Sponsor:</strong> R. Marsh, COO</span>
+        <span><strong>Advocate:</strong> D. Anand, CPSO</span>
+        <span><strong>Window:</strong> 12 Jun · Phoenix</span>
+        <span><strong>Owner:</strong> MC</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────── DINNER ── -->
+<section id="dinner" class="dinner-section">
+  <div class="ornament">§ 08 · The Bhusri Dinner — Readout</div>
+  <h2 class="section-h"><em>Six CHROs, two new conversations, one name to flag</em></h2>
+  <p class="section-dek">
+    Held at Aneel's home in Atherton on the evening of 04 June. Three
+    we knew; three we did not. Maya and Priya attended; David did not,
+    by his own choice, which I supported and continue to.
+  </p>
+
+  <div class="dinner">
+    <p>
+      The format was Aneel's: dinner at seven, two rounds of
+      introductions, no slides, the briefing left in a folder by each
+      place setting for whoever wanted to read it on the way home.
+      Three of the six were people we had been trying to reach since
+      week one — Marisol Cheng at a 9,000-EE retailer in Texas, Devon
+      Park at a regional bank in the Carolinas, and Annika Whitfield
+      at <strong>Cordova</strong>, a 5,200-employee specialty
+      manufacturer in Ohio. The other three were friends of Aneel's
+      whose orgs we had not mapped. None of the six wasted our time;
+      two of them, before the cheese course, started conversations
+      that have since produced calendar invites.
+    </p>
+    <p>
+      The standout was Whitfield. She arrived having read the brief,
+      which I did not expect, and she asked one question of David
+      that I have been turning over since: <em>do you let the agent
+      decide which question is the question, or do you make me phrase
+      it?</em> (We let the agent decide; she nodded once and said
+      "good".) She offered, unprompted, to be design partner #5 if
+      we wanted her — to which I said we did but we would not say so
+      until after a second conversation, because we have learned that
+      the first conversation is the easy one. The second is on the
+      calendar for 16 June.
+    </p>
+
+    <p class="pull-quote">
+      "I've sat through fourteen demos like the one you described.
+      The thing that's different is that you're not selling me a
+      product — you're selling me back hours I haven't had since I
+      made VP."
+      <span class="attrib">— Annika Whitfield, CHRO · Cordova · 04 Jun, after dessert</span>
+    </p>
+
+    <p>
+      On the David question: I want it on the record that he was
+      right to be cautious about the optics of taking Aneel's
+      hospitality this early, and that I think, on the merits, the
+      evening produced value the cautious read would not have. The
+      cost was one evening of our time and one evening of his
+      hospitality, and the surface area now includes two
+      conversations we would not otherwise have started. Aneel has
+      offered to do a second dinner in early August, smaller, more
+      regional. We are saying yes. We will be more selective.
+    </p>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────── QUEUED DECISION ── -->
+<section id="queued" class="queued-section">
+  <div class="ornament">§ 09 · New Decision, queued</div>
+  <h2 class="section-h">An unbudgeted hire, in service of the wobble</h2>
+  <p class="section-dek">
+    Surfaced today because it is the first thing the compact has not
+    cleanly answered for us. A soft test, by design.
+  </p>
+
+  <div class="queued">
+    <div class="queued-label">Queued · Decision 034 · pending Chairman</div>
+    <div class="queued-body">
+      We are considering a hire that is not in the month-12 plan: a
+      <strong>founding customer engineer</strong>, specifically to
+      anchor the Halcyon transition with Marsh and to be the human
+      face of the connector work to design partners #2 through #5.
+      Target offer: <strong>$200K base + 0.5% equity</strong>; start
+      late June if the candidate (one we already know, ex-Looker
+      forward-deployed) is available. The reason we are surfacing
+      this rather than just doing it is the compact: non-routine
+      spend above $150K, and a deviation from the agreed M12 hiring
+      sequence, both require Chairman visibility. We can act on
+      our own authority and brief you after — but we would rather
+      not. We would rather know whether you want this to clear the
+      full compact-review channel, or whether a written nod by
+      Tuesday is sufficient. The question, in other words, is not
+      about the hire. It is about how the compact wants to handle a
+      hire that the compact did not anticipate.
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── OPEN TO CHAIRMAN ── -->
+<section id="open" class="open">
+  <div class="ornament">§ 10 · Open to the Chairman, III</div>
+  <h2 class="section-h">Three questions for this fortnight</h2>
+  <p class="section-dek">
+    The first is the queued decision above. The second is a soft
+    branding ask Aneel made on the evening. The third is an awkward
+    little one from Madrid.
+  </p>
+
+  <ol class="open-list">
+    <li>
+      <strong>The unbudgeted customer engineer.</strong> See §09. The
+      narrow question: are you comfortable blessing this on a written
+      nod by Tuesday, or would you prefer it goes through the formal
+      compact-review channel? The broader question — which is the one
+      we actually care about — is whether the compact should have a
+      light-weight lane for hires of this shape, and if so, what its
+      ceiling and form should be. We do not need an answer to the
+      broader question this week. We need an answer to the narrow one
+      by Tuesday evening.
+    </li>
+    <li>
+      <strong>The Information.</strong> Aneel has offered to
+      introduce us to Berber Jin's colleague at The Information for
+      a profile piece — small, founder-led, embargoed until our
+      first commercial contract. Priya is split: she likes the
+      reach and dislikes the timing. David is firmly no. I am
+      cautiously yes, but only if the piece is held until at least
+      one connector is at beta and one partner is willing to be
+      named. Your read?
+    </li>
+    <li>
+      <strong>The design-week budget.</strong> Tomás has asked, in
+      writing, for a small <strong>$12K design-week budget</strong>
+      to fly to Palo Alto from Madrid for five days before his start
+      date of 23 June, observe the team, sketch a v1 of the answer
+      surface, and leave with a recommendation. He has offered to
+      eat the airfare himself; we have refused. The Compact's
+      threshold is $25K so we are under it, but the cleanest read of
+      the spirit is to surface it. We are surfacing it.
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── FOOTER ── -->
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div class="colophon-left">
+      <div class="colo-mark">S<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Stratum, Inc. · 2475 Hanover Street, Palo Alto, CA 94304<br />
+        stratum.ai · founding@stratum.ai · @stratum_hcm
+      </div>
+    </div>
+    <div class="colophon-right">
+      <div class="colo-issue">
+        Briefing No. 003 · Compiled by Maya Chen on Sunday, 07 June 2026.<br />
+        Set in Fraunces, Newsreader, and JetBrains Mono.<br />
+        Previous: <a href="002.html">Briefing No. 002</a> · First: <a href="../index.html">Briefing No. 001</a><br />
+        Next briefing: Sunday, 21 June 2026.
+      </div>
+    </div>
+  </div>
+  <div class="colo-tag">— END OF BRIEFING —</div>
+</footer>
+
+</body>
+</html>

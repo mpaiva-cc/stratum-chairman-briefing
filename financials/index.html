@@ -1,0 +1,1709 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Financials — Operating Model v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · Financials · Operating Model v1
+   Aesthetic: Bridgewater research note × Bloomberg printout
+   Cream paper · deep ink · ochre accent · mono-heavy figures
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-cool:   #ede3c8;
+  --paper-deep:   #e5dcc4;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --ochre-tint:   #f0d9b5;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --teal:         #2f5c5e;
+
+  --hi:           #a13418;
+  --md:           #b8651f;
+  --lo:           #6b7a4a;
+  --ok:           #4a6d4a;
+  --neg:          #a13418;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1280px, 95vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 16px;
+  line-height: 1.5;
+  font-feature-settings: "kern","liga","onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184,101,31,.05), transparent 40%),
+    radial-gradient(circle at 92% 88%, rgba(14,22,38,.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14,22,38,.012) 0 1px, transparent 1px 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* ──────────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 1.6rem 0 0;
+}
+
+.masthead-classified {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--hi);
+  text-align: center;
+  padding: .35rem 0;
+  border-top: 1px solid var(--hi);
+  border-bottom: 1px solid var(--hi);
+  margin-bottom: 1rem;
+  background: rgba(161,52,24,.04);
+}
+
+.masthead-rule { height: 1px; background: var(--ink); }
+.masthead-rule.double {
+  margin-top: 1.4rem;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px; background: transparent;
+}
+
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding: .65rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.masthead-meta { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+.masthead-nav { display: flex; gap: 1rem; flex-wrap: wrap; }
+.masthead-nav a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.masthead-nav a:hover { color: var(--ink); }
+.masthead-nav a:hover::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.masthead-back { color: var(--ochre) !important; }
+
+.masthead-title {
+  text-align: center;
+  padding: 2rem 0 .8rem;
+}
+
+.title-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 1.2rem;
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.4rem, 8.6vw, 7.4rem);
+  line-height: .9;
+  letter-spacing: -.035em;
+  margin: 0;
+  color: var(--ink);
+}
+.wordmark .slash { color: var(--ochre); font-style: italic; font-weight: 400; padding: 0 .12em; }
+.wordmark .label { font-weight: 400; font-style: italic; font-variation-settings: "opsz" 144; }
+
+.title-folio {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.title-folio .sep { color: var(--paper-rule-2); padding: 0 .55rem; }
+.title-folio .compiled { color: var(--ink); }
+
+/* ──────────────────────────────────────────────── SECTIONS ── */
+
+section {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 3.2rem 0 .6rem;
+}
+
+.ornament {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .7rem;
+  display: flex;
+  align-items: baseline;
+  gap: .7rem;
+}
+.ornament::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--paper-rule);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  margin: 0 0 .5rem;
+  color: var(--ink);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--ink-2);
+  max-width: 68ch;
+  margin: 0 0 1.8rem;
+}
+
+.sub-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  margin: 1.6rem 0 .6rem;
+  color: var(--ink);
+}
+
+/* ──────────────────────────────────────────────── EXECUTIVE TILES ── */
+
+.exec-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+
+.exec-tile {
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1.1rem 1.2rem 1rem;
+  background: var(--paper-warm);
+  position: relative;
+}
+
+.exec-tile.accent { background: var(--paper-cool); }
+
+.exec-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: .55rem;
+}
+
+.exec-num {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+}
+.exec-num .u {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: .42em;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  padding-left: .12em;
+  vertical-align: .25em;
+}
+.exec-num .arrow {
+  font-family: var(--mono);
+  font-size: .42em;
+  color: var(--ochre);
+  padding: 0 .2em;
+  vertical-align: .35em;
+}
+
+.exec-cap {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .04em;
+  color: var(--ink-mute);
+  margin-top: .55rem;
+  line-height: 1.45;
+}
+
+/* ──────────────────────────────────────────────── DATA TABLE ── */
+
+.table-wrap {
+  border-top: 1px solid var(--ink);
+  overflow-x: auto;
+}
+
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+table.data th, table.data td {
+  text-align: right;
+  padding: .55rem .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+  white-space: nowrap;
+}
+
+table.data th {
+  font-weight: 500;
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper-cool);
+  border-bottom: 1px solid var(--ink);
+  padding: .7rem .55rem;
+}
+
+table.data th:first-child,
+table.data td:first-child {
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 13.5px;
+  font-feature-settings: normal;
+  color: var(--ink);
+  white-space: normal;
+  min-width: 180px;
+  padding-left: 0;
+}
+
+table.data tr.rule-top td { border-top: 1px solid var(--ink); }
+table.data tr.strong td { font-weight: 700; color: var(--ink); background: var(--paper-warm); }
+table.data tr.strong td:first-child { font-weight: 600; }
+table.data tr.muted td:first-child { color: var(--ink-3); font-style: italic; }
+
+table.data .neg { color: var(--neg); }
+table.data .yr-mark { color: var(--ochre); padding-left: .25em; font-size: 10px; vertical-align: .15em; }
+table.data .year-sep { border-left: 1px solid var(--paper-rule-2); }
+table.data .yr-banner {
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: .15em;
+  text-align: center;
+  font-size: 10.5px;
+}
+
+table.data tbody tr:hover td { background: rgba(184,101,31,.04); }
+table.data tbody tr.strong:hover td { background: var(--paper-warm); }
+
+/* ──────────────────────────────────────────────── HEADCOUNT TABLE ── */
+
+table.hc {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+table.hc th, table.hc td {
+  padding: .5rem .5rem;
+  border-bottom: 1px solid var(--paper-rule);
+  text-align: right;
+}
+table.hc th {
+  font-weight: 500;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-cool);
+}
+table.hc th:first-child, table.hc td:first-child {
+  text-align: left;
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink);
+  min-width: 140px;
+}
+table.hc td:last-child, table.hc th:last-child { min-width: 160px; }
+table.hc tr.total td { background: var(--paper-warm); font-weight: 700; border-top: 1px solid var(--ink); }
+
+.hc-bar {
+  display: inline-block;
+  height: 8px;
+  background: var(--ink);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.hc-bar.eng { background: var(--ink); }
+.hc-bar.des { background: var(--ochre); }
+.hc-bar.prd { background: var(--moss); }
+.hc-bar.gtm { background: var(--plum); }
+.hc-bar.cus { background: var(--teal); }
+.hc-bar.ops { background: var(--ink-3); }
+
+.legend {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 1rem 0 1.2rem;
+}
+.legend .sw {
+  display: inline-block; width: 14px; height: 8px;
+  vertical-align: middle; margin-right: 6px;
+}
+
+.named-hires {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink-2);
+  font-style: italic;
+  margin-top: .6rem;
+  padding-top: .8rem;
+  border-top: 1px dashed var(--paper-rule-2);
+}
+.named-hires .pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: var(--ochre-tint);
+  color: var(--ochre-deep);
+  padding: 2px 7px;
+  border-radius: 2px;
+  margin-right: .4rem;
+}
+
+/* ──────────────────────────────────────────────── RUNWAY CHART ── */
+
+.chart-frame {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 1px solid var(--ink);
+  padding: 1.4rem 1.2rem 1rem;
+  position: relative;
+}
+
+.chart-frame svg { display: block; width: 100%; height: auto; max-height: 460px; }
+
+.chart-legend {
+  display: flex; gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-top: .8rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.chart-legend .ln {
+  display: inline-block; width: 22px; height: 2px;
+  vertical-align: middle; margin-right: 7px;
+}
+.chart-legend .plan { background: var(--ink); }
+.chart-legend .stretch { background: var(--ochre); }
+.chart-legend .patient { background: var(--plum); }
+
+/* ──────────────────────────────────────────────── ARR + UE ── */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.acv-bar-wrap {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 1px solid var(--ink);
+  padding: 1.2rem;
+}
+
+.acv-stack {
+  display: flex;
+  height: 38px;
+  border: 1px solid var(--ink);
+  margin: 1rem 0;
+  overflow: hidden;
+}
+.acv-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--paper);
+  letter-spacing: .04em;
+}
+.acv-seg.mid { background: var(--ink); }
+.acv-seg.up { background: var(--ochre); }
+
+.acv-labels {
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10.5px;
+  color: var(--ink-3); letter-spacing: .04em;
+}
+
+.ue-list {
+  list-style: none; padding: 0; margin: 0;
+  border-top: 1px solid var(--ink);
+}
+.ue-list li {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  align-items: baseline;
+  padding: .8rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--serif);
+}
+.ue-list .lbl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.ue-list .val {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.45rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+}
+.ue-list .val .u {
+  font-family: var(--mono);
+  font-size: .55em;
+  color: var(--ink-3);
+  padding-left: .25em;
+  vertical-align: .15em;
+}
+
+.ue-note {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-top: 1.2rem;
+  padding: 1rem 1.1rem;
+  background: var(--paper-warm);
+  border-left: 3px solid var(--ochre);
+}
+
+/* ──────────────────────────────────────────────── DONUT ── */
+
+.donut-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) 1.4fr;
+  gap: 2.4rem;
+  align-items: center;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 1px solid var(--ink);
+  padding: 1.6rem 1.4rem;
+}
+
+.donut-grid svg { width: 100%; height: auto; max-width: 360px; margin: 0 auto; display: block; }
+
+.donut-num {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 30px;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.donut-sub {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  fill: var(--ink-3);
+}
+
+.use-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.use-table td {
+  padding: .55rem .4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.use-table td.lbl {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+  width: 55%;
+}
+.use-table td.r { text-align: right; }
+.use-table tr:last-child td { border-bottom: 0; font-weight: 700; border-top: 1px solid var(--ink); background: var(--paper-cool); }
+.use-table .sw {
+  display: inline-block; width: 11px; height: 11px;
+  vertical-align: -1px; margin-right: 8px;
+  border: 1px solid var(--ink);
+}
+
+/* ──────────────────────────────────────────────── SCENARIO MATRIX ── */
+
+.matrix {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--paper-rule);
+}
+.matrix > div {
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1.1rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
+.matrix .hdr {
+  background: var(--paper-cool);
+  color: var(--ink-3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  border-bottom: 1px solid var(--ink);
+}
+.matrix .row-hdr {
+  background: var(--paper-cool);
+  color: var(--ink-3);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.matrix .cell {
+  background: var(--paper-warm);
+}
+.matrix .cell.bull { background: rgba(74,109,74,.10); }
+.matrix .cell.bear { background: rgba(161,52,24,.07); }
+.matrix .cell .arr {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.6rem;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.01em;
+  margin-bottom: .25rem;
+  display: block;
+}
+.matrix .cell .arr .u {
+  font-family: var(--mono);
+  font-size: .42em;
+  color: var(--ink-3);
+  padding-left: .15em;
+  vertical-align: .25em;
+}
+.matrix .cell .note {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+.matrix .cell .dil {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ochre);
+  letter-spacing: .04em;
+  margin-top: .35rem;
+  display: block;
+}
+
+/* ──────────────────────────────────────────────── NOTES ── */
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 2.4rem;
+  border-top: 1px solid var(--ink);
+  padding-top: 1.2rem;
+}
+.notes-grid dt {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 1rem;
+}
+.notes-grid dd {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  margin: .25rem 0 .8rem;
+  color: var(--ink-2);
+  line-height: 1.55;
+}
+
+/* ──────────────────────────────────────────────── COLOPHON ── */
+
+.colophon {
+  width: var(--col);
+  margin: 4rem auto 0;
+  padding: 2rem 0 3rem;
+}
+.colophon-rule {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+  margin-bottom: 1.4rem;
+}
+.colophon-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.colo-mark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: var(--ink);
+}
+.colo-mark .slash { color: var(--ochre); font-style: italic; }
+.colo-meta, .colo-issue {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  line-height: 1.7;
+}
+.colo-issue { text-align: right; }
+.colo-tag {
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .42em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--paper-rule);
+}
+
+/* ──────────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 920px) {
+  .exec-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+  .donut-grid { grid-template-columns: 1fr; }
+  .notes-grid { grid-template-columns: 1fr; }
+  .matrix { grid-template-columns: 110px 1fr 1fr; }
+  .masthead-nav { font-size: 10px; gap: .7rem; }
+}
+@media (max-width: 560px) {
+  .exec-grid { grid-template-columns: 1fr; }
+  .exec-num { font-size: 2rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ──────────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-classified">Operating Model · v1 · Confidential · Founders + Chairman + Series A (selective)</div>
+
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span>Sunday · 24 May 2026 · Palo Alto</span>
+      <span>Vol. I · No. 001</span>
+    </div>
+    <nav class="masthead-nav">
+      <a href="#pl">P&amp;L</a>
+      <a href="#hc">Headcount</a>
+      <a href="#runway">Runway</a>
+      <a href="#arr">ARR</a>
+      <a href="#ue">Unit Economics</a>
+      <a href="#use">Use of Funds</a>
+      <a href="#scen">Scenarios</a>
+      <a href="#notes">Notes</a>
+      <a href="../index.html" class="masthead-back">← Chairman's Briefing</a>
+    </nav>
+  </div>
+
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Operating Model · Bottoms-up · Founder-signed</div>
+    <h1 class="wordmark">Stratum<span class="slash">/</span><span class="label">Financials</span></h1>
+    <div class="title-folio">
+      <span class="compiled">Compiled by M. Chen</span>
+      <span class="sep">·</span>
+      <span>24 May 2026</span>
+      <span class="sep">·</span>
+      <span>Vol. I · No. 001</span>
+      <span class="sep">·</span>
+      <span>Next revision 23 Jun 2026</span>
+    </div>
+  </div>
+  <div class="masthead-rule double"></div>
+</header>
+
+<!-- ────────────────────────────────────────────── EXECUTIVE NUMBERS ── -->
+<section id="exec">
+  <div class="ornament">§ 01 — Executive numbers</div>
+  <h2 class="section-h">Eight figures, taken together.</h2>
+  <p class="section-dek">
+    The financial state of the company on Sunday, 24 May 2026 — twelve days
+    after closing the seed and signing the Compact. Numbers are the canonical
+    snapshot; the live model is the source of truth and rounds to these.
+  </p>
+
+  <div class="exec-grid">
+    <div class="exec-tile accent">
+      <div class="exec-label">Cash on hand</div>
+      <div class="exec-num">$7.82<span class="u">M</span></div>
+      <div class="exec-cap">As of 24 May 2026 · post seed-close costs<br/>Index $7.98M wired 11 May · -$180K legal &amp; fees</div>
+    </div>
+    <div class="exec-tile">
+      <div class="exec-label">Runway</div>
+      <div class="exec-num">24<span class="u">mo</span></div>
+      <div class="exec-cap">At planned ramp · to Q2 2028<br/>Without follow-on capital</div>
+    </div>
+    <div class="exec-tile">
+      <div class="exec-label">Burn (run-rate)</div>
+      <div class="exec-num">$410<span class="u">K/mo</span></div>
+      <div class="exec-cap">Ramping to ~$720K/mo by month 12<br/>Eng comp drives 62% of envelope</div>
+    </div>
+    <div class="exec-tile accent">
+      <div class="exec-label">Headcount</div>
+      <div class="exec-num">5<span class="arrow">→</span>22</div>
+      <div class="exec-cap">3 founders + 2 accepted offers today<br/>22 FTE by month 12 · Asha P., Tomás I.</div>
+    </div>
+    <div class="exec-tile">
+      <div class="exec-label">ARR target Q1 2027</div>
+      <div class="exec-num">$400<span class="u">K</span></div>
+      <div class="exec-cap">First commercial bookings<br/>3 design partners convert from pilot</div>
+    </div>
+    <div class="exec-tile accent">
+      <div class="exec-label">ARR target M18 (Nov 2027)</div>
+      <div class="exec-num">$5.0<span class="u">M</span></div>
+      <div class="exec-cap">10 customers · blended ACV $290K<br/>Run-rate at Series A close + 4mo</div>
+    </div>
+    <div class="exec-tile">
+      <div class="exec-label">Series A target · Q2 2027</div>
+      <div class="exec-num">$25<span class="u">M</span></div>
+      <div class="exec-cap">$120M pre · 17.2% dilution<br/>Lead unwon · Cannon retains seat</div>
+    </div>
+    <div class="exec-tile">
+      <div class="exec-label">Seed equity outstanding</div>
+      <div class="exec-num">32<span class="u">%</span></div>
+      <div class="exec-cap">Index 19.0 · Angels 4.0 · Pool 9.0<br/>Founders 68% post-pool, pre-Series A</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── P&L SUMMARY ── -->
+<section id="pl">
+  <div class="ornament">§ 02 — Three-year P&amp;L</div>
+  <h2 class="section-h">Quarterly · Q2 2026 → Q4 2028.</h2>
+  <p class="section-dek">
+    Revenue is ARR-derived, recognised quarterly against signed contracts.
+    Operating expense splits into S&amp;M, R&amp;D, G&amp;A on a fully-loaded basis
+    (comp, benefits, payroll tax, software, inference). Cash balance is
+    end-of-quarter; burn is the four-quarter trailing monthly average. Series
+    A capital injection lands in Q2 2027 in the plan scenario.
+  </p>
+
+  <div class="table-wrap">
+  <table class="data">
+    <thead>
+      <tr>
+        <th>Line · $K</th>
+        <th>Q2'26</th>
+        <th>Q3'26</th>
+        <th>Q4'26</th>
+        <th class="year-sep">Q1'27</th>
+        <th>Q2'27</th>
+        <th>Q3'27</th>
+        <th>Q4'27</th>
+        <th class="year-sep">Q1'28</th>
+        <th>Q2'28</th>
+        <th>Q3'28</th>
+        <th>Q4'28</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Revenue (recognised)</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td class="year-sep">90</td>
+        <td>240</td>
+        <td>520</td>
+        <td>910</td>
+        <td class="year-sep">1,420</td>
+        <td>2,040</td>
+        <td>2,690</td>
+        <td>3,380</td>
+      </tr>
+      <tr class="muted">
+        <td>— ARR run-rate (EOQ)</td>
+        <td>0</td>
+        <td>0</td>
+        <td>150</td>
+        <td class="year-sep">400</td>
+        <td>1,000</td>
+        <td>2,200</td>
+        <td>3,800</td>
+        <td class="year-sep">5,600</td>
+        <td>7,800</td>
+        <td>10,200</td>
+        <td>12,400 <span class="yr-mark">▲</span></td>
+      </tr>
+      <tr>
+        <td>Gross margin %</td>
+        <td>—</td>
+        <td>—</td>
+        <td>52%</td>
+        <td class="year-sep">58%</td>
+        <td>62%</td>
+        <td>66%</td>
+        <td>69%</td>
+        <td class="year-sep">72%</td>
+        <td>74%</td>
+        <td>76%</td>
+        <td>78%</td>
+      </tr>
+      <tr>
+        <td>S&amp;M expense</td>
+        <td class="neg">(80)</td>
+        <td class="neg">(180)</td>
+        <td class="neg">(290)</td>
+        <td class="year-sep neg">(460)</td>
+        <td class="neg">(640)</td>
+        <td class="neg">(880)</td>
+        <td class="neg">(1,140)</td>
+        <td class="year-sep neg">(1,400)</td>
+        <td class="neg">(1,640)</td>
+        <td class="neg">(1,820)</td>
+        <td class="neg">(1,960)</td>
+      </tr>
+      <tr>
+        <td>R&amp;D expense</td>
+        <td class="neg">(1,020)</td>
+        <td class="neg">(1,280)</td>
+        <td class="neg">(1,470)</td>
+        <td class="year-sep neg">(1,640)</td>
+        <td class="neg">(1,820)</td>
+        <td class="neg">(2,040)</td>
+        <td class="neg">(2,260)</td>
+        <td class="year-sep neg">(2,480)</td>
+        <td class="neg">(2,640)</td>
+        <td class="neg">(2,780)</td>
+        <td class="neg">(2,900)</td>
+      </tr>
+      <tr>
+        <td>G&amp;A expense</td>
+        <td class="neg">(180)</td>
+        <td class="neg">(220)</td>
+        <td class="neg">(260)</td>
+        <td class="year-sep neg">(310)</td>
+        <td class="neg">(360)</td>
+        <td class="neg">(440)</td>
+        <td class="neg">(510)</td>
+        <td class="year-sep neg">(570)</td>
+        <td class="neg">(620)</td>
+        <td class="neg">(670)</td>
+        <td class="neg">(710)</td>
+      </tr>
+      <tr class="rule-top">
+        <td><em>Operating loss</em></td>
+        <td class="neg">(1,280)</td>
+        <td class="neg">(1,680)</td>
+        <td class="neg">(2,020)</td>
+        <td class="year-sep neg">(2,408)</td>
+        <td class="neg">(2,807)</td>
+        <td class="neg">(3,313)</td>
+        <td class="neg">(3,632)</td>
+        <td class="year-sep neg">(3,427)</td>
+        <td class="neg">(3,290)</td>
+        <td class="neg">(3,226)</td>
+        <td class="neg">(2,933)</td>
+      </tr>
+      <tr class="muted">
+        <td>— Series A injection</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+        <td class="year-sep">—</td>
+        <td>25,000</td>
+        <td>—</td>
+        <td>—</td>
+        <td class="year-sep">—</td>
+        <td>—</td>
+        <td>—</td>
+        <td>—</td>
+      </tr>
+      <tr class="strong">
+        <td>Cash balance (EOQ)</td>
+        <td>6,540</td>
+        <td>4,860</td>
+        <td>2,840</td>
+        <td class="year-sep">432</td>
+        <td>22,625</td>
+        <td>19,312</td>
+        <td>15,680</td>
+        <td class="year-sep">12,253</td>
+        <td>8,963</td>
+        <td>5,737</td>
+        <td>2,804</td>
+      </tr>
+      <tr class="muted">
+        <td>— Burn (avg/mo, $K)</td>
+        <td>427</td>
+        <td>560</td>
+        <td>673</td>
+        <td class="year-sep">803</td>
+        <td>936</td>
+        <td>1,104</td>
+        <td>1,211</td>
+        <td class="year-sep">1,142</td>
+        <td>1,097</td>
+        <td>1,075</td>
+        <td>978</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="section-dek" style="margin-top:1rem; font-size:13px;">
+    Year-end ARR ▲ markers: $150K (Y1) · $3.8M (Y2) · $12.4M (Y3). The plan
+    closes Series A in Q2'27 against a $1.0M ARR run-rate and $3.8M trailing
+    pipeline. The $2.8M cash position at end of 2028 funds the Series B
+    runway and is not the final position — a Series B in Q2'28 is the
+    intended next instrument, modelled separately.
+  </p>
+</section>
+
+<!-- ────────────────────────────────────────────── HEADCOUNT BUILD ── -->
+<section id="hc">
+  <div class="ornament">§ 03 — Headcount build</div>
+  <h2 class="section-h">Three to thirty-eight, by function.</h2>
+  <p class="section-dek">
+    The hiring plan that produces the P&amp;L above. Engineering compounds
+    first; design sets the bar; GTM follows the product. M0 = 09 May 2026
+    (founding). The first two non-founder offers were accepted on 24 May:
+    <strong>Asha Pillai</strong> (founding engineer, data infra) and
+    <strong>Tomás Iglesias</strong> (founding designer).
+  </p>
+
+  <div class="table-wrap">
+  <table class="hc">
+    <thead>
+      <tr>
+        <th>Function</th>
+        <th>M0</th>
+        <th>M3</th>
+        <th>M6</th>
+        <th>M9</th>
+        <th>M12</th>
+        <th>M15</th>
+        <th>M18</th>
+        <th>Composition at M18</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Engineering</td>
+        <td>1</td><td>3</td><td>6</td><td>9</td><td>11</td><td>15</td><td>19</td>
+        <td><span class="hc-bar eng" style="width:190px"></span>19</td>
+      </tr>
+      <tr>
+        <td>Design</td>
+        <td>0</td><td>1</td><td>2</td><td>2</td><td>3</td><td>3</td><td>4</td>
+        <td><span class="hc-bar des" style="width:40px"></span>4</td>
+      </tr>
+      <tr>
+        <td>Product</td>
+        <td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td>3</td><td>3</td>
+        <td><span class="hc-bar prd" style="width:30px"></span>3</td>
+      </tr>
+      <tr>
+        <td>Go-to-Market</td>
+        <td>1</td><td>1</td><td>2</td><td>3</td><td>4</td><td>6</td><td>8</td>
+        <td><span class="hc-bar gtm" style="width:80px"></span>8</td>
+      </tr>
+      <tr>
+        <td>Customer</td>
+        <td>0</td><td>1</td><td>1</td><td>1</td><td>2</td><td>2</td><td>3</td>
+        <td><span class="hc-bar cus" style="width:30px"></span>3</td>
+      </tr>
+      <tr>
+        <td>Operations &amp; G&amp;A</td>
+        <td>0</td><td>0</td><td>1</td><td>1</td><td>0*</td><td>1</td><td>1</td>
+        <td><span class="hc-bar ops" style="width:10px"></span>1</td>
+      </tr>
+      <tr class="total">
+        <td>Total FTE</td>
+        <td>3</td><td>7</td><td>13</td><td>18</td><td>22</td><td>30</td><td>38</td>
+        <td>= 38 FTE @ M18</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:var(--ink)"></i>Engineering</span>
+    <span><i class="sw" style="background:var(--ochre)"></i>Design</span>
+    <span><i class="sw" style="background:var(--moss)"></i>Product</span>
+    <span><i class="sw" style="background:var(--plum)"></i>Go-to-Market</span>
+    <span><i class="sw" style="background:var(--teal)"></i>Customer</span>
+    <span><i class="sw" style="background:var(--ink-3)"></i>Operations &amp; G&amp;A</span>
+  </div>
+
+  <div class="named-hires">
+    <span class="pill">Hire 01</span> Asha Pillai · Founding Engineer, Data Infra · accepted 23 May · ex-Stripe Money Movement · starts 09 Jun 2026.
+    <br/><br/>
+    <span class="pill">Hire 02</span> Tomás Iglesias · Founding Designer · accepted 24 May · ex-Linear, ex-Stripe Atlas · starts 16 Jun 2026.
+    <br/><br/>
+    <span class="pill">Note ·</span> M12 Operations row shows zero because the Head of Finance &amp; Operations is fractional through month 11, transitioning to FTE in month 13. M12 count of 22 includes the fractional seat as 0.5 rounded down; cost model includes it fully.
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── RUNWAY SCENARIOS ── -->
+<section id="runway">
+  <div class="ornament">§ 04 — Runway scenarios</div>
+  <h2 class="section-h">Three paths to the Series A.</h2>
+  <p class="section-dek">
+    Cash on hand over the next 24 months under three scenarios. Each scenario
+    differs only in (i) the pace at which the connectors ship, (ii) the date
+    of the Series A close, and (iii) the post-money valuation at that close.
+    Burn slopes are otherwise identical. The Y-axis is cash; the Series A
+    injection appears as a vertical step.
+  </p>
+
+  <div class="chart-frame">
+    <svg viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Runway scenarios chart">
+      <!-- ─────────────────── grid background ─────────────────── -->
+      <defs>
+        <pattern id="paperGrid" width="60" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 60 0 L 0 0 0 40" fill="none" stroke="#d8cdb6" stroke-width=".5"/>
+        </pattern>
+      </defs>
+      <rect x="70" y="20" width="1100" height="380" fill="url(#paperGrid)" />
+
+      <!-- axes -->
+      <line x1="70" y1="20" x2="70" y2="400" stroke="#0e1626" stroke-width="1"/>
+      <line x1="70" y1="400" x2="1170" y2="400" stroke="#0e1626" stroke-width="1"/>
+
+      <!-- y-axis ticks (cash $M) -->
+      <g font-family="JetBrains Mono" font-size="10" fill="#4b5365">
+        <text x="64" y="24" text-anchor="end">$30M</text>
+        <line x1="68" y1="20" x2="72" y2="20" stroke="#0e1626"/>
+        <text x="64" y="89" text-anchor="end">$25M</text>
+        <line x1="68" y1="85" x2="72" y2="85" stroke="#0e1626"/>
+        <text x="64" y="151" text-anchor="end">$20M</text>
+        <line x1="68" y1="147" x2="72" y2="147" stroke="#0e1626"/>
+        <text x="64" y="214" text-anchor="end">$15M</text>
+        <line x1="68" y1="210" x2="72" y2="210" stroke="#0e1626"/>
+        <text x="64" y="277" text-anchor="end">$10M</text>
+        <line x1="68" y1="273" x2="72" y2="273" stroke="#0e1626"/>
+        <text x="64" y="340" text-anchor="end">$5M</text>
+        <line x1="68" y1="336" x2="72" y2="336" stroke="#0e1626"/>
+        <text x="64" y="403" text-anchor="end">$0</text>
+      </g>
+
+      <!-- x-axis ticks (quarters) -->
+      <g font-family="JetBrains Mono" font-size="10" fill="#4b5365" text-anchor="middle">
+        <!-- 11 quarters: Q2'26..Q4'28, spaced across 1100px = 110 each -->
+        <text x="70" y="418">Q2'26</text>
+        <text x="180" y="418">Q3'26</text>
+        <text x="290" y="418">Q4'26</text>
+        <text x="400" y="418">Q1'27</text>
+        <text x="510" y="418">Q2'27</text>
+        <text x="620" y="418">Q3'27</text>
+        <text x="730" y="418">Q4'27</text>
+        <text x="840" y="418">Q1'28</text>
+        <text x="950" y="418">Q2'28</text>
+        <text x="1060" y="418">Q3'28</text>
+        <text x="1170" y="418">Q4'28</text>
+      </g>
+
+      <!-- Series A injection markers (vertical dashed) -->
+      <!-- Plan: Q2 2027 (x=510) -->
+      <line x1="510" y1="20" x2="510" y2="400" stroke="#0e1626" stroke-dasharray="4 4" stroke-width=".7" opacity=".5"/>
+      <text x="514" y="32" font-family="JetBrains Mono" font-size="9.5" fill="#0e1626" letter-spacing="1.2">SERIES A · PLAN</text>
+
+      <!-- Stretch: Q1 2027 (x=400) -->
+      <line x1="400" y1="20" x2="400" y2="400" stroke="#b8651f" stroke-dasharray="4 4" stroke-width=".7" opacity=".55"/>
+      <text x="404" y="46" font-family="JetBrains Mono" font-size="9.5" fill="#b8651f" letter-spacing="1.2">SERIES A · STRETCH</text>
+
+      <!-- Patient: Q4 2027 (x=730) -->
+      <line x1="730" y1="20" x2="730" y2="400" stroke="#6b3a4a" stroke-dasharray="4 4" stroke-width=".7" opacity=".55"/>
+      <text x="734" y="60" font-family="JetBrains Mono" font-size="9.5" fill="#6b3a4a" letter-spacing="1.2">SERIES A · PATIENT</text>
+
+      <!-- Seed start marker dot -->
+      <circle cx="70" cy="301" r="5" fill="#0e1626" />
+      <text x="80" y="295" font-family="JetBrains Mono" font-size="10" fill="#0e1626">SEED · $7.82M · 24 MAY 2026</text>
+
+      <!-- ─────────────────── PLAN LINE (ink) ─────────────────── -->
+      <!-- Cash $K from P&L: 7820, 6540, 4860, 2840, 432, 22625, 19312, 15680, 12253, 8963, 5737, 2804
+           Y formula: y = 400 - (cash/30000)*380
+           y values:
+             7820 -> 400 - 99.05 = 301
+             6540 -> 400 - 82.84 = 317.2
+             4860 -> 400 - 61.56 = 338.4
+             2840 -> 400 - 35.97 = 364
+             432  -> 400 - 5.47  = 394.5
+             pre-Series A Q2'27 point ~ -780 -> clipped to 400
+             after injection 22625 -> 400 - 286.59 = 113.4
+             19312 -> 400 - 244.62 = 155.4
+             15680 -> 400 - 198.61 = 201.4
+             12253 -> 400 - 155.20 = 244.8
+             8963  -> 400 - 113.53 = 286.5
+             5737  -> 400 - 72.67  = 327.3
+             2804  -> 400 - 35.52  = 364.5
+       -->
+      <!-- Pre-A burn segment -->
+      <polyline fill="none" stroke="#0e1626" stroke-width="2.2"
+                points="70,301 180,317 290,338 400,364 510,394.5"/>
+      <!-- Vertical jump for Series A injection at Q2'27 -->
+      <line x1="510" y1="394.5" x2="510" y2="113.4" stroke="#0e1626" stroke-width="2.2"/>
+      <circle cx="510" cy="113.4" r="4" fill="#0e1626"/>
+      <text x="518" y="108" font-family="JetBrains Mono" font-size="10" fill="#0e1626">+$25M</text>
+      <!-- Post-A burn segment -->
+      <polyline fill="none" stroke="#0e1626" stroke-width="2.2"
+                points="510,113.4 620,155.4 730,201.4 840,244.8 950,286.5 1060,327.3 1170,364.5"/>
+      <text x="1175" y="368" font-family="JetBrains Mono" font-size="11" fill="#0e1626" font-weight="700">PLAN</text>
+
+      <!-- ─────────────────── STRETCH LINE (ochre) ─────────────────── -->
+      <!-- Stretch: $1M ARR by Q4'26, Series A pulled to Q1'27 at $135M pre
+           Slightly higher pre-A burn (faster GTM), Series A 25M lands Q1'27
+           Cash $K (approx): 7820, 6480, 4720, 2580 (then A lands) -> +25000 = 27580; then steady burn ~ 1.0M/mo
+           Approx series: 7820, 6480, 4720, 27580, 24400, 21100, 17700, 14250, 10750, 7250, 3700
+           Y values:
+             7820  -> 301
+             6480  -> 318
+             4720  -> 340.2
+             2580  -> 367.3 (pre-injection)
+             27580 -> 400 - 349.35 = 50.7
+             24400 -> 400 - 309.07 = 90.9
+             21100 -> 400 - 267.27 = 132.7
+             17700 -> 400 - 224.20 = 175.8
+             14250 -> 400 - 180.50 = 219.5
+             10750 -> 400 - 136.17 = 263.8
+             7250  -> 400 - 91.83  = 308.2
+             3700  -> 400 - 46.87  = 353.1
+       -->
+      <polyline fill="none" stroke="#b8651f" stroke-width="2.2"
+                points="70,301 180,318 290,340.2 400,367.3"/>
+      <line x1="400" y1="367.3" x2="400" y2="50.7" stroke="#b8651f" stroke-width="2.2"/>
+      <circle cx="400" cy="50.7" r="4" fill="#b8651f"/>
+      <text x="408" y="46" font-family="JetBrains Mono" font-size="10" fill="#b8651f">+$25M · $135pre</text>
+      <polyline fill="none" stroke="#b8651f" stroke-width="2.2"
+                points="400,50.7 510,90.9 620,132.7 730,175.8 840,219.5 950,263.8 1060,308.2 1170,353.1"/>
+      <text x="1175" y="345" font-family="JetBrains Mono" font-size="11" fill="#b8651f" font-weight="700">STRETCH</text>
+
+      <!-- ─────────────────── PATIENT LINE (plum) ─────────────────── -->
+      <!-- Patient: connectors slip 3mo, Series A in Q4'27 at $90M pre, $22M raised
+           Lower burn earlier (slower hires), longer pre-A runway needed
+           Pre-A burn slightly lower: 380, 510, 620, 740, 870, 990, 1100 K/mo avg per Q
+           Cash $K: 7820, 6680, 5150, 3290, 1070 (Q2'27 nearly zero — bridge?), but model assumes burn lowered
+           Plausible series: 7820, 6680, 5150, 3290, 1280, -460 (gap) ... model the bridge.
+           Simplified: company tightens burn after Q1'27. Patient cash:
+             7820, 6680, 5150, 3290, 1480, 220 (pre-A Q4'27)
+             then +$22M lands at end of Q4'27 -> 22220
+             then 2028 burn lower ~ 950K/mo: 19370, 16520, 13670, 10820
+           Y values:
+             7820 -> 301
+             6680 -> 314.6
+             5150 -> 334.7
+             3290 -> 358
+             1480 -> 381.3
+             220  -> 397.2
+             22220 -> 400 - 281.46 = 118.5
+             19370 -> 400 - 245.40 = 154.6
+             16520 -> 400 - 209.25 = 190.8
+             13670 -> 400 - 173.15 = 226.8
+             10820 -> 400 - 137.05 = 263
+       -->
+      <polyline fill="none" stroke="#6b3a4a" stroke-width="2.2"
+                points="70,301 180,314.6 290,334.7 400,358 510,381.3 620,397.2 730,397.2"/>
+      <line x1="730" y1="397.2" x2="730" y2="118.5" stroke="#6b3a4a" stroke-width="2.2"/>
+      <circle cx="730" cy="118.5" r="4" fill="#6b3a4a"/>
+      <text x="738" y="114" font-family="JetBrains Mono" font-size="10" fill="#6b3a4a">+$22M · $90pre</text>
+      <polyline fill="none" stroke="#6b3a4a" stroke-width="2.2"
+                points="730,118.5 840,154.6 950,190.8 1060,226.8 1170,263"/>
+      <text x="1175" y="266" font-family="JetBrains Mono" font-size="11" fill="#6b3a4a" font-weight="700">PATIENT</text>
+
+      <!-- Zero-cash danger zone band -->
+      <rect x="70" y="385" width="1100" height="15" fill="#a13418" opacity=".06"/>
+      <text x="74" y="396" font-family="JetBrains Mono" font-size="9" fill="#a13418" letter-spacing="2">DANGER · CASH ≤ $1M</text>
+
+      <!-- Y-axis label -->
+      <text x="20" y="220" font-family="JetBrains Mono" font-size="10" fill="#4b5365" transform="rotate(-90 20 220)" letter-spacing="2">CASH ON HAND · USD</text>
+    </svg>
+
+    <div class="chart-legend">
+      <span><span class="ln plan"></span>Plan · Series A Q2 2027 · $25M on $120M pre · 17.2% dilution</span>
+      <span><span class="ln stretch"></span>Stretch · ARR $1M by Q4 2026 · A pulled to Q1 2027 · $135M pre · 15.6% dilution</span>
+      <span><span class="ln patient"></span>Patient · connectors slip 3mo · A pushed to Q4 2027 · $90M pre · $22M raised · 19.6% dilution</span>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── ARR BUILD ── -->
+<section id="arr">
+  <div class="ornament">§ 05 — ARR build &amp; unit economics</div>
+  <h2 class="section-h">From design partner to commercial customer.</h2>
+  <p class="section-dek">
+    Five design partners enter pilot in Act I. Three convert to paid pilots
+    at $50K in Act II, with two of those rolling into commercial agreements
+    by end of Q1 2027. Commercial bookings then ramp through Act III on a
+    blended ACV of $290K, with mid-market customers anchored at $180K and
+    upper-band customers (≥3,000 EE) anchored at $480K.
+  </p>
+
+  <h3 class="sub-h">Pilot &amp; commercial conversion ledger</h3>
+  <div class="table-wrap">
+  <table class="data">
+    <thead>
+      <tr>
+        <th>Stage</th>
+        <th>Q3'26</th>
+        <th>Q4'26</th>
+        <th>Q1'27</th>
+        <th>Q2'27</th>
+        <th>Q3'27</th>
+        <th>Q4'27</th>
+        <th>Q1'28</th>
+        <th>Q2'28</th>
+        <th>Q3'28</th>
+        <th>Q4'28</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Design partners (free)</td>
+        <td>2</td><td>4</td><td>5</td><td>5</td><td>3</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+      </tr>
+      <tr>
+        <td>Paid pilots ($50K)</td>
+        <td>0</td><td>1</td><td>3</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td><td>0</td><td>0</td>
+      </tr>
+      <tr>
+        <td>Commercial customers</td>
+        <td>0</td><td>0</td><td>2</td><td>4</td><td>7</td><td>10</td><td>14</td><td>20</td><td>26</td><td>34</td>
+      </tr>
+      <tr class="muted">
+        <td>— New logos in quarter</td>
+        <td>—</td><td>—</td><td>2</td><td>2</td><td>3</td><td>3</td><td>4</td><td>6</td><td>7</td><td>9</td>
+      </tr>
+      <tr class="muted">
+        <td>— Blended ACV ($K)</td>
+        <td>—</td><td>—</td><td>200</td><td>250</td><td>275</td><td>290</td><td>310</td><td>325</td><td>340</td><td>355</td>
+      </tr>
+      <tr class="strong">
+        <td>ARR run-rate (EOQ, $K)</td>
+        <td>0</td><td>150</td><td>400</td><td>1,000</td><td>2,200</td><td>3,800</td><td>5,600</td><td>7,800</td><td>10,200</td><td>12,400</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="two-col" style="margin-top: 2rem;">
+
+    <div>
+      <h3 class="sub-h">Target ACV mix · steady state</h3>
+      <div class="acv-bar-wrap">
+        <div class="acv-labels">
+          <span>Mid-market · 1,000–3,000 EE · $180K avg ACV</span>
+          <span>Upper-band · 3,000–8,000 EE · $480K avg ACV</span>
+        </div>
+        <div class="acv-stack">
+          <div class="acv-seg mid" style="flex: 62">62%</div>
+          <div class="acv-seg up" style="flex: 38">38%</div>
+        </div>
+        <div class="acv-labels">
+          <span>21 customers · $3.78M of ARR</span>
+          <span>13 customers · $6.24M of ARR (~52% of ARR)</span>
+        </div>
+        <p style="font-family: var(--serif); font-size: 14px; color: var(--ink-2); margin-top: 1rem; line-height: 1.55;">
+          The upper-band cohort drives half of dollars but only 38% of logos.
+          We will not chase 8,000-EE logos in Y1; Priya's discipline is to
+          land mid-market first to harden the connectors, then move
+          upmarket in Y2 with a proof-of-deployment narrative.
+        </p>
+      </div>
+    </div>
+
+    <div id="ue">
+      <h3 class="sub-h">Unit economics · steady state (Y2 exit)</h3>
+      <ul class="ue-list">
+        <li>
+          <span class="lbl">Gross margin</span>
+          <span class="val">78<span class="u">%</span></span>
+        </li>
+        <li>
+          <span class="lbl">CAC · blended</span>
+          <span class="val">$85<span class="u">K</span></span>
+        </li>
+        <li>
+          <span class="lbl">CAC payback</span>
+          <span class="val">18<span class="u">mo</span></span>
+        </li>
+        <li>
+          <span class="lbl">Net revenue retention</span>
+          <span class="val">130<span class="u">%</span></span>
+        </li>
+        <li>
+          <span class="lbl">LTV / CAC</span>
+          <span class="val">5.4<span class="u">x</span></span>
+        </li>
+      </ul>
+      <div class="ue-note">
+        The hybrid pricing model (decision 007) drives the NRR. The platform
+        floor anchors the contract; the usage tier on
+        <em>decisions-supported</em> is where expansion lives — a customer
+        whose CHRO asks twice as many questions of the graph in year two
+        contributes twice the decision count, and our take rate is constant.
+        We model 1.6× decision volume growth in the second year of any
+        contract; combined with platform escalator language, this lands NRR
+        in the 125–135% band at Y2 exit.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── USE OF FUNDS ── -->
+<section id="use">
+  <div class="ornament">§ 06 — Use of seed funds</div>
+  <h2 class="section-h">Allocating $8.0M across twenty-four months.</h2>
+  <p class="section-dek">
+    The breakdown below is a budget, not a forecast. Engineering compensation
+    dominates because the moat is the entity-resolution graph and the
+    eval-graded copilot — both compounding engineering bets. The
+    opportunistic reserve covers either a foundation-model strategy shift or
+    a hire we did not know we needed.
+  </p>
+
+  <div class="donut-grid">
+    <div class="donut">
+      <svg viewBox="0 0 220 220" aria-label="Seed allocation donut">
+        <!-- background ring -->
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#e5dcc4" stroke-width="30"/>
+        <!-- circumference = 2π * 85 ≈ 534.07
+             Engineering 51%: 0..272.4
+             GTM 14%: 272.4..347.2  (74.77)
+             Design+Product 9%: 347.2..395.3 (48.07)
+             Infra 8%: 395.3..438 (42.73)
+             Compliance 5%: 438..464.7 (26.7)
+             Office+Ops 5%: 464.7..491.5 (26.7)
+             Reserve 8%: 491.5..534.2 (42.73)
+        -->
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#0e1626" stroke-width="30"
+                stroke-dasharray="272.4 261.7" stroke-dashoffset="0"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#b8651f" stroke-width="30"
+                stroke-dasharray="74.77 459.3" stroke-dashoffset="-272.4"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#4a5d3a" stroke-width="30"
+                stroke-dasharray="48.07 486.0" stroke-dashoffset="-347.2"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#2f5c5e" stroke-width="30"
+                stroke-dasharray="42.73 491.3" stroke-dashoffset="-395.3"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#6b3a4a" stroke-width="30"
+                stroke-dasharray="26.70 507.4" stroke-dashoffset="-438.0"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#4b5365" stroke-width="30"
+                stroke-dasharray="26.70 507.4" stroke-dashoffset="-464.7"
+                transform="rotate(-90 110 110)" />
+        <circle cx="110" cy="110" r="85" fill="none" stroke="#e6c79b" stroke-width="30"
+                stroke-dasharray="42.73 491.3" stroke-dashoffset="-491.5"
+                transform="rotate(-90 110 110)" />
+
+        <text x="110" y="106" text-anchor="middle" class="donut-num">$8.00M</text>
+        <text x="110" y="125" text-anchor="middle" class="donut-sub">SEED · 24 MONTHS</text>
+      </svg>
+    </div>
+
+    <table class="use-table">
+      <tbody>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#0e1626"></i>Engineering compensation</td>
+          <td class="r">51.0%</td>
+          <td class="r">$4.08M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#b8651f"></i>GTM compensation</td>
+          <td class="r">14.0%</td>
+          <td class="r">$1.12M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#4a5d3a"></i>Design + Product</td>
+          <td class="r">9.0%</td>
+          <td class="r">$0.72M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#2f5c5e"></i>Infrastructure &amp; inference</td>
+          <td class="r">8.0%</td>
+          <td class="r">$0.64M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#6b3a4a"></i>Compliance &amp; security</td>
+          <td class="r">5.0%</td>
+          <td class="r">$0.40M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#4b5365"></i>Office + operations</td>
+          <td class="r">5.0%</td>
+          <td class="r">$0.40M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><i class="sw" style="background:#e6c79b"></i>Reserve · opportunistic</td>
+          <td class="r">8.0%</td>
+          <td class="r">$0.64M</td>
+        </tr>
+        <tr>
+          <td class="lbl"><strong>Total</strong></td>
+          <td class="r"><strong>100.0%</strong></td>
+          <td class="r"><strong>$8.00M</strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── SCENARIO MATRIX ── -->
+<section id="scen">
+  <div class="ornament">§ 07 — Scenarios &amp; sensitivity</div>
+  <h2 class="section-h">Connector velocity × sales cycle, Q4 2027.</h2>
+  <p class="section-dek">
+    The two variables we believe most determine Series A outcomes. Each cell
+    shows the ARR run-rate at Q4 2027 and the implied dilution at the Series
+    A close. The Compact requires that we revisit this sensitivity grid
+    every quarter and brief the Chairman on any cell movement.
+  </p>
+
+  <div class="matrix">
+    <div class="hdr"></div>
+    <div class="hdr">Sales cycle · on plan (8–10mo)</div>
+    <div class="hdr">Sales cycle · long (12–14mo)</div>
+
+    <div class="row-hdr">Connector<br/>velocity<br/>· on plan</div>
+    <div class="cell bull">
+      <span class="arr">$3.8<span class="u">M ARR</span></span>
+      <span class="note">The plan case. Ten commercial customers, blended ACV $290K. Series A unwon at $120M pre.</span>
+      <span class="dil">→ 17.2% dilution</span>
+    </div>
+    <div class="cell">
+      <span class="arr">$2.4<span class="u">M ARR</span></span>
+      <span class="note">Connectors land but enterprise procurement extends every cycle. Six commercial, four in late-stage.</span>
+      <span class="dil">→ 19.4% dilution at $108M pre</span>
+    </div>
+
+    <div class="row-hdr">Connector<br/>velocity<br/>· slow (3mo slip)</div>
+    <div class="cell">
+      <span class="arr">$2.1<span class="u">M ARR</span></span>
+      <span class="note">Product later but buyer ready. Five commercial, two on accelerated stretch contracts.</span>
+      <span class="dil">→ 20.1% dilution at $95M pre</span>
+    </div>
+    <div class="cell bear">
+      <span class="arr">$1.0<span class="u">M ARR</span></span>
+      <span class="note">Bear case. Product late, buyer slow. Three commercial. Series A pushed to Q1 2028 with bridge from existing investors.</span>
+      <span class="dil">→ 24.6% dilution at $78M pre + $4M bridge</span>
+    </div>
+  </div>
+
+  <p class="section-dek" style="margin-top: 1.4rem; font-size: 13.5px;">
+    The bull and bear cells span a $20M+ valuation delta and a ~7-point
+    dilution swing. We are most exposed in the lower-right; the leading
+    indicator there is <strong>connector cycle time per engineer</strong>
+    (telemetered from M4), and our agreed kill criterion is two consecutive
+    quarters above 9 weeks per connector. Below that line, we will pull the
+    Series A forward at any reasonable price.
+  </p>
+</section>
+
+<!-- ────────────────────────────────────────────── NOTES ── -->
+<section id="notes">
+  <div class="ornament">§ 08 — Notes &amp; methodology</div>
+  <h2 class="section-h">Assumptions, on the record.</h2>
+  <p class="section-dek">
+    A short list of the choices baked into the numbers above. Each is a
+    decision the three of us have signed off on; each is one we would
+    cheerfully revisit if the data demands it. The live model holds the
+    workings; the figures above round to it.
+  </p>
+
+  <dl class="notes-grid">
+    <dt>Provenance</dt>
+    <dd>All figures pre-product; bottoms-up plan signed off by all three
+      founders on 22 May 2026, reviewed by Sarah Cannon (Index) on 23 May.
+      The live Google Sheets model is the canonical source; figures here
+      round to it within ±1%.</dd>
+
+    <dt>Inference cost</dt>
+    <dd>Modelled at $0.07 per <em>decision-supported</em> — the unit our
+      pricing tier is denominated in. Sensitive to foundation-model pricing.
+      A 25% increase in model unit cost compresses gross margin by ~3
+      points at steady state; the live model has a sensitivity tab.</dd>
+
+    <dt>Compensation</dt>
+    <dd>Salary and equity bands pulled from 41 closed offers in H1 2026 at
+      mid-tier enterprise SaaS companies (Series A–C, US-headquartered, Bay
+      Area + NYC weighted). Refreshed quarterly through Pave + Carta.
+      Founders are at 60% of band cash; pool is at 100%.</dd>
+
+    <dt>Conversion</dt>
+    <dd>Design partner → paid pilot conversion assumed 60% (3 of 5). Paid
+      pilot → commercial conversion assumed 67% in Y1, 80% in Y2 as eval
+      benchmarks mature. Win rates against incumbent are not modelled — we
+      assume we are not in deals where Workday is incumbent.</dd>
+
+    <dt>Discount rate · NPV</dt>
+    <dd>12% for any NPV-style framing — consistent with Index's internal
+      hurdle for seed-stage software portfolio companies. We do not use NPV
+      operationally; we use it only to test asymmetric upside in the
+      scenario grid (§ 07).</dd>
+
+    <dt>Cash discipline</dt>
+    <dd>Burn is measured monthly against a forward-twelve forecast. Any
+      single month above 110% of forecast triggers a founder review;
+      anything above 125% triggers a hire freeze in the affected function
+      until the next monthly close. SOC2 / ISO / EU AI Act spend is ring-fenced.</dd>
+
+    <dt>Currency &amp; tax</dt>
+    <dd>All figures USD. Federal &amp; CA state income tax modelled at the
+      effective C-corp rates for a loss-making company (i.e., NOLs
+      accumulate, no current tax). Sales tax is collected and remitted on
+      US ARR from Q2'27 onward via Anrok.</dd>
+
+    <dt>Reporting cadence</dt>
+    <dd>This document is revised on the 4th Sunday of each month. A live
+      monthly close is delivered to the Board within ten business days of
+      month-end. The Chairman receives a one-page <em>delta</em> against
+      this v1 model on the same Sunday as the briefing.</dd>
+
+    <dt>Rounding</dt>
+    <dd>Numbers above are rounded for legibility: ARR in $K, cash in $M to
+      two decimals, percentages to a single decimal. The live model is
+      the canonical source and will, on close inspection, reveal cents.</dd>
+
+    <dt>Cross-reference</dt>
+    <dd>No number in this artifact contradicts the Chairman's Briefing
+      No. 001 (founding) or No. 002 (24 May). Where the briefings round
+      ($8.0M seed, 26-month runway at founding), this model presents the
+      operating refinement ($7.82M post-fees, 24-month runway at current
+      planned ramp).</dd>
+  </dl>
+</section>
+
+<!-- ────────────────────────────────────────────── COLOPHON ── -->
+<footer class="colophon">
+  <div class="colophon-rule"></div>
+  <div class="colophon-row">
+    <div>
+      <div class="colo-mark">Stratum<span class="slash">/</span><em>fin.</em></div>
+      <div class="colo-meta" style="margin-top:.6rem;">
+        Stratum, Inc. · 2475 Hanover Street, Palo Alto, CA 94304<br/>
+        stratum.ai · finance@stratum.ai · @stratum_hcm
+      </div>
+    </div>
+    <div class="colo-issue">
+      Operating Model · Vol. I · No. 001 · Confidential<br/>
+      Compiled by M. Chen on Sunday, 24 May 2026.<br/>
+      Set in Fraunces, Newsreader, and JetBrains Mono.<br/>
+      Next revision: Sunday, 23 June 2026.
+    </div>
+  </div>
+  <div class="colo-tag">— END OF MODEL · v1 —</div>
+</footer>
+
+</body>
+</html>
