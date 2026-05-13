@@ -1155,19 +1155,24 @@ section {
 
 @media (max-width: 960px) {
   .quicknav { display: flex; }
-  /* Don't stretch the items beyond reading width on tablet portrait */
+}
+
+@media (max-width: 720px) {
+  /* Slim the ticker — shrink the badge and hide the trailing source link on
+     mobile; the quicknav below already offers an Ops board button, so the
+     ticker doesn't need to carry that affordance. */
+  .ticker { grid-template-columns: max-content 1fr; }
+  .ticker-label { font-size: 9.5px; padding: .5rem .55rem; letter-spacing: .14em; }
+  .ticker-label::after { margin-left: .4rem; width: 5px; height: 5px; }
+  .ticker-source { display: none; }
+  .t-item { font-size: 11.5px; padding-right: 1.2rem; }
 }
 
 @media (max-width: 600px) {
-  .quicknav {
-    flex-wrap: wrap;
-  }
+  .quicknav { flex-wrap: wrap; }
   .quicknav a { flex: 1 1 calc(50% - .25rem); font-size: 10.5px; padding: .7rem .4rem; }
   .quicknav a.qn-primary { flex: 1 1 100%; padding: .85rem .5rem; font-size: 12px; }
-  .ticker { font-size: 11px; }
-  .ticker-label { font-size: 9.5px; padding: .55rem .7rem; }
-  .ticker-source { padding: .55rem .7rem; font-size: 9.5px; }
-  .t-item { font-size: 11.5px; padding-right: 1.2rem; }
+  .ticker-label { font-size: 9px; padding: .5rem .5rem; letter-spacing: .1em; }
 }
 
 /* ────────────────────────────────────────────── ARTIFACTS ── */

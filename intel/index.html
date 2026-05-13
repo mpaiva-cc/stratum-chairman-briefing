@@ -847,8 +847,37 @@ section {
   body { font-size: 10pt; }
 }
 </style>
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+<style id="mobile-readability-patch">
+@media (max-width: 960px){
+  /* Prevent whole-page horizontal scroll without breaking sticky */
+  html, body { overflow-x: clip; }
+  /* Reasonable tap targets for inline arrow links */
+  a[href]:not(.row):not(.artifact):not(.mob-bar a) { min-height: 28px; }
+}
+@media (max-width: 600px){
+  /* Engineering blog: tighter mono data blocks */
+  .dataframe { font-size: 11px; padding: .85rem 1rem; }
+  /* Careers: enlarge apply-row tap targets */
+  .role-row, .role-apply { min-height: 44px; }
+  /* Intel/financials: wide tables should always scroll inside their wrapper */
+  .matrix-wrap, .table-wrap, .ledger, .funds-table-wrap, .scenarios-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  /* Financials tab strip: enlarge tap targets */
+  .topnav a, .top-nav a, .doc-nav a { min-height: 36px; display: inline-flex; align-items: center; padding: .35rem .55rem; }
+}
+</style>
 </head>
 <body>
+<div class="mob-bar"><a href="../library/" aria-label="The Library">← Library</a><span class="mob-bar-mark">Stratum / Intelligence</span><a href="../" aria-label="Chairman&#39;s Briefing">Briefing →</a></div>
+
 
 <!-- ───────────────────────────────────────────────── MASTHEAD ── §01 -->
 <header class="masthead">

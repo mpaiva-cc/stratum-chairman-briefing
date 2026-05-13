@@ -1076,8 +1076,29 @@ body { height: 100%; }
 }
 
 </style>
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(244,236,218,.94);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid rgba(14,22,38,.12);padding:.55rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Push first slide content down so it isn't under the fixed bar */
+  body { padding-top: 0; }
+  .slide:first-of-type { padding-top: 5rem; }
+  /* Ensure slides can scroll naturally on mobile */
+  html, body { overflow-x: clip; scroll-snap-type: none !important; }
+  .slide { height: auto !important; min-height: auto !important; padding: 3rem 1.4rem !important; border-bottom: 4px double rgba(14,22,38,.18); }
+  .slide.ink { border-bottom-color: rgba(244,236,218,.18); }
+  /* Existing fixed bottom slide counter probably collides; reduce visual weight on mobile */
+  .progress, .deck-progress, .slide-counter, .counter { font-size: 9.5px !important; }
+}
+
+</style>
 </head>
 <body>
+<div class="mob-bar"><a href="../library/" aria-label="The Library">← Library</a><span class="mob-bar-mark">Stratum / Deck</span><a href="../" aria-label="Chairman&#39;s Briefing">Briefing →</a></div>
+
 
 <!-- ─── Fixed chrome ─── -->
 <div class="progress"><div class="progress-fill" id="progFill"></div></div>
