@@ -1,0 +1,2060 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Ninety seconds with the CHRO's copilot. The guided tour.</title>
+<meta name="description" content="A 90-second auto-playing walkthrough of Stratum — the AI-native human capital platform for the enterprise. Watch the Console answer three CHRO questions end-to-end. No login. No demo request." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum · /tour/ — scroll-driven product tour
+   90 seconds. Eight scenes. Cream paper, deep ink, ochre, moss.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-card:   #fbf6e7;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-tight:    min(900px, 90vw);
+  --radius:       4px;
+  --radius-lg:    8px;
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+
+  --shadow-sm:    0 1px 2px rgba(14,22,38,.06), 0 2px 6px rgba(14,22,38,.04);
+  --shadow-md:    0 6px 24px rgba(14,22,38,.10), 0 1px 3px rgba(14,22,38,.05);
+  --shadow-lg:    0 24px 60px rgba(14,22,38,.18), 0 4px 12px rgba(14,22,38,.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 86% 82%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+::selection { background: var(--ochre); color: var(--paper); }
+
+/* ─────────────────────────────────────── MOBILE BAR ── */
+
+.mobile-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.mobile-bar-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem 0;
+}
+.mobile-bar a {
+  color: var(--paper);
+  border-bottom: 0;
+  opacity: .8;
+  transition: opacity .2s, color .2s;
+}
+.mobile-bar a:hover { opacity: 1; color: var(--ochre); }
+.mobile-bar .mb-center {
+  color: var(--ochre);
+  letter-spacing: .18em;
+}
+.mobile-bar .mb-center .sl { color: var(--paper); opacity: .6; }
+
+/* ─────────────────────────────────────── TOP NAV ── */
+
+.nav {
+  position: sticky;
+  top: 30px;
+  z-index: 55;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .95rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.45rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current {
+  color: var(--ink);
+}
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 820px) {
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────── SCENES ── */
+
+main { display: block; }
+
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem var(--gutter);
+  position: relative;
+  scroll-snap-align: start;
+}
+
+@supports (scroll-snap-type: y proximity) {
+  main { scroll-snap-type: y proximity; }
+}
+
+.scene-inner {
+  width: var(--col);
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1);
+}
+.scene.is-visible .scene-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-inner { opacity: 1; transform: none; transition: none; }
+}
+
+.scene-counter {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  margin-bottom: 1.4rem;
+}
+.scene-counter .bar {
+  height: 1px;
+  width: 36px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────── INTRO ── */
+
+.scene-intro h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.8rem, 9vw, 7.4rem);
+  line-height: .94;
+  letter-spacing: -.038em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+}
+.scene-intro h1 em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+}
+
+.scene-intro .dek {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 660px;
+  margin: 0 auto 2.6rem;
+  line-height: 1.5;
+}
+
+.cta-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.4rem;
+}
+
+.btn-primary {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 1rem 1.6rem;
+  background: var(--ochre);
+  color: var(--ink);
+  border: 1px solid var(--ochre);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  border-bottom: 1px solid var(--ochre);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.btn-primary:hover {
+  background: var(--ink);
+  color: var(--ochre);
+  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 1rem 1.6rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  border-bottom: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.progress-meter {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+}
+.progress-meter .bar {
+  height: 1px;
+  width: 32px;
+  background: var(--paper-rule-2);
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────── SCENE TYPOGRAPHY ── */
+
+.scene-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+
+.scene-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.scene-title em {
+  font-style: italic;
+  color: var(--ochre);
+}
+
+.scene-pull {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.3vw, 1.85rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 760px;
+  margin: 0 auto 1.4rem;
+  line-height: 1.45;
+}
+
+.scene-caption {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1rem;
+}
+
+.scene-footline {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+}
+.scene-footline .bar {
+  height: 1px;
+  width: 48px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.scene-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: var(--ink-2);
+  max-width: 620px;
+  margin: 2rem auto 0;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── CONSOLE FRAME ── */
+
+.console-frame {
+  width: 100%;
+  max-width: 1040px;
+  margin: 0 auto;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  text-align: left;
+}
+
+.frame-chrome {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .55rem .9rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.frame-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--paper-rule-2);
+  display: inline-block;
+}
+.frame-dot.r { background: #c87a6c; }
+.frame-dot.y { background: #d9b66a; }
+.frame-dot.g { background: var(--moss); }
+.frame-url {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+}
+
+.frame-topbar {
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .7rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.frame-brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.frame-brand .sl { color: var(--ochre); }
+.frame-meta {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+}
+.frame-user {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--ink-2);
+}
+.frame-user .av {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--ochre);
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .04em;
+}
+
+.frame-tabs {
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 0 1.1rem;
+  display: flex;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.frame-tab {
+  padding: .8rem 0;
+  color: var(--ink-mute);
+  border-bottom: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.frame-tab .sec {
+  color: var(--ochre);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+}
+.frame-tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ochre);
+}
+
+.frame-body {
+  padding: 2rem 1.6rem 1.6rem;
+  background: var(--paper-card);
+}
+
+.ask-hero-mock {
+  text-align: center;
+  padding: 1.4rem 0 1.6rem;
+}
+.ask-eyebrow-mock {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.ask-h1-mock {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.ask-h1-mock em { font-style: italic; color: var(--ochre); }
+
+.ask-input-mock {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  background: var(--paper);
+  max-width: 720px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.ask-input-field {
+  flex: 1;
+  padding: .85rem 1rem;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 22px;
+  text-align: left;
+}
+.ask-input-field .typed {
+  color: var(--ink);
+  font-style: italic;
+}
+.ask-input-field .cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  background: var(--ochre);
+  margin-left: 1px;
+  vertical-align: middle;
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.ask-submit-mock {
+  background: var(--ink);
+  color: var(--paper);
+  border: 0;
+  padding: 0 1.3rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.ask-submit-mock .arr { color: var(--ochre); }
+
+.ask-chips-mock {
+  margin: 1.4rem auto 0;
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 760px;
+}
+.chip-mock {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: 999px;
+  padding: .4rem .8rem;
+}
+
+/* Thinking state */
+.thinking-card {
+  margin: 1.6rem auto 0;
+  max-width: 760px;
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.5rem;
+}
+.thinking-q {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  line-height: 1.4;
+}
+.thinking-q .lbl {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: inline-block;
+  margin-right: .55rem;
+  vertical-align: 2px;
+}
+.thinking-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  margin-bottom: .55rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.thinking-status .dot-spin {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--ochre);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: .35; transform: scale(.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.thinking-bar {
+  height: 4px;
+  background: var(--paper-deep);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+.thinking-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 35%;
+  background: linear-gradient(90deg, transparent, var(--ochre), transparent);
+  animation: think-slide 1.8s ease-in-out infinite;
+}
+@keyframes think-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(320%); }
+}
+.thinking-trace {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+  margin-top: .8rem;
+  line-height: 1.6;
+}
+.thinking-trace .t {
+  display: block;
+  padding-left: 1rem;
+  position: relative;
+}
+.thinking-trace .t::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+}
+
+/* ─────────────────────────────────── ANSWER CARD MOCK ── */
+
+.answer-card-mock {
+  margin: 1.4rem auto 0;
+  max-width: 920px;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.ac-q {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.ac-q-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.ac-q-text {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 36;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--paper);
+  flex: 1;
+  min-width: 0;
+}
+.ac-section {
+  padding: 1.3rem 1.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.ac-section:last-of-type { border-bottom: none; }
+.ac-section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  margin-bottom: .7rem;
+}
+.ac-section-label .sigil {
+  display: inline-flex;
+  width: 16px; height: 16px;
+  background: var(--ink);
+  color: var(--ochre);
+  font-size: 8.5px;
+  font-weight: 700;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+.cohort-mock {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-2);
+  background: var(--paper-deep);
+  padding: .6rem .85rem;
+  border-radius: var(--radius);
+  border-left: 3px solid var(--ochre);
+  line-height: 1.5;
+}
+.cohort-mock .k { color: var(--plum); }
+.cohort-mock .v { color: var(--moss-deep); }
+
+.ac-headline {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60;
+  font-size: clamp(1.2rem, 2.3vw, 1.8rem);
+  line-height: 1.2;
+  color: var(--ink);
+  font-weight: 400;
+  margin: 0;
+}
+.ac-headline .big {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 120, "SOFT" 0;
+  color: var(--ochre);
+  font-weight: 600;
+  font-size: 1.35em;
+  letter-spacing: -.02em;
+}
+.ac-headline em { font-style: italic; color: var(--ink-2); }
+
+.ac-inspect {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 1.4rem;
+  align-items: start;
+}
+@media (max-width: 720px) {
+  .ac-inspect { grid-template-columns: 1fr; }
+}
+.ac-chart {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .9rem;
+}
+.ac-chart-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .7rem;
+}
+.ac-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.ac-table {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  width: 100%;
+  border-collapse: collapse;
+}
+.ac-table th, .ac-table td {
+  text-align: left;
+  padding: .4rem .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.ac-table th {
+  font-weight: 700;
+  color: var(--ink-mute);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.ac-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+.ac-table tr:last-child td { border-bottom: none; }
+
+.cite-grid-mock {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: .65rem;
+}
+.cite-chip-mock {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .55rem .7rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.cite-chip-mock .lbl {
+  color: var(--ochre);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 9px;
+  display: block;
+  margin-bottom: .2rem;
+  font-weight: 700;
+}
+.cite-chip-mock .v { color: var(--ink); }
+
+/* ─────────────────────────────────── SCENE 5 · BIG CITATION ── */
+
+.cite-blown {
+  max-width: 720px;
+  margin: 1.4rem auto 0;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.2rem;
+  text-align: left;
+  box-shadow: var(--shadow-md);
+}
+.cite-blown .cb-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+  font-weight: 700;
+}
+.cite-blown .cb-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.cite-blown .cb-row:last-child { border-bottom: none; }
+.cite-blown .cb-k {
+  color: var(--ochre);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding-top: .15rem;
+}
+.cite-blown .cb-v { color: var(--ink); }
+
+@media (max-width: 620px) {
+  .cite-blown .cb-row { grid-template-columns: 1fr; gap: .2rem; }
+}
+
+/* ─────────────────────────────────── SCENE 6 · DIAGRAM ── */
+
+.arch-diagram {
+  max-width: 980px;
+  margin: 1rem auto 0;
+}
+.arch-diagram svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ─────────────────────────────────── SCENE 7 · QUESTION PILE ── */
+
+.q-pile {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 480px;
+  margin: 1rem auto 0;
+}
+.q-card {
+  position: absolute;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-variation-settings: "opsz" 36;
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+  max-width: 360px;
+  text-align: left;
+  line-height: 1.35;
+  transition: transform .25s, box-shadow .25s;
+}
+.q-card::before {
+  content: "→";
+  color: var(--ochre);
+  font-style: normal;
+  font-family: var(--mono);
+  margin-right: .55rem;
+}
+.q-card:hover {
+  transform: translate(-2px, -2px) rotate(0deg) !important;
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+.q-card.q1 { top: 0%;   left: 2%;   transform: rotate(-3deg); }
+.q-card.q2 { top: 8%;   right: 4%;  transform: rotate(2.5deg); }
+.q-card.q3 { top: 36%;  left: 18%;  transform: rotate(-1deg); }
+.q-card.q4 { top: 42%;  right: 14%; transform: rotate(2deg); }
+.q-card.q5 { top: 70%;  left: 8%;   transform: rotate(1.5deg); }
+.q-card.q6 { top: 76%;  right: 2%;  transform: rotate(-2deg); }
+
+@media (max-width: 760px) {
+  .q-pile { min-height: auto; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .q-card {
+    position: static;
+    transform: none !important;
+    max-width: 90%;
+  }
+}
+
+/* ─────────────────────────────────── SCENE 8 · CLOSE ── */
+
+.scene-close h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.2rem, 10vw, 8rem);
+  line-height: .94;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.scene-close h2 em { font-style: italic; color: var(--ochre); }
+.scene-close .dek {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 620px;
+  margin: 0 auto 2.4rem;
+  line-height: 1.5;
+}
+.scene-close .fine {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--ink-mute);
+  margin-top: 1.6rem;
+  max-width: 580px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+.btn-big-ochre {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 1.2rem 2rem;
+  background: var(--ochre);
+  color: var(--ink);
+  border: 1px solid var(--ochre);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  border-bottom: 1px solid var(--ochre);
+}
+.btn-big-ochre:hover {
+  background: var(--ink);
+  color: var(--ochre);
+  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* ─────────────────────────────────── OUTRO CARDS ── */
+
+.outro {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 6rem 0 4rem;
+}
+.outro-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+}
+.outro-eyebrow .bar { height: 1px; width: 48px; background: var(--ochre); display: inline-block; }
+.outro-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 3rem;
+}
+.outro-title em { font-style: italic; color: var(--ochre); }
+.outro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+@media (max-width: 820px) {
+  .outro-grid { grid-template-columns: 1fr; }
+}
+.outro-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  min-height: 200px;
+}
+.outro-card:hover {
+  border-color: var(--ochre);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-bottom-color: var(--ochre);
+}
+.outro-card .step {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.outro-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -.018em;
+}
+.outro-card h3 em { font-style: italic; color: var(--ochre); }
+.outro-card p {
+  font-family: var(--serif);
+  color: var(--ink-3);
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.outro-card .arrow {
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--paper-rule);
+  padding: 2.8rem 0 3.4rem;
+  margin-top: 3rem;
+  background: var(--paper-warm);
+}
+.footer-inner {
+  width: var(--col);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+}
+.footer-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.footer-mark .dot { color: var(--ochre); }
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-links {
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.footer-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.footer-links a:hover { color: var(--ochre); }
+
+/* ─────────────────────────────────── FIXED CONTROLS ── */
+
+.scene-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 100;
+  pointer-events: none;
+}
+.scene-progress-fill {
+  height: 100%;
+  background: var(--ochre);
+  width: 0%;
+  transition: width .15s linear;
+}
+
+.play-toggle {
+  position: fixed;
+  bottom: 22px;
+  left: 22px;
+  z-index: 80;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .75rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  box-shadow: var(--shadow-md);
+  transition: background .15s, color .15s;
+}
+.play-toggle:hover { background: var(--ochre); color: var(--ink); border-color: var(--ochre); }
+.play-toggle.is-playing { background: var(--ochre); color: var(--ink); border-color: var(--ochre); }
+.play-toggle .glyph {
+  display: inline-block;
+  width: 10px; text-align: center;
+}
+
+.scene-pos {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 80;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .75rem 1rem;
+  background: var(--paper-card);
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  box-shadow: var(--shadow-sm);
+}
+.scene-pos .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ochre);
+}
+
+@media (max-width: 520px) {
+  .play-toggle, .scene-pos {
+    bottom: 12px;
+    padding: .55rem .75rem;
+    font-size: 10px;
+    letter-spacing: .14em;
+  }
+  .play-toggle { left: 12px; }
+  .scene-pos { right: 12px; }
+}
+
+/* ─────────────────────────────────── SKIP LINK ── */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .5rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  z-index: 200;
+}
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+/* ─────────────────────────────────── HELPERS ── */
+
+.center { text-align: center; }
+.muted { color: var(--ink-mute); }
+
+</style>
+</head>
+<body>
+
+<a href="#scene-intro" class="skip-link">Skip to tour</a>
+
+<!-- Scroll progress bar -->
+<div class="scene-progress" aria-hidden="true">
+  <div class="scene-progress-fill" id="scene-progress-fill"></div>
+</div>
+
+<!-- Mobile bar -->
+<div class="mobile-bar" role="navigation" aria-label="Section navigation">
+  <div class="mobile-bar-inner">
+    <a href="../library/">← Library</a>
+    <span class="mb-center">Stratum <span class="sl">/</span> Tour</span>
+    <a href="../briefings/">Briefing →</a>
+  </div>
+</div>
+
+<!-- Top nav -->
+<header class="nav" id="nav" role="banner">
+  <div class="nav-inner">
+    <a href="../" class="nav-mark">Stratum<span class="dot">.</span></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../product/">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="./" class="is-current" aria-current="page">Tour</a>
+      <a href="../console/">Console</a>
+    </nav>
+    <a href="mailto:partners@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ─────────────────────── SCENE 0 · INTRO -->
+  <section class="scene scene-intro" id="scene-intro" data-scene="0" aria-label="Tour intro">
+    <div class="scene-inner">
+      <div class="scene-counter">
+        <span class="bar"></span>
+        <span>Scene 0 of 8 · The trailer</span>
+        <span class="bar"></span>
+      </div>
+      <h1>Ninety seconds<br/>with <em>Stratum.</em></h1>
+      <p class="dek">
+        Three CHRO questions answered, end-to-end.<br/>
+        No login. No demo request. Press play or scroll.
+      </p>
+      <div class="cta-row">
+        <button class="btn-primary" id="start-tour-btn" type="button">
+          <span aria-hidden="true">▶</span> Start the tour
+        </button>
+        <a href="#scene-1" class="btn-ghost">
+          Scroll yourself <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <div class="progress-meter">
+        <span class="bar"></span>
+        <span id="progress-meter">Scene 0 of 8</span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 1 · THE QUESTION -->
+  <section class="scene" id="scene-1" data-scene="1" aria-label="Scene 1, the CHRO's question">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 1 · The CHRO's question</div>
+      <p class="scene-pull">
+        It's Tuesday afternoon. Your board chair just texted:
+        <br/>
+        <strong style="font-style:normal; color: var(--ochre);">"Can you walk me through our pay equity in EMEA at senior IC levels by Friday?"</strong>
+        <br/>
+        You have 3 days. You have 9 HR systems. You have to be defensible.
+      </p>
+      <div class="scene-caption">Scenario from Mercator · Customer Note 001</div>
+      <div class="scene-footline">
+        <span class="bar"></span>
+        <span>Watch what Stratum does in the next 47 seconds</span>
+        <span>→</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 2 · OPEN CONSOLE -->
+  <section class="scene" id="scene-2" data-scene="2" aria-label="Scene 2, open the Console">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 2 · Open the Console</div>
+      <h2 class="scene-title">You <em>type</em> your question.</h2>
+
+      <div class="console-frame" role="img" aria-label="Stratum Console screenshot mock">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/console</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Console</span>
+          <span class="frame-meta">Demo · Tessera Bank · 2,000 EE · 140 reqs</span>
+          <span class="frame-user">
+            <span class="av">EV</span>
+            <span>Elena Vasquez · CHRO</span>
+          </span>
+        </div>
+        <div class="frame-tabs">
+          <span class="frame-tab is-active"><span class="sec">§ 01</span>Ask</span>
+          <span class="frame-tab"><span class="sec">§ 02</span>People</span>
+          <span class="frame-tab"><span class="sec">§ 03</span>Insights</span>
+          <span class="frame-tab"><span class="sec">§ 04</span>Hiring</span>
+        </div>
+        <div class="frame-body">
+          <div class="ask-hero-mock">
+            <div class="ask-eyebrow-mock">§ The CHRO's copilot · grounded in the people graph</div>
+            <h3 class="ask-h1-mock">What would you like to <em>ask?</em></h3>
+            <div class="ask-input-mock">
+              <div class="ask-input-field">
+                <span class="typed" id="typed-text">Show me our pay equity gap in EMEA at senior IC and M3 levels</span><span class="cursor"></span>
+              </div>
+              <button class="ask-submit-mock" type="button">Ask <span class="arr">→</span></button>
+            </div>
+            <div class="ask-chips-mock">
+              <span class="chip-mock">Who's at flight risk in engineering?</span>
+              <span class="chip-mock">Show me underpaid high performers</span>
+              <span class="chip-mock">Retention story for new joiners in NA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">You type your question in plain English. No SQL. No dashboard hunt.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 3 · STRATUM THINKS -->
+  <section class="scene" id="scene-3" data-scene="3" aria-label="Scene 3, Stratum is thinking">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 3 · Stratum thinks</div>
+      <h2 class="scene-title">It reads your <em>people graph.</em></h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/console</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Console</span>
+          <span class="frame-meta">Demo · Tessera Bank · 2,000 EE · 140 reqs</span>
+          <span class="frame-user">
+            <span class="av">EV</span>
+            <span>Elena Vasquez · CHRO</span>
+          </span>
+        </div>
+        <div class="frame-tabs">
+          <span class="frame-tab is-active"><span class="sec">§ 01</span>Ask</span>
+          <span class="frame-tab"><span class="sec">§ 02</span>People</span>
+          <span class="frame-tab"><span class="sec">§ 03</span>Insights</span>
+          <span class="frame-tab"><span class="sec">§ 04</span>Hiring</span>
+        </div>
+        <div class="frame-body">
+          <div class="thinking-card">
+            <p class="thinking-q">
+              <span class="lbl">Ask</span>
+              Show me our pay equity gap in EMEA at senior IC and M3 levels
+            </p>
+            <div class="thinking-status">
+              <span class="dot-spin"></span>
+              <span>Searching the people graph · 2,000 employees · 4 systems</span>
+            </div>
+            <div class="thinking-bar" role="progressbar" aria-label="Thinking"></div>
+            <div class="thinking-trace">
+              <span class="t">Resolving cohort: region = EMEA · level ∈ {IC5, IC6, M3}</span>
+              <span class="t">Joining: Workday HRIS × ADP Comp × Lattice Reviews × Greenhouse</span>
+              <span class="t">Method: median comp_total grouped by gender within level+location</span>
+              <span class="t">Sample size check: n &gt; 30 per cell — passed</span>
+              <span class="t">Computing 95% CI · bootstrap 5,000 iterations</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Stratum reads your unified people graph and reasons over it. No CSV exports. No data team ticket.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 4 · THE ANSWER -->
+  <section class="scene" id="scene-4" data-scene="4" aria-label="Scene 4, the answer">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 4 · The answer · in thirty seconds</div>
+      <h2 class="scene-title">Four <em>parts.</em> Always.</h2>
+
+      <div class="answer-card-mock" role="img" aria-label="Stratum answer card with ask, answer, inspect, cite sections">
+        <div class="ac-q">
+          <span class="ac-q-label">Ask</span>
+          <span class="ac-q-text">Show me our pay equity gap in EMEA at senior IC and M3 levels</span>
+        </div>
+
+        <div class="ac-section">
+          <div class="ac-section-label"><span class="sigil">A</span>Ask · cohort filter</div>
+          <div class="cohort-mock">
+            <span class="k">region</span> = <span class="v">EMEA</span> ·
+            <span class="k">level</span> ∈ <span class="v">{IC5, IC6, M3}</span> ·
+            <span class="k">grouping</span> = <span class="v">gender</span> ·
+            <span class="k">controls</span> = <span class="v">level, location</span>
+          </div>
+        </div>
+
+        <div class="ac-section">
+          <div class="ac-section-label"><span class="sigil">B</span>Answer · the headline number</div>
+          <p class="ac-headline">
+            <span class="big">4.5%</span> — the <em>median pay gap</em> between women and men at senior IC and M3 levels in EMEA, after controlling for level and location. <em>The gap is narrowest at IC5 (1.8%) and widest at M3 (7.2%).</em>
+          </p>
+        </div>
+
+        <div class="ac-section">
+          <div class="ac-section-label"><span class="sigil">C</span>Inspect · the underlying distribution</div>
+          <div class="ac-inspect">
+            <div class="ac-chart">
+              <div class="ac-chart-title">Median comp_total · women vs men · EMEA · by level</div>
+              <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet" aria-label="Grouped bar chart by level and gender">
+                <!-- axes -->
+                <line x1="40" y1="180" x2="380" y2="180" stroke="#c8b894" stroke-width="1"/>
+                <line x1="40" y1="20"  x2="40"  y2="180" stroke="#c8b894" stroke-width="1"/>
+                <!-- y labels -->
+                <text x="34" y="184" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#6c7180">0</text>
+                <text x="34" y="140" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#6c7180">50k</text>
+                <text x="34" y="100" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#6c7180">100k</text>
+                <text x="34" y="60"  text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#6c7180">150k</text>
+                <text x="34" y="22"  text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#6c7180">200k</text>
+                <!-- IC5 -->
+                <rect x="70"  y="78"  width="22" height="102" fill="#4a5d3a"/>
+                <rect x="94"  y="74"  width="22" height="106" fill="#b8651f"/>
+                <text x="100" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#0e1626">IC5</text>
+                <!-- IC6 -->
+                <rect x="170" y="58"  width="22" height="122" fill="#4a5d3a"/>
+                <rect x="194" y="50"  width="22" height="130" fill="#b8651f"/>
+                <text x="200" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#0e1626">IC6</text>
+                <!-- M3 -->
+                <rect x="270" y="44"  width="22" height="136" fill="#4a5d3a"/>
+                <rect x="294" y="32"  width="22" height="148" fill="#b8651f"/>
+                <text x="300" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#0e1626">M3</text>
+                <!-- legend -->
+                <rect x="220" y="208" width="10" height="8" fill="#4a5d3a"/>
+                <text x="234" y="216" font-family="JetBrains Mono" font-size="9" fill="#4b5365">Women</text>
+                <rect x="284" y="208" width="10" height="8" fill="#b8651f"/>
+                <text x="298" y="216" font-family="JetBrains Mono" font-size="9" fill="#4b5365">Men</text>
+              </svg>
+            </div>
+            <table class="ac-table" aria-label="Pay equity table">
+              <thead>
+                <tr><th>Level</th><th class="num">Women</th><th class="num">Men</th><th class="num">Gap</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>IC5</td><td class="num">€132k</td><td class="num">€134k</td><td class="num">1.8%</td></tr>
+                <tr><td>IC6</td><td class="num">€152k</td><td class="num">€161k</td><td class="num">5.6%</td></tr>
+                <tr><td>M3</td><td class="num">€168k</td><td class="num">€181k</td><td class="num">7.2%</td></tr>
+                <tr><td><strong>All</strong></td><td class="num"><strong>€149k</strong></td><td class="num"><strong>€156k</strong></td><td class="num"><strong>4.5%</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="ac-section">
+          <div class="ac-section-label"><span class="sigil">D</span>Cite · the methodology</div>
+          <div class="cite-grid-mock">
+            <div class="cite-chip-mock"><span class="lbl">Source</span><span class="v">People Graph · 2,000 records as of 2026-05-13</span></div>
+            <div class="cite-chip-mock"><span class="lbl">Cohort</span><span class="v">187 employees</span></div>
+            <div class="cite-chip-mock"><span class="lbl">Method</span><span class="v">Median comp_total within level+location</span></div>
+            <div class="cite-chip-mock"><span class="lbl">Controls</span><span class="v">Level · location</span></div>
+            <div class="cite-chip-mock"><span class="lbl">Confidence</span><span class="v">High · n &gt; 30 per cell</span></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Ask. Answer. Inspect. Cite. Every answer ships in this shape — so it survives a board meeting.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 5 · CITATION PACK -->
+  <section class="scene" id="scene-5" data-scene="5" aria-label="Scene 5, citation pack">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 5 · The citation pack · zoomed in</div>
+      <h2 class="scene-title">The <em>methodology</em> ships with the answer.</h2>
+
+      <div class="cite-blown">
+        <div class="cb-eyebrow">§ Cite · how this answer was computed</div>
+        <div class="cb-row">
+          <span class="cb-k">Source</span>
+          <span class="cb-v">People Graph · 2,000 records as of 2026-05-13</span>
+        </div>
+        <div class="cb-row">
+          <span class="cb-k">Cohort</span>
+          <span class="cb-v">187 employees · EMEA · IC5, IC6, M3</span>
+        </div>
+        <div class="cb-row">
+          <span class="cb-k">Method</span>
+          <span class="cb-v">Median comp_total within level+location groups</span>
+        </div>
+        <div class="cb-row">
+          <span class="cb-k">Controlled for</span>
+          <span class="cb-v">Level · location</span>
+        </div>
+        <div class="cb-row">
+          <span class="cb-k">Confidence</span>
+          <span class="cb-v">High · n &gt; 30 per cell · bootstrap CI ±0.6 pts</span>
+        </div>
+        <div class="cb-row">
+          <span class="cb-k">Computed by</span>
+          <span class="cb-v">Stratum Console · 2026-05-13 14:42 UTC · trace #a8c4e9</span>
+        </div>
+      </div>
+
+      <p class="scene-dek">Every answer ships with the methodology. <strong>Your board can audit the math.</strong> Your CFO can re-derive the number. Your auditor can sign off.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 6 · ARCHITECTURE -->
+  <section class="scene" id="scene-6" data-scene="6" aria-label="Scene 6, architecture diagram">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 6 · The architecture, in one diagram</div>
+      <h2 class="scene-title">Stratum sits <em>above</em> the systems you already run.</h2>
+
+      <div class="arch-diagram">
+        <svg viewBox="0 0 900 460" preserveAspectRatio="xMidYMid meet" aria-label="Architecture diagram: five source systems feed the Stratum people graph, which exposes the Console">
+
+          <!-- Source systems · left column -->
+          <g font-family="JetBrains Mono" font-size="11" fill="#0e1626">
+            <rect x="40"  y="40"  width="150" height="48" fill="#fbf6e7" stroke="#c8b894" stroke-width="1" rx="3"/>
+            <text x="115" y="60" text-anchor="middle" font-weight="700" font-size="11.5">WORKDAY</text>
+            <text x="115" y="76" text-anchor="middle" font-size="9.5" fill="#6c7180">HRIS · people · org</text>
+
+            <rect x="40"  y="108" width="150" height="48" fill="#fbf6e7" stroke="#c8b894" stroke-width="1" rx="3"/>
+            <text x="115" y="128" text-anchor="middle" font-weight="700" font-size="11.5">GREENHOUSE</text>
+            <text x="115" y="144" text-anchor="middle" font-size="9.5" fill="#6c7180">ATS · reqs · hires</text>
+
+            <rect x="40"  y="176" width="150" height="48" fill="#fbf6e7" stroke="#c8b894" stroke-width="1" rx="3"/>
+            <text x="115" y="196" text-anchor="middle" font-weight="700" font-size="11.5">ADP</text>
+            <text x="115" y="212" text-anchor="middle" font-size="9.5" fill="#6c7180">Payroll · comp</text>
+
+            <rect x="40"  y="244" width="150" height="48" fill="#fbf6e7" stroke="#c8b894" stroke-width="1" rx="3"/>
+            <text x="115" y="264" text-anchor="middle" font-weight="700" font-size="11.5">LATTICE</text>
+            <text x="115" y="280" text-anchor="middle" font-size="9.5" fill="#6c7180">Reviews · goals</text>
+
+            <rect x="40"  y="312" width="150" height="48" fill="#fbf6e7" stroke="#c8b894" stroke-width="1" rx="3"/>
+            <text x="115" y="332" text-anchor="middle" font-weight="700" font-size="11.5">CARTA</text>
+            <text x="115" y="348" text-anchor="middle" font-size="9.5" fill="#6c7180">Equity · vesting</text>
+          </g>
+
+          <!-- Source label -->
+          <text x="115" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" letter-spacing="2" fill="#b8651f" font-weight="700">§ SYSTEMS OF RECORD</text>
+          <text x="115" y="390" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6c7180" letter-spacing="1">(yours · unchanged)</text>
+
+          <!-- Arrows from sources to graph -->
+          <g stroke="#b8651f" stroke-width="1.4" fill="none">
+            <path d="M 190 64  Q 280 64,  370 200" marker-end="url(#arr)"/>
+            <path d="M 190 132 Q 280 132, 370 210" marker-end="url(#arr)"/>
+            <path d="M 190 200 L 370 218" marker-end="url(#arr)"/>
+            <path d="M 190 268 Q 280 268, 370 226" marker-end="url(#arr)"/>
+            <path d="M 190 336 Q 280 336, 370 234" marker-end="url(#arr)"/>
+          </g>
+
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+              <path d="M 0 0 L 6 4 L 0 8 z" fill="#b8651f"/>
+            </marker>
+            <marker id="arr-ink" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M 0 0 L 8 5 L 0 10 z" fill="#0e1626"/>
+            </marker>
+          </defs>
+
+          <!-- People graph node · centre -->
+          <g>
+            <circle cx="450" cy="222" r="98" fill="#f4ecda" stroke="#0e1626" stroke-width="2"/>
+            <circle cx="450" cy="222" r="84" fill="none" stroke="#b8651f" stroke-width="1" stroke-dasharray="3 4"/>
+            <text x="450" y="204" text-anchor="middle" font-family="Fraunces" font-size="22" font-weight="500" fill="#0e1626">The people</text>
+            <text x="450" y="232" text-anchor="middle" font-family="Fraunces" font-size="22" font-style="italic" fill="#b8651f">graph.</text>
+            <text x="450" y="258" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6c7180" letter-spacing="1">2,000 nodes · 47,000 edges</text>
+            <text x="450" y="272" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#b8651f" letter-spacing="2" font-weight="700">§ STRATUM</text>
+          </g>
+
+          <!-- Arrow from graph to Console -->
+          <path d="M 550 222 L 690 222" stroke="#0e1626" stroke-width="2" fill="none" marker-end="url(#arr-ink)"/>
+          <text x="620" y="212" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#0e1626" letter-spacing="1.5" font-weight="700">EXPOSES →</text>
+
+          <!-- Console node · right -->
+          <g font-family="JetBrains Mono" font-size="11" fill="#0e1626">
+            <rect x="700" y="90"  width="170" height="260" fill="#0e1626" rx="4"/>
+            <text x="785" y="120" text-anchor="middle" font-family="Fraunces" font-size="20" font-weight="500" fill="#f4ecda">The Console</text>
+            <text x="785" y="142" text-anchor="middle" font-size="9.5" fill="#b8651f" letter-spacing="2" font-weight="700">§ FOUR JOBS</text>
+            <line x1="725" y1="158" x2="845" y2="158" stroke="#b8651f" stroke-width="1" opacity=".6"/>
+
+            <text x="730" y="186" font-size="11" fill="#f4ecda">A · Ask</text>
+            <text x="845" y="186" text-anchor="end" font-size="9" fill="#b8651f">plain English</text>
+            <text x="730" y="216" font-size="11" fill="#f4ecda">B · Answer</text>
+            <text x="845" y="216" text-anchor="end" font-size="9" fill="#b8651f">defensible</text>
+            <text x="730" y="246" font-size="11" fill="#f4ecda">C · Inspect</text>
+            <text x="845" y="246" text-anchor="end" font-size="9" fill="#b8651f">drill down</text>
+            <text x="730" y="276" font-size="11" fill="#f4ecda">D · Cite</text>
+            <text x="845" y="276" text-anchor="end" font-size="9" fill="#b8651f">methodology</text>
+
+            <line x1="725" y1="298" x2="845" y2="298" stroke="#b8651f" stroke-width="1" opacity=".6"/>
+            <text x="785" y="320" text-anchor="middle" font-size="9.5" fill="#f4ecda" font-style="italic" font-family="Newsreader">→ CHRO · board · auditor</text>
+            <text x="785" y="338" text-anchor="middle" font-size="9" fill="#6c7180" letter-spacing="1">stratum.ai/console</text>
+          </g>
+
+          <!-- Bottom caption -->
+          <text x="450" y="430" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6c7180" letter-spacing="2">§ STRATUM DOES NOT REPLACE YOUR HRIS · IT SITS ABOVE IT</text>
+
+        </svg>
+      </div>
+
+      <p class="scene-dek">We don't replace Workday, Greenhouse, or ADP. We read from them, reconcile them, and put one answer-shaped surface on top.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 7 · WHAT YOU CAN ASK -->
+  <section class="scene" id="scene-7" data-scene="7" aria-label="Scene 7, example questions">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 7 · What you can ask</div>
+      <h2 class="scene-title">Six questions, <em>right now,</em> in the live demo.</h2>
+
+      <div class="q-pile" aria-label="Pile of example questions">
+        <div class="q-card q1">Show me our pay equity gap in EMEA at senior IC and M3 levels</div>
+        <div class="q-card q2">Who's at flight risk in engineering with comp below band?</div>
+        <div class="q-card q3">What's our retention story for new joiners in NA?</div>
+        <div class="q-card q4">Show me underpaid high performers</div>
+        <div class="q-card q5">Which requisitions are stuck at offer?</div>
+        <div class="q-card q6">Where do our best hires come from?</div>
+      </div>
+
+      <p class="scene-dek">Six pre-computed answers on a synthetic 2,000-employee dataset. Click any to see the full four-section card.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 8 · TRY IT YOURSELF -->
+  <section class="scene scene-close" id="scene-8" data-scene="8" aria-label="Scene 8, try it yourself">
+    <div class="scene-inner">
+      <div class="scene-counter">
+        <span class="bar"></span>
+        <span>Scene 8 of 8 · The close</span>
+        <span class="bar"></span>
+      </div>
+      <h2>Now <em>you</em> try.</h2>
+      <p class="dek">
+        Six pre-computed answers on a synthetic 2,000-employee dataset.<br/>
+        No login. No demo request. No API key required for the demo.
+      </p>
+      <div class="cta-row">
+        <a href="../console/" class="btn-big-ochre">
+          Open the live Console <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="fine">
+        Or if you want to ask your own questions, connect an Anthropic API key in the Console.<br/>
+        Your key stays in your browser. It never touches our servers.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── OUTRO -->
+  <section class="outro" id="outro" aria-label="Where to next">
+    <div class="outro-eyebrow">
+      <span class="bar"></span>
+      <span>Where to next</span>
+      <span class="bar"></span>
+    </div>
+    <h2 class="outro-title">Three <em>paths</em> from here.</h2>
+    <div class="outro-grid">
+      <a href="../pricing/" class="outro-card">
+        <span class="step">§ 01 · Pricing</span>
+        <h3>I want <em>pricing.</em></h3>
+        <p>The numbers, the tiers, the implementation timeline. No "talk to sales" wall.</p>
+        <span class="arrow">See pricing →</span>
+      </a>
+      <a href="mailto:partners@stratum.ai" class="outro-card">
+        <span class="step">§ 02 · Talk to us</span>
+        <h3>I want to talk to <em>a human.</em></h3>
+        <p>partners@stratum.ai — a founder reads every note. We reply within a business day.</p>
+        <span class="arrow">Email us →</span>
+      </a>
+      <a href="../" class="outro-card">
+        <span class="step">§ 03 · Briefing</span>
+        <h3>I want the <em>long version.</em></h3>
+        <p>The 30-minute briefing: thesis, architecture, evidence, what we won't ship.</p>
+        <span class="arrow">Read the briefing →</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <span class="footer-mark">Stratum<span class="dot">.</span></span>
+    <span class="footer-meta">© Stratum · the CHRO's copilot · 2026</span>
+    <div class="footer-links">
+      <a href="../">Home</a>
+      <a href="../product/">Product</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../console/">Console</a>
+      <a href="mailto:partners@stratum.ai">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Fixed controls -->
+<button class="play-toggle" id="play-toggle" type="button" aria-pressed="false" aria-label="Play or pause the auto-advancing tour">
+  <span class="glyph" id="play-glyph" aria-hidden="true">▶</span>
+  <span id="play-label">Play tour</span>
+</button>
+
+<div class="scene-pos" id="scene-pos" aria-live="polite">
+  <span class="dot" aria-hidden="true"></span>
+  <span id="scene-pos-text">Scene 0 of 8</span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── Reduced motion ────────────────────────────────────────
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ─── Scenes ────────────────────────────────────────────────
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var totalScenes = 8; // scenes 1..8 (intro is 0)
+  var currentScene = 0;
+
+  // ─── Counter / progress text ───────────────────────────────
+  var sceneEls = {
+    pos: document.getElementById('scene-pos-text'),
+    progressMeter: document.getElementById('progress-meter')
+  };
+
+  function setSceneIndex(i) {
+    if (i === currentScene) return;
+    currentScene = i;
+    var label = 'Scene ' + i + ' of ' + totalScenes;
+    if (sceneEls.pos) sceneEls.pos.textContent = label;
+    if (sceneEls.progressMeter) sceneEls.progressMeter.textContent = label;
+  }
+
+  // ─── IntersectionObserver · reveal scenes ──────────────────
+  var io;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          var idx = parseInt(entry.target.getAttribute('data-scene') || '0', 10);
+          if (entry.intersectionRatio >= 0.45 || entry.boundingClientRect.top < window.innerHeight * 0.5) {
+            setSceneIndex(idx);
+          }
+        }
+      });
+    }, {
+      threshold: [0.15, 0.45, 0.75],
+      rootMargin: '0px 0px -10% 0px'
+    });
+    scenes.forEach(function (s) { io.observe(s); });
+  } else {
+    // Fallback
+    scenes.forEach(function (s) { s.classList.add('is-visible'); });
+  }
+
+  // ─── Scroll progress bar ──────────────────────────────────
+  var progressFill = document.getElementById('scene-progress-fill');
+  function updateProgress() {
+    if (!progressFill) return;
+    var h = document.documentElement;
+    var st = h.scrollTop || document.body.scrollTop;
+    var sh = h.scrollHeight - h.clientHeight;
+    var pct = sh > 0 ? (st / sh) * 100 : 0;
+    progressFill.style.width = pct + '%';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ─── Nav scroll state ─────────────────────────────────────
+  var nav = document.getElementById('nav');
+  function updateNav() {
+    if (!nav) return;
+    if (window.scrollY > 40) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  }
+  document.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // ─── Auto-advance / play tour ─────────────────────────────
+  var playBtn = document.getElementById('play-toggle');
+  var playGlyph = document.getElementById('play-glyph');
+  var playLabel = document.getElementById('play-label');
+  var startBtn = document.getElementById('start-tour-btn');
+  var isPlaying = false;
+  var advanceTimer = null;
+  var SCENE_DURATION_MS = 6000;
+
+  function nextSceneIndex() {
+    // Determine the scene whose top is closest to viewport top
+    var bestIdx = 0;
+    var bestDist = Infinity;
+    var vp = window.scrollY;
+    scenes.forEach(function (s, i) {
+      var top = s.offsetTop;
+      var d = Math.abs(top - vp);
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    });
+    // Advance one scene; if last, stop
+    return Math.min(bestIdx + 1, scenes.length - 1);
+  }
+
+  function scrollToScene(i) {
+    var s = scenes[i];
+    if (!s) return;
+    s.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function tick() {
+    var nextIdx = nextSceneIndex();
+    var atEnd = nextIdx >= scenes.length - 1 && Math.abs(window.scrollY - scenes[scenes.length - 1].offsetTop) < 80;
+    if (atEnd) {
+      stopAutoAdvance();
+      return;
+    }
+    scrollToScene(nextIdx);
+  }
+
+  function startAutoAdvance() {
+    if (prefersReducedMotion) return; // honor preference
+    if (isPlaying) return;
+    isPlaying = true;
+    if (playBtn) {
+      playBtn.classList.add('is-playing');
+      playBtn.setAttribute('aria-pressed', 'true');
+    }
+    if (playGlyph) playGlyph.textContent = '❚❚';
+    if (playLabel) playLabel.textContent = 'Pause tour';
+    // First advance happens after one duration
+    advanceTimer = setInterval(tick, SCENE_DURATION_MS);
+  }
+
+  function stopAutoAdvance() {
+    isPlaying = false;
+    if (playBtn) {
+      playBtn.classList.remove('is-playing');
+      playBtn.setAttribute('aria-pressed', 'false');
+    }
+    if (playGlyph) playGlyph.textContent = '▶';
+    if (playLabel) playLabel.textContent = 'Play tour';
+    if (advanceTimer) { clearInterval(advanceTimer); advanceTimer = null; }
+  }
+
+  function togglePlay() {
+    if (isPlaying) stopAutoAdvance();
+    else startAutoAdvance();
+  }
+
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
+  if (startBtn) {
+    startBtn.addEventListener('click', function () {
+      // Scroll to scene 1 then start advancing
+      scrollToScene(1);
+      if (!prefersReducedMotion) {
+        // Slight delay so the first scrollIntoView completes before kicking off
+        setTimeout(function () { startAutoAdvance(); }, 800);
+      }
+    });
+  }
+
+  // ─── Escape · exit tour ───────────────────────────────────
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      stopAutoAdvance();
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    }
+  });
+
+  // ─── Pause auto-advance if user scrolls manually ──────────
+  var lastScrollY = window.scrollY;
+  var userScrollTimeout = null;
+  document.addEventListener('wheel', function () {
+    if (isPlaying) {
+      stopAutoAdvance();
+    }
+  }, { passive: true });
+  document.addEventListener('touchmove', function () {
+    if (isPlaying) {
+      stopAutoAdvance();
+    }
+  }, { passive: true });
+
+})();
+</script>
+
+</body>
+</html>

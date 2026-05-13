@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Frequently asked, plainly answered.</title>
+<meta name="description" content="The questions we get asked weekly about Stratum, with the honest answers. Product, pricing, security, implementation, the company, and hiring — in one place, each linked to the deeper page." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · stratum.ai/faq — Frequently asked, plainly answered
+   Cream paper · deep ink · ochre · moss accent
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1180px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(820px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184, 101, 31, 0.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 700px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 3.6rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 0 0 1.6rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 60;
+  font-size: clamp(1.2rem, 1.7vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.4rem;
+  font-weight: 400;
+}
+
+.hero-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-foot strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── JUMP MENU ── */
+
+.jump {
+  width: var(--col-wide);
+  margin: 0 auto 3rem;
+  padding: 1.2rem 0 1.4rem;
+  border-top: 1px dashed var(--paper-rule);
+  border-bottom: 1px dashed var(--paper-rule);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.jump-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-right: .6rem;
+}
+.jump-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+.jump-pill {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  padding: .45rem .85rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+  border-radius: 999px;
+  transition: background .18s, color .18s, border-color .18s;
+}
+.jump-pill:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.jump-pill .ct {
+  color: var(--ink-mute);
+  margin-left: .35rem;
+  font-weight: 400;
+}
+.jump-pill:hover .ct { color: var(--ochre-soft); }
+
+/* ─────────────────────────────────────────── CATEGORY ── */
+
+.cat {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 3.2rem 0 2.4rem;
+  scroll-margin-top: 90px;
+}
+.cat + .cat { border-top: 1px solid var(--paper-rule); }
+
+.cat-head {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2.6rem;
+  align-items: baseline;
+  margin-bottom: 2.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.cat-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  padding-top: .5rem;
+}
+.cat-num .bar {
+  display: inline-block;
+  width: 32px;
+  height: 1px;
+  background: var(--ochre);
+  vertical-align: middle;
+  margin-right: .7rem;
+}
+.cat-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+}
+.cat-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+.cat-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 20;
+  font-size: 1.1rem;
+  color: var(--ink-3);
+  max-width: 58ch;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.qa-list {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 2.6rem 2.6rem;
+  align-items: start;
+}
+
+.qa-side {
+  position: sticky;
+  top: 80px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  padding-top: .3rem;
+  line-height: 1.7;
+}
+.qa-side .count {
+  font-family: var(--display);
+  font-size: 2rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-variation-settings: "opsz" 72;
+  line-height: 1;
+  margin-bottom: .4rem;
+  display: block;
+}
+.qa-side .note {
+  text-transform: none;
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 16;
+  letter-spacing: 0;
+  font-size: 14px;
+  color: var(--ink-3);
+  display: block;
+  margin-top: 1rem;
+  line-height: 1.5;
+  max-width: 24ch;
+}
+
+.qa {
+  padding: 0 0 1.8rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px dotted var(--paper-rule);
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 1.1rem;
+}
+.qa:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
+
+.qa-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  color: var(--ochre);
+  padding-top: .35rem;
+  font-weight: 500;
+}
+
+.qa-body { min-width: 0; }
+
+.qa-q {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36, "SOFT" 0;
+  font-size: clamp(1.2rem, 1.7vw, 1.45rem);
+  line-height: 1.25;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 .7rem;
+}
+.qa-q em {
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.qa-a {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 .6rem;
+  font-variation-settings: "opsz" 16;
+  max-width: 64ch;
+}
+.qa-a strong { color: var(--ink); font-weight: 600; }
+.qa-a + .qa-a { margin-top: .55rem; }
+
+.qa-more {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  border-bottom: 0;
+  display: inline-block;
+  margin-top: .5rem;
+}
+.qa-more:hover { color: var(--ochre-deep); border-bottom: 1px solid var(--ochre); }
+
+/* ─────────────────────────────────────────── CONTACT ── */
+
+.contact {
+  background: var(--ink);
+  color: var(--paper);
+  margin-top: 4rem;
+  padding: 5rem 0 5.5rem;
+  position: relative;
+}
+.contact::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(184, 101, 31, 0.10), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(244, 236, 218, 0.04), transparent 50%);
+  pointer-events: none;
+}
+.contact-inner {
+  width: var(--col);
+  margin: 0 auto;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+.contact-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+  margin-bottom: 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.contact-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--ochre-soft);
+  display: inline-block;
+}
+.contact-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2rem, 4.2vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  margin: 0 0 1.4rem;
+  color: var(--paper);
+  max-width: 18ch;
+}
+.contact-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre-soft);
+}
+.contact-p {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .85);
+  max-width: 48ch;
+  margin: 0;
+  font-variation-settings: "opsz" 20;
+}
+.contact-p em { color: var(--ochre-soft); }
+
+.contact-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.contact-card {
+  border: 1px solid rgba(244, 236, 218, .18);
+  background: rgba(244, 236, 218, .04);
+  padding: 1.3rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4rem;
+  transition: background .2s, border-color .2s;
+  color: var(--paper);
+  border-bottom: 1px solid rgba(244, 236, 218, .18);
+}
+.contact-card:hover {
+  background: rgba(184, 101, 31, .14);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.contact-card .lbl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+  margin-bottom: .35rem;
+  display: block;
+}
+.contact-card .ttl {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  letter-spacing: -.015em;
+  color: var(--paper);
+  line-height: 1.1;
+}
+.contact-card .arr {
+  font-family: var(--mono);
+  font-size: 1.2rem;
+  color: var(--ochre);
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 4rem 0 2.4rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.8rem;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ink-3);
+  margin: 0;
+  max-width: 32ch;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 1.1rem;
+  font-weight: 500;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  font-family: var(--serif);
+  font-size: 15px;
+  border-bottom: 0;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.footer-foot .briefing-link { color: var(--ink-3); border-bottom: 0; }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+.footer-foot .briefing-link:hover strong { color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1080px) {
+  .cat-head { grid-template-columns: 1fr; gap: 1rem; }
+  .qa-list { grid-template-columns: 1fr; gap: 1.6rem; }
+  .qa-side { position: static; padding-bottom: 1rem; border-bottom: 1px dashed var(--paper-rule); margin-bottom: .4rem; }
+  .qa-side .count { display: inline-block; margin-right: .9rem; vertical-align: middle; margin-bottom: 0; }
+  .qa-side .note { display: inline-block; margin-top: 0; max-width: none; vertical-align: middle; }
+  .contact-inner { grid-template-columns: 1fr; gap: 2.4rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 700px) {
+  .nav-inner { padding: .8rem 0; }
+  .hero { padding: 2.8rem 0 2.2rem; }
+  .hero-foot { font-size: 10px; gap: .65rem; }
+  .jump { margin-bottom: 2rem; }
+  .jump-pill { font-size: 11px; padding: .4rem .7rem; }
+  .cat { padding: 2.4rem 0 1.6rem; }
+  .qa { grid-template-columns: 28px 1fr; gap: .7rem; }
+  .qa-q { font-size: 1.15rem; }
+  .qa-a { font-size: 16px; }
+  .contact { padding: 3.4rem 0 4rem; }
+  .footer { padding: 2.8rem 0 2rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-foot { flex-direction: column; gap: .7rem; align-items: flex-start; }
+  html, body { overflow-x: clip; }
+}
+
+@media (max-width: 480px) {
+  .contact-card { flex-direction: row; align-items: center; padding: 1.05rem 1.15rem; gap: .8rem; }
+  .contact-card .ttl { font-size: 1.1rem; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / FAQ</span>
+  <a href="../" aria-label="Chairman's Briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../pricing/">Pricing</a>
+      <a href="../trust/">Trust</a>
+      <a href="#" class="is-current">FAQ</a>
+      <a href="../careers/">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai?subject=Stratum%20%E2%80%94%20a%20question%20we%20didn%27t%20cover">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar"></span>
+    FAQ · Updated 13 May 2026 · 52 answers across six categories
+  </div>
+  <h1 class="hero-h1">
+    Frequently asked, <em>plainly</em> answered.
+  </h1>
+  <p class="hero-sub">
+    The questions we get asked weekly, with the honest answers. Each Q&amp;A links
+    to the deeper page if you want more. Last updated 13 May 2026.
+  </p>
+  <div class="hero-foot">
+    <span><strong>52 questions</strong> answered</span>
+    <span><strong>6 categories</strong> · skim or jump</span>
+    <span><strong>Founder reply</strong> within 24 hours</span>
+    <span><strong>No marketing fluff.</strong> If we don't know, we say so.</span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── JUMP MENU ── -->
+<div class="jump" aria-label="Jump to a category">
+  <span class="jump-label">Jump to →</span>
+  <div class="jump-pills">
+    <a class="jump-pill" href="#product">Product <span class="ct">· 10</span></a>
+    <a class="jump-pill" href="#pricing">Pricing <span class="ct">· 8</span></a>
+    <a class="jump-pill" href="#security">Security &amp; compliance <span class="ct">· 10</span></a>
+    <a class="jump-pill" href="#implementation">Implementation <span class="ct">· 8</span></a>
+    <a class="jump-pill" href="#company">About the company <span class="ct">· 10</span></a>
+    <a class="jump-pill" href="#hiring">Hiring &amp; culture <span class="ct">· 8</span></a>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── §01 PRODUCT ── -->
+<section class="cat" id="product">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 01 · Product</div>
+    <div>
+      <h2 class="cat-title">What it <em>is</em>, what it isn't, and how it touches your stack.</h2>
+      <p class="cat-dek">The ten questions a CHRO and her CIO ask in the first thirty minutes. If you only read one category, read this one.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">10</span>
+      <span>answers</span>
+      <span class="note">Each links to the deeper page when there is one.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What does Stratum actually do?</h3>
+          <p class="qa-a">Stratum builds a unified people graph from your HRIS, ATS, performance, payroll, and equity systems, then sits a CHRO-grade copilot — <strong>the Console</strong> — on top of it. You ask questions like <em>"who left in Q1 and why,"</em> the Console answers with citations to the underlying records, and over time it begins to take supported actions you approve.</p>
+          <a class="qa-more" href="../product/index.html">Read more on the product page →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How is it different from Workday, Greenhouse, or Rippling?</h3>
+          <p class="qa-a">Workday, Greenhouse, and Rippling are <strong>systems of record</strong> — they store the truth of who is hired, paid, and reviewed. Stratum is a <strong>system of truth</strong> that sits above them, connects them, and answers the questions the records can't. We don't replace them; we make them legible to a CHRO.</p>
+          <a class="qa-more" href="../compare/">Read the full comparison →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Do you replace our HRIS or ATS?</h3>
+          <p class="qa-a">No. If a vendor tells you they will replace your HRIS in twelve months, they are either selling a five-year migration or a fiction. Stratum reads from your existing systems and — in Plan B — writes carefully back into them through approved actions.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What systems can you connect to today?</h3>
+          <p class="qa-a">Out of the box: <strong>Workday, Greenhouse, Lever, Lattice, 15Five, ADP-WFN, BambooHR, Carta, Okta, Rippling</strong>, plus Snowflake / BigQuery / Databricks for warehouse mirrors. One custom HRIS connector is included in standard implementations.</p>
+          <a class="qa-more" href="../partners/">See the integration directory →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How does the Console work without us giving you our data?</h3>
+          <p class="qa-a">Two options. Either you spin up an isolated tenant in our environment and we pull through read-only connectors, or — for the more conservative — we deploy the Console inside <strong>your</strong> VPC and the data never leaves your perimeter. Both setups are described in the security packet.</p>
+          <a class="qa-more" href="../security/">See the deployment options →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we try it without commitment?</h3>
+          <p class="qa-a">Yes. The Console at <strong>stratum.ai/console</strong> runs on a synthetic but realistic 4,200-employee company. You can ask it real CHRO questions and watch the citations come back. No login, no email gate, no demo gauntlet.</p>
+          <a class="qa-more" href="../console/">Try the live console →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What does "system of truth above the system of record" mean?</h3>
+          <p class="qa-a">Records say <em>what happened</em>. Truth says <em>what it meant and what should happen next</em>. Your ATS knows Maya was hired in March; only a graph that joins her offer, her org, her manager's tenure, and her first review can tell you why she resigned in October. That join is what we sell.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Do you use our data to train AI?</h3>
+          <p class="qa-a">No. Customer data is never used to train any model — ours or anyone else's. The contract says so, the architecture enforces it, and the SOC 2 audit confirms it. Aggregated, fully anonymised benchmarks are an opt-in only.</p>
+          <a class="qa-more" href="../trust/">Read the data-use stance →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 09</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we use our own LLM — GPT-5, Gemini, our private model — instead of Claude?</h3>
+          <p class="qa-a">Not yet. Today the Console runs on Anthropic Claude with a small set of internal evaluators. <strong>Bring-your-own-key</strong> for GPT-5 and Gemini is on the roadmap for the second half of 2027. Private-model routing follows once we are sure we can hold the eval bar.</p>
+          <a class="qa-more" href="../roadmap/">See the roadmap →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 10</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's on the product roadmap?</h3>
+          <p class="qa-a">Through 2026: more connectors, the Decisions surface (Plan B write-back), and the second eval set. Through 2027: BYOK, the manager copilot, and a structured agents API. We publish the roadmap as a single page rather than a deck so you can read it in five minutes.</p>
+          <a class="qa-more" href="../roadmap/">Read the roadmap →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §02 PRICING ── -->
+<section class="cat" id="pricing">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 02 · Pricing</div>
+    <div>
+      <h2 class="cat-title">A platform fee, plus the decisions <em>we actually supported</em>.</h2>
+      <p class="cat-dek">No per-seat math. No surprise renewals. We bill for what the Console did, not who logged in.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">8</span>
+      <span>answers</span>
+      <span class="note">Two plans, annual prepaid, usage in arrears.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How much does Stratum cost?</h3>
+          <p class="qa-a">Plan A (Platform) starts at <strong>$12,000 / month</strong>, annual prepaid, for companies in the 1,000–8,000 employee band. Plan B adds a quarterly usage tier on decisions supported. The full math, including the band table, is published.</p>
+          <a class="qa-more" href="../pricing/">See pricing in full →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Why don't you publish per-seat pricing?</h3>
+          <p class="qa-a">Because the value of Stratum doesn't scale with headcount — it scales with how many real decisions the Console supports. A 1,200-person company with an active CHRO often gets more out of it than a 6,000-person one with a quiet one. Per-seat pricing punishes the wrong thing.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's a "decision supported"?</h3>
+          <p class="qa-a">A material people decision the Console either answered with cited evidence or executed via an approved write-back — a hire, a promotion, a comp adjustment, an org change, an offboarding. We count them quarterly, you see the log, and the tier is set against that count.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Is there a minimum contract length?</h3>
+          <p class="qa-a">Twelve months. We don't sell month-to-month — implementation alone is sixty days, and a six-month contract isn't long enough to be a good citizen for either side.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we do a paid pilot before signing a full contract?</h3>
+          <p class="qa-a">For the right design partner, yes. The pilot is ninety days, scoped to two connectors and the Console, and the fee credits against the first-year contract if you proceed. Two design-partner seats remain for 2026.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Are there volume discounts?</h3>
+          <p class="qa-a">There are band discounts published in the band table. There are no off-table discretionary discounts — the published price is the price, and your procurement team won't be punished for not negotiating hard.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we negotiate the usage tier?</h3>
+          <p class="qa-a">Within reason. The tier brackets are fixed; what we will discuss is which decision types count, how quarterly true-ups behave, and whether unused usage rolls. None of that is a markup hidden in the SOW.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What happens at renewal?</h3>
+          <p class="qa-a">Renewal is at the published price for your band, with a ninety-day notice period either way. If your band changed materially mid-term, we true up rather than ambush you at the end of year one.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §03 SECURITY ── -->
+<section class="cat" id="security">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 03 · Security &amp; compliance</div>
+    <div>
+      <h2 class="cat-title">What your <em>InfoSec</em> team will ask before procurement signs.</h2>
+      <p class="cat-dek">Everything below is also written into the security packet your reviewer can download once the MNDA is in place.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">10</span>
+      <span>answers</span>
+      <span class="note">Median MSA cycle to date: 31 days.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Are you SOC 2 compliant?</h3>
+          <p class="qa-a"><strong>SOC 2 Type I</strong> is complete (March 2026). Type II observation window closes August 2026; the report is expected in October. ISO 27001 follows in Q1 2027.</p>
+          <a class="qa-more" href="../trust/">See trust posture →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Do you have a SIG / CAIQ questionnaire available?</h3>
+          <p class="qa-a">Yes — both SIG Lite and the CAIQ v4.0.3 are pre-filled and available within twenty-four hours of an MNDA. We do not gate them behind a sales call.</p>
+          <a class="qa-more" href="mailto:security@stratum.ai?subject=Stratum%20%E2%80%94%20SIG%20%2F%20CAIQ%20request">Request the packet →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's your data residency story?</h3>
+          <p class="qa-a">Two regions live today: <strong>US (us-east-1)</strong> and <strong>EU (eu-west-1, Dublin)</strong>. Your tenant pins to a single region for storage, compute, and inference. APAC (ap-northeast-1, Tokyo) opens Q3 2026.</p>
+          <a class="qa-more" href="../security/">See residency &amp; sub-processors →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How do you handle our PII?</h3>
+          <p class="qa-a">Encrypted in transit (TLS 1.3) and at rest (AES-256 with customer-isolated KMS keys). Access is role-scoped, logged, and reviewed quarterly. PII is never used for model training, never shared with sub-processors except for the explicit list in the DPA, and is purged on contract termination per the schedule.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we use customer-managed keys (BYOK)?</h3>
+          <p class="qa-a">Yes. AWS KMS BYOK is generally available; GCP and Azure CMEK are in private preview and expected GA in Q3 2026. Key rotation is yours to schedule and revoke is honoured immediately.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's your incident response SLA?</h3>
+          <p class="qa-a"><strong>P1 confirmed within four hours</strong>, customer notification within twenty-four hours, written post-mortem within fourteen days. We will not bury an incident in a status page footnote.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Have you ever had a customer data incident?</h3>
+          <p class="qa-a">No. As of 13 May 2026, Stratum has had zero customer-data incidents and zero confirmed breaches. The status page is the canonical record and will remain so when that changes.</p>
+          <a class="qa-more" href="../status/">See the status page →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How are you preparing for the EU AI Act?</h3>
+          <p class="qa-a">Stratum is classified <strong>limited risk</strong> under our self-assessment because the Console supports a human decision-maker rather than making the decision. We publish model cards, eval sets, and the human-in-the-loop record for every Decisions write-back, in line with Articles 13 and 14.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 09</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What about NYC AEDT compliance?</h3>
+          <p class="qa-a">We are not an Automated Employment Decision Tool under Local Law 144 because the Console does not score, rank, or filter candidates. Our hiring-side product surfaces evidence; the recruiter and hiring manager make the call. We publish the annotation matrix on request.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 10</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Can we audit you?</h3>
+          <p class="qa-a">Yes. Annual customer audit rights are in the MSA — penetration testing of the customer tenant, log access, and a one-day on-site at our Palo Alto office. We will share the standing pen-test report and the audit calendar before you sign.</p>
+          <a class="qa-more" href="../security/">See "How to audit us" →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §04 IMPLEMENTATION ── -->
+<section class="cat" id="implementation">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 04 · Implementation</div>
+    <div>
+      <h2 class="cat-title">From signed MSA to <em>first cited answer</em>, in sixty days.</h2>
+      <p class="cat-dek">Ninety days if the integration footprint is unusual. Each milestone has an SLA, and we credit usage if we miss it.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">8</span>
+      <span>answers</span>
+      <span class="note">Five implementations completed to date. Median: 58 days.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How long does implementation take?</h3>
+          <p class="qa-a">Standard is <strong>sixty days</strong> from MSA signature to the Console answering its first cited question. <strong>Deep</strong> — a custom HRIS, four-plus connectors, or a private deployment — is ninety. Both are written into the SOW and tied to milestone SLAs.</p>
+          <a class="qa-more" href="../implementation/">See the implementation timeline →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What do we (the customer) have to do?</h3>
+          <p class="qa-a">Three things, sized small. Name an executive sponsor (usually the CHRO), name a technical lead (usually a senior People Ops manager), and clear about eight hours per week from each for the first thirty days. After that, the load drops to two hours weekly.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What if our HRIS is on a custom version of Workday?</h3>
+          <p class="qa-a">Most Workday tenants are custom — that's normal. Our Workday connector handles common variations automatically; the genuinely odd objects (custom prompts, custom business processes that affect worker data) are mapped during implementation and reviewed with your Workday partner.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Will you connect to our custom internal HRIS?</h3>
+          <p class="qa-a">Yes. Standard implementation includes one custom HRIS connector, built against your API by our Customer Engineering team and documented in your tenant. Additional custom connectors are scoped in the SOW.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Do you have implementation partners we can use?</h3>
+          <p class="qa-a">Not yet, and we are honest about it. The first ten customers are implemented exclusively by Stratum Customer Engineers because we are still learning what the playbook should look like. We expect to name two or three certified partners in Q4 2026.</p>
+          <a class="qa-more" href="../partners/">See the partner directory →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Who is our day-to-day contact after implementation?</h3>
+          <p class="qa-a">A named <strong>Customer Engineer</strong> who knows your tenant, plus a Customer Success Manager for the QBR cadence. Both stay through year two — we do not hand you off to a generalist after launch.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's the SLA on missed implementation milestones?</h3>
+          <p class="qa-a">Each milestone has a hard date in the SOW. A miss caused by us credits two percent of annual platform fee per week of delay, capped at twelve percent. A miss caused by you (data not delivered, sponsor unavailable) extends but does not credit.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What if implementation takes longer than sixty days?</h3>
+          <p class="qa-a">If it's our fault, the credit clause above applies and your Customer Engineer's bonus is impacted — incentive alignment we publish to customers on request. If it's the shape of the integration, we agree a revised plan with you in writing within five business days of the slip.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §05 COMPANY ── -->
+<section class="cat" id="company">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 05 · About the company</div>
+    <div>
+      <h2 class="cat-title">Who we are, who funds us, and why <em>now</em>.</h2>
+      <p class="cat-dek">We are seven days past our seed announcement as you read this. We will be transparent about how small we are for as long as it is true.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">10</span>
+      <span>answers</span>
+      <span class="note">Founded 06 May 2026 · Palo Alto · seven people.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Who founded Stratum?</h3>
+          <p class="qa-a">Two founders, both ex-operators rather than career founders. The bios — and the photos — are on the press page. We will not paste them here so that the people, not the press release, are what you remember.</p>
+          <a class="qa-more" href="../press/">Read founder bios →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">When was Stratum founded?</h3>
+          <p class="qa-a"><strong>06 May 2026.</strong> The company was incorporated in Delaware that morning and the seed round closed the following Friday.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How big are you?</h3>
+          <p class="qa-a"><strong>Seven active employees</strong> as of 13 May 2026 — two founders, three engineers, one designer, one customer engineer. Year-end target is twenty-two.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How are you funded?</h3>
+          <p class="qa-a"><strong>$8M seed</strong>, led by <strong>Index Ventures (Sarah Cannon)</strong>, with participation from a small group of operator angels from the HRIS, ATS, and developer-tools worlds. No corporate strategics on the cap table.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Are you hiring?</h3>
+          <p class="qa-a">Yes. Four open roles today, all in Palo Alto with remote flexibility for the right candidate. The careers page is the authoritative list and is updated within an hour of a role being filled.</p>
+          <a class="qa-more" href="../careers/">See open roles →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Are you profitable?</h3>
+          <p class="qa-a"><strong>No — we are early.</strong> Runway is fourteen months at planned burn, eighteen if we slow hiring. We will be honest with you about that number on every quarterly business review.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Where are you based?</h3>
+          <p class="qa-a"><strong>Palo Alto, California.</strong> We hold the team to two anchor days a week in the office and are remote-flexible for the right candidate outside the Bay Area.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">When will you GA the product?</h3>
+          <p class="qa-a"><strong>Q1 2027 target</strong> for general availability of Plan A (Platform). Plan B (Decisions) follows in Q3 2027 once the eval set is mature enough to back the write-back surface. Design partners get the GA build before everyone else, by contract.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 09</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Is the company name pronounced "Stra-tum" or "Stray-tum"?</h3>
+          <p class="qa-a"><strong>Stra-tum</strong> — rhymes with <em>atom</em>. The word means a layer; the metaphor is the people layer above your operating systems. Both founders forgive the mispronunciation, but only once.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 10</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Where can I read more about your founding story?</h3>
+          <p class="qa-a">The founding story is the first Chairman's Briefing — written the week the company started, before anyone could revise it. It is the most honest document on this site.</p>
+          <a class="qa-more" href="../index.html">Read Briefing No. 001 →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §06 HIRING ── -->
+<section class="cat" id="hiring">
+  <div class="cat-head">
+    <div class="cat-num"><span class="bar"></span>§ 06 · Hiring &amp; culture</div>
+    <div>
+      <h2 class="cat-title">What it's like to work here, and <em>why you might</em>.</h2>
+      <p class="cat-dek">Honest answers about equity, sponsorship, and the trade we are asking you to make against a steadier company.</p>
+    </div>
+  </div>
+
+  <div class="qa-list">
+    <aside class="qa-side">
+      <span class="count">8</span>
+      <span>answers</span>
+      <span class="note">Four open roles · interview loop runs in seven business days.</span>
+    </aside>
+
+    <div>
+      <article class="qa">
+        <div class="qa-num">Q · 01</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Are you hiring?</h3>
+          <p class="qa-a">Yes. Four roles open today, growing to about twelve through 2026. We hire deliberately — most months we close one role, not three.</p>
+          <a class="qa-more" href="../careers/">See open roles →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 02</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's it like to work at Stratum?</h3>
+          <p class="qa-a">Small, written, and quiet. We default to a one-page memo over a fifteen-person meeting, we ship every Friday, and we close Slack at 7pm Pacific. The job is intense without being chaotic — that distinction matters to us.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 03</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How do you make decisions?</h3>
+          <p class="qa-a">A written proposal with a recommendation, a forty-eight-hour comment window, then a named decider. We use the DACI model and publish the trail to the team. No decisions by Slack thread.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 04</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Do you support remote work?</h3>
+          <p class="qa-a">Hybrid, anchored. Two anchor days in Palo Alto each week (Tuesday and Thursday), three flexible. For exceptional candidates outside the Bay Area we will discuss fully remote with a monthly visit.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 05</div>
+        <div class="qa-body">
+          <h3 class="qa-q">How much equity do you offer?</h3>
+          <p class="qa-a">Generously, for a company this small. Senior engineers in the first twenty hires receive between <strong>0.3% and 1.5%</strong> on a four-year vest with a one-year cliff. We publish the band per level internally; we will share yours in writing before you sign.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 06</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's your interview process?</h3>
+          <p class="qa-a">Four stages over seven business days: a written take-home (paid), a technical conversation, a working session with the team you would join, and a values conversation with a founder. We close the loop within forty-eight hours of the last stage, yes or no.</p>
+          <a class="qa-more" href="../careers/">See the loop in detail →</a>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 07</div>
+        <div class="qa-body">
+          <h3 class="qa-q">What's your visa / sponsorship policy?</h3>
+          <p class="qa-a">We sponsor H-1B transfers, O-1s, and TN visas for senior engineering hires. We do not, today, sponsor first-time H-1B lottery candidates — the operational load is too high for a seven-person team. We will revisit by Q1 2027.</p>
+        </div>
+      </article>
+
+      <article class="qa">
+        <div class="qa-num">Q · 08</div>
+        <div class="qa-body">
+          <h3 class="qa-q">Why should I join Stratum versus a larger company?</h3>
+          <p class="qa-a">Because you want your fingerprints on the product, on the culture, and on the eval set. A larger company will pay you more cash today and offer fewer surprises. We will pay you well, give you real equity, and ask you to help build a company you would want to recommend to your friends. That trade isn't for everyone.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CONTACT ── -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <div>
+      <div class="contact-eyebrow">
+        <span class="bar"></span>
+        Didn't find your answer?
+      </div>
+      <h2 class="contact-h">Write to us. We'll <em>actually</em> reply.</h2>
+      <p class="contact-p">
+        If your question isn't here, write to us. Stratum is small enough that one
+        of the founders will read your note and respond personally within
+        twenty-four hours during US business hours. Pick the inbox closest to your
+        question and you will get to the right person faster.
+      </p>
+    </div>
+    <div class="contact-cards">
+      <a class="contact-card" href="mailto:hello@stratum.ai?subject=Stratum%20%E2%80%94%20a%20general%20question">
+        <div>
+          <span class="lbl">General inquiry</span>
+          <span class="ttl">hello@stratum.ai</span>
+        </div>
+        <span class="arr">→</span>
+      </a>
+      <a class="contact-card" href="mailto:partners@stratum.ai?subject=Stratum%20%E2%80%94%20talk%20to%20sales">
+        <div>
+          <span class="lbl">Talk to sales</span>
+          <span class="ttl">partners@stratum.ai</span>
+        </div>
+        <span class="arr">→</span>
+      </a>
+      <a class="contact-card" href="mailto:careers@stratum.ai?subject=Stratum%20%E2%80%94%20applying%20to%20a%20role">
+        <div>
+          <span class="lbl">Apply to a role</span>
+          <span class="ttl">careers@stratum.ai</span>
+        </div>
+        <span class="arr">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back to your CHRO.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/">Careers</a></li>
+        <li><a href="../product/index.html#customer">Customers</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../implementation/">Implementation</a></li>
+        <li><a href="../security/">Security</a></li>
+        <li><a href="../trust/">Trust</a></li>
+        <li><a href="../library/">The Library</a></li>
+        <li><a href="../index.html">Briefing No. 001</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../status/">Status</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state — vanilla, no framework
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var apply = function () {
+      if (window.scrollY > 8) nav.classList.add('is-scrolled');
+      else nav.classList.remove('is-scrolled');
+    };
+    apply();
+    window.addEventListener('scroll', apply, { passive: true });
+  })();
+</script>
+
+</body>
+</html>
