@@ -1,0 +1,1363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>The Chairman's Briefing — Stratum</title>
+<meta name="description" content="A fortnightly written briefing from the founders to the Chairman of Stratum, Inc. Public since the day we incorporated. Seven issues, weeks 1–12." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · The Chairman's Briefing · Index
+   Editorial archive. Cream paper, deep ink, ochre.
+   Fraunces (display) · Newsreader (serif body) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+  --col-mid:      min(960px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 12% 14%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 88% 88%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav { display: none; }
+}
+
+/* ─────────────────────────────────────────── HEADER ── */
+.header {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.header-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.header-slug div + div { color: var(--ink-3); }
+
+.header-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: .96;
+  letter-spacing: -.035em;
+  margin: 2rem 0 1.6rem;
+  color: var(--ink);
+  max-width: 14ch;
+}
+.header-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.header-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.15rem, 1.7vw, 1.4rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 58ch;
+  margin: 0 0 2.4rem;
+  font-weight: 300;
+}
+
+.statstrip {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 1.1rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.4rem;
+}
+.statstrip span.sep { color: var(--ink-mute); }
+.statstrip strong { color: var(--ochre); font-weight: 700; }
+
+/* ─────────────────────────────────────────── FEATURED ── */
+.featured {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.featured-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.3rem;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+.featured-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--ink);
+  margin: 0 0 1.3rem;
+  max-width: 14ch;
+}
+.featured-h2 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+.featured-h2 a {
+  color: inherit;
+  border-bottom: 0;
+}
+.featured-h2 a:hover em { color: var(--ochre-deep); }
+
+.featured-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.8rem;
+  font-weight: 300;
+  max-width: 38ch;
+}
+
+.featured-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.6rem;
+  padding: 1.6rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 1.8rem;
+}
+.featured-stats .stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .35rem;
+}
+.featured-stats .stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.4rem;
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.featured-stats .stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.55em;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .25rem;
+}
+
+.featured-excerpt p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.featured-excerpt p:first-child::first-letter {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 3.4rem;
+  line-height: .85;
+  float: left;
+  padding: .25rem .45rem 0 0;
+  color: var(--ochre);
+}
+
+.featured-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+  margin-top: .6rem;
+}
+.featured-cta:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+.featured-byline {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 1rem;
+}
+.featured-byline span { color: var(--ink-3); margin: 0 .5rem; }
+
+@media (max-width: 960px) {
+  .featured-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .featured-stats { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+}
+@media (max-width: 480px) {
+  .featured-stats { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── ARCHIVE ── */
+.archive {
+  width: var(--col-mid);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.archive-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.6rem;
+}
+
+.archive-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+}
+.archive-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 24, "SOFT" 80;
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  margin: 0 0 2.4rem;
+  font-weight: 300;
+  max-width: 60ch;
+}
+
+.entry {
+  display: block;
+  color: inherit;
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 2.2rem 0;
+  transition: background .2s;
+  border-radius: 0;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+}
+.entry:hover {
+  background: var(--paper-warm);
+  border-bottom-color: var(--paper-rule-2);
+}
+.entry:first-of-type { border-top: 1px solid var(--paper-rule); }
+
+.entry-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .7rem;
+}
+.entry-num .name {
+  color: var(--ink-3);
+  margin-left: .5rem;
+}
+
+.entry-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.5rem, 2.6vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+  max-width: 28ch;
+}
+.entry-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.entry-dek {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+  font-weight: 400;
+  max-width: 62ch;
+}
+
+.entry-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--paper-rule);
+  margin: 1rem 0 1.2rem;
+  max-width: 600px;
+}
+.entry-stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .25rem;
+}
+.entry-stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-weight: 400;
+  font-size: 1.2rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.entry-stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.55em;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .25rem;
+}
+
+.entry-read {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.entry:hover .entry-read { color: var(--ochre-deep); }
+
+@media (max-width: 600px) {
+  .entry-stats { grid-template-columns: 1fr; gap: .8rem; }
+}
+
+/* ─────────────────────────────────────────── CONTAINS ── */
+.contains {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.contains-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+
+.contains-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.8rem, 3.2vw, 2.4rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 2rem;
+}
+
+.contains p {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+}
+.contains p strong { color: var(--ink); font-weight: 600; }
+.contains p em { color: var(--ink); }
+
+.contains-list {
+  margin: 1.4rem 0 1.6rem;
+  padding: 1.4rem 1.6rem;
+  background: var(--paper-warm);
+  border-left: 2px solid var(--ochre);
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.contains-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contains-list li {
+  padding: .15rem 0;
+  position: relative;
+  padding-left: 1.2rem;
+}
+.contains-list li::before {
+  content: "§";
+  position: absolute;
+  left: 0;
+  top: .15rem;
+  color: var(--ochre);
+  font-family: var(--display);
+  font-size: 1rem;
+}
+.contains-list li strong { color: var(--ink); font-weight: 600; }
+
+/* ─────────────────────────────────────────── SUBSCRIBE ── */
+.subscribe {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.sub-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+
+.sub-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(1.6rem, 2.8vw, 2.1rem);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+
+.sub-dek {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-3);
+  margin: 0 0 1.6rem;
+  max-width: 56ch;
+}
+
+.sub-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  font-family: var(--mono);
+  margin-bottom: 1rem;
+}
+.sub-form input[type="email"] {
+  flex: 1 1 280px;
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: .85rem 1rem;
+  border: 1px solid var(--paper-rule-2);
+  background: var(--paper-warm);
+  color: var(--ink);
+  letter-spacing: .04em;
+  border-radius: 0;
+  outline: none;
+}
+.sub-form input[type="email"]:focus {
+  border-color: var(--ochre);
+  background: var(--paper);
+}
+.sub-form input[type="email"]::placeholder {
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+}
+.sub-form button {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .85rem 1.3rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.sub-form button:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+}
+.sub-form button .arr { color: var(--ochre); transition: color .2s; }
+.sub-form button:hover .arr { color: var(--ink); }
+
+.sub-fine {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.sub-fine a { color: var(--ink-3); border-bottom: 1px solid var(--paper-rule-2); }
+.sub-fine a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  text-align: left;
+}
+
+.closing-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 2.2rem;
+  max-width: 28ch;
+}
+
+.closing-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.closing-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  padding: .85rem 1.25rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.closing-btn.primary {
+  color: var(--paper);
+  background: var(--ink);
+}
+.closing-btn.primary:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+}
+.closing-btn.ghost {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--paper-rule-2);
+}
+.closing-btn.ghost:hover {
+  color: var(--ochre);
+  border-color: var(--ochre);
+}
+.closing-btn .arr { color: var(--ochre); }
+.closing-btn.primary:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+@media (max-width: 960px) {
+  .header { padding: 2.8rem 0 2.2rem; }
+  .featured { padding: 2.8rem 0 2.4rem; }
+  .archive, .contains, .subscribe { padding: 2.8rem 0 2.4rem; }
+  .closing { padding: 3.4rem 0 3rem; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .mob-bar, .footer, .subscribe { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .entry { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Briefings</span>
+  <a href="./007.html" aria-label="Latest briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../library/">Library</a>
+      <a href="./" class="is-current">Briefings</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="../console/">The Console <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HEADER ── -->
+<header class="header">
+  <div class="header-slug">
+    <div>Stratum / Briefings</div>
+    <div>The Chairman's Briefing series · published fortnightly</div>
+  </div>
+
+  <h1 class="header-h1">The Chairman's <em>Briefing.</em></h1>
+
+  <p class="header-dek">
+    A fortnightly written briefing from the founders to the Chairman of Stratum,
+    Inc. Public since the day we incorporated. Read in order; each one builds on
+    the last.
+  </p>
+
+  <div class="statstrip">
+    <span><strong>7</strong> ISSUES</span><span class="sep">·</span>
+    <span>WEEKS 1–12</span><span class="sep">·</span>
+    <span>FOUNDED 06 MAY 2026</span><span class="sep">·</span>
+    <span>NEXT BRIEFING <strong>16 AUG 2026</strong></span>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── FEATURED ── -->
+<section class="featured" aria-label="The latest briefing">
+  <div class="featured-eyebrow">The latest · Briefing No. 007</div>
+
+  <div class="featured-grid">
+    <div class="featured-left">
+      <div class="featured-byline">
+        Briefing No. 007<span>·</span>02 August 2026<span>·</span>Day 89
+      </div>
+
+      <h2 class="featured-h2">
+        <a href="./007.html">Twelve weeks in. The <em>shape</em> of the company.</a>
+      </h2>
+
+      <p class="featured-dek">
+        Halcyon converts, Vanta arrives unbidden, The Information files
+        a piece on the company, and the first commercial dollars clear.
+      </p>
+
+      <a class="featured-cta" href="./007.html">Read the full briefing →</a>
+    </div>
+
+    <div class="featured-right">
+      <div class="featured-stats">
+        <div>
+          <div class="stat-label">First revenue</div>
+          <div class="stat-value">$50<span class="unit">K</span></div>
+        </div>
+        <div>
+          <div class="stat-label">Commercial</div>
+          <div class="stat-value">First</div>
+        </div>
+        <div>
+          <div class="stat-label">Employees</div>
+          <div class="stat-value">8</div>
+        </div>
+        <div>
+          <div class="stat-label">Connectors live</div>
+          <div class="stat-value">5</div>
+        </div>
+        <div>
+          <div class="stat-label">Confidence</div>
+          <div class="stat-value">9.0<span class="unit">/10</span></div>
+        </div>
+      </div>
+
+      <div class="featured-excerpt">
+        <p>
+          The Halcyon downgrade — the one we wrote you about on the twenty-first
+          of July, the one that made us look uncertain about our own product —
+          converted to a paid sixty-day pilot on the morning of the twenty-eighth.
+          Bobby Chen signed it himself. The number is $50,000, prorated against
+          a full-year contract that will follow if the pilot lands. It is the
+          first commercial dollar this company has ever invoiced.
+        </p>
+        <p>
+          Vanta arrived unbidden the week after, having read Briefing 006 in
+          full and decided we were a company worth introducing themselves to.
+          We did not pitch them. They asked us how we were thinking about SOC 2.
+          We told them honestly. A conversation that would normally take three
+          quarters to start has started in three days.
+        </p>
+        <p>
+          The Information filed a piece on Thursday — fair, accurate, and
+          generous about what we have published. It cited the Eval Set by name.
+          We learned something about how the press reads a public ledger when
+          it is given one. Schema v3 shipped on the second; the contractor-class
+          gap is closed. Twelve weeks ago there was a Compact and three people
+          in a room in Palo Alto. Today there is a company.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── ARCHIVE ── -->
+<section class="archive" aria-label="The archive of all briefings">
+  <div class="archive-eyebrow">The archive · reverse chronological</div>
+  <h2 class="archive-h2">Seven briefings, in order of publication.</h2>
+  <p class="archive-sub">
+    Each issue is a self-contained document. Each one builds on the last. If you
+    are new to the series, start with the Founding Edition and read forward.
+  </p>
+
+  <!-- 007 -->
+  <a class="entry" href="./007.html">
+    <div class="entry-num">Briefing No. 007<span class="name">· 02 Aug 2026 · Day 89</span></div>
+    <h3 class="entry-title">Twelve weeks in. The <em>shape</em> of the company.</h3>
+    <p class="entry-dek">
+      Halcyon converts to a paid sixty-day pilot — $50,000, the first commercial
+      revenue this company has ever invoiced. Vanta arrives unbidden after
+      reading Briefing 006. The Information files a piece. Schema v3 ships on
+      the second, closing the contractor-class gap.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">First revenue</div>
+        <div class="entry-stat-value">$50<span class="unit">K</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Connectors live</div>
+        <div class="entry-stat-value">5</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Confidence</div>
+        <div class="entry-stat-value">9.0<span class="unit">/10</span></div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 007 →</span>
+  </a>
+
+  <!-- 006 -->
+  <a class="entry" href="./006.html">
+    <div class="entry-num">Briefing No. 006<span class="name">· 19 Jul 2026 · Day 75</span></div>
+    <h3 class="entry-title">The Eval Set, <em>in public.</em></h3>
+    <p class="entry-dek">
+      We publish the 250-question Eval Set in full and open the harness to
+      anyone who wants to run it. Kenji ships an 18% context-window improvement
+      his second week in. Mercator signs the pricing pilot. Cordova tentative on
+      comp-review write-back.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Eval Set</div>
+        <div class="entry-stat-value">250<span class="unit">Q</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Context window</div>
+        <div class="entry-stat-value">−18<span class="unit">%</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Pricing pilot</div>
+        <div class="entry-stat-value">Signed</div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 006 →</span>
+  </a>
+
+  <!-- 005 -->
+  <a class="entry" href="./005.html">
+    <div class="entry-num">Briefing No. 005<span class="name">· 05 Jul 2026 · Day 61</span></div>
+    <h3 class="entry-title">After the board, <em>before</em> the storm.</h3>
+    <p class="entry-dek">
+      Board Meeting No. 1 closes cleanly — three resolutions adopted, no
+      objections recorded. Workday Illuminate Copilot goes GA on the first of
+      July and Risk R1 materialises. Three connector alphas in the field. ADP-WFN
+      shipped on time.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Board meeting</div>
+        <div class="entry-stat-value">№ 1 · clean</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Risk materialised</div>
+        <div class="entry-stat-value">R1</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Connector alphas</div>
+        <div class="entry-stat-value">3</div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 005 →</span>
+  </a>
+
+  <!-- 004 -->
+  <a class="entry" href="./004.html">
+    <div class="entry-num">Briefing No. 004<span class="name">· 21 Jun 2026 · Day 47</span></div>
+    <h3 class="entry-title">Five of five, and <em>a downgrade.</em></h3>
+    <p class="entry-dek">
+      Cordova Manufacturing signs — five of five design-partner slots filled,
+      ahead of schedule. Halcyon's CHRO change forces a downgrade to a sixty-day
+      evaluation; the decision deferred to 31 August. Tomás accepts the founding
+      eng-2 offer.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Design partners</div>
+        <div class="entry-stat-value">5 / 5</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Halcyon</div>
+        <div class="entry-stat-value">60-day eval</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Eng-2 offer</div>
+        <div class="entry-stat-value">Accepted</div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 004 →</span>
+  </a>
+
+  <!-- 003 -->
+  <a class="entry" href="./003.html">
+    <div class="entry-num">Briefing No. 003<span class="name">· 07 Jun 2026 · Day 33</span></div>
+    <h3 class="entry-title">The first connector, the <em>first wobble.</em></h3>
+    <p class="entry-dek">
+      The Workday HR Core connector ships its alpha — the company's first
+      production integration. Northwind Studios signs as a design partner.
+      Halcyon's sponsor changes mid-evaluation and the schedule wobbles for the
+      first time.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">First connector</div>
+        <div class="entry-stat-value">Workday HR</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Design partners</div>
+        <div class="entry-stat-value">4 / 5</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Halcyon sponsor</div>
+        <div class="entry-stat-value">Changed</div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 003 →</span>
+  </a>
+
+  <!-- 002 -->
+  <a class="entry" href="./002.html">
+    <div class="entry-num">Briefing No. 002<span class="name">· 24 May 2026 · Day 19</span></div>
+    <h3 class="entry-title">The first <em>twelve days.</em></h3>
+    <p class="entry-dek">
+      The first hire accepts. The first partner begins ingesting data. The gap
+      between the eighteen-month plan and the daily reality opens up in honest
+      view for the first time — and we write about it rather than smoothing it
+      over.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">First hire</div>
+        <div class="entry-stat-value">Accepted</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">First ingestion</div>
+        <div class="entry-stat-value">Mercator</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Days in</div>
+        <div class="entry-stat-value">19</div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 002 →</span>
+  </a>
+
+  <!-- 001 -->
+  <a class="entry" href="../index.html">
+    <div class="entry-num">Briefing No. 001<span class="name">· 12 May 2026 · Day 7 · Founding Edition</span></div>
+    <h3 class="entry-title">The <em>Founding</em> Edition.</h3>
+    <p class="entry-dek">
+      The Compact of Three. The founding conversation, set down verbatim.
+      Decisions 001–012. The eighteen-month roadmap. The capital structure. The
+      first edition of the document that has become the company's permanent
+      memory.
+    </p>
+    <div class="entry-stats">
+      <div>
+        <div class="entry-stat-label">Decisions</div>
+        <div class="entry-stat-value">12</div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Roadmap horizon</div>
+        <div class="entry-stat-value">18<span class="unit">mo</span></div>
+      </div>
+      <div>
+        <div class="entry-stat-label">Capital</div>
+        <div class="entry-stat-value">$8<span class="unit">M seed</span></div>
+      </div>
+    </div>
+    <span class="entry-read">Read briefing 001 →</span>
+  </a>
+</section>
+
+<!-- ─────────────────────────────────────────── CONTAINS ── -->
+<section class="contains" aria-label="What a briefing contains">
+  <div class="contains-eyebrow">For readers new to the series</div>
+  <h2 class="contains-h2">What a briefing contains.</h2>
+
+  <p>
+    Every briefing has the same shape. A letter from Maya to the Chairman; a
+    snapshot of six key metrics with deltas from the prior issue; a transcript
+    of one tense founders' conversation; a decisions ledger with new entries;
+    an honest <em>what we learned this fortnight</em> section; new risks added
+    to the register; and three open questions for the Chairman.
+  </p>
+
+  <div class="contains-list">
+    <ul>
+      <li><strong>The letter.</strong> A single page from Maya. The state of the company in plain prose.</li>
+      <li><strong>The snapshot.</strong> Six metrics, each with a delta from the last issue. No vanity numbers.</li>
+      <li><strong>The conversation.</strong> One real founders' disagreement, transcribed with consent.</li>
+      <li><strong>The ledger.</strong> Every decision, dated and attributed, with the rationale that produced it.</li>
+      <li><strong>What we learned.</strong> The fortnight's mistakes, named clearly. No spin.</li>
+      <li><strong>The risk register.</strong> New risks added, old risks retired or escalated.</li>
+      <li><strong>Three questions.</strong> The open items we need the Chairman to think about.</li>
+    </ul>
+  </div>
+
+  <p>
+    The decisions ledger has grown from twelve entries in Briefing 001 to
+    eighty-four entries in Briefing 007. Every entry is dated, attributed, and
+    rationaled. The ledger is the part of the briefing the team itself reads
+    most often; it is how we remember what we already decided, and why.
+  </p>
+
+  <p>
+    We publish these in full, on the public site, at noon Pacific on the day
+    they are written. We do not draft them in private and release them later.
+    We do not edit them after publication except to correct typos, and those
+    corrections are logged. This is what we believe a company looks like when
+    it is being built honestly.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── SUBSCRIBE ── -->
+<section class="subscribe" aria-label="Subscribe to the briefing">
+  <div class="sub-eyebrow">Subscribe</div>
+  <h2 class="sub-h2">The briefing, in your inbox.</h2>
+  <p class="sub-dek">
+    Email-only. No marketing, no newsletter, no other mail from us. Roughly
+    1,500 words per fortnight, the morning the issue goes live.
+  </p>
+
+  <form class="sub-form" action="mailto:briefing@stratum.ai" method="post" enctype="text/plain">
+    <input type="email" name="email" placeholder="your.email@company.com" aria-label="Your email address" required />
+    <button type="submit">Subscribe <span class="arr">→</span></button>
+  </form>
+
+  <p class="sub-fine">
+    Or write to <a href="mailto:briefing@stratum.ai">briefing@stratum.ai</a> · One mail every two weeks · Unsubscribe with any reply.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing" aria-label="Closing">
+  <p class="closing-line">
+    The Chairman's Briefing is the company's permanent memory. It is also our
+    most credible document.
+  </p>
+  <div class="closing-row">
+    <a class="closing-btn primary" href="./007.html">Read the latest briefing <span class="arr">→</span></a>
+    <a class="closing-btn ghost" href="../library/">The Library <span class="arr">→</span></a>
+    <a class="closing-btn ghost" href="../changelog/">The Changelog <span class="arr">→</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="../partners/">Connectors</a></li>
+        <li><a href="../changelog/">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../customers/">Customers</a></li>
+        <li><a href="../press/">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="../handbook/">CHRO Field Guide</a></li>
+        <li><a href="../eval/">Eval set methodology</a></li>
+        <li><a href="../partners/">Connector library</a></li>
+        <li><a href="../api/">API reference</a></li>
+        <li><a href="./">Briefings index</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../trust/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="./007.html">Latest issue: <strong>Briefing No. 007 →</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>

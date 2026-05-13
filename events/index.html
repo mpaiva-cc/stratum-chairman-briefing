@@ -1,0 +1,1711 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Events. Where you can find us.</title>
+<meta name="description" content="Stratum's events calendar: speaking engagements, conferences, private dinners, and the rare Stratum-hosted gathering. We say yes to about one in eight requests." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Events · stratum.ai/events
+   Editorial. Cream paper + deep ink + ochre.
+   Fraunces (display) · Newsreader (serif) · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-soft:    #c9b1bd;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col:          min(1180px, 92vw);
+  --col-read:     min(740px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17.5px;
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(244, 236, 218, 0.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3);
+    text-decoration: none;
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 .25rem;
+    border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -.02em;
+    color: var(--ink);
+    text-transform: none;
+    flex: 1;
+    text-align: center;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.hero-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.hero-slug div + div { color: var(--ink-3); }
+.hero-slug div + div + div { color: var(--ink-mute); }
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.2rem 0 1.8rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.hero-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.9vw, 1.55rem);
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 64ch;
+  margin: 0 0 2.6rem;
+}
+.hero-dek em { color: var(--ochre); }
+
+.dateline-strip {
+  margin-top: 1.4rem;
+  padding: 1.2rem 1.3rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule-2);
+  border-left: 3px solid var(--ochre);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  line-height: 1.9;
+}
+.dateline-strip .sep {
+  color: var(--ochre);
+  margin: 0 .55rem;
+}
+.dateline-strip strong { color: var(--ink); font-weight: 600; }
+
+/* ─────────────────────────────────────────── SECTION ── */
+
+.section {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.section.narrow { width: var(--col); }
+.section.read { width: var(--col-read); }
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--ochre);
+  display: inline-block;
+}
+.section-eyebrow .num {
+  border: 1px solid var(--ochre);
+  padding: .15rem .45rem;
+  color: var(--ochre);
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -.025em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  max-width: 24ch;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 0 2.6rem;
+}
+.section-dek em { font-style: italic; color: var(--ochre-deep); }
+
+/* ─────────────────────────────────────────── FEATURED EVENT ── */
+
+.featured {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  position: relative;
+  overflow: hidden;
+}
+.featured::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  height: 4px;
+  width: 120px;
+  background: var(--ochre);
+}
+
+.featured-head {
+  padding: 2.4rem 2.6rem 1.6rem;
+  border-bottom: 1px solid var(--paper-rule-2);
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 1.4rem;
+  align-items: end;
+}
+.featured-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.featured-name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.4vw, 3.2rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0;
+}
+.featured-name em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--ochre);
+}
+.featured-date {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: right;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+.featured-date strong { color: var(--ochre); font-weight: 700; }
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 0;
+}
+.featured-block {
+  padding: 2.2rem 2.6rem;
+  border-right: 1px solid var(--paper-rule-2);
+}
+.featured-block:last-child { border-right: 0; }
+
+.featured-block + .featured-block { border-top: 0; }
+
+.feat-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .8rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.feat-eyebrow .pip { width: 6px; height: 6px; background: var(--ochre); display: inline-block; }
+
+.feat-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .8rem;
+}
+.feat-h em { font-style: italic; color: var(--ochre-deep); }
+
+.feat-meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  color: var(--ink-mute);
+  line-height: 1.65;
+  margin: 0 0 1.1rem;
+}
+.feat-meta strong { color: var(--ink-2); font-weight: 600; }
+
+.feat-prose {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0;
+}
+.feat-prose strong { color: var(--ink); font-weight: 600; }
+.feat-prose em { font-style: italic; color: var(--ochre-deep); }
+
+.featured-essay {
+  padding: 2.4rem 2.6rem 2rem;
+  border-top: 1px solid var(--paper-rule-2);
+  background: var(--paper);
+}
+.featured-essay .feat-prose {
+  font-size: 16.5px;
+  line-height: 1.65;
+  max-width: 62ch;
+}
+.featured-essay .feat-prose p { margin: 0 0 1.1rem; }
+.featured-essay .feat-prose p:last-child { margin-bottom: 0; }
+
+.featured-cta-row {
+  padding: 1.5rem 2.6rem;
+  border-top: 1px solid var(--ink);
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+.featured-cta-row .label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+}
+.featured-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: transparent;
+  padding: .65rem 1.1rem;
+  border: 1px solid var(--paper);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--paper);
+}
+.featured-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  color: var(--ink);
+}
+.featured-cta .arr { color: var(--ochre); }
+.featured-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── EVENT LIST (upcoming) ── */
+
+.event-list {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.evt {
+  display: grid;
+  grid-template-columns: 11ch 1fr 14ch;
+  gap: 2rem;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--paper-rule-2);
+  align-items: start;
+}
+.evt:last-child { border-bottom: 0; }
+
+.evt-date {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .1em;
+  color: var(--ochre);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.5;
+  padding-top: .35rem;
+}
+.evt-date .yr { color: var(--ink-mute); font-weight: 400; }
+
+.evt-body { min-width: 0; }
+.evt-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.evt-title em { font-style: italic; color: var(--ochre-deep); }
+.evt-place {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .85rem;
+}
+.evt-desc {
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0 0 .85rem;
+  max-width: 64ch;
+}
+.evt-desc em { font-style: italic; color: var(--ochre-deep); }
+.evt-desc strong { color: var(--ink); font-weight: 600; }
+
+.evt-doing {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-3);
+  line-height: 1.65;
+  text-transform: none;
+  padding: .6rem 0 0;
+  border-top: 1px dashed var(--paper-rule-2);
+  max-width: 64ch;
+}
+.evt-doing .lbl {
+  color: var(--ochre);
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  font-weight: 700;
+  margin-right: .55rem;
+}
+
+.evt-tag {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  padding: .35rem .55rem;
+  text-align: center;
+  align-self: start;
+  margin-top: .25rem;
+  white-space: nowrap;
+}
+.evt-tag.is-keynote { color: var(--ochre); border-color: var(--ochre); }
+.evt-tag.is-booth   { color: var(--ink-2); background: var(--paper-warm); }
+.evt-tag.is-panel   { color: var(--moss);  border-color: var(--moss-soft); background: rgba(74,93,58,.06); }
+.evt-tag.is-dinner  { color: var(--plum);  border-color: var(--plum-soft); background: rgba(107,58,74,.06); }
+.evt-tag.is-private { color: var(--ink-mute); border-style: dashed; }
+
+/* ─────────────────────────────────────────── PAST EVENTS ── */
+
+.past {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.past-row {
+  display: grid;
+  grid-template-columns: 12ch 1fr;
+  gap: 2rem;
+  padding: 2rem 2.2rem;
+  border-bottom: 1px solid var(--paper-rule-2);
+  align-items: start;
+}
+.past-row:last-child { border-bottom: 0; }
+
+.past-date {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .1em;
+  color: var(--ochre);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.5;
+  padding-top: .4rem;
+}
+.past-date .yr { color: var(--ink-mute); font-weight: 400; display: block; margin-top: .15rem; }
+
+.past-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 .35rem;
+}
+.past-title em { font-style: italic; color: var(--ochre-deep); }
+.past-place {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: 1rem;
+}
+.past-body {
+  font-family: var(--serif);
+  font-size: 1.06rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin: 0 0 1.1rem;
+  max-width: 62ch;
+}
+.past-body strong { color: var(--ink); font-weight: 600; }
+.past-body em { font-style: italic; color: var(--ochre-deep); }
+
+.past-reflect {
+  border-left: 2px solid var(--ochre);
+  padding: .2rem 0 .2rem 1rem;
+  background: rgba(184, 101, 31, 0.04);
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.05rem;
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0;
+  padding-top: .6rem;
+  padding-bottom: .6rem;
+  max-width: 62ch;
+}
+.past-reflect .lbl {
+  display: block;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .35rem;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────── WILL / WON'T ── */
+
+.policy {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+}
+.policy-col {
+  padding: 2.2rem 2.4rem 2rem;
+  border-right: 1px solid var(--paper-rule-2);
+}
+.policy-col:last-child { border-right: 0; background: var(--paper); }
+
+.policy-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.policy-col.is-will .policy-eyebrow { color: var(--moss); }
+.policy-col.is-wont .policy-eyebrow { color: var(--plum); }
+.policy-eyebrow .pip {
+  width: 8px; height: 8px;
+  display: inline-block;
+  border-radius: 50%;
+}
+.policy-col.is-will .pip { background: var(--moss); }
+.policy-col.is-wont .pip { background: var(--plum); }
+
+.policy-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: -.018em;
+  color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+.policy-h em { font-style: italic; color: var(--ochre-deep); }
+
+.policy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.04rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.policy-list li {
+  padding: .9rem 0;
+  border-bottom: 1px dashed var(--paper-rule-2);
+}
+.policy-list li:last-child { border-bottom: 0; }
+.policy-list strong { color: var(--ink); font-weight: 600; }
+.policy-list em { font-style: italic; color: var(--ochre-deep); }
+
+.policy-cadence {
+  margin-top: 2.4rem;
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  line-height: 1.9;
+  grid-column: 1 / -1;
+}
+.policy-cadence .sep { color: var(--ochre); margin: 0 .55rem; }
+.policy-cadence strong { color: var(--ochre); font-weight: 700; }
+
+/* ─────────────────────────────────────────── REQUEST BLOCK ── */
+
+.request {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: .02em;
+  line-height: 1.7;
+}
+.request-head {
+  padding: 1.6rem 2rem 1.2rem;
+  border-bottom: 1px solid #1d2638;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .8rem;
+}
+.request-head .lbl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.request-head .addr {
+  font-family: var(--mono);
+  font-size: 1rem;
+  letter-spacing: .04em;
+  color: var(--paper);
+  border-bottom: 1px solid rgba(244, 236, 218, 0.3);
+}
+.request-head .addr:hover { border-bottom-color: var(--ochre); color: var(--ochre-soft); }
+
+.request-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.request-cell {
+  padding: 1.4rem 2rem;
+  border-right: 1px solid #1d2638;
+  border-bottom: 1px solid #1d2638;
+}
+.request-cell:nth-child(2n) { border-right: 0; }
+.request-cell:nth-last-child(-n+2) { border-bottom: 0; }
+.request-k {
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+  font-weight: 700;
+}
+.request-v {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--paper);
+  letter-spacing: 0;
+}
+.request-v strong { color: var(--ochre-soft); font-weight: 600; }
+.request-v em { color: var(--ochre-soft); font-style: italic; }
+
+.request-speakers {
+  padding: 1.6rem 2rem;
+  border-top: 1px solid #1d2638;
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--paper);
+  letter-spacing: 0;
+}
+.request-speakers .name {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 24;
+  font-size: 1rem;
+  margin-right: .35rem;
+}
+.request-speakers .topic {
+  color: rgba(244, 236, 218, .82);
+  font-style: italic;
+}
+.request-speakers div { padding: .3rem 0; border-bottom: 1px dashed rgba(244, 236, 218, .12); }
+.request-speakers div:last-child { border-bottom: 0; }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 0 auto;
+  text-align: center;
+}
+.closing-prose {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 60, "SOFT" 80;
+  font-size: clamp(1.55rem, 2.8vw, 2.15rem);
+  line-height: 1.32;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 2.4rem;
+}
+.closing-prose em { color: var(--ochre); }
+.closing-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 2px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+.closing-links .sep { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .featured-head { grid-template-columns: 1fr; align-items: start; }
+  .featured-date { text-align: left; }
+  .featured-grid { grid-template-columns: 1fr; }
+  .featured-block { border-right: 0; border-bottom: 1px solid var(--paper-rule-2); }
+  .featured-block:last-child { border-bottom: 0; }
+  .policy { grid-template-columns: 1fr; }
+  .policy-col { border-right: 0; border-bottom: 1px solid var(--paper-rule-2); }
+  .policy-col:last-child { border-bottom: 0; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+
+@media (max-width: 820px) {
+  .evt { grid-template-columns: 1fr; gap: .35rem; padding: 1.4rem 0; }
+  .evt-tag { justify-self: start; margin-top: .6rem; }
+  .evt-date { padding-top: 0; }
+  .past-row { grid-template-columns: 1fr; gap: .35rem; padding: 1.6rem 1.4rem; }
+  .past-date { padding-top: 0; }
+  .past-date .yr { display: inline; margin-left: .35rem; }
+  .request-grid { grid-template-columns: 1fr; }
+  .request-cell { border-right: 0; }
+  .request-cell:nth-last-child(2) { border-bottom: 1px solid #1d2638; }
+}
+
+@media (max-width: 760px) {
+  .featured-head, .featured-block, .featured-essay, .featured-cta-row {
+    padding-left: 1.4rem;
+    padding-right: 1.4rem;
+  }
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .section { padding: 3.6rem 0 3rem; }
+  .hero { padding: 3rem 0 2.6rem; }
+  .dateline-strip { font-size: 10.5px; letter-spacing: .12em; }
+  .request-head { padding: 1.3rem 1.4rem; }
+  .request-cell { padding: 1.2rem 1.4rem; }
+  .request-speakers { padding: 1.4rem 1.4rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-h1 { font-size: clamp(2.4rem, 11vw, 3.4rem); }
+  .featured-name { font-size: clamp(1.8rem, 7.4vw, 2.2rem); }
+  .past-reflect { font-size: .98rem; }
+}
+
+@media print {
+  .nav, .footer, .mob-bar { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .section, .hero { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Events</span>
+  <a href="../briefings/005.html" aria-label="Latest briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/index.html">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../press/index.html">Press</a>
+      <a href="./" class="is-current">Events</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:events@stratum.ai">Email events <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-slug">
+    <div>Stratum / Events</div>
+    <div>The calendar · 2026 – 2027</div>
+    <div>Updated 13 May 2026</div>
+  </div>
+
+  <h1 class="hero-h1">
+    Where you can <em>find us.</em>
+  </h1>
+
+  <p class="hero-dek">
+    Speaking engagements, industry conferences, private dinners, and occasional
+    Stratum-hosted gatherings. We are intentionally selective — <em>we say yes
+    to about one in eight requests.</em>
+  </p>
+
+  <div class="dateline-strip">
+    <strong>7 confirmed events</strong>
+    <span class="sep">·</span> Next 9 months
+    <span class="sep">·</span> 2 booths
+    <span class="sep">·</span> 3 keynotes
+    <span class="sep">·</span> 2 dinners
+    <span class="sep">·</span> Speaker requests: <strong>events@stratum.ai</strong>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── 01  FEATURED EVENT ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 01</span>
+    <span class="bar"></span>
+    <span>Featured · The fall headline</span>
+  </div>
+  <h2 class="section-h">HR Tech 2026, <em>Las Vegas.</em></h2>
+  <p class="section-dek">
+    The conference where the HCM category does its annual self-assessment. We
+    are there in three capacities: a keynote from Maya, a booth on the floor,
+    and three private CHRO dinners across the conference. If you are a
+    customer, a prospect, or a journalist working the show, <em>this is where
+    we will be all week.</em>
+  </p>
+
+  <article class="featured">
+    <div class="featured-head">
+      <div>
+        <div class="featured-tag">Featured event · Keynote + booth + dinners</div>
+        <h3 class="featured-name">HR Tech 2026 <em>— Las Vegas.</em></h3>
+      </div>
+      <div class="featured-date">
+        <strong>14 – 16 October 2026</strong><br />
+        Mandalay Bay Convention Center
+      </div>
+    </div>
+
+    <div class="featured-grid">
+      <div class="featured-block">
+        <div class="feat-eyebrow"><span class="pip"></span>On stage · Maya Chen</div>
+        <h4 class="feat-h">"Building the AI-native HCM platform: an honest field report from the <em>first 150 days.</em>"</h4>
+        <p class="feat-meta">
+          <strong>Tuesday 15 October · 14:00 PT</strong><br />
+          Mandalay Bay Ballroom F · main stage · 45 minutes · Q&amp;A to follow
+        </p>
+        <p class="feat-prose">
+          Maya will walk the room through what we have actually learned in the
+          first 150 days of running Stratum — the eval set methodology, what
+          surprised us, what we got wrong on the first try, and the three
+          questions every CHRO buyer keeps asking. <em>No demos, no slides
+          full of logos.</em> A field report.
+        </p>
+      </div>
+
+      <div class="featured-block">
+        <div class="feat-eyebrow"><span class="pip"></span>On the floor · Booth F-2218</div>
+        <h4 class="feat-h">The Console, demoed by the engineers who built it.</h4>
+        <p class="feat-meta">
+          <strong>David Okonkwo · Sofia Vargas</strong><br />
+          Booth F-2218 · open Tuesday – Thursday · expo hall, west wing<br />
+          <strong>Priya Rao</strong> · 3 private CHRO dinners across the week
+        </p>
+        <p class="feat-prose">
+          The booth is small and the demo is the actual product, not a
+          rendered video. David runs the architecture conversation; Sofia
+          runs the onboarding conversation. Priya is not on the floor — she
+          is hosting three small CHRO dinners across the conference (Monday,
+          Tuesday, Wednesday). <em>If you would like one of those seats,
+          email events.</em>
+        </p>
+      </div>
+    </div>
+
+    <div class="featured-essay">
+      <div class="feat-prose">
+        <p>
+          <strong>What we are presenting.</strong> The eval set. We have
+          spent four months building the 102-question internal benchmark
+          that every Stratum answer is measured against, and Maya will walk
+          the room through the construction of it — where the questions
+          came from, what we cut, what surprised us when we ran it against
+          the four incumbents, and the three places we still get it wrong.
+          This is the talk we wanted someone else to give two years ago and
+          nobody did.
+        </p>
+        <p>
+          <strong>What we hope to learn.</strong> HR Tech is the room with
+          the highest density of working CHROs of any week in the calendar.
+          We want to know which of the methodology choices ring true to the
+          buyer and which ring false. Maya will take questions on stage and
+          for an hour after; David and Priya will field the architecture
+          and pricing questions at the booth and at the dinners. <em>The
+          reactions we get this week will shape the public eval set
+          publication in November.</em>
+        </p>
+        <p>
+          <strong>What we would like attendees to do.</strong> Come to the
+          14:00 talk on Tuesday. Visit the booth. Ask Maya the hardest
+          question she will get all day — she has asked us to seed it. If
+          you are a CHRO at a mid-market enterprise and you want twenty
+          minutes of real conversation, email events and we will find a
+          slot. We are not running a lead-capture machine. We are running
+          a research week.
+        </p>
+      </div>
+    </div>
+
+    <div class="featured-cta-row">
+      <span class="label">To schedule a meeting at HR Tech 2026</span>
+      <a class="featured-cta" href="mailto:events@stratum.ai?subject=HR%20Tech%202026%20%E2%80%94%20meeting%20request">
+        Email events@stratum.ai <span class="arr">→</span>
+      </a>
+    </div>
+  </article>
+</section>
+
+<!-- ─────────────────────────────────────────── 02  UPCOMING EVENTS ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 02</span>
+    <span class="bar"></span>
+    <span>Upcoming · Next nine months</span>
+  </div>
+  <h2 class="section-h">The calendar, <em>chronological.</em></h2>
+  <p class="section-dek">
+    Seven confirmed appearances between September 2026 and March 2027. Where we
+    have a booth, who is on stage, what the talk is about, and what we are
+    actually doing there. <em>If a request is not on this list, we said no.</em>
+  </p>
+
+  <div class="event-list">
+
+    <article class="evt">
+      <div class="evt-date">23 Sep<br /><span class="yr">2026</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">Workday Rising 2026 <em>— Las Vegas</em></h3>
+        <div class="evt-place">Caesars Forum · partner pavilion · day 2 of 3</div>
+        <p class="evt-desc">
+          <strong>David Okonkwo</strong> on a panel: <em>"Building on top of
+          HRIS: the integration ecosystem."</em> The panel is the one
+          conversation at Rising about the architecture above the system of
+          record, and we will not pass it up. Stratum booth in the partner
+          pavilion alongside Greenhouse, Lattice, and Ashby — small,
+          deliberately understated.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Booth in the partner pavilion · David on the integration panel ·
+          no dinner this week · we go home Wednesday night.
+        </p>
+      </div>
+      <span class="evt-tag is-panel">Panel · Booth</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">14 – 16 Oct<br /><span class="yr">2026</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">HR Tech 2026 <em>— Las Vegas · featured</em></h3>
+        <div class="evt-place">Mandalay Bay Convention Center · booth F-2218</div>
+        <p class="evt-desc">
+          See <strong>§ 01</strong> above. <strong>Maya Chen</strong>
+          keynote on the eval set methodology (Tue 15 Oct, 14:00 PT,
+          Ballroom F). Stratum booth F-2218 with David and Sofia.
+          <strong>Priya</strong> hosts three private CHRO dinners across the
+          week.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Keynote · booth all three days · 3 private CHRO dinners ·
+          customer meetings booked back-to-back · email events to schedule.
+        </p>
+      </div>
+      <span class="evt-tag is-keynote">Keynote · Booth · Dinners</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">05 Nov<br /><span class="yr">2026</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">UNLEASH America 2026 <em>— Las Vegas</em></h3>
+        <div class="evt-place">Caesars Palace · small-stage track · 45-minute panel</div>
+        <p class="evt-desc">
+          <strong>Priya Rao</strong> on a small-stage panel: <em>"Pricing
+          software in the age of agentic AI."</em> A short, sharp
+          conversation on what changes when the unit of value shifts from
+          seat to outcome. <strong>No booth — deliberate.</strong> The room
+          we want is the one in the panel session, not the one walking the
+          floor.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Priya on stage · no booth · no sponsorship · we fly in Tuesday
+          morning and out Wednesday night.
+        </p>
+      </div>
+      <span class="evt-tag is-panel">Panel only</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">18 Nov<br /><span class="yr">2026</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">The Stratum / Founders Dinner #2 <em>— Palo Alto</em></h3>
+        <div class="evt-place">Private residence · 14 seats · by invitation</div>
+        <p class="evt-desc">
+          The second in our quarterly dinner series. <strong>Maya and
+          Priya</strong> host fourteen CHROs at a private home in Palo
+          Alto. Theme: <em>"What boards are actually asking in Q4
+          2026."</em> No decks, no demos. One question goes around the
+          table; the conversation goes wherever the room takes it. We
+          publish a one-page note from each dinner (anonymized) two weeks
+          later in the Library.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Hosting · listening · by invitation only · if you'd like to be
+          considered, email events with a one-line note on your
+          board's current Q4 reporting burden.
+        </p>
+      </div>
+      <span class="evt-tag is-dinner">Private dinner</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">Dec<br /><span class="yr">2026</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">Gartner HR Technology Predictions <em>— virtual</em></h3>
+        <div class="evt-place">Analyst briefings · not on-stage</div>
+        <p class="evt-desc">
+          <strong>Maya and David</strong> provide background briefings to
+          Gartner analysts (Stamford and London) ahead of the 2027
+          predictions cycle. We are not on the public agenda — we treat
+          analyst time as <em>research</em>, not marketing. Slot length
+          is 45 minutes, off-the-record, and our prep doc is the same
+          memo we send to the board.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Background briefings only · no stage · no quote-in-the-Magic-Quadrant
+          ambitions for 2027 · we will be ready for that conversation in 2028.
+        </p>
+      </div>
+      <span class="evt-tag is-private">Analyst brief</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">Jan<br /><span class="yr">2027</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">World Economic Forum, Davos <em>— week of 19 Jan</em></h3>
+        <div class="evt-place">Private session · AI in the workplace · Maya only</div>
+        <p class="evt-desc">
+          <strong>Maya</strong> has been invited to a small private session
+          on AI in the workplace, hosted by one of the early Stratum
+          investors. Stratum has <em>no booth, no presence in the main
+          program, no co-branded anything.</em> Maya only, one session, one
+          conversation. We will not pretend to be in Davos when we are not.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Maya only · one private session · the rest of the team is in
+          Palo Alto · we will not be on the promenade.
+        </p>
+      </div>
+      <span class="evt-tag is-private">Invitation</span>
+    </article>
+
+    <article class="evt">
+      <div class="evt-date">22 – 24 Mar<br /><span class="yr">2027</span></div>
+      <div class="evt-body">
+        <h3 class="evt-title">SaaStr Annual 2027 <em>— San Mateo</em></h3>
+        <div class="evt-place">SaaStr Annual · fireside chat · booth in the founder pavilion</div>
+        <p class="evt-desc">
+          <strong>Sarah Cannon</strong> (Index Ventures, Stratum board)
+          introduces <strong>Maya</strong> on a fireside chat. The
+          conversation is the founder-investor pairing on what it took to
+          build the eval set, get to ten customers, and turn the
+          architectural argument into a product the market would pay for.
+          Stratum booth in the founder pavilion.
+        </p>
+        <p class="evt-doing">
+          <span class="lbl">What we're doing</span>
+          Fireside chat with Sarah Cannon · small booth · Priya and David
+          on the floor · we treat this as the Series A audience.
+        </p>
+      </div>
+      <span class="evt-tag is-keynote">Fireside · Booth</span>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 03  PAST EVENTS ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 03</span>
+    <span class="bar"></span>
+    <span>Past · The record so far</span>
+  </div>
+  <h2 class="section-h">What we have done, <em>and what we learned.</em></h2>
+  <p class="section-dek">
+    Three appearances since the company was incorporated. In reverse
+    chronology, with the unvarnished version of what worked and what did not.
+    <em>We do not believe in pretending an event went better than it did.</em>
+  </p>
+
+  <div class="past">
+
+    <article class="past-row">
+      <div class="past-date">30 Jul<span class="yr">2026</span></div>
+      <div>
+        <h3 class="past-title">The Information <em>— feature interview</em></h3>
+        <div class="past-place">Maya Chen interview · published 30 Jul · The Information</div>
+        <p class="past-body">
+          A long-form Maya interview built around the public eval set.
+          Reporter: Erin Woo. The piece ran 3,200 words and reproduced six
+          of the eval-set questions verbatim alongside the Stratum and
+          Workday answers. <strong>It did not generate substantive customer
+          inbound in the first 48 hours</strong> — but it generated
+          <strong>eight Series A informational requests from investors</strong>
+          in the same window, which is a useful signal about who reads The
+          Information first.
+        </p>
+        <p class="past-reflect">
+          <span class="lbl">What we learned</span>
+          The Information piece reaches investors faster than buyers. Useful
+          for fundraising, slower for pipeline. Worth repeating next cycle
+          with a deliberately buyer-facing outlet (HR Executive, Talent
+          Daily) for the customer story.
+        </p>
+      </div>
+    </article>
+
+    <article class="past-row">
+      <div class="past-date">18 Jun<span class="yr">2026</span></div>
+      <div>
+        <h3 class="past-title">The Stratum / Founders Dinner #1 <em>— Palo Alto</em></h3>
+        <div class="past-place">Sundance Steakhouse · 6 CHROs · NDA · Maya, Priya, David</div>
+        <p class="past-body">
+          The first Stratum-hosted dinner. <strong>Maya, Priya, and
+          David</strong> hosted six CHROs at the Sundance Steakhouse in
+          Palo Alto. The theme: <em>"The eval set, before publication."</em>
+          All six attendees agreed under NDA to give feedback on the
+          102-question pre-publication eval set. The conversation ran from
+          7:00pm to 11:40pm and the wine list was honest. <strong>Two of
+          the six attendees are now Stratum customers.</strong>
+        </p>
+        <p class="past-reflect">
+          <span class="lbl">What we learned</span>
+          Six is the right number. Four feels like a sales meeting; eight
+          feels like a focus group. The conversion ratio (2 of 6) was
+          higher than any cohort we have run any other way. We will do
+          this again every quarter, hosted by us, and one a quarter hosted
+          by someone with more standing than us.
+        </p>
+      </div>
+    </article>
+
+    <article class="past-row">
+      <div class="past-date">04 Jun<span class="yr">2026</span></div>
+      <div>
+        <h3 class="past-title">The Bhusri Dinner <em>— Atherton, CA</em></h3>
+        <div class="past-place">Hosted by Aneel Bhusri at his home · 6 CHROs · Maya + Priya</div>
+        <p class="past-body">
+          Aneel Bhusri (ex-Workday CEO, Stratum angel investor) hosted six
+          CHROs at his home in Atherton. <strong>Maya and Priya</strong>
+          represented Stratum. The conversation was framed by Aneel and
+          ran without a deck — he asked the table what they were paying
+          their HCM vendor and what they got for it. We mostly listened.
+          <strong>Two new design partner conversations resulted</strong> —
+          Cordova Manufacturing (now signed) and one we are not yet ready
+          to name publicly.
+        </p>
+        <p class="past-reflect">
+          <span class="lbl">What we learned</span>
+          This is the format we want to recreate. Small, hosted by an
+          introducer with credibility, no decks, real conversation. The
+          host matters more than the venue. <em>We will do a Stratum-hosted
+          version in November</em> (see § 02 above). We will also try to
+          get on the calendar for a Bock-hosted version in Q1 2027.
+        </p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 04  WILL / WONT ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 04</span>
+    <span class="bar"></span>
+    <span>Our editorial policy on events</span>
+  </div>
+  <h2 class="section-h">What we will, <em>and won't,</em> do.</h2>
+  <p class="section-dek">
+    A short editorial section. We turn down most speaking requests not
+    because we are precious about it, but because most requests are not the
+    talk we would give. The list below is the test we run.
+  </p>
+
+  <div class="policy">
+
+    <div class="policy-col is-will">
+      <div class="policy-eyebrow"><span class="pip"></span>What we will speak on</div>
+      <h3 class="policy-h"><em>Yes</em> — on specific topics, with evidence.</h3>
+      <ul class="policy-list">
+        <li>
+          <strong>The architecture argument.</strong> Graph vs. record. Why
+          the system of truth sits above, not replaces, the systems of
+          record. Maya or David.
+        </li>
+        <li>
+          <strong>The eval set methodology.</strong> How we built the
+          102-question benchmark, what we cut, what surprised us. Maya.
+        </li>
+        <li>
+          <strong>Customer-engineering motion.</strong> What it looks like
+          to put a Forward Deployed Engineer at every design partner from
+          day one. David and Sofia.
+        </li>
+        <li>
+          <strong>Pricing in agentic AI.</strong> Outcome-based vs.
+          seat-based vs. usage. Where the unit economics actually land.
+          Priya.
+        </li>
+        <li>
+          <strong>AI safety in HR data.</strong> Entity resolution, audit
+          trails, the EU AI Act, and what "defensible" means at the board
+          level. David.
+        </li>
+      </ul>
+    </div>
+
+    <div class="policy-col is-wont">
+      <div class="policy-eyebrow"><span class="pip"></span>What we will not speak on</div>
+      <h3 class="policy-h"><em>No</em> — the talks we always decline.</h3>
+      <ul class="policy-list">
+        <li>
+          <strong>"AI in HR" generally.</strong> Too vague. The talk has
+          been given a thousand times and we have nothing new to add to it.
+        </li>
+        <li>
+          <strong>Competitor comparisons on stage.</strong> We publish those
+          in writing, with sources. Stages are not the medium for it.
+        </li>
+        <li>
+          <strong>Revenue, ARR, or fundraising specifics.</strong> Not for
+          stages. Our investors and our board hear the numbers first.
+        </li>
+        <li>
+          <strong>Predictions for next year.</strong> We have been a company
+          for a week. We do not believe our own forecasts yet; you should
+          not either.
+        </li>
+        <li>
+          <strong>Anything we do not have direct evidence on.</strong> If
+          the question is "what does the data say," and we have not run
+          the data, we will tell you so on stage.
+        </li>
+      </ul>
+    </div>
+
+    <div class="policy-cadence">
+      <strong>Cadence</strong>
+      <span class="sep">·</span>
+      We host <strong>one dinner per quarter</strong>.
+      <span class="sep">·</span>
+      We say yes to <strong>one external dinner per quarter</strong> (typically Bhusri / Bock-style).
+      <span class="sep">·</span>
+      We say no to everything else.
+      <span class="sep">·</span>
+      We pay for booths at <strong>HR Tech</strong> and <strong>Workday Rising</strong> in 2026.
+      <span class="sep">·</span>
+      We will add <strong>SHRM 2027</strong> if it makes sense by Q3.
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 05  SPEAKER REQUESTS ── -->
+<section class="section">
+  <div class="section-eyebrow">
+    <span class="num">§ 05</span>
+    <span class="bar"></span>
+    <span>Speaker requests</span>
+  </div>
+  <h2 class="section-h">How to <em>invite us.</em></h2>
+  <p class="section-dek">
+    If you are organizing a conference, panel, dinner, or podcast and you
+    want one of us on it, the address below is the front door. Read the
+    lead times. We confirm or decline within a week — usually within two
+    days.
+  </p>
+
+  <div class="request">
+    <div class="request-head">
+      <span class="lbl">To invite Stratum to speak</span>
+      <a class="addr" href="mailto:events@stratum.ai?subject=Speaker%20request%20%E2%80%94%20%5Bevent%20name%5D">events@stratum.ai</a>
+    </div>
+
+    <div class="request-grid">
+      <div class="request-cell">
+        <div class="request-k">Keynote lead time</div>
+        <div class="request-v"><strong>8 weeks</strong> minimum. Six if the topic is one we already speak on.</div>
+      </div>
+      <div class="request-cell">
+        <div class="request-k">Panel lead time</div>
+        <div class="request-v"><strong>4 weeks</strong>. We will not commit to a panel sight unseen on shorter notice.</div>
+      </div>
+      <div class="request-cell">
+        <div class="request-k">Response time</div>
+        <div class="request-v">Confirm or decline within <strong>1 week</strong> of request. Usually within two business days.</div>
+      </div>
+      <div class="request-cell">
+        <div class="request-k">Travel</div>
+        <div class="request-v">We pay our own. <em>Do not offer to cover it.</em> It is a courtesy we prefer to extend.</div>
+      </div>
+      <div class="request-cell">
+        <div class="request-k">Honoraria</div>
+        <div class="request-v">We do not accept them. <em>Donate to a 501(c)(3) of your choice if you must.</em></div>
+      </div>
+      <div class="request-cell">
+        <div class="request-k">What to include</div>
+        <div class="request-v">Event name, date, audience size and shape, format, the one question you want answered.</div>
+      </div>
+    </div>
+
+    <div class="request-speakers">
+      <div><span class="name">Maya Chen</span> <span class="topic">— architecture, strategy, the eval set, the competitive frame.</span></div>
+      <div><span class="name">David Okonkwo</span> <span class="topic">— AI safety, entity resolution, infrastructure, security.</span></div>
+      <div><span class="name">Priya Rao</span> <span class="topic">— go-to-market, pricing, the buyer, customer-engineering.</span></div>
+      <div><span class="name">Sofia Vargas</span> <span class="topic">— customer onboarding, Forward Deployed Engineering, the first 60 days.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── 06  CLOSING ── -->
+<section class="section">
+  <div class="closing">
+    <p class="closing-prose">
+      The right conference talk is <em>research, not marketing.</em>
+    </p>
+    <div class="closing-links">
+      <a href="../press/index.html">/press</a>
+      <span class="sep">·</span>
+      <a href="../research/index.html">/research</a>
+      <span class="sep">·</span>
+      <a href="../essays/index.html">/essays</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../console/">The Console</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">Team</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="../press/index.html">Press</a></li>
+        <li><a href="./" >Events</a></li>
+        <li><a href="../trust/">Trust</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Customers</h4>
+      <ul>
+        <li><a href="../customers/index.html">All customers</a></li>
+        <li><a href="../customers/mercator.html">Mercator</a></li>
+        <li><a href="mailto:partners@stratum.ai">Partnerships</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="mailto:events@stratum.ai">Events</a></li>
+        <li><a href="mailto:press@stratum.ai">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">General</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>© 2026 Stratum, Inc. · Palo Alto</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+// Sticky nav border on scroll
+(function() {
+  var nav = document.getElementById('nav');
+  if (!nav) return;
+  var onScroll = function() {
+    if (window.scrollY > 12) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>
