@@ -23,7 +23,7 @@
     <div class="brand">
       <span class="brand-mark">Stratum<span class="sl">/</span>Console</span>
       <span class="brand-meta" aria-label="Demo metadata">
-        Demo · Tessera Bank · 2,000 EE · prototype build
+        Demo · Tessera Bank · 2,000 EE · 140 reqs · prototype build
       </span>
     </div>
     <div class="topbar-right">
@@ -60,6 +60,9 @@
     </button>
     <button class="tab" role="tab" data-view="insights" aria-selected="false" aria-controls="view-insights" id="tab-insights">
       <span class="sec">§ 03</span>Insights
+    </button>
+    <button class="tab" role="tab" data-view="hiring" aria-selected="false" aria-controls="view-hiring" id="tab-hiring">
+      <span class="sec">§ 04</span>Hiring
     </button>
   </div>
 </nav>
@@ -232,6 +235,116 @@
     </div>
   </section>
 
+  <!-- ─── VIEW · HIRING ──────────────────────────────── -->
+  <section class="view" id="view-hiring" role="tabpanel" aria-labelledby="tab-hiring">
+    <div class="hiring-head">
+      <h2 class="view-title">The <em>hiring pipeline.</em></h2>
+      <p style="color:var(--ink-3); font-size:15px; margin:.4rem 0 0; max-width:680px;">
+        140 open requisitions · 3,500 candidates across the funnel · grounded in the same
+        people graph. Switch sub-views for the funnel, the requisition list, or source mix.
+      </p>
+    </div>
+
+    <nav class="hiring-pills" role="tablist" aria-label="Hiring sub-views">
+      <button class="hiring-pill" data-sub="pipeline"     aria-selected="true"  type="button">§ Pipeline</button>
+      <button class="hiring-pill" data-sub="requisitions" aria-selected="false" type="button">§ Requisitions</button>
+      <button class="hiring-pill" data-sub="sources"      aria-selected="false" type="button">§ Sources</button>
+    </nav>
+
+    <!-- Pipeline sub-view -->
+    <div class="hiring-sub is-active" id="sub-pipeline">
+      <div class="pipeline-grid">
+        <div class="pipeline-card pipeline-funnel-card">
+          <div class="ch-title">§ Funnel · all open requisitions</div>
+          <div id="hiring-funnel-mount"></div>
+        </div>
+        <div class="pipeline-card pipeline-stuck-card">
+          <div class="ch-title">§ Stuck or aging · top 8</div>
+          <div id="hiring-stuck-mount"></div>
+        </div>
+        <div class="pipeline-card pipeline-movement-card">
+          <div class="ch-title">§ Movement · last 7 days</div>
+          <div id="hiring-movement-mount"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Requisitions sub-view -->
+    <div class="hiring-sub" id="sub-requisitions" hidden>
+      <div class="filter-strip" role="search" aria-label="Filter requisitions">
+        <div class="filter">
+          <label for="rq-dept">Department</label>
+          <select id="rq-dept"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label for="rq-status">Status</label>
+          <select id="rq-status">
+            <option value="">All</option>
+            <option value="open">Open</option>
+            <option value="on_hold">On hold</option>
+            <option value="filled">Filled</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="rq-sla">Pipeline health</label>
+          <select id="rq-sla">
+            <option value="">All</option>
+            <option value="in_pace">In pace</option>
+            <option value="aging">Aging</option>
+            <option value="stuck">Stuck</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="rq-region">Region</label>
+          <select id="rq-region"><option value="">All</option></select>
+        </div>
+        <div class="filter">
+          <label for="rq-priority">Priority</label>
+          <select id="rq-priority">
+            <option value="">All</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="standard">Standard</option>
+          </select>
+        </div>
+        <div class="filter">
+          <label for="rq-level">Level</label>
+          <select id="rq-level"><option value="">All</option></select>
+        </div>
+        <div class="filter" style="margin-left:auto;">
+          <input type="text" id="rq-search" placeholder="Search req title, team…" aria-label="Search" />
+        </div>
+        <button class="filter-clear" id="rq-clear" type="button">Reset</button>
+      </div>
+
+      <div class="req-list-head">
+        <span class="count-pill">
+          Showing <span class="n" id="rq-count-n">140</span> of <span id="rq-count-total">140</span>
+        </span>
+      </div>
+      <div class="req-list" id="req-list" role="list"></div>
+    </div>
+
+    <!-- Sources sub-view -->
+    <div class="hiring-sub" id="sub-sources" hidden>
+      <div class="sources-grid">
+        <div class="pipeline-card">
+          <div class="ch-title">§ Funnel counts by source</div>
+          <div id="sources-bars-mount"></div>
+        </div>
+        <div class="pipeline-card">
+          <div class="ch-title">§ Top 10 referrers</div>
+          <div id="sources-referrers-mount"></div>
+        </div>
+        <div class="pipeline-card sources-conversion-card">
+          <div class="ch-title">§ Conversion ratios by source</div>
+          <div id="sources-conversion-mount"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
 </main>
 
 <!-- ────────────────────────────────────────── DRAWER -->
@@ -266,7 +379,22 @@
   <button class="mobile-tab" data-view="ask"      aria-selected="true"><span class="sec">§</span>Ask</button>
   <button class="mobile-tab" data-view="people"   aria-selected="false"><span class="sec">§</span>People</button>
   <button class="mobile-tab" data-view="insights" aria-selected="false"><span class="sec">§</span>Insights</button>
+  <button class="mobile-tab" data-view="hiring"   aria-selected="false"><span class="sec">§</span>Hiring</button>
 </nav>
+
+<!-- ────────────────────────────────────────── REQUISITION DRAWER -->
+<div class="drawer-backdrop" id="req-drawer-backdrop" aria-hidden="true"></div>
+<aside class="drawer" id="req-drawer" role="dialog" aria-modal="true" aria-labelledby="req-drawer-name" aria-hidden="true">
+  <div class="drawer-head">
+    <div class="row-id" id="req-drawer-id">REQ-00000</div>
+    <h3 id="req-drawer-name">Loading…</h3>
+    <div class="role-line" id="req-drawer-role">—</div>
+    <button class="drawer-close" id="req-drawer-close" type="button" aria-label="Close requisition detail">×</button>
+  </div>
+  <div class="drawer-body" id="req-drawer-body">
+    <!-- populated by JS -->
+  </div>
+</aside>
 
 
 <!-- ──────────────────────────────────────────  ONBOARDING -->

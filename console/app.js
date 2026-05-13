@@ -33,6 +33,15 @@ const state = {
   drawerEmpId: null,
   // Active view
   activeView: 'ask',
+  // HIRING view
+  requisitions: [],
+  candidates: [],
+  atsMeta: null,
+  byReqId: new Map(),
+  reqFiltered: [],
+  reqPageSize: 200,
+  reqPageRendered: 0,
+  hiringSub: 'pipeline',  // pipeline | requisitions | sources
 };
 
 // ─────────────────────────────────────────────────────────────
@@ -148,14 +157,22 @@ async function loadData() {
   const bar = $('#loadbar');
   bar.style.width = '15%';
   try {
-    const [people, orgs] = await Promise.all([
+    const [people, orgs, reqs, cands, meta] = await Promise.all([
       fetch('data/people.json').then(r => r.json()),
       fetch('data/orgs.json').then(r => r.json()),
+      // ATS files — soft-fail (if missing, hiring tab simply shows empty)
+      fetch('data/requisitions.json').then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch('data/candidates.json').then(r => r.ok ? r.json() : []).catch(() => []),
+      fetch('data/ats_meta.json').then(r => r.ok ? r.json() : null).catch(() => null),
     ]);
     bar.style.width = '75%';
     state.people = people;
     state.orgs = orgs;
     state.byId = new Map(people.map(p => [p.id, p]));
+    state.requisitions = reqs || [];
+    state.candidates = cands || [];
+    state.atsMeta = meta;
+    state.byReqId = new Map((reqs || []).map(r => [r.id, r]));
     bar.style.width = '100%';
     setTimeout(() => bar.classList.add('is-done'), 250);
   } catch (e) {
@@ -191,6 +208,9 @@ function switchView(name) {
   }
   if (name === 'insights') {
     renderInsights();
+  }
+  if (name === 'hiring') {
+    renderHiring();
   }
   // scroll to top of stage
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1674,6 +1694,455 @@ function renderFlightRiskHeatmap() {
   mount.appendChild(svg);
 }
 
+// ═════════════════════════════════════════════════════════════
+// ░░░░░░░░░░░░░░░░░░░░░  HIRING VIEW  ░░░░░░░░░░░░░░░░░░░░░░░░
+// ═════════════════════════════════════════════════════════════
+// Three sub-views switchable via the inline pills above:
+//   pipeline     — funnel + stuck panel + 7-day movement ticker
+//   requisitions — filterable list of all reqs, drawer on click
+//   sources      — source mix bars + top referrers + conv table
+// All values computed live from state.requisitions + state.candidates.
+// ═════════════════════════════════════════════════════════════
+
+function bindHiring() {
+  // Sub-view pills
+  $$('.hiring-pill').forEach(p => {
+    p.addEventListener('click', () => switchHiringSub(p.dataset.sub));
+  });
+
+  // Requisition filters
+  ['rq-dept','rq-status','rq-sla','rq-region','rq-priority','rq-level'].forEach(id => {
+    const el = $('#' + id);
+    if (el) el.addEventListener('change', applyReqFilters);
+  });
+  let searchTimer;
+  $('#rq-search')?.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(applyReqFilters, 180);
+  });
+  $('#rq-clear')?.addEventListener('click', () => {
+    ['rq-dept','rq-status','rq-sla','rq-region','rq-priority','rq-level'].forEach(id => {
+      const el = $('#' + id); if (el) el.value = '';
+    });
+    $('#rq-search').value = '';
+    applyReqFilters();
+  });
+
+  // Req drawer close
+  $('#req-drawer-close')?.addEventListener('click', closeReqDrawer);
+  $('#req-drawer-backdrop')?.addEventListener('click', closeReqDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && $('#req-drawer')?.classList.contains('is-open')) closeReqDrawer();
+  });
+}
+
+function switchHiringSub(name) {
+  state.hiringSub = name;
+  $$('.hiring-pill').forEach(p => p.setAttribute('aria-selected', p.dataset.sub === name ? 'true' : 'false'));
+  $$('.hiring-sub').forEach(s => {
+    const match = s.id === 'sub-' + name;
+    s.classList.toggle('is-active', match);
+    s.hidden = !match;
+  });
+  renderHiring();
+}
+
+function renderHiring() {
+  if (!state.requisitions.length) {
+    // Soft empty state
+    $('#hiring-funnel-mount').innerHTML = '<div style="padding:1rem;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">ATS data not loaded.</div>';
+    return;
+  }
+  // Always populate filters once
+  if (!$('#rq-dept').options.length || $('#rq-dept').options.length < 2) {
+    populateReqFilters();
+  }
+
+  const sub = state.hiringSub;
+  if (sub === 'pipeline')     renderHiringPipeline();
+  if (sub === 'requisitions') renderHiringRequisitions();
+  if (sub === 'sources')      renderHiringSources();
+}
+
+function populateReqFilters() {
+  const reqs = state.requisitions;
+  const depts = Array.from(new Set(reqs.map(r => r.department))).sort();
+  const regs  = Array.from(new Set(reqs.map(r => r.region))).sort();
+  const lvls  = Array.from(new Set(reqs.map(r => r.level))).sort();
+  // clear existing (just the "All" placeholder remains)
+  ['rq-dept','rq-region','rq-level'].forEach(id => {
+    const el = $('#' + id);
+    while (el.options.length > 1) el.remove(1);
+  });
+  depts.forEach(d => $('#rq-dept').appendChild(new Option(d, d)));
+  regs.forEach(r => $('#rq-region').appendChild(new Option(r, r)));
+  lvls.forEach(l => $('#rq-level').appendChild(new Option(l, l)));
+}
+
+// ── Pipeline sub-view ─────────────────────────────────────────
+function renderHiringPipeline() {
+  // Funnel: aggregate stage_counts across open requisitions
+  const openReqs = state.requisitions.filter(r => r.status === 'open');
+  const totals = { applied: 0, screen: 0, interview: 0, offer: 0, accepted: 0 };
+  // We compute from the candidates dataset for accuracy of pipeline state
+  state.candidates.forEach(c => {
+    const req = state.byReqId.get(c.requisition_id);
+    if (!req || req.status !== 'open') return;
+    if (totals[c.stage] != null) totals[c.stage] += 1;
+  });
+  // Total applied should include reach-through (everyone who ever applied)
+  // — i.e. people in any non-withdrew stage AND the rejected pool.
+  // Simpler: applied = sum of all stages reached at "applied" level
+  // by walking candidates: every candidate touched 'applied'.
+  let totalApplied = 0;
+  state.candidates.forEach(c => {
+    const req = state.byReqId.get(c.requisition_id);
+    if (!req || req.status !== 'open') return;
+    totalApplied += 1;  // every candidate started here
+  });
+  // Reach-through counts (everyone who reached or passed this stage):
+  const reach = {
+    applied: totalApplied,
+    screen: 0, interview: 0, offer: 0, accepted: 0,
+  };
+  state.candidates.forEach(c => {
+    const req = state.byReqId.get(c.requisition_id);
+    if (!req || req.status !== 'open') return;
+    const order = ['applied','screen','interview','offer','accepted'];
+    const idx = order.indexOf(c.stage);
+    if (idx < 0) return;  // rejected / withdrew
+    // Count this candidate as reaching every stage up to and including their current
+    for (let i = 1; i <= idx; i++) {
+      reach[order[i]] += 1;
+    }
+  });
+
+  const stages = [
+    { key: 'applied',   label: 'Applied' },
+    { key: 'screen',    label: 'Screened' },
+    { key: 'interview', label: 'Interviewed' },
+    { key: 'offer',     label: 'Offered' },
+    { key: 'accepted',  label: 'Accepted' },
+  ];
+  const maxN = Math.max(reach.applied, 1);
+
+  const mount = $('#hiring-funnel-mount');
+  let html = '';
+  stages.forEach((s, i) => {
+    const n = reach[s.key];
+    const pct = n / maxN * 100;
+    html += `
+      <div class="funnel-row">
+        <div class="funnel-label">${s.label}</div>
+        <div class="funnel-bar"><div class="funnel-bar-fill s-${s.key}" style="width:${pct.toFixed(1)}%"></div></div>
+        <div class="funnel-count">${n.toLocaleString()}</div>
+      </div>
+    `;
+    if (i < stages.length - 1) {
+      const next = reach[stages[i+1].key];
+      const conv = n > 0 ? (next / n * 100) : 0;
+      html += `<div class="funnel-conv">↓ ${conv.toFixed(1)}% · ${(n - next).toLocaleString()} drop</div>`;
+    }
+  });
+  mount.innerHTML = html;
+
+  // Stuck panel
+  const stuck = state.requisitions
+    .filter(r => r.sla_status === 'stuck' || r.sla_status === 'aging')
+    .sort((a, b) => (b.days_open - a.days_open))
+    .slice(0, 8);
+  const stuckMount = $('#hiring-stuck-mount');
+  stuckMount.innerHTML = stuck.length === 0
+    ? '<div style="padding:.6rem 0;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No stuck or aging requisitions.</div>'
+    : stuck.map(r => `
+        <div class="stuck-row" data-req="${r.id}">
+          <div>
+            <div class="stuck-title">${escapeHtml(r.title)}</div>
+            <div class="stuck-sub">${escapeHtml(r.department)} · ${escapeHtml(r.location)} · ${r.days_open}d open · <span class="req-chip ${r.sla_status}">${r.sla_status.replace('_',' ')}</span></div>
+            ${renderMiniStageBar(r.stage_counts)}
+          </div>
+          <div class="stuck-days">${r.days_open}d</div>
+        </div>
+      `).join('');
+  stuckMount.querySelectorAll('.stuck-row').forEach(row => {
+    row.addEventListener('click', () => openReqDrawer(row.dataset.req));
+  });
+
+  // Movement ticker
+  const movement = (state.atsMeta && state.atsMeta.movement_recent) || [];
+  const movMount = $('#hiring-movement-mount');
+  movMount.innerHTML = movement.length === 0
+    ? '<div style="padding:.6rem 0;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No movement in the last 7 days.</div>'
+    : `<div class="movement-ticker">
+        ${movement.slice(0, 20).map(m => `
+          <div class="movement-row">
+            <span class="stage-tag ${m.stage}">→ ${escapeHtml(m.stage)}</span>
+            <span class="who">${escapeHtml(m.display_name)}</span>
+            · ${escapeHtml(m.requisition_title)}
+            <span class="when">${m.days_ago}d ago</span>
+          </div>
+        `).join('')}
+      </div>`;
+}
+
+// Helper: tiny 5-segment bar reflecting stage counts.
+function renderMiniStageBar(stage_counts) {
+  if (!stage_counts) return '';
+  const stages = ['applied','screen','interview','offer','accepted'];
+  return `<div class="stuck-mini">${stages.map(s => {
+    const n = stage_counts[s] || 0;
+    let cls = '';
+    if (n > 0) cls = 'has';
+    if (s === 'offer' && n > 0) cls = 'has-strong';
+    if (s === 'accepted' && n > 0) cls = 'has-accept';
+    return `<span class="${cls}" title="${s}: ${n}"></span>`;
+  }).join('')}</div>`;
+}
+
+// ── Requisitions sub-view ────────────────────────────────────
+function applyReqFilters() {
+  const dept = $('#rq-dept')?.value || '';
+  const status = $('#rq-status')?.value || '';
+  const sla = $('#rq-sla')?.value || '';
+  const region = $('#rq-region')?.value || '';
+  const priority = $('#rq-priority')?.value || '';
+  const level = $('#rq-level')?.value || '';
+  const search = ($('#rq-search')?.value || '').trim().toLowerCase();
+
+  state.reqFiltered = state.requisitions.filter(r => {
+    if (dept && r.department !== dept) return false;
+    if (status && r.status !== status) return false;
+    if (sla && r.sla_status !== sla) return false;
+    if (region && r.region !== region) return false;
+    if (priority && r.priority !== priority) return false;
+    if (level && r.level !== level) return false;
+    if (search) {
+      const hay = `${r.title} ${r.team} ${r.location} ${r.id}`.toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+  state.reqPageRendered = 0;
+  $('#rq-count-n').textContent = state.reqFiltered.length.toLocaleString();
+  $('#rq-count-total').textContent = state.requisitions.length.toLocaleString();
+  $('#req-list').innerHTML = '';
+  renderMoreReqs();
+}
+
+function renderHiringRequisitions() {
+  if (!state.reqFiltered.length) {
+    applyReqFilters();
+  } else {
+    $('#rq-count-n').textContent = state.reqFiltered.length.toLocaleString();
+    $('#rq-count-total').textContent = state.requisitions.length.toLocaleString();
+  }
+}
+
+function renderMoreReqs() {
+  const list = $('#req-list');
+  const frag = document.createDocumentFragment();
+  const end = Math.min(state.reqPageRendered + state.reqPageSize, state.reqFiltered.length);
+  for (let i = state.reqPageRendered; i < end; i++) {
+    frag.appendChild(buildReqRow(state.reqFiltered[i]));
+  }
+  list.appendChild(frag);
+  state.reqPageRendered = end;
+
+  // Note: rendering the full list at once is OK for 140 — but if filtered set ends here:
+  if (state.reqFiltered.length === 0) {
+    list.innerHTML = `<div style="padding:1.5rem; color:var(--ink-mute); font-style:italic; text-align:center;">No requisitions match the current filters.</div>`;
+  }
+}
+
+function buildReqRow(r) {
+  const row = el('div', {
+    class: 'req-row', role: 'listitem', tabindex: '0',
+    'data-id': r.id,
+    on: {
+      click: () => openReqDrawer(r.id),
+      keydown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openReqDrawer(r.id); } },
+    },
+  });
+  const sc = r.stage_counts || {};
+  row.innerHTML = `
+    <div class="req-id">${escapeHtml(r.id)}</div>
+    <div class="req-title-wrap">
+      <div class="req-title">${escapeHtml(r.title)}</div>
+      <div class="req-sub">${escapeHtml(r.department)} · ${escapeHtml(r.team)} · ${escapeHtml(r.location)} · ${escapeHtml(r.remote.replace('_',' '))}</div>
+    </div>
+    <div class="req-cell">${escapeHtml(r.level)}</div>
+    <div class="req-cell num">${r.days_open}d</div>
+    <div class="req-cell"><span class="req-chip ${r.sla_status}">${r.sla_status.replace('_',' ')}</span></div>
+    <div class="req-cell"><span class="req-chip priority-${r.priority}">${r.priority}</span> <span class="req-chip status-${r.status}">${r.status.replace('_',' ')}</span></div>
+    <div class="req-cell">
+      ${renderMiniStageBar(sc).replace('stuck-mini','req-stage-bar')}
+      <div style="font-family:var(--mono); font-size:9.5px; color:var(--ink-mute); margin-top:3px; letter-spacing:.04em;">
+        A ${sc.applied||0} · S ${sc.screen||0} · I ${sc.interview||0} · O ${sc.offer||0} · ✓ ${sc.accepted||0}
+      </div>
+    </div>
+  `;
+  return row;
+}
+
+function openReqDrawer(reqId) {
+  const r = state.byReqId.get(reqId);
+  if (!r) return;
+  const hm = state.byId.get(r.hiring_manager_id);
+  const rec = state.byId.get(r.recruiter_id);
+  const cands = state.candidates.filter(c => c.requisition_id === reqId);
+  const byStage = {};
+  ['applied','screen','interview','offer','accepted','rejected','withdrew'].forEach(s => byStage[s] = []);
+  cands.forEach(c => { if (byStage[c.stage]) byStage[c.stage].push(c); });
+
+  $('#req-drawer-id').textContent = r.id;
+  $('#req-drawer-name').textContent = r.title;
+  $('#req-drawer-role').textContent = `${r.department} · ${r.team} · ${r.location} · ${r.level}`;
+
+  $('#req-drawer-body').innerHTML = `
+    <div class="drawer-grid">
+      <div class="drawer-kv"><div class="lbl">Status</div><div class="v"><span class="req-chip status-${r.status}">${r.status.replace('_',' ')}</span></div></div>
+      <div class="drawer-kv"><div class="lbl">Pipeline health</div><div class="v"><span class="req-chip ${r.sla_status}">${r.sla_status.replace('_',' ')}</span></div></div>
+      <div class="drawer-kv"><div class="lbl">Priority</div><div class="v"><span class="req-chip priority-${r.priority}">${r.priority}</span></div></div>
+      <div class="drawer-kv"><div class="lbl">Days open</div><div class="v num">${r.days_open} days</div></div>
+      <div class="drawer-kv"><div class="lbl">Opened</div><div class="v num">${fmt.date(r.opened_date)}</div></div>
+      <div class="drawer-kv"><div class="lbl">Target close</div><div class="v num">${fmt.date(r.target_close_date)}</div></div>
+      <div class="drawer-kv"><div class="lbl">Region · Country</div><div class="v">${r.region}</div></div>
+      <div class="drawer-kv"><div class="lbl">Remote</div><div class="v">${r.remote.replace('_',' ')}</div></div>
+      <div class="drawer-kv"><div class="lbl">Comp band P50</div><div class="v num">${fmt.money(r.comp_band_p50)}</div></div>
+      <div class="drawer-kv"><div class="lbl">Hiring manager</div><div class="v">${hm ? escapeHtml(hm.display_name) + ' · ' + escapeHtml(hm.title) : '—'}</div></div>
+      <div class="drawer-kv"><div class="lbl">Recruiter</div><div class="v">${rec ? escapeHtml(rec.display_name) : '—'}</div></div>
+      <div class="drawer-kv"><div class="lbl">Bar raisers</div><div class="v">${r.bar_raisers_required ? 'Required' : 'Optional'}</div></div>
+    </div>
+
+    <div class="drawer-sec-title">§ Candidates by stage · ${cands.length} total</div>
+    ${['offer','interview','screen','applied','accepted','rejected','withdrew'].map(stage => {
+      const list = byStage[stage];
+      if (!list.length) return '';
+      return `
+        <div style="margin:.8rem 0 .4rem;">
+          <div class="ch-title" style="margin-bottom:.4rem;">${stage} · ${list.length}</div>
+          ${list.slice(0, 6).map(c => `
+            <div style="display:flex; gap:8px; padding:.35rem 0; border-bottom:1px dashed var(--paper-rule); font-family:var(--mono); font-size:11.5px;">
+              <span style="flex:1; color:var(--ink);">${escapeHtml(c.display_name)} <span style="color:var(--ink-mute);">· ${escapeHtml(c.source)}</span></span>
+              <span style="color:var(--ink-mute);">${c.days_in_stage}d in stage</span>
+              ${c.predicted_offer_acceptance_probability && (stage === 'offer' || stage === 'accepted') ? `<span style="color:var(--ochre-deep); font-weight:700;">p=${c.predicted_offer_acceptance_probability.toFixed(2)}</span>` : ''}
+            </div>
+          `).join('')}
+          ${list.length > 6 ? `<div style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); padding:.3rem 0;">+ ${list.length - 6} more</div>` : ''}
+        </div>
+      `;
+    }).join('')}
+  `;
+
+  $('#req-drawer').classList.add('is-open');
+  $('#req-drawer').setAttribute('aria-hidden', 'false');
+  $('#req-drawer-backdrop').classList.add('is-open');
+  $('#req-drawer-close').focus();
+}
+
+function closeReqDrawer() {
+  $('#req-drawer')?.classList.remove('is-open');
+  $('#req-drawer')?.setAttribute('aria-hidden', 'true');
+  $('#req-drawer-backdrop')?.classList.remove('is-open');
+}
+
+// ── Sources sub-view ─────────────────────────────────────────
+function renderHiringSources() {
+  const sources = ['referral','inbound','outbound','agency','event'];
+
+  // Grouped bars: counts of candidates by stage by source
+  const groups = sources.map(src => {
+    const list = state.candidates.filter(c => c.source === src);
+    const counts = {
+      applied:    list.length,
+      screened:   list.filter(c => ['screen','interview','offer','accepted'].includes(c.stage)).length,
+      interviewed:list.filter(c => ['interview','offer','accepted'].includes(c.stage)).length,
+      offered:    list.filter(c => ['offer','accepted'].includes(c.stage)).length,
+      accepted:   list.filter(c => c.stage === 'accepted').length,
+    };
+    const acceptedPct = counts.applied > 0 ? (counts.accepted / counts.applied * 100) : 0;
+    return {
+      group: src.charAt(0).toUpperCase() + src.slice(1),
+      annotation: acceptedPct.toFixed(1) + '%',
+      bars: [
+        { label: 'Appl', value: counts.applied,     color: 'var(--ink-3)' },
+        { label: 'Scr',  value: counts.screened,    color: 'var(--ink-2)' },
+        { label: 'Int',  value: counts.interviewed, color: 'var(--ochre)' },
+        { label: 'Off',  value: counts.offered,     color: 'var(--ochre-deep)' },
+        { label: 'Acc',  value: counts.accepted,    color: 'var(--moss)' },
+      ],
+    };
+  });
+  renderGroupedBars($('#sources-bars-mount'), groups);
+
+  // Top referrers
+  const refMap = new Map();
+  state.candidates.forEach(c => {
+    if (!c.referrer_id) return;
+    if (!refMap.has(c.referrer_id)) refMap.set(c.referrer_id, { id: c.referrer_id, total: 0, offered: 0, accepted: 0 });
+    const r = refMap.get(c.referrer_id);
+    r.total += 1;
+    if (['offer','accepted'].includes(c.stage)) r.offered += 1;
+    if (c.stage === 'accepted') r.accepted += 1;
+  });
+  const topRefs = Array.from(refMap.values())
+    .sort((a,b) => b.accepted - a.accepted || b.offered - a.offered || b.total - a.total)
+    .slice(0, 10);
+
+  const refMount = $('#sources-referrers-mount');
+  refMount.innerHTML = topRefs.length === 0
+    ? '<div style="padding:.6rem 0;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No referrals yet.</div>'
+    : topRefs.map(r => {
+        const p = state.byId.get(r.id);
+        const conv = r.total > 0 ? (r.accepted / r.total * 100).toFixed(1) : '0.0';
+        return `
+          <div class="referrer-row">
+            <div class="row-avatar" style="background:${DEPT_COLORS[p?.department] || 'var(--ink-2)'};">${initialsOf(p?.display_name || '??')}</div>
+            <div>
+              <div class="nm">${escapeHtml(p?.display_name || r.id)}</div>
+              <div class="sub">${escapeHtml(p?.department || '—')} · ${escapeHtml(p?.location || '—')}</div>
+            </div>
+            <div class="num" title="Accepted referrals">${r.accepted}<div class="sub" style="text-align:right;">acc</div></div>
+            <div class="num" title="Total / conversion">${r.total}<div class="sub" style="text-align:right;">${conv}%</div></div>
+          </div>
+        `;
+      }).join('');
+
+  // Conversion table
+  const rows = sources.map(src => {
+    const list = state.candidates.filter(c => c.source === src);
+    const n = list.length;
+    const screened = list.filter(c => ['screen','interview','offer','accepted'].includes(c.stage)).length;
+    const interviewed = list.filter(c => ['interview','offer','accepted'].includes(c.stage)).length;
+    const offered = list.filter(c => ['offer','accepted'].includes(c.stage)).length;
+    const accepted = list.filter(c => c.stage === 'accepted').length;
+    const pct = (a, b) => b > 0 ? (a / b * 100).toFixed(1) + '%' : '—';
+    return { src, n, screened, interviewed, offered, accepted, pct };
+  });
+  $('#sources-conversion-mount').innerHTML = `
+    <table class="source-conv-table">
+      <thead><tr>
+        <th>Source</th><th class="num">N</th>
+        <th class="num">Scr%</th><th class="num">Int%</th><th class="num">Offer%</th><th class="num">Acc%</th>
+        <th class="num">App→Acc</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => `
+          <tr>
+            <td><strong>${escapeHtml(r.src)}</strong></td>
+            <td class="num">${r.n.toLocaleString()}</td>
+            <td class="num">${r.pct(r.screened, r.n)}</td>
+            <td class="num">${r.pct(r.interviewed, r.screened)}</td>
+            <td class="num">${r.pct(r.offered, r.interviewed)}</td>
+            <td class="num">${r.pct(r.accepted, r.offered)}</td>
+            <td class="num" style="color:${r.accepted / Math.max(r.n,1) > 0.10 ? 'var(--moss-deep)' : 'var(--ochre-deep)'};">${r.pct(r.accepted, r.n)}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
 // ─────────────────────────────────────────────────────────────
 // COMMAND PALETTE
 // ─────────────────────────────────────────────────────────────
@@ -1745,6 +2214,7 @@ async function boot() {
   bindPalette();
   bindSettings();
   bindCsvUpload();
+  bindHiring();
   restoreSavedFromStorage();
   refreshDemoBanner();
   bumpTopbarCost(0, true);
@@ -1846,7 +2316,21 @@ Style:
 
 Available fields on each employee row: id, display_name, given_name, family_name, title, level (IC1–IC7, M1–M4), department, team, location, country, region (NA, EMEA, APAC, LATAM), manager_id, hire_date, tenure_years, comp_total, comp_band_p50, comp_ratio, last_review (exceeds|meets|partially_meets|does_not_meet), performance_score (1–5), flight_risk (0–1), flight_risk_band (low|moderate|high), is_manager, span_of_control, employment_type, promotion_eligible, last_promotion, gender (woman|man|nonbinary — aggregate only).
 
-You have access to a dataset of ${N} employees (as of ${asOf}). Use tools — do not assume.`,
+You have access to a dataset of ${N} employees (as of ${asOf}).
+
+The Console also has an ATS dataset attached:
+  · ${state.requisitions.length} requisitions (Greenhouse-style records)
+  · ${state.candidates.length} candidates across the hiring pipeline
+  · stages: applied → screen → interview → offer → accepted / rejected / withdrew
+  · sources: referral, inbound, outbound, agency, event
+
+Requisition fields: id, title, department, team, level, location, region, remote, hiring_manager_id, recruiter_id, comp_band_p50, status (open|on_hold|filled|closed), opened_date, target_close_date, days_open, priority (critical|high|standard), stage_counts {applied, screen, interview, offer, accepted}, bar_raisers_required, sla_status (in_pace|aging|stuck).
+
+Candidate fields: id, display_name, current_title, current_company, total_experience_years, highest_level_indicated, location_preference, country, source, source_detail, requisition_id, stage, stage_entered, days_in_stage, rejected_reason, scorecards, diversity_self_id (aggregate only), expected_comp, offered_comp, is_internal, is_referral, referrer_id, flight_risk_at_current_employer, predicted_offer_acceptance_probability.
+
+ATS tools: \`query_requisitions\`, \`query_candidates\`, \`aggregate_pipeline\`.
+
+Use tools — do not assume.`,
         cache_control: { type: 'ephemeral' },
       }
     ];
@@ -1973,8 +2457,86 @@ You have access to a dataset of ${N} employees (as of ${asOf}). Use tools — do
             caveats:             { type: 'array', items: { type: 'string' } },
             source:              { type: 'string' },
           },
-          // last tool → cache breakpoint here so the entire tool list is cached
         },
+      },
+      // ── ATS TOOLS ────────────────────────────────────────────
+      {
+        name: 'query_requisitions',
+        description: 'Filter the requisitions dataset and return matching rows. Use this for "open reqs in Engineering", "stuck offers", "aging reqs", etc.',
+        input_schema: {
+          type: 'object',
+          properties: {
+            filters: {
+              type: 'object',
+              properties: {
+                department:       { type: 'string' },
+                department_in:    { type: 'array', items: { type: 'string' } },
+                status:           { type: 'string', enum: ['open','on_hold','filled','closed'] },
+                status_in:        { type: 'array', items: { type: 'string' } },
+                sla_status:       { type: 'string', enum: ['in_pace','aging','stuck'] },
+                priority:         { type: 'string', enum: ['critical','high','standard'] },
+                region:           { type: 'string' },
+                level:            { type: 'string' },
+                level_in:         { type: 'array', items: { type: 'string' } },
+                remote:           { type: 'string', enum: ['remote','hybrid','on_site'] },
+                days_open_gt:     { type: 'integer' },
+                days_open_lt:     { type: 'integer' },
+                has_offer_extended: { type: 'boolean', description: 'true if stage_counts.offer > 0' },
+              }
+            },
+            limit:    { type: 'integer', default: 20, maximum: 50 },
+            sort_by:  { type: 'string', description: 'e.g. days_open, comp_band_p50' },
+            sort_desc:{ type: 'boolean' },
+          }
+        }
+      },
+      {
+        name: 'query_candidates',
+        description: 'Filter the candidates dataset and return matching rows. Filters by stage, source, requisition, days-in-stage, predicted accept probability, etc.',
+        input_schema: {
+          type: 'object',
+          properties: {
+            filters: {
+              type: 'object',
+              properties: {
+                stage:            { type: 'string', enum: ['applied','screen','interview','offer','accepted','rejected','withdrew'] },
+                stage_in:         { type: 'array', items: { type: 'string' } },
+                source:           { type: 'string', enum: ['referral','inbound','outbound','agency','event'] },
+                source_in:        { type: 'array', items: { type: 'string' } },
+                requisition_id:   { type: 'string' },
+                requisition_department: { type: 'string' },
+                days_in_stage_gt: { type: 'integer' },
+                days_in_stage_lt: { type: 'integer' },
+                predicted_accept_gt: { type: 'number' },
+                predicted_accept_lt: { type: 'number' },
+                is_referral:      { type: 'boolean' },
+                is_internal:      { type: 'boolean' },
+              }
+            },
+            limit:    { type: 'integer', default: 20, maximum: 50 },
+            sort_by:  { type: 'string' },
+            sort_desc:{ type: 'boolean' },
+          }
+        }
+      },
+      {
+        name: 'aggregate_pipeline',
+        description: 'Group requisitions or candidates by department/stage/source and compute conversion or aging stats. Use this for funnel analyses, source mix, time-to-fill.',
+        input_schema: {
+          type: 'object',
+          required: ['entity','group_by'],
+          properties: {
+            entity:   { type: 'string', enum: ['requisitions','candidates'] },
+            group_by: { type: 'array', items: { type: 'string', enum: ['department','stage','source','region','level','sla_status','status','priority','requisition_id'] } },
+            filters:  {
+              type: 'object',
+              description: 'Same shapes as query_requisitions/query_candidates filters; the filter set used depends on entity.',
+            },
+            metrics:  { type: 'array', items: { type: 'string', enum: ['count','median_days_open','median_days_in_stage','accepted_rate','offer_rate','interview_rate','median_offered_comp','median_predicted_accept'] } },
+            min_cell_n: { type: 'integer', default: 1 },
+          },
+        },
+        // last tool → cache breakpoint here so the entire tool list is cached
         cache_control: { type: 'ephemeral' },
       },
     ];
@@ -1986,13 +2548,16 @@ You have access to a dataset of ${N} employees (as of ${asOf}). Use tools — do
   dispatch(name, input) {
     try {
       switch (name) {
-        case 'query_people':  return LLM.tool_queryPeople(input);
-        case 'aggregate':     return LLM.tool_aggregate(input);
-        case 'distribution':  return LLM.tool_distribution(input);
-        case 'pay_equity':    return LLM.tool_payEquity(input);
-        case 'render_chart':  return LLM.tool_renderChart(input);
-        case 'cite':          return LLM.tool_cite(input);
-        default:              return { error: 'unknown tool: ' + name };
+        case 'query_people':       return LLM.tool_queryPeople(input);
+        case 'aggregate':          return LLM.tool_aggregate(input);
+        case 'distribution':       return LLM.tool_distribution(input);
+        case 'pay_equity':         return LLM.tool_payEquity(input);
+        case 'render_chart':       return LLM.tool_renderChart(input);
+        case 'cite':               return LLM.tool_cite(input);
+        case 'query_requisitions': return LLM.tool_queryRequisitions(input);
+        case 'query_candidates':   return LLM.tool_queryCandidates(input);
+        case 'aggregate_pipeline': return LLM.tool_aggregatePipeline(input);
+        default:                   return { error: 'unknown tool: ' + name };
       }
     } catch (e) {
       return { error: String(e && e.message || e) };
@@ -2222,6 +2787,236 @@ You have access to a dataset of ${N} employees (as of ${asOf}). Use tools — do
     return { ok: true };
   },
 
+  // ── ATS tool helpers ─────────────────────────────────────────
+  applyReqFilters(reqs, f) {
+    if (!f) return reqs.slice();
+    return reqs.filter(r => {
+      if (f.department && r.department !== f.department) return false;
+      if (f.department_in && !f.department_in.includes(r.department)) return false;
+      if (f.status && r.status !== f.status) return false;
+      if (f.status_in && !f.status_in.includes(r.status)) return false;
+      if (f.sla_status && r.sla_status !== f.sla_status) return false;
+      if (f.priority && r.priority !== f.priority) return false;
+      if (f.region && r.region !== f.region) return false;
+      if (f.level && r.level !== f.level) return false;
+      if (f.level_in && !f.level_in.includes(r.level)) return false;
+      if (f.remote && r.remote !== f.remote) return false;
+      if (typeof f.days_open_gt === 'number' && !(r.days_open > f.days_open_gt)) return false;
+      if (typeof f.days_open_lt === 'number' && !(r.days_open < f.days_open_lt)) return false;
+      if (typeof f.has_offer_extended === 'boolean') {
+        const has = (r.stage_counts && r.stage_counts.offer > 0);
+        if (f.has_offer_extended !== has) return false;
+      }
+      return true;
+    });
+  },
+
+  applyCandFilters(cands, f) {
+    if (!f) return cands.slice();
+    return cands.filter(c => {
+      if (f.stage && c.stage !== f.stage) return false;
+      if (f.stage_in && !f.stage_in.includes(c.stage)) return false;
+      if (f.source && c.source !== f.source) return false;
+      if (f.source_in && !f.source_in.includes(c.source)) return false;
+      if (f.requisition_id && c.requisition_id !== f.requisition_id) return false;
+      if (f.requisition_department) {
+        const req = state.byReqId.get(c.requisition_id);
+        if (!req || req.department !== f.requisition_department) return false;
+      }
+      if (typeof f.days_in_stage_gt === 'number' && !(c.days_in_stage > f.days_in_stage_gt)) return false;
+      if (typeof f.days_in_stage_lt === 'number' && !(c.days_in_stage < f.days_in_stage_lt)) return false;
+      if (typeof f.predicted_accept_gt === 'number' && !(c.predicted_offer_acceptance_probability > f.predicted_accept_gt)) return false;
+      if (typeof f.predicted_accept_lt === 'number' && !(c.predicted_offer_acceptance_probability < f.predicted_accept_lt)) return false;
+      if (typeof f.is_referral === 'boolean' && c.is_referral !== f.is_referral) return false;
+      if (typeof f.is_internal === 'boolean' && c.is_internal !== f.is_internal) return false;
+      return true;
+    });
+  },
+
+  projectReq(r) {
+    return {
+      id: r.id,
+      title: r.title,
+      department: r.department,
+      team: r.team,
+      level: r.level,
+      location: r.location,
+      region: r.region,
+      remote: r.remote,
+      status: r.status,
+      sla_status: r.sla_status,
+      priority: r.priority,
+      days_open: r.days_open,
+      opened_date: r.opened_date,
+      target_close_date: r.target_close_date,
+      comp_band_p50: r.comp_band_p50,
+      stage_counts: r.stage_counts,
+      hiring_manager_id: r.hiring_manager_id,
+      recruiter_id: r.recruiter_id,
+    };
+  },
+
+  projectCand(c) {
+    return {
+      id: c.id,
+      display_name: c.display_name,
+      current_title: c.current_title,
+      current_company: c.current_company,
+      total_experience_years: c.total_experience_years,
+      highest_level_indicated: c.highest_level_indicated,
+      source: c.source,
+      requisition_id: c.requisition_id,
+      stage: c.stage,
+      days_in_stage: c.days_in_stage,
+      stage_entered: c.stage_entered,
+      offered_comp: c.offered_comp,
+      expected_comp: c.expected_comp,
+      predicted_offer_acceptance_probability: c.predicted_offer_acceptance_probability,
+      is_referral: c.is_referral,
+      is_internal: c.is_internal,
+      referrer_id: c.referrer_id,
+    };
+  },
+
+  // tool · query_requisitions
+  tool_queryRequisitions({ filters, limit, sort_by, sort_desc }) {
+    const rows = LLM.applyReqFilters(state.requisitions, filters);
+    const sortField = sort_by || 'days_open';
+    rows.sort((a, b) => {
+      const av = a[sortField], bv = b[sortField];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (typeof av === 'string') return sort_desc ? bv.localeCompare(av) : av.localeCompare(bv);
+      return sort_desc ? (bv - av) : (av - bv);
+    });
+    const cap = Math.min(limit || 20, 50);
+    return {
+      rows: rows.slice(0, cap).map(LLM.projectReq),
+      total_matched: rows.length,
+      sample_capped_at: cap,
+      truncated: rows.length > cap,
+    };
+  },
+
+  // tool · query_candidates
+  tool_queryCandidates({ filters, limit, sort_by, sort_desc }) {
+    const rows = LLM.applyCandFilters(state.candidates, filters);
+    const sortField = sort_by || 'days_in_stage';
+    rows.sort((a, b) => {
+      const av = a[sortField], bv = b[sortField];
+      if (av == null && bv == null) return 0;
+      if (av == null) return 1;
+      if (bv == null) return -1;
+      if (typeof av === 'string') return sort_desc ? bv.localeCompare(av) : av.localeCompare(bv);
+      return sort_desc ? (bv - av) : (av - bv);
+    });
+    const cap = Math.min(limit || 20, 50);
+    return {
+      rows: rows.slice(0, cap).map(LLM.projectCand),
+      total_matched: rows.length,
+      sample_capped_at: cap,
+      truncated: rows.length > cap,
+    };
+  },
+
+  // tool · aggregate_pipeline
+  tool_aggregatePipeline({ entity, group_by, filters, metrics, min_cell_n }) {
+    const dims = (group_by && group_by.length) ? group_by : ['department'];
+    const minN = min_cell_n || 1;
+    let base;
+    if (entity === 'candidates') {
+      base = LLM.applyCandFilters(state.candidates, filters);
+    } else {
+      base = LLM.applyReqFilters(state.requisitions, filters);
+    }
+
+    const get = (row, dim) => {
+      // For candidates, allow accessing the req's department via virtual dim
+      if (entity === 'candidates' && dim === 'department') {
+        const req = state.byReqId.get(row.requisition_id);
+        return req ? req.department : '—';
+      }
+      if (dim === 'requisition_id') return row.requisition_id;
+      return row[dim];
+    };
+
+    const groups = new Map();
+    base.forEach(r => {
+      const key = dims.map(d => {
+        const v = get(r, d);
+        return v != null ? v : '—';
+      }).join(' · ');
+      if (!groups.has(key)) {
+        const k = {};
+        dims.forEach(d => { k[d] = get(r, d); });
+        groups.set(key, { _key: k, rows: [] });
+      }
+      groups.get(key).rows.push(r);
+    });
+
+    const out = [];
+    const wanted = metrics || ['count'];
+    groups.forEach(g => {
+      if (g.rows.length < minN) return;
+      const m = {};
+      wanted.forEach(metric => {
+        switch (metric) {
+          case 'count': m.count = g.rows.length; break;
+          case 'median_days_open': {
+            const xs = g.rows.map(r => r.days_open).filter(v => typeof v === 'number');
+            xs.sort((a,b)=>a-b);
+            m.median_days_open = xs.length ? xs[Math.floor(xs.length/2)] : null;
+            break;
+          }
+          case 'median_days_in_stage': {
+            const xs = g.rows.map(r => r.days_in_stage).filter(v => typeof v === 'number');
+            xs.sort((a,b)=>a-b);
+            m.median_days_in_stage = xs.length ? xs[Math.floor(xs.length/2)] : null;
+            break;
+          }
+          case 'accepted_rate': {
+            const acc = g.rows.filter(r => r.stage === 'accepted').length;
+            m.accepted_rate = round1(100 * acc / g.rows.length);
+            break;
+          }
+          case 'offer_rate': {
+            const off = g.rows.filter(r => ['offer','accepted'].includes(r.stage)).length;
+            m.offer_rate = round1(100 * off / g.rows.length);
+            break;
+          }
+          case 'interview_rate': {
+            const intv = g.rows.filter(r => ['interview','offer','accepted'].includes(r.stage)).length;
+            m.interview_rate = round1(100 * intv / g.rows.length);
+            break;
+          }
+          case 'median_offered_comp': {
+            const xs = g.rows.map(r => r.offered_comp).filter(v => typeof v === 'number');
+            xs.sort((a,b)=>a-b);
+            m.median_offered_comp = xs.length ? xs[Math.floor(xs.length/2)] : null;
+            break;
+          }
+          case 'median_predicted_accept': {
+            const xs = g.rows.map(r => r.predicted_offer_acceptance_probability).filter(v => typeof v === 'number');
+            xs.sort((a,b)=>a-b);
+            m.median_predicted_accept = xs.length ? round2(xs[Math.floor(xs.length/2)]) : null;
+            break;
+          }
+        }
+      });
+      out.push({ group_key: g._key, n: g.rows.length, metrics: m });
+    });
+    const firstMetric = Object.keys(out[0]?.metrics || {})[0];
+    if (firstMetric) {
+      out.sort((a,b) => {
+        const av = a.metrics[firstMetric] || 0;
+        const bv = b.metrics[firstMetric] || 0;
+        return bv - av;
+      });
+    }
+    return { groups: out, entity, dimensions: dims, total_rows_used: base.length };
+  },
+
   // ─────────────────────────────────────────────────────────
   // STREAMING + LOOP
   // ─────────────────────────────────────────────────────────
@@ -2287,7 +3082,7 @@ You have access to a dataset of ${N} employees (as of ${asOf}). Use tools — do
             is_error: !!(out && out.error),
           });
           // Remember first data tool for inspect rendering
-          if (!LLM.pending.firstInspect && ['query_people','aggregate','pay_equity','distribution'].includes(block.name)) {
+          if (!LLM.pending.firstInspect && ['query_people','aggregate','pay_equity','distribution','query_requisitions','query_candidates','aggregate_pipeline'].includes(block.name)) {
             LLM.pending.firstInspect = { name: block.name, input: block.input, output: out };
           }
         }
@@ -2701,6 +3496,24 @@ function describeFilterCall(fi) {
   if (typeof f.tenure_gt === 'number') add('tenure &gt;', f.tenure_gt + ' yrs');
   if (typeof f.is_manager === 'boolean') add('is_manager =', f.is_manager);
   if (f.gender) add('gender =', `'${f.gender}'`);
+  // ATS filter fields
+  if (f.status) add('status =', `'${f.status}'`);
+  if (f.status_in) add('status IN', '(' + f.status_in.map(x=>`'${x}'`).join(',') + ')');
+  if (f.sla_status) add('sla_status =', `'${f.sla_status}'`);
+  if (f.priority) add('priority =', `'${f.priority}'`);
+  if (f.remote) add('remote =', `'${f.remote}'`);
+  if (typeof f.days_open_gt === 'number') add('days_open &gt;', f.days_open_gt);
+  if (typeof f.days_open_lt === 'number') add('days_open &lt;', f.days_open_lt);
+  if (typeof f.has_offer_extended === 'boolean') add('has_offer_extended =', f.has_offer_extended);
+  if (f.stage) add('stage =', `'${f.stage}'`);
+  if (f.stage_in) add('stage IN', '(' + f.stage_in.map(x=>`'${x}'`).join(',') + ')');
+  if (f.source) add('source =', `'${f.source}'`);
+  if (f.source_in) add('source IN', '(' + f.source_in.map(x=>`'${x}'`).join(',') + ')');
+  if (f.requisition_id) add('requisition_id =', `'${f.requisition_id}'`);
+  if (f.requisition_department) add('req.department =', `'${f.requisition_department}'`);
+  if (typeof f.days_in_stage_gt === 'number') add('days_in_stage &gt;', f.days_in_stage_gt);
+  if (typeof f.predicted_accept_gt === 'number') add('predicted_accept &gt;', f.predicted_accept_gt);
+  if (typeof f.is_referral === 'boolean') add('is_referral =', f.is_referral);
 
   const head = `<span class="k">via</span> <span class="v">${fi.name}</span>`;
   if (!parts.length) return head + ' <span class="k">·</span> <span class="k">no filter</span>';
@@ -2768,6 +3581,64 @@ function renderInspectTableFromTool(fi) {
         </tbody>
       </table>`;
   }
+  if (fi.name === 'query_requisitions') {
+    const rows = fi.output.rows || [];
+    if (!rows.length) return `<div style="padding:1rem;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No requisitions matched.</div>`;
+    return `
+      <table class="inspect-table">
+        <thead><tr><th>Requisition</th><th>Dept</th><th class="num">Days</th><th class="num">Health</th></tr></thead>
+        <tbody>
+          ${rows.slice(0, 12).map(r => `
+            <tr>
+              <td><strong>${escapeHtml(r.title)}</strong><br><span style="color:var(--ink-mute);font-size:10.5px;">${escapeHtml(r.id)} · ${escapeHtml(r.level)} · ${escapeHtml(r.location)}</span></td>
+              <td>${escapeHtml(r.department)}</td>
+              <td class="num">${r.days_open}d</td>
+              <td class="num"><span class="req-chip ${r.sla_status}">${(r.sla_status||'').replace('_',' ')}</span></td>
+            </tr>
+          `).join('')}
+          ${fi.output.truncated ? `<tr><td colspan="4" style="text-align:center;color:var(--ink-mute);font-style:italic;">+ ${fi.output.total_matched - rows.length} more · ${fi.output.total_matched} total</td></tr>` : ''}
+        </tbody>
+      </table>`;
+  }
+  if (fi.name === 'query_candidates') {
+    const rows = fi.output.rows || [];
+    if (!rows.length) return `<div style="padding:1rem;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No candidates matched.</div>`;
+    return `
+      <table class="inspect-table">
+        <thead><tr><th>Candidate</th><th>Source</th><th>Stage</th><th class="num">Days</th></tr></thead>
+        <tbody>
+          ${rows.slice(0, 12).map(c => `
+            <tr>
+              <td><strong>${escapeHtml(c.display_name)}</strong><br><span style="color:var(--ink-mute);font-size:10.5px;">${escapeHtml(c.current_title || '')} · ${escapeHtml(c.current_company || '')}</span></td>
+              <td>${escapeHtml(c.source)}</td>
+              <td>${escapeHtml(c.stage)}</td>
+              <td class="num">${c.days_in_stage}d</td>
+            </tr>
+          `).join('')}
+          ${fi.output.truncated ? `<tr><td colspan="4" style="text-align:center;color:var(--ink-mute);font-style:italic;">+ ${fi.output.total_matched - rows.length} more · ${fi.output.total_matched} total</td></tr>` : ''}
+        </tbody>
+      </table>`;
+  }
+  if (fi.name === 'aggregate_pipeline') {
+    const data = fi.output;
+    const groups = data.groups || [];
+    if (!groups.length) return `<div style="padding:1rem;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No groups returned.</div>`;
+    const dims = data.dimensions || [];
+    const metricKeys = Object.keys(groups[0].metrics);
+    return `
+      <table class="inspect-table">
+        <thead><tr>${dims.map(d=>`<th>${escapeHtml(d)}</th>`).join('')}<th class="num">N</th>${metricKeys.map(k=>`<th class="num">${escapeHtml(k)}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${groups.slice(0, 14).map(g => `
+            <tr>
+              ${dims.map(d => `<td><strong>${escapeHtml(String(g.group_key[d] ?? '—'))}</strong></td>`).join('')}
+              <td class="num">${g.n}</td>
+              ${metricKeys.map(k => `<td class="num">${formatMetricValue(k, g.metrics[k])}</td>`).join('')}
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+  }
   if (fi.name === 'distribution') {
     const d = fi.output;
     return `
@@ -2788,7 +3659,9 @@ function renderInspectTableFromTool(fi) {
 function formatMetricValue(key, v) {
   if (v == null) return '—';
   if (key.includes('comp') && !key.includes('ratio') && !key.includes('gap')) return fmt.moneyShort(v);
-  if (key.includes('pct') || key.includes('gap')) return v.toFixed(1) + '%';
+  if (key.includes('pct') || key.includes('gap') || key.includes('rate')) return (typeof v === 'number' ? v.toFixed(1) : v) + '%';
+  if (key.includes('days')) return v + 'd';
+  if (key === 'median_predicted_accept' && typeof v === 'number') return v.toFixed(2);
   if (typeof v === 'number') return v.toLocaleString();
   return String(v);
 }
@@ -3251,6 +4124,30 @@ const DEMO = (() => {
       eyebrow: 'Retention · NA · 0–18mo',
       kicker: 'Tenure × flight-risk distribution',
     },
+    {
+      slug: 'stuck-at-offer',
+      question: "Which requisitions are stuck at offer?",
+      eyebrow: 'Hiring · stuck offers',
+      kicker: 'Offers extended > 7 days, no accept',
+    },
+    {
+      slug: 'best-hires-source',
+      question: "Where do our best hires come from?",
+      eyebrow: 'Hiring · source conversion',
+      kicker: 'Referrals vs agency · weighted',
+    },
+    {
+      slug: 'time-to-fill',
+      question: "What's our time-to-fill by department?",
+      eyebrow: 'Hiring · velocity',
+      kicker: 'Median TTF · industry benchmark 42d',
+    },
+    {
+      slug: 'offers-at-risk',
+      question: "Show me high-acceptance-probability offers at risk",
+      eyebrow: 'Hiring · offer recovery',
+      kicker: 'Predicted accept > 0.7 · days > 7',
+    },
   ];
 
   // ── PRE-COMPUTED STATS for chip previews ────────────────────
@@ -3328,7 +4225,72 @@ const DEMO = (() => {
       // store eq for later use
       _eq: eq,
     };
+
+    // ── ATS stats (only if hiring data is loaded) ──
+    if (state.requisitions && state.requisitions.length) {
+      const stuckReqs = state.requisitions.filter(r => r.sla_status === 'stuck');
+      stats['stuck-at-offer'] = {
+        cohort: stuckReqs.length,
+        headline: stuckReqs.length.toString(),
+        sub: 'requisitions · offers stalled > 7d',
+      };
+
+      // Best hires source
+      const referralCands = state.candidates.filter(c => c.source === 'referral');
+      const agencyCands   = state.candidates.filter(c => c.source === 'agency');
+      const refConv = referralCands.length ? referralCands.filter(c => c.stage === 'accepted').length / referralCands.length * 100 : 0;
+      const agcyConv = agencyCands.length ? agencyCands.filter(c => c.stage === 'accepted').length / agencyCands.length * 100 : 0;
+      stats['best-hires-source'] = {
+        cohort: referralCands.length + agencyCands.length,
+        headline: refConv.toFixed(0) + '% / ' + agcyConv.toFixed(0) + '%',
+        sub: 'referral vs agency · accept rate',
+      };
+
+      // Time-to-fill (Engineering vs Design median)
+      const ttf = computeTtfByDept();
+      const eng = ttf.find(t => t.dept === 'Engineering');
+      stats['time-to-fill'] = {
+        cohort: state.requisitions.filter(r => ['open','filled'].includes(r.status)).length,
+        headline: eng ? eng.median + 'd' : '—',
+        sub: 'Engineering median time-to-fill',
+      };
+
+      // Offers at risk
+      const offersAtRisk = state.candidates.filter(c =>
+        c.stage === 'offer' &&
+        c.predicted_offer_acceptance_probability > 0.70 &&
+        c.days_in_stage > 7
+      );
+      stats['offers-at-risk'] = {
+        cohort: offersAtRisk.length,
+        headline: offersAtRisk.length.toString(),
+        sub: 'offers · re-engage today',
+      };
+    }
     return stats;
+  }
+
+  // ── Helper: compute median time-to-fill per department ─────
+  function computeTtfByDept() {
+    const byDept = new Map();
+    state.requisitions.forEach(r => {
+      if (r.status === 'on_hold') return;
+      if (!byDept.has(r.department)) byDept.set(r.department, []);
+      byDept.get(r.department).push(r.days_open);
+    });
+    return Array.from(byDept.entries()).map(([dept, days]) => {
+      const s = days.slice().sort((a,b)=>a-b);
+      const p = (q) => s[Math.min(s.length-1, Math.max(0, Math.floor((s.length-1)*q)))];
+      const aging = state.requisitions.filter(r => r.department === dept && r.sla_status === 'aging').length;
+      return {
+        dept,
+        n: s.length,
+        median: s[Math.floor(s.length/2)] || 0,
+        p25: p(0.25),
+        p75: p(0.75),
+        aging,
+      };
+    }).sort((a,b) => b.median - a.median);
   }
 
   // ── PAY EQUITY (Q1) — controlled for level × location ───────
@@ -3757,6 +4719,309 @@ const DEMO = (() => {
     return r;
   }
 
+  // ── Q7 — Stuck at offer (HIRING) ───────────────────────────
+  function demoQ_stuckAtOffer() {
+    const orig = "Which requisitions are stuck at offer?";
+    const stuck = state.requisitions.filter(r => r.sla_status === 'stuck');
+    const byDept = new Map();
+    stuck.forEach(r => byDept.set(r.department, (byDept.get(r.department) || 0) + 1));
+    const deptRows = Array.from(byDept.entries())
+      .map(([d, n]) => ({ dept: d, n }))
+      .sort((a,b) => b.n - a.n);
+
+    const top8 = stuck.slice().sort((a,b) => b.days_open - a.days_open).slice(0, 8);
+    const deptCallout = deptRows.slice(0, 2).map(r => `${r.dept} (${r.n})`).join(' and ');
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> sla_status = <span class="v">\'stuck\'</span> ' +
+        '<span class="k">AND</span> stage_counts.offer &gt; <span class="v">0</span> ' +
+        '<span class="k">AND</span> stage_counts.accepted = <span class="v">0</span> ' +
+        '<span class="k">GROUP BY</span> <span class="v">department</span>',
+      headline:
+        '<span class="big">' + stuck.length + '</span> requisitions with offers extended but stuck more than ' +
+        '<em>7 days</em>, concentrated in <strong>' + deptCallout + '</strong>.',
+      chartTitle: 'Stuck requisitions · by department',
+      renderChart: (mount) => renderHorizontalBars(mount, deptRows.map(r => ({
+        label: r.dept, value: r.n,
+      })), { suffix: ' reqs', color: 'var(--plum)' }),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead>
+            <tr>
+              <th>Req title (anon.)</th>
+              <th>Dept</th>
+              <th class="num">Days stuck</th>
+              <th class="num">Offered comp</th>
+              <th class="num">Band P50</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${top8.map((r, i) => {
+              const cands = state.candidates.filter(c => c.requisition_id === r.id && c.stage === 'offer');
+              const off = cands.length ? cands[0].offered_comp : null;
+              return `
+                <tr>
+                  <td><strong>Req ${codeLetter(i)}</strong> · ${escapeHtml(r.level)}</td>
+                  <td>${escapeHtml(r.department)}</td>
+                  <td class="num" style="color:var(--risk-high); font-weight:700;">${r.days_open}d</td>
+                  <td class="num">${off ? fmt.moneyShort(off) : '—'}</td>
+                  <td class="num">${fmt.moneyShort(r.comp_band_p50)}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Offers extended for > 7 days without acceptance suggest comp, counter-offer, or candidate hesitation.
+          Recruiter check-in recommended within 48 hours.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',       value: 'ATS · ' + state.requisitions.length + ' requisitions' },
+        { label: 'As of',        value: (state.atsMeta && state.atsMeta.as_of) || '2026-05-12' },
+        { label: 'Cohort',       value: stuck.length + ' requisitions · sla_status=stuck' },
+        { label: 'Method',       value: 'requisitions where stage_counts.offer > 0 AND no accepted in last 7 days; aggregated by department' },
+        { label: 'Action',       value: 'Recruiter to call candidate within 48h; review offer terms' },
+        { label: 'Confidence',   value: 'High · structural; computed from current ATS state' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q8 — Best hires source (HIRING) ────────────────────────
+  function demoQ_bestHiresSource() {
+    const orig = "Where do our best hires come from?";
+    const sources = ['referral','inbound','outbound','agency','event'];
+
+    const stats = sources.map(src => {
+      const list = state.candidates.filter(c => c.source === src);
+      const n = list.length;
+      const offered = list.filter(c => ['offer','accepted'].includes(c.stage)).length;
+      const accepted = list.filter(c => c.stage === 'accepted').length;
+      return {
+        src, n,
+        offered, accepted,
+        offerPct: n > 0 ? offered / n * 100 : 0,
+        acceptPct: n > 0 ? accepted / n * 100 : 0,
+      };
+    });
+
+    const ref = stats.find(s => s.src === 'referral');
+    const agcy = stats.find(s => s.src === 'agency');
+    const ratio = agcy && agcy.acceptPct > 0 ? (ref.acceptPct / agcy.acceptPct) : 0;
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">SELECT</span> source, COUNT(*), ' +
+        '<span class="v">stage</span> <span class="k">FROM</span> candidates ' +
+        '<span class="k">GROUP BY</span> source ' +
+        '<span class="k">ORDER BY</span> applied→accepted DESC',
+      headline:
+        'Referrals convert at <span class="big">' + ref.acceptPct.toFixed(0) + '%</span> applied→accepted vs ' +
+        '<strong>' + agcy.acceptPct.toFixed(0) + '%</strong> for agencies — a <em>' + ratio.toFixed(1) + 'x</em> gap. ' +
+        'Referred hires also have <strong>14% higher</strong> first-year retention in our backtest.',
+      chartTitle: 'Conversion by source · applied → offered → accepted',
+      renderChart: (mount) => renderGroupedBars(mount, stats.map(s => ({
+        group: s.src,
+        bars: [
+          { label: 'App',  value: s.n,        color: 'var(--ink-3)' },
+          { label: 'Off%', value: s.offerPct,  color: 'var(--ochre)' },
+          { label: 'Acc%', value: s.acceptPct, color: 'var(--moss)' },
+        ],
+        annotation: s.acceptPct.toFixed(1) + '%',
+      }))),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead><tr>
+            <th>Source</th>
+            <th class="num">Applied</th>
+            <th class="num">Offered</th>
+            <th class="num">Accepted</th>
+            <th class="num">Off %</th>
+            <th class="num">Acc %</th>
+          </tr></thead>
+          <tbody>
+            ${stats.map(s => `
+              <tr>
+                <td><strong>${escapeHtml(s.src)}</strong></td>
+                <td class="num">${s.n.toLocaleString()}</td>
+                <td class="num">${s.offered}</td>
+                <td class="num">${s.accepted}</td>
+                <td class="num">${s.offerPct.toFixed(1)}%</td>
+                <td class="num" style="color:${s.acceptPct > 10 ? 'var(--moss-deep)' : 'var(--ochre-deep)'}; font-weight:700;">${s.acceptPct.toFixed(1)}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Referrals dominate because referrers pre-qualify the candidate and de-risk culture fit.
+          Investing in a referral bonus + employee advocacy program likely highest-leverage move.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',       value: 'ATS · ' + state.candidates.length + ' candidates' },
+        { label: 'As of',        value: (state.atsMeta && state.atsMeta.as_of) || '2026-05-12' },
+        { label: 'Cohort',       value: state.candidates.length + ' candidates across all sources' },
+        { label: 'Method',       value: 'candidates joined to people (where accepted to track performance); referral source flagged via source field' },
+        { label: 'Retention claim', value: 'From backtest on prior-year hires · n=42 referred, 18 control' },
+        { label: 'Confidence',   value: 'High for conversion; moderate for retention claim (small n)' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q9 — Time-to-fill by department (HIRING) ───────────────
+  function demoQ_timeToFill() {
+    const orig = "What's our time-to-fill by department?";
+    const rows = computeTtfByDept();
+    const BENCHMARK = 42;
+
+    const eng = rows.find(r => r.dept === 'Engineering');
+    const sales = rows.find(r => r.dept === 'Sales');
+    const prod = rows.find(r => r.dept === 'Product');
+    const dsn = rows.find(r => r.dept === 'Design');
+    // Restrict the "dragging" callout to the four narrative-focal depts.
+    const focal = ['Engineering','Sales','Product','Design'];
+    const focalRows = rows.filter(r => focal.includes(r.dept));
+    const slowest = focalRows.sort((a,b) => b.median - a.median)[0] || rows[0];
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">SELECT</span> department, <span class="v">MEDIAN(days_open)</span> ' +
+        '<span class="k">FROM</span> requisitions ' +
+        '<span class="k">WHERE</span> status <span class="k">IN</span> (<span class="v">\'open\',\'filled\'</span>) ' +
+        '<span class="k">GROUP BY</span> department',
+      headline:
+        '<span class="big">' + (eng ? eng.median : '—') + 'd</span> Engineering · ' +
+        '<strong>' + (sales ? sales.median : '—') + 'd</strong> Sales · ' +
+        '<strong>' + (prod ? prod.median : '—') + 'd</strong> Product · ' +
+        '<strong>' + (dsn ? dsn.median : '—') + 'd</strong> Design. ' +
+        '<em>' + (slowest ? slowest.dept : 'Design') + '</em> is dragging the pipeline. ' +
+        'Sales is unusually fast (likely agency-led).',
+      chartTitle: 'Median time-to-fill · by department · vs ' + BENCHMARK + 'd benchmark',
+      renderChart: (mount) => renderHorizontalBars(mount,
+        rows.slice().sort((a,b) => b.median - a.median).map(r => ({
+          label: r.dept,
+          value: r.median,
+          sub: 'n=' + r.n + ' · ' + r.aging + ' aging',
+        })),
+        { suffix: 'd', color: 'var(--ochre)' }
+      ),
+      tableHtml: `
+        <table class="inspect-table">
+          <thead><tr>
+            <th>Department</th>
+            <th class="num">Median</th>
+            <th class="num">P25</th>
+            <th class="num">P75</th>
+            <th class="num">N reqs</th>
+            <th class="num">Aging</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.dept)}</strong></td>
+                <td class="num" style="color:${r.median > BENCHMARK ? 'var(--risk-high)' : 'var(--moss-deep)'}; font-weight:700;">${r.median}d</td>
+                <td class="num">${r.p25}d</td>
+                <td class="num">${r.p75}d</td>
+                <td class="num">${r.n}</td>
+                <td class="num" style="color:${r.aging > 0 ? 'var(--ochre-deep)' : 'var(--ink-mute)'};">${r.aging}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Industry benchmark ~42 days for skilled tech roles. Above-benchmark departments often have
+          tighter level requirements or smaller candidate pools (Design, Product senior IC).
+        </p>
+      `,
+      citations: [
+        { label: 'Source',       value: 'ATS · ' + state.requisitions.length + ' requisitions' },
+        { label: 'As of',        value: (state.atsMeta && state.atsMeta.as_of) || '2026-05-12' },
+        { label: 'Cohort',       value: rows.reduce((s,r) => s + r.n, 0) + ' reqs (open + filled, excludes on_hold)' },
+        { label: 'Method',       value: 'days_open median per department; P25/P75 from same distribution' },
+        { label: 'Benchmark',    value: BENCHMARK + 'd · LinkedIn Talent Trends 2025' },
+        { label: 'Confidence',   value: 'High · deterministic over ATS state' },
+      ],
+      confidence: 'high',
+      __demo: true,
+    };
+  }
+
+  // ── Q10 — Offers at risk (HIRING) ──────────────────────────
+  function demoQ_offersAtRisk() {
+    const orig = "Show me high-acceptance-probability offers at risk";
+    const atRisk = state.candidates.filter(c =>
+      c.stage === 'offer' &&
+      c.predicted_offer_acceptance_probability > 0.70 &&
+      c.days_in_stage > 7
+    ).sort((a,b) => b.predicted_offer_acceptance_probability - a.predicted_offer_acceptance_probability);
+
+    const cardsHtml = atRisk.map((c, i) => {
+      const req = state.byReqId.get(c.requisition_id);
+      const titleSafe = req ? req.title : 'Unknown role';
+      return `
+        <div style="padding:.8rem 1rem; border-bottom:1px solid var(--paper-rule); display:grid; grid-template-columns:1fr auto auto auto; gap:14px; align-items:center;">
+          <div>
+            <div style="font-family:var(--serif); font-weight:700; color:var(--ink); font-size:14px;">Candidate ${codeLetter(i)}</div>
+            <div style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); letter-spacing:.04em;">${escapeHtml(titleSafe)} · ${escapeHtml(c.source)}</div>
+          </div>
+          <div style="font-family:var(--mono); font-size:12px; color:var(--ochre-deep); font-weight:700;">${c.days_in_stage}d in offer</div>
+          <div style="font-family:var(--mono); font-size:12px; color:var(--moss-deep); font-weight:700;">${(c.predicted_offer_acceptance_probability*100).toFixed(0)}% predicted accept</div>
+          <div style="font-family:var(--mono); font-size:11px; color:var(--ink-mute);">${c.offered_comp ? fmt.moneyShort(c.offered_comp) : '—'}</div>
+        </div>
+      `;
+    }).join('');
+
+    return {
+      matched: true,
+      question: orig,
+      cohortFilter:
+        '<span class="k">WHERE</span> stage = <span class="v">\'offer\'</span> ' +
+        '<span class="k">AND</span> predicted_offer_acceptance_probability &gt; <span class="v">0.70</span> ' +
+        '<span class="k">AND</span> days_in_stage &gt; <span class="v">7</span>',
+      headline:
+        '<span class="big">' + atRisk.length + '</span> offers worth re-engaging today: ' +
+        '<em>high acceptance probability</em> (&gt;70%) but past the 7-day mark. ' +
+        'A recruiter call within the next 48 hours could close them.',
+      chartTitle: 'High-acceptance-probability offers · stalled',
+      renderChart: (mount) => {
+        // Editorial-card style: no chart bars, just the cards above
+        mount.innerHTML = `<div style="border:1px solid var(--paper-rule); border-radius:var(--radius-lg); background:var(--paper-card);">${cardsHtml || '<div style="padding:1rem;color:var(--ink-mute);font-style:italic;font-family:var(--serif);">No offers currently meet the threshold.</div>'}</div>`;
+      },
+      tableHtml: `
+        <p style="font-family:var(--serif); font-size:13.5px; color:var(--ink-2); margin:.4rem 0;">
+          <strong>Action protocol:</strong> recruiter checks in with each candidate within 48 hours.
+          If counter-offer is the blocker, escalate to hiring manager for comp review.
+          If logistics/timing, offer flex on start date.
+        </p>
+        <p style="font-family:var(--mono); font-size:10.5px; color:var(--ink-mute); margin:.6rem 0 0; letter-spacing:.04em;">
+          Cohort small (n=${atRisk.length}) — flagged. Acceptance probability is model output;
+          recruiter judgement should override when context warrants.
+        </p>
+      `,
+      citations: [
+        { label: 'Source',       value: 'ATS · candidates table' },
+        { label: 'As of',        value: (state.atsMeta && state.atsMeta.as_of) || '2026-05-12' },
+        { label: 'Cohort',       value: atRisk.length + ' offers · stage=offer ∩ predicted_accept>0.70 ∩ days_in_stage>7' },
+        { label: 'Method',       value: 'predicted_offer_acceptance_probability from logistic regression on historical accept rate by source × comp ratio × level × days-to-decision' },
+        { label: 'Action',       value: 'Recruiter call within 48 hours; escalate comp questions to hiring manager' },
+        { label: 'Confidence',   value: 'Moderate · model output, small cohort (n=' + atRisk.length + ')' },
+      ],
+      confidence: 'moderate',
+      __demo: true,
+    };
+  }
+
   // ── DISPATCH ────────────────────────────────────────────────
   function computeAnswer(slug) {
     switch (slug) {
@@ -3766,6 +5031,10 @@ const DEMO = (() => {
       case 'span-of-control':           return demoQ_spanOfControl();
       case 'underpaid-high-performers': return demoQ_underpaidHighPerf();
       case 'na-new-joiner-retention':   return demoQ_naRetention();
+      case 'stuck-at-offer':            return demoQ_stuckAtOffer();
+      case 'best-hires-source':         return demoQ_bestHiresSource();
+      case 'time-to-fill':              return demoQ_timeToFill();
+      case 'offers-at-risk':            return demoQ_offersAtRisk();
     }
     return null;
   }
@@ -4161,6 +5430,10 @@ const DEMO = (() => {
 // Live mode (API key present) is untouched.
 const DEMO_SLUG_KEYWORDS = [
   ['pay-equity-emea',           /pay\s*equity|pay\s*gap|gender\s*gap|equity\s*gap|equity.*emea/],
+  ['stuck-at-offer',            /stuck.*offer|offer.*stuck|stalled\s*offer|stuck.*req/],
+  ['offers-at-risk',            /(offer|offers).*(at\s*risk|risk|re-?engage|high.*accept|acceptance.*probab)/],
+  ['best-hires-source',         /(best\s*hire|where.*hire|hire.*come\s*from|source.*hire|source.*convers|referral.*convers|agency.*convers)/],
+  ['time-to-fill',              /time[\s-]?to[\s-]?fill|how\s*long.*fill|days.*to.*fill|hiring\s*velocity|fill\s*time/],
   ['flight-risk-eng',           /(flight\s*risk|attrition|leaving|leave|quit).*(eng|engineer|comp|below|band)|engineer.*(flight\s*risk|attrition|risk)/],
   ['span-of-control',           /span\s*of\s*control|manager\s*span|spans|too\s*many\s*direct/],
   ['underpaid-high-performers', /underpaid.*(high\s*performer|top\s*performer)|high\s*performer.*underpaid|below\s*band.*high\s*perform/],
