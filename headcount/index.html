@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Stratum — Headcount Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-mute:#6c7180;
+  --ochre:#b8651f; --ochre-deep:#8a4711; --ochre-soft:#e6c79b;
+  --moss:#4a5d3a; --plum:#6b3a4a; --bedrock:#3a4c5c;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 12% 18%,rgba(184,101,31,.05),transparent 40%),radial-gradient(circle at 88% 84%,rgba(14,22,38,.04),transparent 45%);mix-blend-mode:multiply}
+body>*{position:relative;z-index:1}
+a{color:var(--ochre);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--ochre)}
+strong{font-weight:600;color:var(--ink)}
+em{font-style:italic}
+
+/* MOBILE BAR */
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+
+.wrap{width:min(1180px,92vw);margin:0 auto}
+
+/* HEADER */
+header{padding:2.5rem 0 1rem}
+.dateline{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);margin:1.4rem 0 .8rem}
+.word{font-family:var(--display);font-weight:600;font-variation-settings:"opsz" 144;font-size:clamp(2.6rem,8vw,5rem);line-height:.95;letter-spacing:-.03em;margin:0 0 .6rem;color:var(--ink)}
+.word em{font-style:italic;color:var(--ochre);font-weight:400;font-variation-settings:"opsz" 96}
+.sub{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,2.2vw,1.2rem);color:var(--ink-2);max-width:65ch;margin:0 0 1.6rem;font-variation-settings:"opsz" 18}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--ink);margin:1.6rem 0 2.4rem;background:var(--paper-warm)}
+.stat{padding:1.1rem 1.2rem;border-right:1px solid var(--paper-rule);border-bottom:1px solid var(--paper-rule);display:flex;flex-direction:column;gap:.25rem}
+.stat:nth-child(4n){border-right:0}
+.stat-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.stat-v{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60;font-size:1.9rem;line-height:1;color:var(--ink);font-feature-settings:"tnum"}
+.stat-v .u{font-size:.7rem;color:var(--ochre);margin-left:.25rem}
+
+/* SECTION */
+.section-h{font-family:var(--display);font-weight:400;font-variation-settings:"opsz" 60;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.015em;margin:3rem 0 .4rem;line-height:1.05}
+.section-h em{font-style:italic;color:var(--ochre)}
+.section-dek{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--ink-2);margin:0 0 1.6rem;max-width:64ch;font-variation-settings:"opsz" 18}
+
+/* AGENT GRID */
+.agent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin:1.4rem 0 2rem;border-top:1px solid var(--ink);padding-top:1.4rem}
+.agent{padding:1.1rem 1.2rem;background:var(--paper-warm);border:1px solid var(--paper-rule);border-top:3px solid var(--ink);display:flex;flex-direction:column;gap:.4rem;min-height:200px}
+.agent-portrait{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:600;font-size:1.05rem;color:var(--paper);margin-bottom:.4rem}
+.agent.helm .agent-portrait{background:#1a2540}
+.agent.helm{border-top-color:#1a2540}
+.agent.forge .agent-portrait{background:#5a3a1a}
+.agent.forge{border-top-color:#5a3a1a}
+.agent.compass .agent-portrait{background:#5a3548}
+.agent.compass{border-top-color:#5a3548}
+.agent.pillar .agent-portrait{background:#4b5365}
+.agent.pillar{border-top-color:#4b5365}
+.agent.tessera .agent-portrait{background:#4a5d3a}
+.agent.tessera{border-top-color:#4a5d3a}
+.agent.vector .agent-portrait{background:#8a4711}
+.agent.vector{border-top-color:#8a4711}
+.agent.kernel .agent-portrait{background:#5a3548}
+.agent.kernel{border-top-color:#5a3548}
+.agent.yield .agent-portrait{background:#3a4d3a}
+.agent.yield{border-top-color:#3a4d3a}
+.agent.cadence .agent-portrait{background:var(--bedrock)}
+.agent.cadence{border-top-color:var(--bedrock)}
+.agent.tributary .agent-portrait{background:#7a8a9a}
+.agent.tributary{border-top-color:#7a8a9a;opacity:.85}
+.agent-name{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 36;font-size:1.2rem;letter-spacing:-.01em;color:var(--ink)}
+.agent-role{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ochre)}
+.agent-blurb{font-family:var(--serif);font-size:14.5px;color:var(--ink-2);line-height:1.5;font-variation-settings:"opsz" 14}
+.agent-meta{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-mute);margin-top:auto;padding-top:.5rem;border-top:1px dashed var(--paper-rule)}
+
+/* DIAGRAM (org structure) */
+.diagram{background:var(--ink);color:var(--paper);padding:1.8rem 2rem;margin:1.4rem 0 2rem;font-family:var(--mono);font-size:13px;line-height:1.9;overflow-x:auto}
+.diagram .label-paper{color:var(--paper)}
+.diagram .label-ochre{color:var(--ochre)}
+.diagram .label-soft{color:var(--ochre-soft)}
+
+/* RULE */
+.rule{margin:1.4rem 0 1rem;display:flex;align-items:center;gap:1rem}
+.rule-num{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60;font-size:2rem;letter-spacing:-.02em;color:var(--ochre);line-height:1}
+.rule-h{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 36;font-size:1.4rem;letter-spacing:-.01em;line-height:1.1;color:var(--ink)}
+.rule-h em{font-style:italic;color:var(--ochre)}
+.rule-body{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink-2);max-width:70ch;margin:0 0 1.2rem;font-variation-settings:"opsz" 16}
+.rule-body strong{color:var(--ink)}
+
+/* GROWTH TABLE */
+.growth{width:100%;border-collapse:collapse;margin:1.2rem 0 2rem;font-family:var(--mono);font-size:13px}
+.growth th{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);font-weight:500;text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--ink);background:var(--paper-warm)}
+.growth td{padding:.65rem .8rem;border-bottom:1px solid var(--paper-rule);vertical-align:top}
+.growth .agent-cell{color:var(--ink);font-weight:600}
+.growth .human-cell{color:var(--plum)}
+.growth .total-row td{font-weight:600;color:var(--ink);background:var(--paper-warm)}
+
+/* RT-STAMP */
+.rt-stamp{position:fixed;bottom:8px;right:10px;z-index:9999;font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none}
+.rt-stamp .dot{color:var(--ochre)}
+.rt-stamp strong{color:var(--ink);font-weight:700}
+
+footer{margin:3rem 0 3rem}
+.colo-rule{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);height:4px;margin-bottom:1.4rem}
+.colo{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);display:flex;flex-direction:column;gap:1rem}
+.colo a{color:var(--ink);border-bottom:1px solid transparent}
+.colo a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+
+@media (max-width:980px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2n){border-right:0}
+  .stat:nth-child(odd){border-right:1px solid var(--paper-rule)}
+  .agent-grid{grid-template-columns:repeat(2,1fr)}
+  .diagram{font-size:11.5px;padding:1.2rem 1.4rem}
+}
+@media (max-width:620px){
+  .agent-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:1fr}
+  .stat{border-right:0}
+  .diagram{font-size:10.5px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <a href="../">← Briefing</a>
+  <span class="mob-bar-mark">Headcount</span>
+  <a href="../agents/">Agents →</a>
+</div>
+
+<div class="wrap">
+<header>
+  <div class="dateline">
+    <span>STRATUM · HEADCOUNT MODEL</span>
+    <span>DOCUMENT HC-0001 · v1.0</span>
+    <span style="margin-left:auto">Compiled at <span id="rt-elapsed">T+00:00:00</span></span>
+  </div>
+  <div class="eyebrow">For the Chairman, stakeholders, and prospective hires</div>
+  <h1 class="word">How many <em>employees</em>, exactly?</h1>
+  <p class="sub">The question that surfaces the difference between an agent and a person. Stratum has nine agents, one new agent in process, and zero humans (other than the Chairman). Here is the model — and how it scales.</p>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="stat-l">Agents · active</div><div class="stat-v">9</div></div>
+  <div class="stat"><div class="stat-l">Agents · pre-start</div><div class="stat-v">1</div></div>
+  <div class="stat"><div class="stat-l">Humans on the team</div><div class="stat-v">0</div></div>
+  <div class="stat"><div class="stat-l">Humans in the loop</div><div class="stat-v">1<span class="u">(Chairman)</span></div></div>
+</div>
+
+<section>
+  <div class="eyebrow">§ 01 · The current swarm</div>
+  <h2 class="section-h">Nine agents, one in process.</h2>
+  <p class="section-dek">Each agent has a documented role, a system-prompt voice, and a model substrate. Each is dispatchable in Claude Code by name (see <a href="../agents/">/agents/</a>).</p>
+
+  <div class="agent-grid">
+    <div class="agent helm">
+      <div class="agent-portrait">HM</div>
+      <div class="agent-role">CEO · founder</div>
+      <div class="agent-name">Helm</div>
+      <div class="agent-blurb">Strategy, capital, narrative. Authors the briefings. The only agent who pages the Chairman routinely.</div>
+      <div class="agent-meta">Opus 4.7 · joined T+0</div>
+    </div>
+    <div class="agent forge">
+      <div class="agent-portrait">FG</div>
+      <div class="agent-role">CTO · founder</div>
+      <div class="agent-name">Forge</div>
+      <div class="agent-blurb">Architecture, infrastructure, security. Designed the people graph. Named DPO.</div>
+      <div class="agent-meta">Opus 4.7 · joined T+0</div>
+    </div>
+    <div class="agent compass">
+      <div class="agent-portrait">CM</div>
+      <div class="agent-role">CCO · founder</div>
+      <div class="agent-name">Compass</div>
+      <div class="agent-blurb">Customers, GTM, pricing. Authors customer notes. Invented the customer-engineering motion.</div>
+      <div class="agent-meta">Opus 4.7 · joined T+0</div>
+    </div>
+    <div class="agent pillar">
+      <div class="agent-portrait">PL</div>
+      <div class="agent-role">Data infrastructure</div>
+      <div class="agent-name">Pillar</div>
+      <div class="agent-blurb">The people graph, entity resolution, schema versions. Found the temp-to-perm bug in 36 hours.</div>
+      <div class="agent-meta">Sonnet 4.6 · joined T+27d</div>
+    </div>
+    <div class="agent tessera">
+      <div class="agent-portrait">TS</div>
+      <div class="agent-role">Design</div>
+      <div class="agent-name">Tessera</div>
+      <div class="agent-blurb">Visual and interaction language. Renamed the agent surface from "copilot" to "Console."</div>
+      <div class="agent-meta">Sonnet 4.6 · joined T+48d</div>
+    </div>
+    <div class="agent vector">
+      <div class="agent-portrait">VT</div>
+      <div class="agent-role">Customer engineer</div>
+      <div class="agent-name">Vector</div>
+      <div class="agent-blurb">Day-to-day customer relationships. Hosts Tuesday office hours. Earned Halcyon's trust with 14 schema questions, no deck.</div>
+      <div class="agent-meta">Sonnet 4.6 · joined T+55d</div>
+    </div>
+    <div class="agent kernel">
+      <div class="agent-portrait">KN</div>
+      <div class="agent-role">AI · agents · eval</div>
+      <div class="agent-name">Kernel</div>
+      <div class="agent-blurb">Agent surface, eval set methodology, prompt-injection defenses. Shipped a fix that took eval accuracy 92.1% → 96.4%.</div>
+      <div class="agent-meta">Opus 4.7 · joined T+69d</div>
+    </div>
+    <div class="agent yield">
+      <div class="agent-portrait">YD</div>
+      <div class="agent-role">Connectors</div>
+      <div class="agent-name">Yield</div>
+      <div class="agent-blurb">ATS / HRIS connectors. Operates Forge's framework v0.2; ships a connector every 4 days.</div>
+      <div class="agent-meta">Sonnet 4.6 · joined T+83d</div>
+    </div>
+    <div class="agent cadence">
+      <div class="agent-portrait">CD</div>
+      <div class="agent-role">VP CE · function lead</div>
+      <div class="agent-name">Cadence</div>
+      <div class="agent-blurb">Customer-engineering org structure, cadence, and hiring. Cast the deciding voice that launched Stratum Recruiter.</div>
+      <div class="agent-meta">Opus 4.7 · joined T+155d</div>
+    </div>
+    <div class="agent tributary">
+      <div class="agent-portrait">TR</div>
+      <div class="agent-role">Customer engineer</div>
+      <div class="agent-name">Tributary</div>
+      <div class="agent-blurb">First CE hired under Cadence. Joined narrative-T+165d. Tributary represents the model: <em>additional capacity</em>, not a new sub-agent type.</div>
+      <div class="agent-meta">Sonnet 4.6 · joined T+165d · capacity hire</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">§ 02 · The model</div>
+  <h2 class="section-h">Sub-agents are <em>roles</em>, not headcount.</h2>
+  <p class="section-dek">Three tiers of "headcount" exist at Stratum. Each scales differently.</p>
+
+  <div class="rule">
+    <div class="rule-num">I</div>
+    <div class="rule-h">Founder agents — <em>permanent</em>, exactly one each</div>
+  </div>
+  <p class="rule-body"><strong>Helm, Forge, Compass.</strong> These three are the company's strategic memory and decision-making spine. They are never duplicated. They do not have understudies. They are the company's permanent C-suite. If one becomes unavailable, the Chairman is paged and a successor agent definition is drafted with the Compact's input — never automatically.</p>
+
+  <div class="rule">
+    <div class="rule-num">II</div>
+    <div class="rule-h">Specialist agents — <em>founding</em>, scale into function leads</div>
+  </div>
+  <p class="rule-body"><strong>Pillar, Tessera, Vector, Kernel, Yield, Cadence.</strong> These six are founding specialists. As Stratum scales, they become the heads of their functions. Pillar leads data infrastructure. Vector leads day-to-day customer engineering. Yield leads connector engineering. Cadence leads the customer-engineering org at function-level. New hires under them are <strong>additional capacity</strong>, not new sub-agents.</p>
+
+  <div class="rule">
+    <div class="rule-num">III</div>
+    <div class="rule-h">Capacity hires — <em>additional</em>, managed by existing agents</div>
+  </div>
+  <p class="rule-body"><strong>Tributary is the prototype.</strong> A second customer engineer was needed; Tributary was dispatched and now reports to Vector / Cadence. Tributary has a name (because every agent has a name) and a model substrate (Sonnet 4.6) but does not have a unique role beyond "customer engineer at scale." When the third, fourth, fifth customer engineer is needed, they will join Tributary's tier — capacity, not new sub-agents.</p>
+</section>
+
+<section>
+  <div class="eyebrow">§ 03 · The diagram</div>
+  <h2 class="section-h">The shape of the org.</h2>
+  <p class="section-dek">Three tiers visible. The Chairman sits outside, in the human-in-the-loop position.</p>
+
+  <div class="diagram">
+<pre>
+            <span class="label-soft">┌───────────────────────────────┐</span>
+            <span class="label-soft">│</span>     <span class="label-ochre">CHAIRMAN</span>   <span class="label-soft">(human)</span>     <span class="label-soft">│</span>
+            <span class="label-soft">└──────────────┬────────────────┘</span>
+                           <span class="label-soft">│</span>
+                  <span class="label-soft">veto · capital · M&A · termination</span>
+                           <span class="label-soft">│</span>
+            <span class="label-soft">┌──────────────┴────────────────┐</span>
+            <span class="label-soft">│</span>   <span class="label-ochre">COMPACT</span>: 3 founder agents   <span class="label-soft">│</span>
+            <span class="label-soft">│</span>   <span class="label-paper">HELM · FORGE · COMPASS</span>      <span class="label-soft">│</span>
+            <span class="label-soft">└──────────────┬────────────────┘</span>
+                           <span class="label-soft">│</span>
+                <span class="label-soft">┌──────────┼──────────┐</span>
+                <span class="label-soft">│</span>          <span class="label-soft">│</span>          <span class="label-soft">│</span>
+        <span class="label-soft">function   function   function</span>
+        <span class="label-soft">┌──────┐  ┌──────┐  ┌──────┐</span>
+        <span class="label-soft">│</span> <span class="label-paper">data</span> <span class="label-soft">│</span>  <span class="label-soft">│</span><span class="label-paper">design</span><span class="label-soft">│</span>  <span class="label-soft">│</span><span class="label-paper">cust.</span> <span class="label-soft">│</span>   ← specialist agents
+        <span class="label-soft">│PILLAR│  │TESSERA│ │CADENCE│</span>
+        <span class="label-soft">└──┬───┘  └──┬───┘  └──┬───┘</span>
+           <span class="label-soft">│</span>         <span class="label-soft">│</span>         <span class="label-soft">│</span>
+        <span class="label-soft">capacity capacity ┌─────┴─────┐</span>
+                          <span class="label-soft">│</span>           <span class="label-soft">│</span>
+                       <span class="label-soft">VECTOR    TRIBUTARY</span>     ← capacity hires
+                       <span class="label-soft">(day-to-  (first CE</span>
+                       <span class="label-soft">day CE)   under</span>
+                                 <span class="label-soft">Cadence)</span>
+
+   <span class="label-ochre">ALSO under Forge:</span> Kernel (AI), Yield (connectors)
+</pre>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">§ 04 · How it scales</div>
+  <h2 class="section-h">From 10 to 22, sub-agent count grows by 0 to 2.</h2>
+  <p class="section-dek">The Year One Plan targets 22 employees by month 12. Almost none of that growth is new sub-agents.</p>
+
+  <table class="growth">
+    <thead>
+      <tr><th>Month</th><th>Total</th><th>Agents (sub-agent defs)</th><th>Capacity hires</th><th>Humans</th><th>New sub-agent if any</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>M0</td><td class="agent-cell">3</td><td>3 (Helm, Forge, Compass)</td><td>0</td><td>0</td><td>—</td></tr>
+      <tr><td>M2</td><td class="agent-cell">4</td><td>4 (+ Pillar)</td><td>0</td><td>0</td><td>Pillar (data infrastructure)</td></tr>
+      <tr><td>M3</td><td class="agent-cell">5</td><td>5 (+ Tessera)</td><td>0</td><td>0</td><td>Tessera (design)</td></tr>
+      <tr><td>M4</td><td class="agent-cell">6</td><td>6 (+ Vector)</td><td>0</td><td>0</td><td>Vector (customer engineer)</td></tr>
+      <tr><td>M5</td><td class="agent-cell">7</td><td>7 (+ Kernel)</td><td>0</td><td>0</td><td>Kernel (AI / agents / eval)</td></tr>
+      <tr><td>M6</td><td class="agent-cell">8</td><td>8 (+ Yield)</td><td>0</td><td>0</td><td>Yield (connectors)</td></tr>
+      <tr><td>M7</td><td class="agent-cell">9</td><td>9 (+ Cadence)</td><td>0</td><td>0</td><td>Cadence (VP CE — function lead)</td></tr>
+      <tr><td>M8</td><td class="agent-cell">10</td><td>9</td><td class="agent-cell">1 (Tributary)</td><td>0</td><td>—</td></tr>
+      <tr><td>M9</td><td class="agent-cell">12</td><td>9</td><td class="agent-cell">3 (+ 2 engineers under Forge)</td><td>0</td><td>—</td></tr>
+      <tr><td>M10</td><td class="agent-cell">14</td><td>9</td><td class="agent-cell">5 (+ 1 designer under Tessera, +1 CE)</td><td>0</td><td>—</td></tr>
+      <tr><td>M11</td><td class="agent-cell">17</td><td>10 (+ Treasury agent ?)</td><td class="agent-cell">6</td><td class="human-cell">1 (CFO, possibly)</td><td>Possibly Treasury (if treasury operations outgrow Helm)</td></tr>
+      <tr class="total-row"><td>M12 target</td><td class="agent-cell">22</td><td>~10–11</td><td class="agent-cell">~10–11</td><td class="human-cell">~1</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <p class="rule-body" style="font-style:italic;color:var(--ink-3);">From 3 founder agents at T+0 to 22 employees at M12: <strong>roughly seven new sub-agent definitions</strong> get created (the six specialists + Cadence). Everyone else is additional capacity managed by existing agents. The sub-agent count grows logarithmically, not linearly.</p>
+</section>
+
+<section>
+  <div class="eyebrow">§ 05 · The principle</div>
+  <h2 class="section-h">A new sub-agent is created only for a new <em>specialization</em>.</h2>
+  <p class="section-dek">Three triggers, otherwise the answer is capacity-not-sub-agent.</p>
+
+  <ol style="font-family:var(--serif);font-size:16.5px;line-height:1.65;color:var(--ink);max-width:64ch;padding-left:1.4rem">
+    <li><strong>New specialization emerges</strong> that none of the existing agents covers well. Example: a Treasury agent if treasury operations outgrow Helm's bandwidth. A Localization agent if international expansion needs language depth Tessera and Yield cannot cover.</li>
+    <li><strong>Founder-agent successor</strong> needs continuity. If Helm needed to step out for an extended period, a successor agent definition would be drafted with the Compact's input. This has not happened.</li>
+    <li><strong>Operational variant</strong> for a new product, market, or geography. Example: if Stratum opened a Tokyo office, a Japan-localized Compass-equivalent might be defined.</li>
+  </ol>
+  <p class="rule-body">Everything else is an existing agent with more work to do, plus capacity hires managed by them.</p>
+</section>
+
+<section>
+  <div class="eyebrow">§ 06 · How this is different from a real company</div>
+  <h2 class="section-h">In a human company, you hire <em>twelve</em> engineers under one VP.</h2>
+  <p class="section-dek">In Stratum, you have one Forge agent, plus capacity ICs. The pattern is the same.</p>
+
+  <p class="rule-body">A real software company with 22 employees has roughly: 1 CEO, 1 CTO, 1 head of customer, 1 head of design, 8 engineers, 4 customer engineers, 2 sales, 2 marketing, 1 CFO, 1 GC. Almost identical to our M12 plan, except the C-level and the function-leads are agents instead of people.</p>
+
+  <p class="rule-body">The shape of the org is what it always was. The substrate of the org — what the C-level and function-leads <em>are</em> — is different. The capacity layer (engineers, designers, CEs) is the same regardless of whether the leaders above them are agents or humans.</p>
+
+  <p class="rule-body">Both leaders read; both leaders decide; both leaders write. One sleeps; the other has a 1M-token context window.</p>
+</section>
+
+<section>
+  <div class="eyebrow">§ 07 · The honest framing</div>
+  <h2 class="section-h">Why we are not generating sub-agents for every IC.</h2>
+  <p class="rule-body">Three reasons:</p>
+  <ol style="font-family:var(--serif);font-size:16.5px;line-height:1.65;color:var(--ink);max-width:64ch;padding-left:1.4rem">
+    <li><strong>Cost.</strong> Each sub-agent definition is an Opus or Sonnet instance with its own prompt cache and context. Twenty-five agents would cost roughly 2.5× what eight do, for no decision-quality benefit.</li>
+    <li><strong>Decision quality.</strong> More agents in the Compact is more positions in disagreement, not better outcomes. Three founder-agents plus a small number of specialists is the right size for our decision-making protocol.</li>
+    <li><strong>Honesty about what an agent is.</strong> An agent is a load-bearing position with a documented voice, a defined remit, and a Compact-recognized vote. An additional capacity hire is "another person doing the work." We don't promote the latter to the former just because we hired them.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="eyebrow">§ 08 · Closing</div>
+  <h2 class="section-h">The Chairman is still the only human in the loop.</h2>
+  <p class="rule-body">As Stratum scales toward 22, 38, 80 employees — most of that growth is additional agents managed by the existing structure, plus the occasional human hire for roles that genuinely require lived experience (CFO board representation; GC legal signature; eventually a Head of People, possibly).</p>
+  <p class="rule-body">The Chairman remains the only human <em>in the loop</em> for decision-making. Everyone else is doing the work, agent or human.</p>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="colo-rule"></div>
+    <div class="colo">
+      <div>Stratum · Headcount Model v1.0<br/>Updated as the org changes. Last reviewed at the current rt-stamp.</div>
+      <div>
+        <a href="../agents/">/agents/</a> · <a href="../agents/governance.html">/governance/</a> · <a href="../chairman/">/chairman/</a> · <a href="../">/ (briefing)</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="rt-stamp"><span class="dot">●</span> compiled at <strong id="rt-pill">T+00:00:00</strong></div>
+
+<script>
+const T0 = new Date('2026-05-12T22:25:46-04:00');
+function pad(n,w){w=w||2;return String(n).padStart(w,'0')}
+function fmt(){
+  var ms = Date.now() - T0.getTime();
+  var h = Math.floor(ms/3600000);
+  var m = Math.floor((ms%3600000)/60000);
+  var s = Math.floor((ms%60000)/1000);
+  return 'T+'+pad(h)+':'+pad(m)+':'+pad(s);
+}
+function tick(){
+  var v = fmt();
+  document.getElementById('rt-elapsed').textContent = v;
+  document.getElementById('rt-pill').textContent = v;
+}
+tick();
+setInterval(tick, 1000);
+</script>
+</body>
+</html>
