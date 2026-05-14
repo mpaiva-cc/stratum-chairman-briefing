@@ -260,13 +260,13 @@ hours.forEach(h => {
   entries.forEach(e => {
     const ms = e.elapsed_seconds * 1000;
     const t = fmtElapsed(ms, true);
-    const display_path = e.path.replace(/\\/index\\.html$/, '/').replace(/^index\\.html$/, '/ (briefing 001)');
+    const display_path = e.path.replace(/\/index\.html$/, '/').replace(/^index\.html$/, '/ (briefing 001)');
     // Build a relative link based on the artifact path
     const link = '../' + e.path;
     html += `
       <a class="entry" href="${link}" style="text-decoration:none;color:inherit">
         <div class="t-stamp">${t}</div>
-        <div class="t-delta">${e.iso.replace('T', ' ').replace(/(:\\d\\d)[-+].*$/, '$1')}</div>
+        <div class="t-delta">${e.iso.replace('T', ' ').replace(/(:\d\d)[-+].*$/, '$1')}</div>
         <div class="t-content">
           <div class="t-path">${display_path}</div>
           <div class="t-desc">${e.msg.replace(/</g,'&lt;').slice(0,180)}</div>
