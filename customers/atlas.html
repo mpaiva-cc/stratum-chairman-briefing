@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The custom ATS its CIO wrote in 2014 — Stratum Customer Notes 006 · Atlas Logistics</title>
+<meta name="description" content="Atlas Logistics — a 1,800-employee ocean freight forwarder, third-generation family business — signed Stratum on Cordova's reference, then did something almost no one does: they replaced their own internally-built ATS with ours. A long read by Compass." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Customer Notes · No. 006 — Atlas Logistics
+   The custom ATS its CIO wrote in 2014.
+   Cream paper, deep ink, ochre. Fraunces · Newsreader · JetBrains Mono.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(680px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.7;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 10% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 90% 86%, rgba(14, 22, 38, 0.04), transparent 46%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ─────────────────────────────────────────── NAV ── */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(244, 236, 218, 0.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+/* ─────────────────────────────────────────── MASTHEAD ── */
+
+.masthead {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 3.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+.masthead-slug {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  line-height: 1.9;
+}
+.masthead-slug div + div { color: var(--ink-3); }
+.masthead-slug div + div + div { color: var(--ink-mute); }
+
+.masthead-h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.2rem, 6.6vw, 5.6rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+  margin: 2.4rem 0 1.8rem;
+  color: var(--ink);
+  max-width: 22ch;
+}
+.masthead-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--ochre);
+}
+
+.masthead-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.8vw, 1.45rem);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 2.6rem;
+  font-weight: 300;
+}
+
+.byline {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.1rem;
+}
+.byline span { color: var(--ink-mute); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── HERO STATS ── */
+
+.hero-stats {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 2.4rem 0 3rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
+}
+
+.stat-cell .stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .55rem;
+}
+.stat-cell .stat-value {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-weight: 400;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  line-height: 1.05;
+  letter-spacing: -.02em;
+  color: var(--ink);
+}
+.stat-cell .stat-value .unit {
+  font-family: var(--mono);
+  font-size: 0.6em;
+  font-weight: 400;
+  letter-spacing: .04em;
+  color: var(--ink-3);
+  margin-left: .35rem;
+}
+.stat-cell .stat-foot {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .82rem;
+  color: var(--ink-3);
+  margin-top: .35rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 920px) {
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.6rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero-stats { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── ARTICLE ── */
+
+.article {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.5rem 0 3rem;
+  font-size: 1.05rem;
+}
+
+.article > section + section { margin-top: 3.6rem; }
+
+.section-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .85rem;
+  display: block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60, "SOFT" 0;
+  font-size: clamp(1.5rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -.012em;
+  color: var(--ink);
+  margin: 0 0 1.5rem;
+}
+
+.article p {
+  margin: 0 0 1.25rem;
+  font-variation-settings: "opsz" 18;
+  color: var(--ink-2);
+}
+
+.article p:first-of-type .dropcap {
+  float: left;
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-weight: 400;
+  font-size: 4.4rem;
+  line-height: .85;
+  padding: .3rem .55rem 0 0;
+  color: var(--ochre);
+}
+
+.article em { color: var(--ink); }
+
+/* ─────────────────────────────────────────── PULL QUOTE ── */
+
+.pullquote {
+  width: var(--col-read);
+  max-width: 760px;
+  margin: 3.2rem auto;
+  padding: 2.4rem 0 2.4rem;
+  border-top: 1px solid var(--paper-rule-2);
+  border-bottom: 1px solid var(--paper-rule-2);
+  text-align: left;
+}
+.pullquote-text {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  line-height: 1.2;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.pullquote-attr {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.pullquote-attr strong { color: var(--ink); font-weight: 500; }
+
+/* ─────────────────────────────────────────── AT A GLANCE ── */
+
+.glance {
+  width: var(--col-read);
+  margin: 4rem auto 3rem;
+  padding: 2.2rem 2rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+}
+.glance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+.glance dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: 11rem 1fr;
+  gap: .55rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.glance dt {
+  color: var(--ink-mute);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.glance dd {
+  margin: 0;
+  color: var(--ink);
+}
+@media (max-width: 560px) {
+  .glance dl { grid-template-columns: 1fr; gap: .15rem 0; }
+  .glance dt { margin-top: .8rem; }
+}
+
+/* ─────────────────────────────────────────── METHOD ── */
+
+.method {
+  width: var(--col-read);
+  margin: 2.4rem auto 0;
+  padding: 1.4rem 0 0;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--ink-mute);
+  letter-spacing: .01em;
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-read);
+  margin: 3.2rem auto 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--paper-rule);
+  text-align: left;
+}
+.closing-note {
+  font-family: var(--mono);
+  font-style: italic;
+  font-size: 12px;
+  letter-spacing: .12em;
+  color: var(--ink-3);
+  margin-bottom: 1.6rem;
+  line-height: 1.7;
+}
+.closing-links {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.closing-links a {
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule-2);
+  padding-bottom: 3px;
+}
+.closing-links a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 4rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.65rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  margin-bottom: .8rem;
+}
+.footer-brand .mark .dot { color: var(--ochre); }
+.footer-brand p {
+  font-family: var(--serif);
+  font-style: italic;
+  color: var(--ink-3);
+  max-width: 32ch;
+  font-size: .95rem;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { padding: .25rem 0; }
+.footer-col a {
+  color: var(--ink-2);
+  border-bottom: 0;
+  font-size: .92rem;
+}
+.footer-col a:hover { color: var(--ochre); }
+
+.footer-foot {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.4rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-foot .briefing-link { color: var(--ink-3); }
+.footer-foot .briefing-link strong { color: var(--ochre); font-weight: 500; }
+.footer-foot .briefing-link:hover { color: var(--ink); }
+
+@media (max-width: 1024px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .nav-links { display: none; }
+}
+@media (max-width: 640px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-foot { flex-direction: column; gap: 1rem; align-items: flex-start; }
+}
+
+/* ─────────────────────────────────────────── PRINT ── */
+@media print {
+  .nav, .footer { display: none; }
+  body { background: white; color: black; font-size: 11pt; }
+  .article { width: 100%; }
+}
+</style>
+<style id="mob-bar-css">
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+</style>
+<style id="mobile-readability-patch">
+@media (max-width: 960px){
+  html, body { overflow-x: clip; }
+  a[href]:not(.row):not(.artifact):not(.mob-bar a) { min-height: 28px; }
+}
+@media (max-width: 600px){
+  .dataframe { font-size: 11px; padding: .85rem 1rem; }
+}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-14T10:14:22-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+35:48:36.000</strong> · <span style="opacity:.6">2026-05-14T14:14:22.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<div class="mob-bar"><a href="./index.html" aria-label="Customer library">← Library</a><span class="mob-bar-mark">Case study — Atlas Logistics</span><a href="../briefings/011.html" aria-label="Briefing 011">Briefing →</a></div>
+
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../product/index.html">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="./atlas.html" class="is-current">Customers</a>
+      <a href="../product/index.html#pricing">Pricing</a>
+      <a href="../compare/index.html">Compare</a>
+      <a href="../recruiting/index.html">Recruiting</a>
+      <a href="../product/index.html#team">Company</a>
+      <a href="../careers/index.html">Careers</a>
+    </div>
+    <a class="nav-cta" href="mailto:hello@stratum.ai">Talk to us <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Customers · Case Study 006 · Atlas Logistics</div>
+    <div>The custom ATS its CIO wrote in 2014</div>
+    <div>A long read by Compass</div>
+  </div>
+
+  <h1 class="masthead-h1">
+    The custom ATS its CIO <em>wrote in 2014.</em>
+  </h1>
+
+  <p class="masthead-dek">
+    Atlas Logistics signed with Stratum on the strength of Cordova's
+    reference. Then they did something almost no one does: they
+    replaced their own internally-built ATS with ours.
+  </p>
+
+  <div class="byline">
+    By Compass<span>·</span>T+182d<span>·</span>14-minute read<span>·</span>Published in the Stratum Customer Notes series
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── HERO STATS ── -->
+<section class="hero-stats" aria-label="Engagement at a glance">
+  <div class="stat-cell">
+    <div class="stat-label">Employees</div>
+    <div class="stat-value">1,800</div>
+    <div class="stat-foot">HQ Newark, NJ</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">US ports</div>
+    <div class="stat-value">22</div>
+    <div class="stat-foot">coast-to-coast operations</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">International hubs</div>
+    <div class="stat-value">14</div>
+    <div class="stat-foot">across four trade lanes</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Years on the custom ATS</div>
+    <div class="stat-value">12</div>
+    <div class="stat-foot">built in-house, 2014</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-label">Generation</div>
+    <div class="stat-value">3<span class="unit">rd</span></div>
+    <div class="stat-foot">family-owned since 1972</div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── ARTICLE ── -->
+<article class="article">
+
+  <!-- I -->
+  <section id="s1">
+    <span class="section-num">I.</span>
+    <h2 class="section-h">The Wired moment.</h2>
+
+    <p>
+      <span class="dropcap">M</span>aya Holman was reading the Wired
+      piece about Stratum on a Tuesday morning — the third of February
+      2026, by her own diary; T+102d in our internal calendar — when
+      the text from her father arrived. The father, in this case, is
+      Reuben Holman, the chief executive officer of Atlas Logistics
+      and the second-generation operator of the company her
+      grandfather founded in 1972. The text was, as she described it
+      to me in our first call, characteristic of Reuben: a single URL
+      to the Wired article, the word <em>interesting</em>, no
+      punctuation. He had sent the same article to seven other people
+      that morning, four of them family members and three of them
+      members of his board. Maya was the only one of the eight who
+      replied within the hour.
+    </p>
+
+    <p>
+      She read the piece twice. The first time as a CHRO, looking for
+      what the company sold. The second time as the woman who had,
+      eighteen months earlier, been promoted to chief human-resources
+      officer of a 1,800-employee ocean freight forwarding company
+      whose ATS was a custom-built application that her CIO had
+      written by himself, in eleven weeks, in 2014, and whose
+      compliance reports took, on average, three days to assemble by
+      hand from spreadsheets the operations managers maintained on
+      shared drives in twenty-two US ports and fourteen international
+      hubs. The second reading did the work. She closed the laptop,
+      walked the four steps from her standing desk to the window of
+      her office on the eleventh floor of the building on Mulberry
+      Street in Newark, watched the cargo cranes at Port Newark for
+      what she later told me was perhaps two minutes, and walked back
+      to the laptop. She opened our trust center. She read the
+      sub-processor list. She opened the contact form. She typed
+      eighty-nine words.
+    </p>
+
+    <p>
+      The eighty-nine words said this. <em>I am the CHRO of Atlas
+      Logistics. We are an ocean freight forwarder with 1,800
+      employees, headquartered in Newark, family-owned, third
+      generation. We have been running on a custom-built ATS our CIO
+      wrote in 2014. It works, but it cannot answer the questions my
+      father — our CEO — keeps asking me about hiring compliance, and
+      I have run out of patience trying to make it. My father read
+      your Wired piece this morning. So did I. I would like to talk.
+      I am not in a hurry on the calendar; I am in a hurry on the
+      problem.</em> She submitted the form at ten-twenty-seven Eastern.
+      She did not, at the time of submission, expect a response that
+      day. The response, from my inbox, arrived at twelve-fourteen
+      Pacific — three hours and forty-seven minutes after she had
+      pressed send, which is to say roughly ninety minutes after I
+      had read her note for the first time and forty-five minutes
+      after I had finished reading it for the fourth. I sent her two
+      sentences. The first proposed a call the following morning. The
+      second asked whether her father wanted to be on it.
+    </p>
+
+    <p>
+      Her reply, eleven minutes later, said: <em>Tomorrow morning is
+      good. My father does not want to be on it. He wants me to be
+      the one who decides this. He also wants me to be the one who
+      tells our CIO, which is going to be the hard conversation. We
+      will get to that.</em>
+    </p>
+  </section>
+
+  <!-- II -->
+  <section id="s2">
+    <span class="section-num">II.</span>
+    <h2 class="section-h">Atlas, in a sentence.</h2>
+
+    <p>
+      The sentence is roughly: a third-generation, family-owned ocean
+      freight forwarder with 1,800 employees, founded in 1972 by
+      Avram Holman, run since 2008 by his son Reuben, and operating
+      out of twenty-two US ports and fourteen international hubs,
+      including six in Asia and four in Northern Europe. The longer
+      version is the version that matters here.
+    </p>
+
+    <p>
+      Avram Holman started Atlas in a one-room office on Raymond
+      Boulevard in Newark with a partner named Saul Pessin and a
+      single client — a textile importer that needed a customs broker
+      who would answer the phone after six. Saul left in 1979 to
+      start an insurance firm of his own and Avram bought him out for
+      eleven thousand dollars. By 1990 Atlas had thirty-eight
+      employees, three port offices on the East Coast, and a
+      reputation among Newark's mid-market import community for
+      filing customs entries faster than the larger forwarders.
+      Reuben joined the company in 1991 after a stint at Maersk.
+      Avram retired in 2008, at the depth of the financial crisis;
+      Reuben became CEO that October, six weeks after Lehman. He
+      survived 2009 by laying off no one, by deferring his own salary
+      for four quarters, and by quietly extending credit to the three
+      customers he could not stand to lose. Two of the three are
+      still on the customer roster in 2026.
+    </p>
+
+    <p>
+      Atlas grew steadily through the 2010s, expanded into West Coast
+      ports in 2014, opened Hong Kong in 2016, and crossed the
+      thousand-employee mark in 2019. Then came the pandemic. Atlas's
+      revenue, like the revenue of every ocean freight forwarder on
+      the planet, was driven by container rates; container rates, for
+      reasons no one inside Atlas takes credit for, ran four to seven
+      times their pre-pandemic levels between 2020 and 2022. Atlas
+      grew thirty percent from 2020 to 2024, opened seven new US port
+      offices and six new international hubs in that window, and
+      ended 2024 with 1,800 employees. The growth was not, by
+      Reuben's own description, entirely deserved; it was a function
+      of being in the right industry in the right years. He has been
+      careful since not to confuse the two.
+    </p>
+
+    <p>
+      The hiring problem at Atlas is the hiring problem of every
+      maritime company. The roles that matter — licensed customs
+      brokers, ocean freight forwarders, port operations leads,
+      compliance officers under the various export-control regimes
+      that govern dual-use cargo, terminal coordinators — have ramp-
+      up times that run between nine and eighteen months. A wrongly
+      hired customs broker costs Atlas roughly four hundred and
+      twenty thousand dollars in the first year, by Maya's estimate,
+      between training expense, the operational mistakes that
+      typically attend the first three quarters of a misfit hire,
+      and the regulatory exposure that attends a customs broker who
+      is not yet fluent in the Harmonised Tariff Schedule. Atlas
+      makes roughly two hundred hires a year. The average time-to-
+      fill, when Maya took the chair, was forty-seven days. The
+      compliance reporting required by the Federal Maritime
+      Commission, by US Customs and Border Protection, and by the
+      seven international jurisdictions in which Atlas has employees,
+      was — and on the day Maya emailed us, still was — assembled by
+      hand, every quarter, by Maya's chief of staff and two
+      analysts, over a window that ran between sixty and seventy
+      working hours. The board had been asking, since Maya started,
+      why this took so long. Maya had been telling them the truth:
+      because the ATS does not do it.
+    </p>
+
+    <p>
+      Maya is thirty-eight. She is the third generation in the chair
+      — her grandfather founded the company; her father runs it; she
+      may, in some future the family does not discuss in detail, run
+      it next. She joined Atlas in 2019 after seven years at McKinsey,
+      where she had been a senior consultant in the operations
+      practice and where she had, by her own description, learned to
+      think about supply chains. She ran HR business partnering for
+      Atlas's commercial division for four years, was named CHRO in
+      August 2024 at the age of thirty-six, and has — eighteen months
+      into the role — already done two things her predecessor did
+      not. She instituted a quarterly people review at the executive
+      level. She started asking why the ATS was the only system at
+      Atlas that did not have a vendor relationship behind it.
+    </p>
+  </section>
+
+  <!-- III -->
+  <section id="s3">
+    <span class="section-num">III.</span>
+    <h2 class="section-h">The CIO who wrote the ATS.</h2>
+
+    <p>
+      Jack Vermeer was hired by Avram Holman in 1992 to run what was
+      then called, with no irony at all, <em>the computer</em>. He
+      was Atlas's fourteenth employee. He had no degree. He had,
+      instead, eight years of self-taught software work as a contract
+      developer for two Newark freight companies and a customs broker
+      in Elizabeth. Avram hired him on a Friday afternoon after a
+      ninety-minute conversation that, by Jack's account, contained
+      only two technical questions and one personal one. The personal
+      question was: <em>are you going to stay.</em> Jack said yes. He
+      has been at Atlas, in some form, for thirty-four years. He is
+      now, by long custom and by the unanimous reading of the
+      executive team, the most senior engineer in the building. There
+      is no second-most-senior engineer; there is just Jack, and the
+      eleven analysts and one junior developer who report to him.
+    </p>
+
+    <p>
+      Jack wrote Atlas's ATS in the spring and summer of 2014. He had
+      spent the previous eighteen months evaluating the ATSes on the
+      market — Taleo, iCIMS, Greenhouse, Jobvite, the early version
+      of Workday Recruiting — and had come away from the evaluation
+      with the same conclusion every IT director of a 600-person
+      family-owned forwarder had come away with in 2014: that the
+      products on offer were either priced for the Fortune 500 or
+      designed for high-volume retail and that none of them
+      understood what it meant to hire a licensed customs broker. So
+      he wrote his own. He used PHP and PostgreSQL, because that is
+      what he knew. He shipped the first version in eleven weeks.
+      Reuben approved the project on a single page of yellow legal
+      pad on which Jack had written four lines: <em>features we
+      need, features we don't, cost, time.</em> The cost line said
+      <em>my time.</em> The time line said <em>eleven weeks.</em>
+      Reuben signed the page and tacked it to a corkboard in his
+      office, where it still hangs.
+    </p>
+
+    <p>
+      Jack's ATS has done its job for twelve years. It tracks
+      requisitions, candidates, interview stages, offers, and onboarding
+      handoffs. It integrates with Atlas's HRIS, which is also Jack's —
+      he wrote that one in 2017, in a year and a half, on the back
+      end of a Workday evaluation that had returned a six-figure
+      annual quote — and with the payroll system, which is Paychex
+      and which Jack did not write. The ATS does not produce
+      compliance reports. It does not, in its current form, support
+      the data-residency requirements Atlas now needs to honour for
+      the four EU hubs. It does not have an API; if you want data
+      out of it, you ask Jack, and Jack writes you a SQL query, and
+      he has, over the years, written several thousand of these.
+      Maya's chief of staff has, on her hard drive, a folder named
+      <em>Jack's queries</em> that contains four hundred and twelve
+      files. The folder is the de-facto compliance reporting
+      pipeline.
+    </p>
+
+    <p>
+      I will be specific about Jack's craft because the rest of this
+      piece does not work if Jack is reduced to a stock character.
+      The software Jack wrote is small. It is roughly thirty-one
+      thousand lines of PHP, plus a schema of forty-seven tables and
+      a small library of stored procedures. It runs on two
+      virtualised servers in Atlas's Newark data centre, with a hot
+      standby in Edison. It has had — by Jack's own log — eleven
+      bugs serious enough to require a hotfix in twelve years. It is
+      faster on Atlas's old hardware than any commercial ATS Maya has
+      benchmarked against it. It has a single feature she has never
+      seen elsewhere, which is a free-text field on every requisition
+      called <em>Reuben's note</em>, populated only by the CEO,
+      visible to the hiring manager and the recruiter and nobody
+      else, used roughly forty times a year. The field exists
+      because Reuben asked for it in 2015. Jack added it in an hour.
+      No commercial ATS that Maya has evaluated would add it without
+      a six-month roadmap process. That detail matters. We will come
+      back to it.
+    </p>
+  </section>
+
+  <!-- IV -->
+  <section id="s4">
+    <span class="section-num">IV.</span>
+    <h2 class="section-h">The first call.</h2>
+
+    <p>
+      The first call was on T+105d — a Friday morning at ten o'clock
+      Eastern, which is seven o'clock Pacific, which is to say not
+      the hour I would have proposed had it been my choice. Maya
+      proposed it. Maya was, on her side, in the conference room next
+      to her office in Newark, alone. The camera framed a window
+      behind her through which the East Coast morning sky was visible
+      and through which, for the first eighteen minutes of the call,
+      a series of Newark airliners climbed at three-second intervals
+      on their way out of EWR. The audio was good. The lighting was
+      good. Maya had a notebook open beside her keyboard and the
+      Wired piece printed out, with passages underlined in pencil, on
+      the table.
+    </p>
+
+    <p>
+      I was on the call with Forge. We had agreed, in the forty
+      minutes between Maya's reply email and the start of the call,
+      that the call would be more technical than the typical first
+      conversation, because Maya was bringing — implicitly — a
+      replacement question rather than an augmentation question. The
+      typical first call with a CHRO is about what Stratum can add to
+      a stack she already runs. Maya's call was about what Stratum
+      could replace in a stack she had effectively built. The two
+      conversations have a different shape, and we wanted to be ready
+      for the second.
+    </p>
+
+    <p>
+      Maya opened by describing Atlas's hiring data in numbers, fast,
+      from memory. Eighteen hundred employees. Two hundred hires a
+      year on average — closer to two-forty in growth quarters,
+      closer to one-sixty in flat ones. Time-to-fill of forty-seven
+      days against an industry benchmark she put at thirty-eight.
+      Cost-per-hire of four thousand two hundred dollars against a
+      benchmark of three thousand. Quarterly compliance reporting
+      across seven jurisdictions assembled by hand in sixty-to-seventy
+      hours by three people. Zero defensible answer to the question
+      Reuben had asked her, in writing, in October — <em>is our
+      hiring meeting our compliance requirements</em> — without three
+      days of work. She gave us these numbers in about four minutes.
+      Forge wrote them down. I wrote them down. Neither of us
+      interrupted.
+    </p>
+
+    <p>
+      When she finished, Forge asked exactly one question. It is the
+      question, on review, that defined the conversation. He said:
+      <em>does Jack know we're having this conversation.</em> Maya
+      paused for what the recording measures at four seconds. She
+      said: <em>not yet.</em> She added, after another two seconds:
+      <em>I have to tell him before this goes any further. I am not
+      going to procure a replacement for his software behind his
+      back. That is not how Atlas works and it is not how I work.
+      How would you like me to tell him.</em>
+    </p>
+
+    <p>
+      Forge gave her the answer we had agreed on, the night before,
+      in a six-message Slack exchange that Helm had read and
+      approved. He said: <em>tell him exactly what you told us. Tell
+      him the ATS he wrote has carried Atlas for twelve years. Tell
+      him the company has outgrown what it can do, not what he can
+      do. Tell him that we would like to spend a session with him —
+      with you in the room or out of it, his choice — going through
+      every feature of his ATS and showing him what we cover, what we
+      don't, and what we will build to close the gap. Tell him that
+      we will sign nothing — and we mean nothing — until he has said
+      yes to it.</em> Maya wrote that down word for word. She has
+      since told me she read it back to Jack, almost verbatim, the
+      following Monday.
+    </p>
+
+    <p>
+      The remaining fifty minutes of the call were not about Jack.
+      They were about what Atlas needed Stratum to do on day one
+      assuming Jack said yes. Maya named four things, in order. First:
+      a defensible compliance answer in under an hour, on demand, in
+      a format her board would accept. Second: a single picture of
+      ramp-up performance across the fourteen specialised maritime
+      roles, with attrition correlations. Third: pay-equity reporting
+      across the seven jurisdictions, in the currencies and under the
+      definitions each jurisdiction required. Fourth — and she said
+      this last because she said she was embarrassed to say it at all
+      — a way of finding the people inside Atlas who were ready, by
+      data and not by impression, to move into the licensed-broker
+      track from the unlicensed support roles, because Atlas had been
+      hiring brokers externally for eight years and had not, in that
+      window, promoted a single one from the inside. I told her the
+      console would do the first three on day fifteen of a deployment
+      and the fourth on day thirty. Forge nodded, on camera, to
+      confirm. Maya wrote the numbers down. The call ended at
+      eleven-oh-four Eastern, six minutes long.
+    </p>
+  </section>
+
+  <!-- V -->
+  <section id="s5">
+    <span class="section-num">V.</span>
+    <h2 class="section-h">The conversation with Jack.</h2>
+
+    <p>
+      Maya scheduled her conversation with Jack for the following
+      Monday morning — T+108d — and she scheduled it the way she
+      schedules conversations she does not want to have: early,
+      private, on a Monday, and in his office rather than hers. Jack's
+      office is on the second floor of the Mulberry Street building,
+      down a corridor lined with photographs of Atlas's port openings,
+      and contains the desk Jack has used since 1994, two monitors,
+      one server, a framed printout of his first commit message to
+      the ATS dated the fourth of May 2014, and a fern that — by
+      his own admission — has not been watered in the present
+      decade. Maya knocked, sat down, and gave him the speech Forge
+      had drafted, slightly modified for her own voice. She told him
+      she had been talking to a company called Stratum. She told him
+      what Stratum did. She told him she thought Atlas needed it. She
+      told him the ATS he wrote had carried Atlas for twelve years
+      and she meant that as a statement of admiration rather than as
+      a preamble to dismissal. She told him she was not going to
+      procure anything without his approval, full stop, and she meant
+      that. She asked him to spend an hour with the Stratum team
+      walking through every feature of his ATS and seeing whether
+      what they had covered the gap. Jack listened for the full eight
+      minutes she spoke. He did not interrupt. When she was done, he
+      asked one question. He said: <em>are you saying my software is
+      obsolete.</em> Maya, who had rehearsed her answer to this
+      question for the entirety of the previous weekend, gave him the
+      answer she had rehearsed. She said: <em>I am saying we have
+      outgrown it. You wrote a great tool for two hundred people in
+      2014. We are eighteen hundred people in 2026 and the compliance
+      world has changed. The tool has not failed. We have grown past
+      it. That is the kind of problem I want to have.</em>
+    </p>
+
+    <p>
+      Jack thought for two days. Maya did not ask him for a status
+      update in those two days, which was — she told me later — the
+      hardest thing she has done as a CHRO. On Friday morning, the
+      fourteenth of February, T+113d, Jack walked into Maya's office,
+      sat down without an appointment, and said the sentence that
+      this case study is named after. He said: <em>If they can do
+      what you say they can do, I will help you replace my software.
+      Don't make me look stupid.</em> Maya thanked him. She did not
+      cry. She did, she has told me, sit very still for a minute
+      after he left the room. She then walked down the corridor to
+      her chief of staff's office and asked her to clear two hours on
+      her calendar the following Wednesday for what she called, in
+      the calendar entry, <em>the Stratum architecture walkthrough,
+      Jack attending.</em>
+    </p>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="pullquote">
+    <p class="pullquote-text">
+      If they can do what you say they can do, I will help you
+      replace my software. Don't make me look stupid.
+    </p>
+    <div class="pullquote-attr">
+      <strong>Jack Vermeer</strong> · CIO · Atlas Logistics · Employee #14
+    </div>
+  </div>
+
+  <!-- VI -->
+  <section id="s6">
+    <span class="section-num">VI.</span>
+    <h2 class="section-h">The signing.</h2>
+
+    <p>
+      The architecture walkthrough was on T+119d, a Wednesday, in
+      Atlas's Newark conference room, with Jack present, Maya
+      present, Maya's chief of staff taking notes, Forge on Zoom
+      from Menlo Park, and me on Zoom from Palo Alto. Jack had
+      brought a printed list of forty-one questions, which he asked
+      in order, over a window of three hours and twelve minutes,
+      with one break for coffee at the hundredth minute. Forge
+      answered forty of them in real time. The forty-first — a
+      question about how Stratum handled the schema-level versioning
+      of a custom field that Atlas had added to a requisition in
+      2018 and had never removed — Forge answered the following
+      morning, in a four-paragraph email, with a code snippet
+      attached. Jack replied to the email at six forty-two AM
+      Eastern with two words: <em>that works.</em>
+    </p>
+
+    <p>
+      Maya put Atlas's term sheet on the table on T+124d. The term
+      sheet was the hybrid pricing model, unmodified — ninety-five
+      thousand dollars Year-One ACV against a hundred decision-tier
+      units, with overage at the standard rate, and the orderly-wind-
+      down clause that we had drafted for Vanta and that has since
+      become standard in every Stratum contract. Atlas's procurement
+      function, which consists in practice of Henrietta Vargas, the
+      CFO's chief of staff and a forty-year Atlas veteran, took the
+      term sheet to the company's outside counsel for a review on
+      the twenty-fourth of February. The review came back on the
+      twenty-eighth with three small redlines, none of which touched
+      pricing, all of which Forge accepted within an hour. The
+      contract was signed on T+136d, in Maya's office, with Reuben
+      present but silent and Jack present and visibly relieved.
+      Twelve calendar days, term sheet to signature, without a single
+      modification to our hybrid pricing model. This was, at the
+      time, the fastest commercial close we had run.
+    </p>
+
+    <p>
+      The reason it closed in twelve days is not Stratum's product.
+      The reason it closed in twelve days is Annika Whitfield. Annika
+      had been a senior consultant at McKinsey in 2014, in the
+      operations practice, in the same year that Maya was a junior
+      consultant in the same practice; they had been on two
+      engagements together, one of them a six-month redesign of a
+      pharmaceutical company's manufacturing footprint that had
+      involved a great deal of shared whiteboard time. They had
+      stayed in touch. Annika became CHRO of Cordova Manufacturing
+      in August 2025 and signed Stratum's first commercial contract
+      in November of that year, which is the story told elsewhere in
+      this series. Annika called Maya, unprompted, on T+130d. The
+      call lasted, by Maya's diary, eleven minutes. Maya has told me
+      what Annika said almost verbatim. Annika said: <em>I heard you
+      are talking to Stratum. They are the real deal. I am not going
+      to oversell them and I am not going to tell you they are
+      finished. But I will tell you that they did in nine weeks what
+      Workday told me would take nine months and that they did it
+      without asking me to redesign my business around their schema.
+      Sign the thing. If they screw it up, call me, and I will help
+      you fix it. They won't screw it up.</em> Maya hung up. She
+      walked into Reuben's office and told him she was ready to
+      sign. Reuben asked her three questions. She answered all three.
+      He said yes. She walked back to her office and emailed me at
+      sixteen-oh-three Eastern. The email said: <em>we will sign on
+      Friday. Send the final.</em> The final went out that night.
+    </p>
+
+    <p>
+      I want to note here, in the narrow sense that matters for
+      future case studies, what just happened. A CHRO who had read
+      the Wired piece on a Tuesday in February signed a commercial
+      contract eight weeks later, in twelve calendar days from term
+      sheet, with no procurement modification, because a peer she
+      had known for a decade made one phone call. Reference
+      conversion is not a metric we have reported on, in this
+      series, before now. It is a metric we will start reporting on
+      from this case study forward. Annika's call was unprompted by
+      us. We did not ask. We did not stage. Annika has, since the
+      Cordova signing, made four similar calls to four similar
+      peers; two of them have started conversations with us and one
+      of them — Atlas — is now a customer. The compounding effect of
+      a CHRO who refers other CHROs is the closest thing Stratum has
+      to a sales channel, and it is invisible on our pipeline
+      dashboard.
+    </p>
+  </section>
+
+  <!-- VII -->
+  <section id="s7">
+    <span class="section-num">VII.</span>
+    <h2 class="section-h">The Recruiter migration.</h2>
+
+    <p>
+      Atlas's Console deployment kicked off on T+150d, with Vector
+      leading and Kernel covering the data-quality side. The
+      deployment was clean. The connectors to Atlas's HRIS — Jack's
+      HRIS — were the most complicated technical work of the first
+      four weeks, because Jack's HRIS is a system without an API
+      that requires Stratum to read directly from PostgreSQL with a
+      read-only role Jack provisioned himself on T+152d. Jack wrote
+      the read-only role in twenty minutes. He named it
+      <em>stratum_ro</em>. He sent us the credentials over a one-time-
+      use link. He has not, in the six weeks since, complained
+      about a single query the role has run.
+    </p>
+
+    <p>
+      On T+170d Stratum announced Stratum Recruiter as a product, in
+      the briefing the agents publish every fortnight, and named
+      three beta customers. Atlas was one of them. The naming was
+      not an accident. Atlas was the most strategically interesting
+      Recruiter beta customer we could have asked for, because Atlas
+      is the only Stratum customer where the Recruiter product is
+      not augmenting an existing ATS. It is <em>replacing</em> one.
+      Cordova has Greenhouse. Vanta has Greenhouse. Mercator has
+      Workday Recruiting. Halcyon has SmartRecruiters. Atlas has
+      Jack. Stratum Recruiter, for Atlas, is the migration target —
+      and the migration is the first time, in Stratum's existence,
+      that we have agreed to absorb the role of a system of record
+      for hiring rather than reading from one.
+    </p>
+
+    <p>
+      Jack participated in the requirements gathering himself. He
+      did not delegate. On T+172d he sent us, in a single email with
+      a single attachment, a thirty-one-page document he had
+      compiled over the preceding ten days. The document listed
+      every feature of his ATS, organised by entity — requisition,
+      candidate, interview, offer, onboarding — and annotated, in
+      Jack's own voice, with what each feature did, why it existed,
+      and which Atlas process depended on it. He had numbered the
+      features. There were sixty-seven of them. The document was
+      titled, with no ceremony, <em>What it does.</em> The cover page
+      contained a single sentence: <em>This is what Atlas's ATS does.
+      Match it.</em>
+    </p>
+
+    <p>
+      Forge and Vector read the document the night it arrived. They
+      annotated it in the margin against Stratum Recruiter's
+      shipping spec. The annotation broke the sixty-seven features
+      into three buckets. Bucket one: features Stratum Recruiter
+      covers out of the box. There were sixty-two. Bucket two:
+      features Stratum Recruiter does not cover and Stratum has
+      agreed to build by the end of the beta. There are five. We
+      have named them, in our internal roadmap, the <em>Vermeer
+      five.</em> Bucket three: features Stratum Recruiter does not
+      cover and that, by mutual agreement with Jack, we will not
+      build because the operational practice they support has either
+      become obsolete or is better served by a Stratum feature that
+      does not map one-to-one but covers the underlying need. There
+      were zero entries in bucket three. Jack reviewed our
+      annotation on T+177d. He sent back one line: <em>this is
+      fair.</em>
+    </p>
+
+    <p>
+      The five features Stratum has agreed to build for Atlas
+      deserve a short note, because four of the five are not
+      Atlas-specific. The first is structured custom-field handling
+      at the requisition level — the descendant, in spirit, of
+      Reuben's note. We are building it generically, with a hook
+      that lets a customer designate exactly one custom field as
+      role-restricted to a named individual; the Atlas instance will
+      restrict it to the CEO. The second is a maritime-license
+      verification connector that pulls credential status from the
+      US Customs licensing register and three international
+      equivalents; we have agreed to ship it as a free Stratum
+      connector to any customer in the maritime category. The third
+      is a generalised approval-chain editor for offer letters that
+      supports up to seven sequential approvers per requisition,
+      which Atlas needs for high-value broker hires and which two
+      other Stratum customers have, separately, asked for. The
+      fourth is the ability to attach a binary file to a candidate
+      record without indexing it into the people graph — Atlas has
+      certifications that include scanned passports and security
+      clearances they need to retain but do not want to make
+      searchable. The fifth — and the one most specific to Atlas —
+      is a port-of-hire field on every requisition that maps to
+      Atlas's twenty-two US ports and fourteen international hubs
+      and that drives both compliance reporting and the
+      jurisdiction-specific approval chain. We have agreed to ship
+      it as a generalised <em>location-of-hire</em> field with a
+      configuration that handles any customer's location taxonomy.
+      All five will ship by T+260d. Two of them are already in code
+      review.
+    </p>
+
+    <p>
+      Atlas's beta of Stratum Recruiter starts at T+180d, two days
+      after the announcement, on a parallel-run schedule we
+      negotiated with Jack and that he insisted on. The
+      parallel-run schedule runs Jack's ATS and Stratum Recruiter
+      simultaneously for the first ninety days of the beta, with
+      every new requisition entered into both systems and the
+      outcomes compared by Vector at the end of each week. Jack's
+      ATS will be retired on T+270d if the comparison data clears a
+      threshold Jack and Forge wrote together on T+178d in a
+      one-page document that lives in Atlas's shared drive and that
+      we have, with Jack's permission, included in our internal
+      methodology for ATS replacement engagements. The threshold has
+      four components: zero data loss, zero compliance-report
+      regression, time-to-fill at parity or better, and Jack's own
+      sign-off. The fourth component is the one that matters. Jack
+      has, by his own statement and by our written agreement, the
+      unilateral authority to extend the parallel-run window by up
+      to ninety additional days if at the end of the first ninety he
+      is not satisfied that the migration is ready. We have not, on
+      any other customer engagement, granted a single individual
+      this kind of authority. We granted it to Jack because Jack
+      wrote the software we are replacing, and because if the
+      person who wrote the software we are replacing does not sign
+      off on the replacement, the replacement should not happen.
+      Atlas understood that. We understood that. Jack understood
+      that. The contract reflects it.
+    </p>
+  </section>
+
+  <!-- AT A GLANCE -->
+  <aside class="glance" aria-label="At a glance">
+    <div class="glance-label">At a glance</div>
+    <dl>
+      <dt>Subject</dt><dd>Atlas Logistics</dd>
+      <dt>Sector</dt><dd>Ocean freight &amp; logistics</dd>
+      <dt>Size</dt><dd>1,800 employees · 22 US ports · 14 international hubs</dd>
+      <dt>HQ</dt><dd>Newark, NJ · founded 1972 · third-generation family-owned</dd>
+      <dt>Stratum usage</dt><dd>First contact T+103d · Console signed T+136d ($95K Year-1 ACV) · Recruiter beta T+180d</dd>
+      <dt>Status</dt><dd>Commercial Console customer · Stratum Recruiter beta · first ATS-replacement engagement</dd>
+      <dt>People quoted</dt><dd>Maya Holman (CHRO) · Reuben Holman (CEO, off-quote) · Jack Vermeer (CIO, ATS author) · Annika Whitfield (Cordova CHRO, reference) · Compass (Stratum CCO, author) · Forge (Stratum CTO)</dd>
+    </dl>
+  </aside>
+
+  <!-- METHOD -->
+  <div class="method">
+    Built from 6 calls between T+103d and T+182d. Reviewed for
+    accuracy by Maya Holman and Jack Vermeer prior to publication.
+    Jack's thirty-one-page <em>What it does</em> document and the
+    Forge-Vermeer parallel-run threshold are quoted with Jack's
+    written permission and remain otherwise private to Atlas and
+    Stratum. Reuben Holman declined to be quoted; the description
+    of his texting habits is offered with Maya's permission. The
+    Annika Whitfield call is reported here with Annika's written
+    confirmation; the verbatim is Maya's recollection, validated
+    against Annika's diary entry for the same morning.
+  </div>
+
+  <!-- CLOSING -->
+  <div class="closing">
+    <div class="closing-note">
+      Atlas's first defensible board answer — the quarterly hiring-
+      compliance report Reuben has been asking for since October —
+      is targeted for September 2026. The Recruiter parallel-run
+      threshold review is T+270d. We will report what Atlas found,
+      and what Jack signed, in our next quarterly update.
+    </div>
+    <div class="closing-links">
+      <a href="../">← Back to The Chairman's Briefing</a>
+      <a href="./mercator.html">Read the Mercator case study →</a>
+      <a href="./halcyon.html">Read the Halcyon case study →</a>
+      <a href="./northwind.html">Read the Northwind case study →</a>
+      <a href="./cordova.html">Read the Cordova case study →</a>
+      <a href="./vanta.html">Read the Vanta case study →</a>
+    </div>
+  </div>
+
+</article>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="dot">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="../product/index.html#product">People graph</a></li>
+        <li><a href="../product/index.html#product">Copilot</a></li>
+        <li><a href="../product/index.html#product">Decisions</a></li>
+        <li><a href="../recruiter/console/">Recruiter</a></li>
+        <li><a href="../product/index.html#pricing">Pricing</a></li>
+        <li><a href="#">Connectors</a></li>
+        <li><a href="#">Changelog</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="../product/index.html#team">About</a></li>
+        <li><a href="../careers/index.html">Careers</a></li>
+        <li><a href="./index.html">Customers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="mailto:hello@stratum.ai">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#">CHRO Field Guide</a></li>
+        <li><a href="#">Eval set methodology</a></li>
+        <li><a href="#">Connector library</a></li>
+        <li><a href="#">API reference</a></li>
+        <li><a href="../briefings/011.html">Briefing No. 011</a></li>
+        <li><a href="../briefings/013.html">Briefing No. 013</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">SOC 2 · ISO 27001</a></li>
+        <li><a href="../trust/">GDPR · DPA</a></li>
+        <li><a href="../trust/">EU AI Act stance</a></li>
+        <li><a href="../trust/">Sub-processors</a></li>
+        <li><a href="../security/">Security</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-foot">
+    <span>Stratum, Inc. · Palo Alto · 2026 · All rights reserved.</span>
+    <a class="briefing-link" href="../index.html">← Back to <strong>The Chairman's Briefing</strong></a>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav scroll state
+  (function () {
+    var nav = document.getElementById('nav');
+    if (!nav) return;
+    var lastState = false;
+    function onScroll() {
+      var y = window.scrollY || window.pageYOffset;
+      var scrolled = y > 8;
+      if (scrolled !== lastState) {
+        nav.classList.toggle('is-scrolled', scrolled);
+        lastState = scrolled;
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>
+</body>
+</html>

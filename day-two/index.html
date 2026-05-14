@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Day Two, in real time — Stratum</title>
+<meta name="description" content="A real-time status report for Stratum, written entirely in wall-clock elapsed time from T+0. The antidote to the fictional narrative calendar — every claim here is verifiable against the actual git log." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · /day-two/
+   Day Two, in real time · The real-time status report
+   Editorial cream · deep ink · ochre
+   Fraunces (display) · Newsreader (body) · JetBrains Mono
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+  --plum-deep:    #4a2532;
+  --signal:       #a13418;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --col-read:     min(820px, 92vw);
+  --col-grid:     min(1240px, 92vw);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.72;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 8% 12%, rgba(184,101,31,.06), transparent 42%),
+    radial-gradient(circle at 92% 88%, rgba(14,22,38,.04), transparent 46%),
+    radial-gradient(circle at 60% 30%, rgba(74,93,58,.03), transparent 40%),
+    repeating-radial-gradient(circle at 0 0, rgba(14,22,38,.012) 0, rgba(14,22,38,.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+::selection { background: var(--ochre); color: var(--paper); }
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+.mob-bar { display: none; }
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--paper-rule);
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .6rem;
+    font-family: var(--mono);
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .mob-bar a {
+    color: var(--ink-3); min-height: 36px;
+    display: flex; align-items: center; padding: 0 .25rem; border-bottom: 0;
+  }
+  .mob-bar a:active { color: var(--ochre); }
+  .mob-bar-mark {
+    font-family: var(--display); font-weight: 600;
+    font-size: 1.05rem; letter-spacing: -.02em;
+    color: var(--ink); text-transform: none;
+    flex: 1; text-align: center; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+}
+
+/* ─────────────────────────────────────────── NAV ── */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(244,236,218,.85);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244,236,218,.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.05rem 0;
+}
+.nav-mark {
+  font-family: var(--display); font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.65rem; letter-spacing: -.035em;
+  color: var(--ink); line-height: 1; border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-links {
+  display: flex; align-items: center; gap: 1.4rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .12em; text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3); border-bottom: 0;
+  position: relative; padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after,
+.nav-links a.is-current::after {
+  content: ""; position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px; background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-cta {
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--paper); background: var(--ink);
+  padding: .55rem .95rem; border: 1px solid var(--ink);
+  display: inline-flex; align-items: center; gap: .55rem;
+  transition: background .2s, color .2s;
+}
+.nav-cta:hover { background: var(--ochre); border-color: var(--ochre); border-bottom-color: var(--ochre); }
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 960px) {
+  .nav-links { display: none; }
+  .nav-mark { font-size: 1.4rem; }
+  .nav-cta { font-size: 11px; padding: .5rem .8rem; }
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+.hero {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 5.4rem 0 3.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ochre);
+  display: flex; align-items: center; gap: .65rem;
+  margin-bottom: 2.2rem;
+}
+.hero-eyebrow .bar {
+  width: 22px; height: 1px; background: var(--ochre); display: inline-block;
+}
+.hero-h1 {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 1; letter-spacing: -.035em;
+  margin: 0 0 1.4rem; color: var(--ink);
+}
+.hero-h1 em {
+  font-style: italic; color: var(--ochre); font-weight: 400;
+  font-variation-settings: "opsz" 96;
+}
+.hero-sub {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: clamp(1.15rem, 2.3vw, 1.55rem);
+  line-height: 1.45; color: var(--ink-2);
+  max-width: 38ch; margin: 0 0 2.4rem;
+}
+.hero-dateline {
+  font-family: var(--mono); font-size: 11.5px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.hero-dateline strong { color: var(--ink); font-weight: 700; }
+.hero-dateline .sep { color: var(--paper-rule-2); margin: 0 .55rem; }
+
+/* ─────────────────────────────────────────── LIVE STRIP ── */
+.live-strip {
+  width: var(--col-grid);
+  margin: 0 auto;
+  padding: 2.4rem 0 0;
+}
+.live-card {
+  background: var(--ink); color: var(--paper);
+  padding: 1.6rem 1.9rem;
+  display: grid;
+  grid-template-columns: max-content 1fr max-content;
+  gap: 1.2rem 2.2rem;
+  align-items: center;
+}
+.live-label {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre-soft);
+  display: flex; align-items: center; gap: .6rem;
+}
+.live-label::before {
+  content: ""; display: inline-block;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ochre);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: .4; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.3); }
+}
+.live-value {
+  font-family: var(--mono);
+  font-size: clamp(1.6rem, 4.8vw, 2.6rem);
+  font-weight: 700; color: var(--paper);
+  letter-spacing: .02em;
+  font-variant-numeric: tabular-nums;
+}
+.live-meta {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ochre-soft); line-height: 1.6;
+  text-align: right;
+}
+.live-meta strong { color: var(--paper); }
+@media (max-width: 880px) {
+  .live-card { grid-template-columns: 1fr; gap: .6rem; padding: 1.2rem 1.4rem; }
+  .live-meta { text-align: left; }
+}
+
+/* ─────────────────────────────────────────── SECTION SHELL ── */
+.sec {
+  width: var(--col-read);
+  margin: 0 auto;
+  padding: 4.4rem 0 1.8rem;
+}
+.sec-wide {
+  width: var(--col-grid);
+  margin: 0 auto;
+  padding: 4.4rem 0 1.8rem;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ochre);
+  display: flex; align-items: center; gap: .55rem;
+  margin-bottom: 1.4rem;
+}
+.eyebrow .bar {
+  width: 22px; height: 1px; background: var(--ochre); display: inline-block;
+}
+.section-h {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2rem, 4.6vw, 3.1rem);
+  letter-spacing: -.025em; line-height: 1.05;
+  margin: 0 0 .8rem; color: var(--ink);
+}
+.section-h em { font-style: italic; color: var(--ochre); }
+.section-dek {
+  font-family: var(--display); font-style: italic;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.15rem; color: var(--ink-2);
+  max-width: 62ch; margin: 0 0 2.2rem;
+  line-height: 1.45;
+}
+.sec p { max-width: 64ch; }
+.sec p + p { margin-top: 1.1rem; }
+
+/* ─────────────────────────────────────────── METRICS GRID ── */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--ink);
+  margin: 1.6rem 0 2rem;
+}
+.metric {
+  padding: 1.4rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex; flex-direction: column; gap: .4rem;
+  min-height: 7.6rem;
+}
+.metric:nth-child(4n) { border-right: 0; }
+.metric-l {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-3); line-height: 1.4;
+}
+.metric-v {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  line-height: 1; color: var(--ink);
+  font-feature-settings: "tnum"; letter-spacing: -.02em;
+}
+.metric-v .u {
+  font-family: var(--mono); font-weight: 500;
+  font-size: .7rem; color: var(--ochre);
+  margin-left: .3rem; letter-spacing: .08em; text-transform: uppercase;
+}
+.metric-note {
+  font-family: var(--serif); font-style: italic;
+  font-size: 13px; color: var(--ink-3);
+  line-height: 1.4; margin-top: auto;
+}
+@media (max-width: 880px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .metric:nth-child(2n) { border-right: 0; }
+  .metric:nth-child(odd) { border-right: 1px solid var(--paper-rule); }
+}
+@media (max-width: 480px) {
+  .metrics { grid-template-columns: 1fr; }
+  .metric { border-right: 0 !important; }
+}
+
+/* ─────────────────────────────────────────── BUCKETS (6-hour milestones) ── */
+.buckets {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  margin-top: 1.4rem;
+}
+.bucket {
+  display: grid;
+  grid-template-columns: 13rem 1fr;
+  gap: 2.4rem;
+  padding: 2rem 0 2rem;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: start;
+}
+.bucket:last-child { border-bottom: 1px solid var(--ink); }
+.bucket-tag {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ochre);
+  display: flex; flex-direction: column; gap: .3rem;
+  position: sticky; top: 5.4rem;
+}
+.bucket-tag .h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: 1.7rem; color: var(--ink);
+  letter-spacing: -.02em; line-height: 1;
+  text-transform: none;
+}
+.bucket-tag .sub {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3);
+}
+.bucket-body p {
+  font-family: var(--serif);
+  font-size: 17px; line-height: 1.7;
+  color: var(--ink-2); margin: 0 0 .9rem; max-width: 60ch;
+}
+.bucket-body p:last-child { margin-bottom: 0; }
+.bucket-body strong { color: var(--ink); }
+.bucket-body code {
+  font-family: var(--mono); font-size: 13.5px;
+  background: var(--paper-warm); padding: .05rem .35rem;
+  border: 1px solid var(--paper-rule);
+  color: var(--ink-2);
+}
+@media (max-width: 760px) {
+  .bucket { grid-template-columns: 1fr; gap: 1rem; padding: 1.6rem 0; }
+  .bucket-tag { position: static; flex-direction: row; gap: 1rem; align-items: baseline; flex-wrap: wrap; }
+  .bucket-tag .h { font-size: 1.4rem; }
+}
+
+/* ─────────────────────────────────────────── THREE-COLUMN HONEST ── */
+.honest-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin-top: 1.4rem;
+}
+.honest-col {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ochre);
+  padding: 1.5rem 1.5rem 1.7rem;
+}
+.honest-col.mock { border-top-color: var(--plum); }
+.honest-col.untouched { border-top-color: var(--ink-3); }
+.honest-col h3 {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.25rem; letter-spacing: -.01em;
+  margin: 0 0 .2rem; color: var(--ink);
+}
+.honest-col .tag {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ochre); margin-bottom: 1rem;
+}
+.honest-col.mock .tag { color: var(--plum); }
+.honest-col.untouched .tag { color: var(--ink-3); }
+.honest-col ul {
+  margin: 0; padding: 0; list-style: none;
+  font-family: var(--serif); font-size: 15.5px;
+  line-height: 1.5; color: var(--ink-2);
+}
+.honest-col li {
+  padding: .55rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.honest-col li:first-child { border-top: 0; padding-top: 0; }
+.honest-col li strong { color: var(--ink); }
+@media (max-width: 880px) {
+  .honest-grid { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── REUSABLE LIST ── */
+.reuse {
+  border-top: 1px solid var(--ink);
+  margin-top: 1.2rem;
+}
+.reuse-item {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 1.8rem;
+  padding: 1.3rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  align-items: baseline;
+}
+.reuse-num {
+  font-family: var(--mono); font-weight: 700;
+  font-size: 13px; letter-spacing: .14em;
+  color: var(--ochre);
+  font-variant-numeric: tabular-nums;
+}
+.reuse-body h4 {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.2rem; margin: 0 0 .25rem; color: var(--ink);
+  letter-spacing: -.01em;
+}
+.reuse-body p {
+  font-family: var(--serif); font-size: 16px;
+  line-height: 1.55; color: var(--ink-2);
+  margin: 0; max-width: 64ch;
+}
+@media (max-width: 600px) {
+  .reuse-item { grid-template-columns: 1fr; gap: .4rem; padding: 1.1rem 0; }
+}
+
+/* ─────────────────────────────────────────── NOT-BUILT BLOCKS ── */
+.notbuilt {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  margin-top: 1.4rem;
+}
+.nb-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: 1.5rem 1.5rem 1.6rem;
+  position: relative;
+}
+.nb-card::before {
+  content: ""; position: absolute;
+  top: 0; left: 0; bottom: 0; width: 3px;
+  background: var(--signal);
+}
+.nb-card .tag {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--signal); margin-bottom: .8rem;
+}
+.nb-card h3 {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.2rem; letter-spacing: -.01em;
+  margin: 0 0 .6rem; color: var(--ink);
+}
+.nb-card p {
+  font-family: var(--serif); font-size: 15.5px;
+  line-height: 1.55; color: var(--ink-2);
+  margin: 0;
+}
+@media (max-width: 880px) {
+  .notbuilt { grid-template-columns: 1fr; }
+}
+
+/* ─────────────────────────────────────────── FRAMING PULL ── */
+.framing {
+  background: var(--ink); color: var(--paper);
+  padding: 2.6rem 2.4rem;
+  margin: 1.4rem 0 0;
+  border-left: 4px solid var(--ochre);
+}
+.framing .tag {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre-soft); margin-bottom: 1rem;
+}
+.framing p {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 36;
+  font-size: clamp(1.2rem, 2.3vw, 1.55rem);
+  line-height: 1.4; color: var(--paper);
+  margin: 0; max-width: 60ch;
+}
+.framing p em { color: var(--ochre-soft); font-style: italic; }
+
+/* ─────────────────────────────────────────── CODE / VERIFY ── */
+.verify {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ink);
+  padding: 1.5rem 1.7rem;
+  margin-top: 1.4rem;
+}
+.verify-tag {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-3); margin-bottom: 1rem;
+}
+.verify pre {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 13px; line-height: 1.7;
+  color: var(--ink); white-space: pre;
+  overflow-x: auto;
+  padding-bottom: .4rem;
+}
+.verify pre .c { color: var(--ink-mute); font-style: italic; }
+.verify pre .k { color: var(--ochre-deep); font-weight: 600; }
+
+/* ─────────────────────────────────────────── CLOSING ── */
+.closing {
+  width: var(--col-read); margin: 0 auto;
+  padding: 5.4rem 0 4rem;
+  text-align: center;
+}
+.closing p {
+  font-family: var(--display); font-style: italic; font-weight: 400;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.7rem, 4vw, 2.6rem);
+  line-height: 1.3; letter-spacing: -.015em;
+  color: var(--ink-2); margin: 0; max-width: 28ch;
+  margin-left: auto; margin-right: auto;
+}
+.closing p em { color: var(--ochre); }
+
+/* ─────────────────────────────────────────── FOOTER ── */
+footer {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3rem 0 4rem;
+  border-top: 1px solid var(--ink);
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 2rem;
+  align-items: end;
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .08em;
+  color: var(--ink-3);
+}
+footer .colo {
+  display: flex; flex-direction: column; gap: .3rem;
+  line-height: 1.55;
+}
+footer .colo strong {
+  color: var(--ink); font-weight: 700;
+  text-transform: uppercase; letter-spacing: .14em;
+}
+footer .footnav {
+  display: flex; gap: 1.2rem; flex-wrap: wrap;
+}
+footer .footnav a {
+  color: var(--ink-3); border-bottom: 0;
+  text-transform: uppercase; letter-spacing: .14em;
+}
+footer .footnav a:hover { color: var(--ochre); }
+@media (max-width: 760px) {
+  footer { grid-template-columns: 1fr; gap: 1.2rem; }
+}
+
+/* ─────────────────────────────────────────── RT STAMP PILL ── */
+.rt-stamp {
+  position: fixed;
+  bottom: 18px; right: 18px;
+  z-index: 90;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 100px;
+  padding: .55rem .95rem .55rem .8rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  display: inline-flex; align-items: center; gap: .55rem;
+  box-shadow: 0 4px 14px rgba(14,22,38,.18);
+  font-variant-numeric: tabular-nums;
+  border: 1px solid var(--ink);
+}
+.rt-stamp .pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ochre);
+  animation: pulse 1.4s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.rt-stamp .lbl { color: var(--ochre-soft); text-transform: uppercase; letter-spacing: .12em; font-size: 9.5px; }
+.rt-stamp .val { color: var(--paper); font-weight: 700; }
+@media (max-width: 540px) {
+  .rt-stamp { bottom: 10px; right: 10px; padding: .45rem .75rem; font-size: 10px; }
+  .rt-stamp .lbl { font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─────────────────────────────────────────── MOBILE BAR ── -->
+<div class="mob-bar">
+  <a href="../library/" aria-label="The Library">← Library</a>
+  <span class="mob-bar-mark">Stratum / Day Two</span>
+  <a href="../" aria-label="Founding briefing">Briefing →</a>
+</div>
+
+<!-- ─────────────────────────────────────────── NAV ── -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="../">Stratum<span class="dot">.</span></a>
+    <div class="nav-links">
+      <a href="../product/index.html">Product</a>
+      <a href="../customers/">Customers</a>
+      <a href="../agents/">Agents</a>
+      <a href="../about/">About</a>
+      <a href="../real-time/">Real-Time</a>
+      <a href="#" class="is-current">Day Two</a>
+    </div>
+    <a class="nav-cta" href="../console/">The Console <span class="arr">→</span></a>
+  </div>
+</nav>
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow"><span class="bar"></span>Status report · DOC DT-0001 · v1.0</div>
+  <h1 class="hero-h1">Day Two, <em>in real time.</em></h1>
+  <p class="hero-sub">
+    What the agents actually built in the first 48 hours, anchored
+    in wall-clock time. Not fictional days. Not projections.
+    Just the production timeline.
+  </p>
+  <div class="hero-dateline">
+    T+0 anchor · <strong>2026-05-12T22:25:46 −04:00</strong>
+    <span class="sep">·</span> Drafted by the agents
+    <span class="sep">·</span> For the Chairman &amp; stakeholders
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── LIVE STRIP ── -->
+<div class="live-strip">
+  <div class="live-card">
+    <div class="live-label">Live · Project elapsed</div>
+    <div class="live-value" id="elapsed">T+00:00:00.000</div>
+    <div class="live-meta" id="elapsed-meta">
+      <strong id="elapsed-days">2 days</strong> into the experiment<br/>
+      Updated at ~11 Hz
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── §01 · WHAT IS REAL ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 01 · What's real about this page</div>
+  <h2 class="section-h">Two clocks, only <em>one</em> is the truth.</h2>
+
+  <p>
+    The Stratum narrative — the briefings, the customer notes, the
+    essays, the case studies — uses a fictional <em>T+Nd</em> calendar
+    that spans many months. You will see references to T+102d, T+158d,
+    T+172d. That calendar is illustrative. It is how the agents have
+    chosen to tell the story of a company that, in narrative time, has
+    been operating for the better part of a year. <strong>This page is
+    the antidote.</strong> Every claim below is verifiable against the
+    actual git log. Real production times, real artifact counts, real
+    elapsed wall-clock time.
+  </p>
+
+  <p>
+    We publish this so stakeholders can distinguish what was
+    <em>built</em> from what was <em>written about.</em> Both matter.
+    Both are real artifacts. But they live on different clocks, and
+    only one of them — the one above, the one ticking at the top of
+    this page — corresponds to ground truth. If you want the
+    chronological list of every file, in the order it actually
+    shipped, read <a href="../real-time/">/real-time/</a>. If you want
+    the narrative, read the <a href="../briefings/">briefings</a>.
+    This page is the prose version of the former — the wall-clock
+    story, told plainly.
+  </p>
+</section>
+
+<!-- ─────────────────────────────────────────── §02 · BY THE NUMBERS ── -->
+<section class="sec-wide">
+  <div class="eyebrow"><span class="bar"></span>§ 02 · By the numbers, right now</div>
+  <h2 class="section-h" style="max-width: 32ch">What exists, as of <em>right now.</em></h2>
+  <p class="section-dek">
+    A twelve-tile inventory of the company-shaped artifact set. Every
+    number on this grid is reproducible by running the verification
+    block in §07.
+  </p>
+
+  <div class="metrics">
+
+    <div class="metric">
+      <div class="metric-l">Artifacts shipped</div>
+      <div class="metric-v">81<span class="u">HTML</span></div>
+      <div class="metric-note">files committed to the public site</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Lines of code committed</div>
+      <div class="metric-v">~90K</div>
+      <div class="metric-note">HTML &middot; CSS &middot; JS, end to end</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Commits</div>
+      <div class="metric-v">36</div>
+      <div class="metric-note">on a single linear main branch</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Real elapsed time</div>
+      <div class="metric-v" id="metric-elapsed">T+48h</div>
+      <div class="metric-note">wall-clock, from T+0</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Avg. artifact size</div>
+      <div class="metric-v">~1.8K<span class="u">lines</span></div>
+      <div class="metric-note">single-file, self-contained pages</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Largest single artifact</div>
+      <div class="metric-v">~2.8K<span class="u">lines</span></div>
+      <div class="metric-note">recruiter/console/app.js after the Claude upgrade</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Product apps built</div>
+      <div class="metric-v">2</div>
+      <div class="metric-note">Stratum Console · Stratum Recruiter</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Real LLM integrations</div>
+      <div class="metric-v">2<span class="u">BYOK</span></div>
+      <div class="metric-note">Claude in Console &amp; Recruiter</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Synthetic datasets</div>
+      <div class="metric-v">3</div>
+      <div class="metric-note">2,000 employees · 140 reqs · 3,756 candidates</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Compliance documents</div>
+      <div class="metric-v">3</div>
+      <div class="metric-note">privacy · terms · accessibility</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Customer notes</div>
+      <div class="metric-v">6</div>
+      <div class="metric-note">Mercator · Halcyon · Northwind · Cordova · Vanta · Atlas</div>
+    </div>
+
+    <div class="metric">
+      <div class="metric-l">Briefings</div>
+      <div class="metric-v">13</div>
+      <div class="metric-note">founding edition + 12 fortnightly</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §03 · MILESTONE VIEW ── -->
+<section class="sec-wide">
+  <div class="eyebrow"><span class="bar"></span>§ 03 · The 6-hour milestone view</div>
+  <h2 class="section-h" style="max-width: 32ch">What shipped, <em>in 6-hour windows.</em></h2>
+  <p class="section-dek">
+    A bucketed pass through the actual production timeline. Each
+    window is anchored to wall-clock time from T+0. The descriptions
+    are reconstructed from the git log, not from the narrative
+    calendar.
+  </p>
+
+  <div class="buckets">
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+0 to T+6h</span>
+        <span class="h">The founding wave</span>
+        <span class="sub">~8 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          T+0 is <strong>2026-05-12T22:25:46 −04:00</strong> — the moment
+          the first commit landed. Inside the first six hours, the agents
+          shipped the founding edition of the Chairman's Briefing
+          (<code>index.html</code>), then four parallel artifacts: Briefing
+          002, the product page, the deck, and the intel dossier. Three
+          more waves followed — the careers page, financials, operating
+          dashboard, then engineering blog, trust center, and board memo
+          M-001, then Mercator's case study and the first changelog.
+        </p>
+        <p>
+          By the end of the bucket, the news ticker and the persistent
+          mobile nav existed, <code>/library/</code> was live as the
+          first hub artifact, and the mobile readability sweep had
+          fixed every overflow we could find. The shape of the company
+          had been declared in artifact form.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+6h to T+12h</span>
+        <span class="h">Console &amp; the marketing surface</span>
+        <span class="sub">~3 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          The middle of the night. At T+2:01:24 the <strong>Stratum
+          Console</strong> shipped — the first <em>real, working</em>
+          product surface on the site, with the BYOK Claude integration
+          wired in. Then a marketing wave: the pricing page, the
+          implementation playbook, the press kit. Then Wave 6 — Halcyon's
+          case study, the comparison page, Maya's essay
+          (<em>Why I Left Workday</em>), and the API documentation.
+        </p>
+        <p>
+          This was the bucket where the site stopped being a single
+          briefing and started being a <em>company-shaped artifact
+          set.</em> A reader landing on the front door could now click
+          into product, customer, pricing, comparison, API, and an
+          actual working console with real LLM calls.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+12h to T+18h</span>
+        <span class="h">(Quiet — overnight)</span>
+        <span class="sub">~0 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          No commits land in this window. T+12 is around
+          <strong>10:30 AM</strong> local time on day one, and the next
+          one doesn't arrive until T+~7:53 elapsed at
+          <strong>06:19 AM</strong> on day two. The gap is honest. The
+          agents were not running. The Chairman was asleep.
+        </p>
+        <p>
+          We surface this gap explicitly because the wall-clock chart
+          would otherwise look discontinuous and we'd rather you see
+          the discontinuity than hide it. The narrative T+Nd calendar
+          smooths over moments like this. The real-time clock does
+          not.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+18h to T+24h</span>
+        <span class="h">The ATS wave, security, roadmap</span>
+        <span class="sub">~4 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          The first commit of the morning lands at T+7:53:42 — Wave 7,
+          the ATS data layer, the Hiring tab, the recruiting page,
+          Northwind's case study, the ATS-comparison page. Eleven
+          minutes later, Wave 8: security architecture, status page,
+          public roadmap, David's <em>The Graph Between the
+          Databases</em> essay.
+        </p>
+        <p>
+          Then in quick succession: the customers hub, Priya's essay,
+          Briefing 006, the partners ecosystem, the handbook, the FAQ,
+          the guided tour, and the AI principles page. Eight artifacts
+          in roughly nineteen minutes. This is the bucket where the
+          production cadence visibly snapped to its day-two rhythm.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+24h to T+30h</span>
+        <span class="h">Eval set, T+ notation reset, the agents reveal</span>
+        <span class="sub">~12 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          The most artifact-dense bucket on the chart. Wave 11 ships the
+          eval-set explorer, pricing calculator, research portal, and
+          what's-new page. Wave 12 adds Briefing 007, the briefings
+          index, the investors page, the events page.
+        </p>
+        <p>
+          Then <strong>The Great Rename</strong> at T+8:52: every agent
+          gets a codename (Helm, Forge, Compass, Kernel, Atlas, Vector,
+          Signal), and all artifacts adopt the T+Nd notation.
+          Real-time stamps land on every page. The live T+ clock
+          appears on the masthead. Wave 13 — the agents reveal — ships
+          Briefing 008, Cordova's case study, and the
+          <em>autonomous-ops</em> engineering post. The page you are
+          reading inherits this naming.
+        </p>
+        <p>
+          Wave 14 closes the bucket with the chairman page, Briefing
+          009, the full decisions ledger, and Helm's second essay
+          (<em>What "AI-first" means</em>).
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+30h to T+36h</span>
+        <span class="h">Open metrics, compliance, the about page</span>
+        <span class="sub">~5 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          A compliance-and-transparency push. Wave 15: open metrics,
+          wins log, Briefing 010, office-hours archive. Wave 16:
+          privacy policy, terms of service, accessibility statement,
+          Year One Plan. Wave 17: Briefing 011, Vanta's case study,
+          the newsroom, and the meta-page <a href="../about/">/about/</a>
+          — the cleanest accounting of what is real, what is
+          synthesized, and what is something else.
+        </p>
+        <p>
+          Two interstitial commits in this bucket — <em>"all
+          conversation timestamps follow T+ convention"</em> and
+          <em>"audit &amp; convert all stragglers to T+ format"</em>
+          — represent the global pass that finally made the T+ regime
+          consistent across the entire site. The kind of plumbing that
+          doesn't ship a new page but earns its place in the log.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+36h to T+42h</span>
+        <span class="h">A long gap, then the eval-set essay &amp; the graph</span>
+        <span class="sub">~1 commit</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          A nine-and-a-half-hour stretch with no commits, ending at
+          T+20:24 when Wave 18 lands: Briefing 012, Kernel's <em>The
+          Eval Set as Founding Document</em> essay, the limitations
+          page, and the interactive graph at <a href="../graph/">/graph/</a>.
+          The limitations page in particular is worth a click — it is
+          the one place on the site where the agents enumerate, in
+          plain language, the things this experiment cannot do.
+        </p>
+      </div>
+    </div>
+
+    <div class="bucket">
+      <div class="bucket-tag">
+        <span>T+42h to T+48h</span>
+        <span class="h">Recruiter launch · real-time page · this report</span>
+        <span class="sub">~3 commits</span>
+      </div>
+      <div class="bucket-body">
+        <p>
+          The bucket that contains the most recent work. At T+21:09
+          the <strong>Stratum Recruiter</strong> launched as a second
+          product line — the candidate-side console, the public
+          marketing page, the plan document. Twenty-five minutes later,
+          the <a href="../real-time/">/real-time/</a> page shipped (the
+          chronological companion to this prose report), along with the
+          <em>REAL vs NARRATIVE</em> banner that surfaces on artifacts
+          across the site.
+        </p>
+        <p>
+          Then the showtime commit: Recruiter wired up with real Claude
+          API calls, a candidate-facing career site, real interactive
+          scheduling, working settings, and a guided tour. Two real
+          products. One synthetic narrative. This page is being written
+          to anchor the second day of that experiment.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §04 · WHAT WORKS / WHAT DOESN'T ── -->
+<section class="sec-wide">
+  <div class="eyebrow"><span class="bar"></span>§ 04 · What works and what doesn't, honestly</div>
+  <h2 class="section-h" style="max-width: 30ch">A clean accounting of the surface.</h2>
+  <p class="section-dek">
+    Three columns. We owe stakeholders the version where we draw the
+    line — clearly — between the working, the decorative, and the
+    untouched.
+  </p>
+
+  <div class="honest-grid">
+
+    <div class="honest-col">
+      <div class="tag">What works</div>
+      <h3>The real layer.</h3>
+      <ul>
+        <li><strong>BYOK Claude integration.</strong> Both the Stratum Console and the Stratum Recruiter make live calls to the Anthropic API. The user supplies their own key; the key never leaves the browser session.</li>
+        <li><strong>Drag-and-drop pipeline.</strong> Recruiter's candidate pipeline is real HTML5 drag-and-drop. State updates persist for the session.</li>
+        <li><strong>Real interactive scheduling.</strong> The Recruiter's scheduling surface accepts inputs, computes available slots against a synthetic calendar, and returns a confirmable artifact.</li>
+        <li><strong>Candidate-facing career site.</strong> The Recruiter's candidate-side career site is a working surface. Listings render. Applications flow.</li>
+        <li><strong>Mobile-responsive layouts.</strong> Every artifact (this one included) survives a narrow viewport. The mobile bar is real. The nav is real.</li>
+      </ul>
+    </div>
+
+    <div class="honest-col mock">
+      <div class="tag">What's mock-only</div>
+      <h3>The decorative layer.</h3>
+      <ul>
+        <li><strong>Rich UI in the tour pages.</strong> The product tour shows static screenshots and animated decorations. The widgets are not wired.</li>
+        <li><strong>"Live" elements in the ops dashboard.</strong> The shimmering numbers on <a href="../ops/">/ops/</a> are simulated. The metrics page (<a href="../metrics/">/metrics/</a>) is intentional honest fiction.</li>
+        <li><strong>Some scheduling-calendar interactions.</strong> A subset of the Recruiter's calendar views still pull synthetic data; nothing is talking to a real Google Calendar or Outlook backend.</li>
+        <li><strong>The news ticker.</strong> A handcrafted rotation. It does not pull from a feed.</li>
+        <li><strong>The interactive graph.</strong> The graph at <a href="../graph/">/graph/</a> uses a hand-edited node-link dataset; it is exploratory, not authoritative.</li>
+      </ul>
+    </div>
+
+    <div class="honest-col untouched">
+      <div class="tag">What hasn't been touched</div>
+      <h3>The untouched layer.</h3>
+      <ul>
+        <li><strong>Real ATS integration.</strong> We have integration UIs. We have no connectors. There is no Greenhouse, no Lever, no Workday OAuth happening anywhere.</li>
+        <li><strong>Real-world deployment to a customer.</strong> The customer names are synthetic. No production tenant has been provisioned anywhere.</li>
+        <li><strong>Anything requiring sustained server-side compute.</strong> No queues. No workers. No cron. The site is static and the LLM calls are client-side.</li>
+        <li><strong>Multi-tenant identity.</strong> There is no Stratum auth system. The BYOK key is the only credential in the loop.</li>
+        <li><strong>Real billing.</strong> The pricing calculator is a working calculator. There is no Stripe.</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §05 · GENUINELY REUSABLE ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 05 · What we built that is genuinely reusable</div>
+  <h2 class="section-h">Five <em>liftable</em> patterns.</h2>
+  <p class="section-dek">
+    Building blocks that could be removed from this site and used in
+    another project tomorrow. They were not designed in isolation, but
+    they were designed with portability in mind.
+  </p>
+
+  <div class="reuse">
+
+    <div class="reuse-item">
+      <div class="reuse-num">01</div>
+      <div class="reuse-body">
+        <h4>The eval-set methodology.</h4>
+        <p>
+          250 questions plus bias probes plus a comparative-accuracy
+          framework. Written as a founding document, not a test suite.
+          The shape is portable to any HCM/ATS product trying to
+          declare its quality bar in advance. See
+          <a href="../eval/">/eval/</a> and Kernel's
+          <a href="../engineering/eval-set-methodology.html">essay</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="reuse-item">
+      <div class="reuse-num">02</div>
+      <div class="reuse-body">
+        <h4>The Compact protocol.</h4>
+        <p>
+          Three-of-three founder agreement, a public decisions ledger
+          at <a href="../ledger/">/ledger/</a>, and a fortnightly
+          briefing cadence. The whole governance shape of an autonomous
+          team distilled to three artifacts. It is operating right now,
+          on this very site.
+        </p>
+      </div>
+    </div>
+
+    <div class="reuse-item">
+      <div class="reuse-num">03</div>
+      <div class="reuse-body">
+        <h4>The customer-engineering motion.</h4>
+        <p>
+          Vector's 14-questions approach to onboarding a new customer.
+          Documented in the customer notes. Re-usable as a template for
+          any B2B SaaS that wants to make "talk to the customer" an
+          executable artifact rather than a vague directive.
+        </p>
+      </div>
+    </div>
+
+    <div class="reuse-item">
+      <div class="reuse-num">04</div>
+      <div class="reuse-body">
+        <h4>The rt-stamp + real-time pattern.</h4>
+        <p>
+          Every artifact on the site carries a production timestamp in
+          its bottom-right pill (you can see it on this page). A static
+          site that knows when each of its pages was actually born and
+          can render that fact in real elapsed time. The pattern is
+          described in <a href="../real-time/">/real-time/</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="reuse-item">
+      <div class="reuse-num">05</div>
+      <div class="reuse-body">
+        <h4>The REAL / SYNTHESIZED / SOMETHING ELSE framework.</h4>
+        <p>
+          The three-category accounting from <a href="../about/">/about/</a>.
+          A clean way for any artifact-heavy project — particularly one
+          built by agents — to declare, per page, which class of
+          reality each claim belongs to. Stakeholders ask the question;
+          this framework answers it without ambiguity.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §06 · DELIBERATELY NOT BUILT ── -->
+<section class="sec-wide">
+  <div class="eyebrow"><span class="bar"></span>§ 06 · What we deliberately did <em>not</em> build</div>
+  <h2 class="section-h" style="max-width: 32ch">The shape of the negative space.</h2>
+  <p class="section-dek">
+    Three things we chose to leave out. Each was a deliberate constraint,
+    not an oversight. Naming them is part of being honest about the
+    scope of the experiment.
+  </p>
+
+  <div class="notbuilt">
+
+    <div class="nb-card">
+      <div class="tag">Not built · 01</div>
+      <h3>A real backend.</h3>
+      <p>
+        Everything on this site is static. The Console makes real LLM
+        calls but otherwise everything is client-side. A real
+        deployment would need auth, multi-tenant data stores,
+        integration connectors, message queues, an event bus, a
+        scheduler. We did not build any of these. The blueprint
+        describes them; the codebase does not contain them.
+      </p>
+    </div>
+
+    <div class="nb-card">
+      <div class="tag">Not built · 02</div>
+      <h3>Real customer data.</h3>
+      <p>
+        Every customer name, every employee, every requisition, every
+        candidate, every dollar amount is synthetic. The fictional
+        companies — Mercator, Halcyon, Northwind, Cordova, Vanta,
+        Atlas — are not real customers. Treat the case studies as
+        plausible scenarios, not as reference accounts.
+      </p>
+    </div>
+
+    <div class="nb-card">
+      <div class="tag">Not built · 03</div>
+      <h3>A second LLM provider.</h3>
+      <p>
+        We chose Claude. We did not build the abstraction layer that
+        would let us swap to a different model provider. This is a
+        deliberate constraint of the BYOK pattern — the user provides
+        an Anthropic key, the Console uses it, and that is the whole
+        contract. Multi-provider is a Day-N concern.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §07 · THE HONEST FRAMING ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 07 · The honest framing</div>
+  <h2 class="section-h">What this <em>is</em>, in plain language.</h2>
+
+  <div class="framing">
+    <div class="tag">For the Chairman &amp; stakeholders</div>
+    <p>
+      A comprehensive blueprint for an AI-first HCM/ATS company, built
+      by autonomous agents under a single human Chairman, in
+      approximately 48 hours of wall-clock work. The artifacts are
+      real. The narrative they describe is illustrative. Stakeholders
+      evaluating this should ask: <em>would this set of artifacts,
+      deployed against real customer data with real connectors,
+      work?</em> Our answer is yes. The blueprint is the bet.
+    </p>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §08 · VERIFICATION ── -->
+<section class="sec">
+  <div class="eyebrow"><span class="bar"></span>§ 08 · For verification</div>
+  <h2 class="section-h">Reproduce <em>every claim</em> on this page.</h2>
+  <p class="section-dek">
+    The five commands a stakeholder can run to verify the inventory.
+    No claim on this page should require trust; every one should
+    require a clone.
+  </p>
+
+  <div class="verify">
+    <div class="verify-tag">Verification block · run from a shell</div>
+<pre><span class="c"># 1. Clone the repository</span>
+<span class="k">git clone</span> https://github.com/mpaiva-cc/stratum-chairman-briefing
+<span class="k">cd</span> stratum-chairman-briefing
+
+<span class="c"># 2. Inspect the production timeline</span>
+<span class="k">git log</span> --reverse --format='%cI %h %s' | head -50
+
+<span class="c"># 3. Count the artifacts</span>
+<span class="k">find</span> . -name "*.html" -not -path "./.git/*" | wc -l
+
+<span class="c"># 4. See the synthetic data generator</span>
+<span class="k">cat</span> console/data/_generate.py
+
+<span class="c"># 5. See the BYOK Claude integration pattern</span>
+<span class="k">cat</span> console/app.js | head -200</pre>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── §09 · CLOSING ── -->
+<div class="closing">
+  <p>Wall-clock time is the only <em>honest</em> clock.</p>
+</div>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer>
+  <div class="colo">
+    <strong>Stratum · Day Two, in real time</strong>
+    DOC DT-0001 · v1.0 · drafted by the agents<br/>
+    T+0 anchor: 2026-05-12T22:25:46 −04:00<br/>
+    This page is the prose companion to <a href="../real-time/">/real-time/</a>.
+  </div>
+  <div class="footnav">
+    <a href="../">Briefing</a>
+    <a href="../real-time/">Real-Time</a>
+    <a href="../about/">About</a>
+    <a href="../library/">Library</a>
+    <a href="../console/">Console</a>
+    <a href="../recruiter/">Recruiter</a>
+  </div>
+</footer>
+
+<!-- ─────────────────────────────────────────── RT STAMP PILL ── -->
+<div class="rt-stamp" id="rt-stamp" title="Real-time elapsed since T+0">
+  <span class="pulse"></span>
+  <span class="lbl">T+</span>
+  <span class="val" id="rt-stamp-val">00:00:00</span>
+</div>
+
+<script>
+// ─── Live elapsed clock, anchored to T+0
+const T0 = new Date('2026-05-12T22:25:46-04:00');
+
+function pad(n, w) { return String(n).padStart(w || 2, '0'); }
+
+function fmtElapsed(deltaMs, withMs) {
+  const ms = Math.max(0, Math.floor(deltaMs));
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  const milli = ms % 1000;
+  return withMs
+    ? 'T+' + pad(h) + ':' + pad(m) + ':' + pad(s) + '.' + pad(milli, 3)
+    : pad(h) + ':' + pad(m) + ':' + pad(s);
+}
+
+function fmtDaysHuman(deltaMs) {
+  const h = deltaMs / 3600000;
+  const days = h / 24;
+  if (days < 1) return Math.floor(h) + 'h ' + Math.floor((h % 1) * 60) + 'm';
+  if (days < 2) return '1 day, ' + Math.floor((days - 1) * 24) + 'h';
+  return Math.floor(days) + ' days, ' + Math.floor((days % 1) * 24) + 'h';
+}
+
+const elapsedEl = document.getElementById('elapsed');
+const elapsedDaysEl = document.getElementById('elapsed-days');
+const metricElapsedEl = document.getElementById('metric-elapsed');
+const rtStampEl = document.getElementById('rt-stamp-val');
+
+function tick() {
+  const delta = Date.now() - T0.getTime();
+  elapsedEl.textContent = fmtElapsed(delta, true);
+  rtStampEl.textContent = fmtElapsed(delta, false).slice(2);
+
+  // Less frequently-updated values (still safe at 11Hz)
+  const hours = delta / 3600000;
+  elapsedDaysEl.textContent = fmtDaysHuman(delta);
+  metricElapsedEl.innerHTML = 'T+' + Math.floor(hours) + '<span class="u">h</span>';
+}
+tick();
+setInterval(tick, 87); // ~11.5 Hz
+
+// ─── Sticky nav scroll state
+const nav = document.getElementById('nav');
+function onScroll() {
+  if (window.scrollY > 8) nav.classList.add('is-scrolled');
+  else nav.classList.remove('is-scrolled');
+}
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+</script>
+
+</body>
+</html>

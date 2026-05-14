@@ -1,0 +1,1824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Recruiter · Hiring Manager view</title>
+<meta name="description" content="Stratum Recruiter — hiring manager view. Your open reqs, your candidates to review, your interviews, your offers to approve." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================================================
+   Stratum · Recruiter — Hiring Manager view
+   Same paper-toned brand · slightly looser · ochre actions
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --paper-card:   #faf3e3;
+  --paper-soft:   #efe7d2;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ink-faint:    #9aa0aa;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --ochre-mist:   rgba(184, 101, 31, 0.08);
+  --ochre-tint:   rgba(184, 101, 31, 0.14);
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --risk-high:    #b94a3d;
+  --risk-mod:     #b8651f;
+  --risk-low:     #4a5d3a;
+
+  --display: "Fraunces", "Newsreader", Georgia, serif;
+  --serif:   "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --radius:     2px;
+  --radius-lg:  4px;
+
+  --shadow-sm: 0 1px 2px rgba(14,22,38,0.04), 0 0 0 1px rgba(14,22,38,0.06);
+  --shadow-md: 0 6px 24px -8px rgba(14,22,38,0.18), 0 0 0 1px rgba(14,22,38,0.08);
+  --shadow-lg: 0 18px 50px -12px rgba(14,22,38,0.28), 0 0 0 1px rgba(14,22,38,0.10);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;            /* slightly larger than recruiter view */
+  line-height: 1.6;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184,101,31,0.045), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14,22,38,0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0,
+      rgba(14,22,38,0.012) 0,
+      rgba(14,22,38,0.012) 1px,
+      transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+button { font-family: inherit; cursor: pointer; }
+
+:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 2px;
+  border-radius: var(--radius);
+}
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--ink); color: var(--paper); padding: .5rem .8rem;
+  z-index: 1000;
+}
+.skip-link:focus { left: 8px; top: 8px; }
+
+.loadbar {
+  position: fixed; top: 0; left: 0;
+  height: 2px; background: var(--ochre);
+  width: 0%; z-index: 1000;
+  transition: width .4s ease, opacity .4s ease;
+}
+.loadbar.is-done { opacity: 0; }
+
+/* ── TOP BAR ──────────────────────────────────────────────── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--ink); color: var(--paper);
+  border-bottom: 1px solid var(--ink-2);
+  backdrop-filter: blur(8px);
+}
+.topbar-inner {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: .75rem 1.4rem;
+  gap: 1rem;
+  max-width: 1600px; margin: 0 auto;
+}
+.brand {
+  display: flex; align-items: baseline; gap: .8rem;
+  min-width: 0; flex: 1;
+}
+.brand-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.35rem;
+  letter-spacing: -.03em;
+}
+.brand-mark .sl {
+  color: var(--ochre);
+  font-style: italic; margin: 0 .2rem;
+  font-weight: 400;
+}
+.brand-meta {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar-right {
+  display: flex; align-items: center; gap: 1rem;
+  flex-shrink: 0;
+}
+.user-pill {
+  display: flex; align-items: center; gap: .55rem;
+  background: var(--ink-2);
+  padding: .3rem .7rem .3rem .3rem;
+  border-radius: 999px;
+}
+.user-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--ochre); color: var(--ink);
+  font-family: var(--mono);
+  font-size: 10.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.user-name {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .04em;
+  color: var(--paper);
+}
+.user-name .role { color: var(--ochre-soft); margin-left: .35rem; }
+.back-link {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ochre-soft);
+  white-space: nowrap;
+}
+.back-link:hover { color: var(--ochre); border-bottom-color: transparent; }
+
+/* ── PAGE WRAP ────────────────────────────────────────────── */
+.wrap {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem 1.6rem 5rem;
+}
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero-section {
+  padding: 2.2rem 0 2.5rem;
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 2.2rem;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1rem;
+}
+.hero {
+  font-family: var(--display);
+  font-variation-settings: "opsz" 144, "SOFT" 50;
+  font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+.hero em {
+  color: var(--ochre);
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
+}
+.dateline {
+  font-family: var(--mono);
+  font-size: 12.5px; letter-spacing: .06em;
+  color: var(--ink-3);
+  text-transform: none;
+}
+.dateline .accent { color: var(--ochre); font-weight: 700; }
+.dateline .sep { color: var(--paper-rule-2); margin: 0 .55rem; }
+
+/* ── SECTION ──────────────────────────────────────────────── */
+.section {
+  margin-bottom: 3rem;
+}
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .65rem;
+  margin-bottom: 1.4rem;
+}
+.section-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.55rem;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.section-title em { color: var(--ochre); font-style: italic; }
+.section-meta {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+/* ── LAYOUT GRID ─────────────────────────────────────────── */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 2rem;
+}
+.with-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .split, .with-sidebar { grid-template-columns: 1fr; }
+}
+
+/* ── REQ CARDS ────────────────────────────────────────────── */
+.req-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.2rem 1.2rem;
+  display: flex; flex-direction: column;
+  gap: .65rem;
+  transition: border-color .2s, transform .15s, box-shadow .2s;
+  cursor: pointer;
+  position: relative;
+}
+.card:hover {
+  border-color: var(--ochre);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.card .row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: .6rem;
+}
+.card .req-id {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.card .pill {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .15rem .55rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  white-space: nowrap;
+}
+.pill.stuck { color: var(--risk-high); }
+.pill.aging { color: var(--ochre); }
+.pill.in_pace { color: var(--moss); }
+.pill.action { color: var(--ochre); background: var(--ochre-tint); border-color: var(--ochre); font-weight: 700; }
+
+.card .req-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.18rem;
+  line-height: 1.25;
+  margin: 0;
+  letter-spacing: -.01em;
+}
+.card .req-meta {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.card .req-meta .sep { color: var(--paper-rule-2); margin: 0 .4rem; }
+
+/* Mini funnel */
+.funnel {
+  display: flex;
+  width: 100%;
+  height: 22px;
+  background: var(--paper-soft);
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid var(--paper-rule);
+}
+.funnel .seg {
+  height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--paper-card);
+  font-weight: 700;
+  border-right: 1px solid rgba(255,255,255,.25);
+  transition: filter .15s;
+}
+.funnel .seg:last-child { border-right: none; }
+.funnel .seg.applied   { background: var(--ink-3); }
+.funnel .seg.screen    { background: var(--moss); }
+.funnel .seg.interview { background: var(--ochre); }
+.funnel .seg.offer     { background: var(--ochre-deep); }
+.funnel .seg.accepted  { background: var(--moss-deep); }
+.funnel .seg:hover { filter: brightness(1.1); }
+
+.funnel-legend {
+  display: flex; flex-wrap: wrap;
+  gap: .6rem;
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .04em;
+  color: var(--ink-mute);
+}
+.funnel-legend .dot {
+  display: inline-block; width: 8px; height: 8px;
+  border-radius: 1px;
+  margin-right: .25rem;
+  vertical-align: -1px;
+}
+.funnel-legend .applied .dot   { background: var(--ink-3); }
+.funnel-legend .screen .dot    { background: var(--moss); }
+.funnel-legend .interview .dot { background: var(--ochre); }
+.funnel-legend .offer .dot     { background: var(--ochre-deep); }
+.funnel-legend .accepted .dot  { background: var(--moss-deep); }
+
+.card .cta {
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+
+/* ── CANDIDATE WAITING CARDS ─────────────────────────────── */
+.waiting-list {
+  display: flex; flex-direction: column;
+  gap: .9rem;
+}
+.wait-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.2rem 1.05rem;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .55rem 1rem;
+  align-items: start;
+  transition: border-color .2s, box-shadow .2s, transform .15s;
+}
+.wait-card:hover {
+  border-color: var(--ochre);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+.wait-card .top {
+  display: flex; flex-wrap: wrap;
+  align-items: baseline; gap: .55rem;
+  grid-column: 1 / -1;
+}
+.wait-card .name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.18rem;
+  letter-spacing: -.01em;
+}
+.wait-card .title {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .04em;
+  color: var(--ink-3);
+}
+.wait-card .req-tag {
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-left: auto;
+}
+.wait-card .action-line {
+  font-family: var(--serif);
+  font-size: .98rem;
+  font-style: italic;
+  color: var(--ink-2);
+  grid-column: 1 / 2;
+}
+.wait-card .action-line strong { color: var(--ochre-deep); font-style: normal; }
+.wait-card .meta-side {
+  display: flex; flex-direction: column;
+  align-items: flex-end;
+  gap: .35rem;
+  grid-column: 2 / 3;
+  grid-row: 2 / 4;
+}
+.wait-card .days {
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: .04em;
+  color: var(--risk-high);
+  font-weight: 700;
+}
+.match-score {
+  display: inline-flex; align-items: center;
+  gap: .35rem;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .06em;
+  color: var(--moss);
+  background: rgba(74, 93, 58, .1);
+  padding: .15rem .5rem;
+  border-radius: 999px;
+}
+.match-score.mid { color: var(--ochre); background: var(--ochre-tint); }
+.match-score.low { color: var(--ink-3); background: rgba(14,22,38,.06); }
+.match-score::before {
+  content: ""; width: 6px; height: 6px;
+  background: currentColor; border-radius: 50%;
+}
+
+/* ── CALENDAR (interviews) ───────────────────────────────── */
+.cal {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.2rem;
+}
+.cal-day {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: .8rem;
+  padding: .7rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.cal-day:last-child { border-bottom: none; padding-bottom: 0; }
+.cal-day .date {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  padding-top: .15rem;
+}
+.cal-day .date .num {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--ink);
+  font-weight: 500;
+  letter-spacing: -.02em;
+  margin-top: .1rem;
+  line-height: 1;
+}
+.cal-block {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  border-radius: 2px;
+  padding: .55rem .7rem;
+  margin-bottom: .35rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: .3rem .8rem;
+  align-items: center;
+}
+.cal-block:last-child { margin-bottom: 0; }
+.cal-block .time {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  letter-spacing: .04em;
+  font-weight: 500;
+}
+.cal-block .who {
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.cal-block .role {
+  grid-column: 1 / 2;
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .06em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.cal-block .sc-btn {
+  grid-column: 2 / 3;
+  grid-row: 1 / 3;
+  background: transparent;
+  border: 1px solid var(--ochre);
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .3rem .55rem;
+  border-radius: 2px;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.cal-block .sc-btn:hover { background: var(--ochre); color: var(--paper); }
+
+/* ── OFFER CARDS ─────────────────────────────────────────── */
+.offer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+  gap: 1.2rem;
+}
+.offer-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.3rem 1.4rem 1.4rem;
+  display: flex; flex-direction: column;
+  gap: .8rem;
+}
+.offer-card .head {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+  gap: .8rem;
+  flex-wrap: wrap;
+}
+.offer-card .who {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.4rem;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.offer-card .who em { color: var(--ochre); font-style: italic; }
+.offer-card .role {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .06em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+.comp-breakdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .6rem;
+  padding: .8rem 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.comp-cell {
+  display: flex; flex-direction: column;
+  gap: .15rem;
+}
+.comp-cell .label {
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.comp-cell .val {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.comp-cell .val.muted { color: var(--ink-3); font-size: .95rem; }
+.comp-cell .ratio.low  { color: var(--risk-high); }
+.comp-cell .ratio.mid  { color: var(--ochre); }
+.comp-cell .ratio.high { color: var(--moss); }
+
+.ai-pred {
+  display: flex; align-items: center;
+  gap: .65rem;
+  padding: .55rem .8rem;
+  background: var(--ochre-mist);
+  border: 1px solid var(--ochre-soft);
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--ink-2);
+}
+.ai-pred .lbl {
+  font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.ai-pred .val {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-left: auto;
+  letter-spacing: -.01em;
+}
+
+.action-row {
+  display: flex; flex-wrap: wrap;
+  gap: .55rem;
+  margin-top: .3rem;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: .55rem .9rem;
+  border-radius: 2px;
+  border: 1px solid var(--ink-2);
+  background: transparent;
+  color: var(--ink);
+  transition: background .15s, color .15s, border-color .15s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn.primary {
+  background: var(--ochre);
+  color: var(--paper);
+  border-color: var(--ochre);
+  font-weight: 700;
+}
+.btn.primary:hover { background: var(--ochre-deep); border-color: var(--ochre-deep); }
+.btn.ghost {
+  border-color: var(--paper-rule-2);
+  color: var(--ink-3);
+}
+.btn.ghost:hover { background: var(--ink-2); color: var(--paper); border-color: var(--ink-2); }
+.btn.danger {
+  border-color: var(--risk-high);
+  color: var(--risk-high);
+}
+.btn.danger:hover { background: var(--risk-high); color: var(--paper); }
+
+/* ── SUGGESTED ACTIONS (sidebar) ─────────────────────────── */
+.suggest-list {
+  display: flex; flex-direction: column;
+  gap: .65rem;
+}
+.suggest-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: .9rem 1rem;
+  display: flex; flex-direction: column;
+  gap: .35rem;
+  position: relative;
+  cursor: pointer;
+  transition: border-color .2s, transform .15s;
+}
+.suggest-card:hover { border-color: var(--ochre); transform: translateY(-1px); }
+.suggest-card .tag {
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.suggest-card .body {
+  font-family: var(--serif);
+  font-size: .97rem;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.suggest-card .body strong { color: var(--ochre-deep); }
+.suggest-card .why {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .04em;
+  color: var(--ink-mute);
+  font-style: italic;
+}
+
+.sidebar-header {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin: 0 0 .9rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+
+/* ── DRAWER ──────────────────────────────────────────────── */
+.scrim {
+  position: fixed; inset: 0;
+  background: rgba(14,22,38,0.45);
+  backdrop-filter: blur(2px);
+  z-index: 200;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.scrim.is-open { opacity: 1; pointer-events: auto; }
+
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: min(640px, 96vw);
+  background: var(--paper-warm);
+  z-index: 210;
+  transform: translateX(100%);
+  transition: transform .3s cubic-bezier(.5,.02,.05,1);
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.drawer.is-open { transform: translateX(0); }
+
+.drawer-head {
+  padding: 1.3rem 1.6rem 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex; justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+.drawer-head .eyebrow { margin: 0 0 .5rem; }
+.drawer-head h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.8rem;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  margin: 0;
+}
+.drawer-head h2 em { color: var(--ochre); font-style: italic; }
+.drawer-close {
+  background: transparent;
+  border: 1px solid var(--paper-rule-2);
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 16px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.drawer-close:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.drawer-body {
+  padding: 1.4rem 1.6rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+.drawer-section {
+  margin-bottom: 1.6rem;
+  padding-bottom: 1.3rem;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.drawer-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.drawer-section h3 {
+  font-family: var(--mono);
+  font-size: 10.5px; letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 0 0 .8rem;
+  font-weight: 700;
+}
+.drawer-section p {
+  font-family: var(--serif);
+  font-size: 1.02rem;
+  line-height: 1.55;
+  margin: 0 0 .8rem;
+  color: var(--ink-2);
+}
+.drawer-section p:last-child { margin-bottom: 0; }
+
+.kv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .8rem 1.2rem;
+}
+.kv {
+  display: flex; flex-direction: column;
+  gap: .2rem;
+}
+.kv .k {
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.kv .v {
+  font-family: var(--display);
+  font-size: 1.08rem;
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.ai-reasoning {
+  background: var(--ochre-mist);
+  border: 1px solid var(--ochre-soft);
+  border-left: 3px solid var(--ochre);
+  border-radius: 2px;
+  padding: .9rem 1.1rem;
+  font-family: var(--serif);
+  font-size: .98rem;
+  font-style: italic;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.ai-reasoning .lbl {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .16em;
+  text-transform: uppercase;
+  font-style: normal;
+  color: var(--ochre);
+  font-weight: 700;
+  margin-bottom: .5rem;
+}
+
+/* Scorecard form */
+.scorecard-q {
+  margin-bottom: 1rem;
+}
+.scorecard-q label {
+  display: block;
+  font-family: var(--serif);
+  font-size: 1rem;
+  color: var(--ink-2);
+  margin-bottom: .5rem;
+}
+.scorecard-q label .qnum {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin-right: .55rem;
+}
+.rating-row {
+  display: flex; gap: .35rem;
+}
+.rating-row .star {
+  width: 40px; height: 38px;
+  border: 1px solid var(--paper-rule-2);
+  border-radius: 2px;
+  background: var(--paper-card);
+  font-family: var(--display);
+  font-size: 1.05rem;
+  color: var(--ink-3);
+  transition: background .12s, color .12s, border-color .12s;
+}
+.rating-row .star:hover,
+.rating-row .star.is-on {
+  background: var(--ochre);
+  color: var(--paper);
+  border-color: var(--ochre);
+  font-weight: 700;
+}
+.scorecard-q textarea {
+  width: 100%;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: 2px;
+  padding: .55rem .7rem;
+  font-family: var(--serif);
+  font-size: .98rem;
+  color: var(--ink);
+  resize: vertical;
+  min-height: 70px;
+}
+.scorecard-q textarea:focus { outline: 2px solid var(--ochre); outline-offset: 0; }
+
+.offer-letter {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ink-2);
+  border-radius: 2px;
+  padding: 1.1rem 1.3rem;
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  white-space: pre-line;
+}
+
+.req-stage-funnel {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .5rem;
+  margin-top: .3rem;
+}
+.req-stage-funnel .cell {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  padding: .65rem .55rem;
+  border-radius: 2px;
+  text-align: center;
+}
+.req-stage-funnel .cell .n {
+  display: block;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1;
+}
+.req-stage-funnel .cell .l {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px; letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: .25rem;
+}
+.req-stage-funnel .cell.warn { border-color: var(--ochre); }
+.req-stage-funnel .cell.warn .n { color: var(--ochre-deep); }
+
+/* ── TOAST ───────────────────────────────────────────────── */
+.toast-stack {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: flex; flex-direction: column;
+  gap: .5rem;
+  pointer-events: none;
+}
+.toast {
+  background: var(--ink);
+  color: var(--paper);
+  padding: .7rem 1.1rem;
+  border-radius: 2px;
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: .04em;
+  box-shadow: var(--shadow-lg);
+  border-left: 3px solid var(--ochre);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .2s, transform .2s;
+}
+.toast.is-on { opacity: 1; transform: translateY(0); }
+
+/* ── EMPTY ───────────────────────────────────────────────── */
+.empty {
+  font-family: var(--mono);
+  font-size: 11.5px; letter-spacing: .06em;
+  color: var(--ink-mute);
+  text-align: center;
+  padding: 2rem 1rem;
+  background: var(--paper-card);
+  border: 1px dashed var(--paper-rule-2);
+  border-radius: 2px;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .wrap { padding: 1rem 1rem 4rem; }
+  .topbar-inner { padding: .55rem .8rem; gap: .55rem; flex-wrap: wrap; }
+  .topbar-right { gap: .6rem; flex-wrap: wrap; }
+  .brand-meta { display: none; }
+  .hero-section { padding: 1.4rem 0 1.6rem; margin-bottom: 1.4rem; }
+  .section { margin-bottom: 2rem; }
+  .req-grid { grid-template-columns: 1fr; }
+  .offer-grid { grid-template-columns: 1fr; }
+  .comp-breakdown { grid-template-columns: repeat(2, 1fr); }
+  .wait-card { grid-template-columns: 1fr; }
+  .wait-card .meta-side { flex-direction: row; grid-column: 1; grid-row: auto; align-items: center; }
+  .drawer { width: 100%; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-14T08:30:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none">
+  <span style="color:#b8651f">●</span> compiled at <strong id="rt-time" style="color:#0e1626">T+0</strong> · <span id="rt-iso" style="opacity:.6">—</span>
+</div>
+
+<a href="#main" class="skip-link">Skip to content</a>
+<div class="loadbar" id="loadbar" aria-hidden="true"></div>
+
+<!-- ────────────────────── TOP BAR ─────────────────────── -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">Stratum<span class="sl">/</span>Recruiter</span>
+      <span class="brand-meta">Hiring Manager view · 8 reqs · prototype</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <span class="user-avatar">DO</span>
+        <span class="user-name">David Okafor<span class="role">· VP Engineering</span></span>
+      </div>
+      <a href="../console/" class="back-link">← Recruiter view</a>
+      <a href="../../library/" class="back-link">← Library</a>
+    </div>
+  </div>
+</header>
+
+<!-- ────────────────────── MAIN ────────────────────────── -->
+<main class="wrap" id="main">
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="eyebrow">§ Thursday · 14 May 2026 · Your week at a glance</div>
+    <h1 class="hero">Your hiring, <em>this week.</em></h1>
+    <p class="dateline">
+      <span class="accent" id="kpi-reqs">—</span> open reqs
+      <span class="sep">·</span>
+      <span class="accent" id="kpi-waiting">—</span> candidates waiting on you
+      <span class="sep">·</span>
+      <span class="accent" id="kpi-offers">—</span> offers awaiting approval
+    </p>
+  </section>
+
+  <!-- A. MY OPEN REQS -->
+  <section class="section" id="sec-reqs">
+    <div class="section-head">
+      <h2 class="section-title">My open <em>reqs.</em></h2>
+      <span class="section-meta">click any req for detail</span>
+    </div>
+    <div class="req-grid" id="req-grid"></div>
+    <div class="funnel-legend" style="margin-top: 1rem;">
+      <span class="applied"><span class="dot"></span>applied</span>
+      <span class="screen"><span class="dot"></span>screen</span>
+      <span class="interview"><span class="dot"></span>interview</span>
+      <span class="offer"><span class="dot"></span>offer</span>
+      <span class="accepted"><span class="dot"></span>accepted</span>
+    </div>
+  </section>
+
+  <!-- B + C. WAITING + INTERVIEWS (split) -->
+  <section class="section">
+    <div class="split">
+      <div>
+        <div class="section-head">
+          <h2 class="section-title">Candidates waiting on <em>you.</em></h2>
+          <span class="section-meta" id="waiting-count">—</span>
+        </div>
+        <div class="waiting-list" id="waiting-list"></div>
+      </div>
+      <div>
+        <div class="section-head">
+          <h2 class="section-title">This week's <em>interviews.</em></h2>
+          <span class="section-meta">may 14–20</span>
+        </div>
+        <div class="cal" id="cal"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- D + E. OFFERS + SUGGESTED ACTIONS -->
+  <section class="section">
+    <div class="with-sidebar">
+      <div>
+        <div class="section-head">
+          <h2 class="section-title">Offers awaiting your <em>approval.</em></h2>
+          <span class="section-meta" id="offer-count">—</span>
+        </div>
+        <div class="offer-grid" id="offer-grid"></div>
+      </div>
+      <aside>
+        <div class="sidebar-header">§ Suggested actions</div>
+        <div class="suggest-list" id="suggest-list"></div>
+      </aside>
+    </div>
+  </section>
+
+</main>
+
+<!-- DRAWER -->
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-hidden="true">
+  <header class="drawer-head">
+    <div>
+      <div class="eyebrow" id="drawer-eyebrow">§ Detail</div>
+      <h2 id="drawer-title">—</h2>
+    </div>
+    <button class="drawer-close" id="drawer-close" type="button" aria-label="Close">×</button>
+  </header>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+
+<!-- TOAST -->
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+
+// ────────────────────────── PERSONA & SYNTHETIC IDS ────────────
+// David Okafor is a synthesized VP Engineering hiring manager. We
+// hand-pick 8 Engineering reqs and treat David as their HM.
+const DAVID = {
+  id: 'EMP-DAVIDO',
+  display_name: 'David Okafor',
+  title: 'VP, Engineering',
+  level: 'M4',
+  department: 'Engineering',
+  team: 'Platform',
+  initials: 'DO',
+};
+const MY_REQ_IDS = [
+  'REQ-00002', 'REQ-00036', 'REQ-00042', 'REQ-00034',
+  'REQ-00047', 'REQ-00030', 'REQ-00041', 'REQ-00024'
+];
+
+// ────────────────────────── STATE ─────────────────────────
+const state = {
+  reqs: [],
+  cands: [],
+  people: [],
+  reqsById: {},
+  peopleById: {},
+  candsById: {},
+  myReqs: [],
+  waiting: [],
+  offers: [],
+  // in-memory mutations
+  decisions: {},   // cand.id -> {decision: 'approve'|'decline'|'adjust', note}
+  scorecards: {},  // cand.id -> {ratings:[1..5 each], submitted:true}
+};
+
+// ────────────────────────── HELPERS ────────────────────────
+const $  = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function fmtMoney(n) {
+  if (n == null) return '—';
+  if (n >= 1000) return '$' + (n/1000).toFixed(0) + 'k';
+  return '$' + n;
+}
+function fmtPct(p) {
+  if (p == null) return '—';
+  return Math.round(p * 100) + '%';
+}
+function setLoad(pct){ const el = $('#loadbar'); if(el) el.style.width = pct + '%'; }
+
+// ────────────────────────── RT STAMP ───────────────────────
+function updateRtStamp() {
+  const now = Date.now();
+  const sessionStart = window.__sessionStart || (window.__sessionStart = now);
+  const elapsed = Math.floor((now - sessionStart) / 1000);
+  const h = Math.floor(elapsed / 3600);
+  const m = Math.floor((elapsed % 3600) / 60);
+  const s = elapsed % 60;
+  const stamp = `T+${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.000`;
+  const rt = $('#rt-time'); if (rt) rt.textContent = stamp;
+  const iso = $('#rt-iso'); if (iso) iso.textContent = new Date().toISOString();
+}
+
+// ────────────────────────── TOAST ──────────────────────────
+function toast(msg) {
+  const stack = $('#toast-stack');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  stack.appendChild(el);
+  requestAnimationFrame(()=> el.classList.add('is-on'));
+  setTimeout(()=>{
+    el.classList.remove('is-on');
+    setTimeout(()=> el.remove(), 250);
+  }, 3000);
+}
+
+// ────────────────────────── BOOT ───────────────────────────
+async function boot() {
+  setLoad(15);
+  updateRtStamp();
+  setInterval(updateRtStamp, 1000);
+
+  try {
+    const [reqs, cands, people] = await Promise.all([
+      fetch('../../console/data/requisitions.json').then(r => r.json()),
+      fetch('../../console/data/candidates.json').then(r => r.json()),
+      fetch('../../console/data/people.json').then(r => r.json()),
+    ]);
+    state.reqs = reqs;
+    state.cands = cands;
+    state.people = people;
+    state.reqsById   = Object.fromEntries(reqs.map(r => [r.id, r]));
+    state.peopleById = Object.fromEntries(people.map(p => [p.id, p]));
+    state.candsById  = Object.fromEntries(cands.map(c => [c.id, c]));
+
+    // Filter to David's world
+    state.myReqs = MY_REQ_IDS
+      .map(id => state.reqsById[id])
+      .filter(Boolean);
+
+    const myReqSet = new Set(MY_REQ_IDS);
+    const myCands = cands.filter(c => myReqSet.has(c.requisition_id));
+
+    // Waiting on David: stage in interview/offer, days_in_stage > 3
+    state.waiting = myCands
+      .filter(c => (c.stage === 'interview' || c.stage === 'offer') && c.days_in_stage > 3)
+      .sort((a,b) => b.days_in_stage - a.days_in_stage)
+      .slice(0, 6);
+
+    // Offers awaiting approval: pick top 2 offer-stage cands by acceptance prob
+    state.offers = myCands
+      .filter(c => c.stage === 'offer' && c.offered_comp != null)
+      .sort((a,b) => (b.predicted_offer_acceptance_probability||0) - (a.predicted_offer_acceptance_probability||0))
+      .slice(0, 2);
+
+    setLoad(60);
+    renderAll();
+    setLoad(100);
+    setTimeout(()=> $('#loadbar').classList.add('is-done'), 250);
+  } catch (e) {
+    console.error('Load failed', e);
+    toast('Failed to load data — check ../../console/data/ paths.');
+    setLoad(100);
+  }
+}
+
+// ────────────────────────── RENDER ─────────────────────────
+function renderAll() {
+  // KPIs in dateline
+  $('#kpi-reqs').textContent = state.myReqs.length;
+  $('#kpi-waiting').textContent = state.waiting.length;
+  $('#kpi-offers').textContent = state.offers.length;
+
+  renderReqs();
+  renderWaiting();
+  renderCalendar();
+  renderOffers();
+  renderSuggestions();
+}
+
+// ── REQS ───────────────────────────────────────────────────
+function renderReqs() {
+  const grid = $('#req-grid');
+  if (!state.myReqs.length) {
+    grid.innerHTML = '<div class="empty">No open reqs.</div>';
+    return;
+  }
+  grid.innerHTML = state.myReqs.map(r => reqCardHtml(r)).join('');
+  $$('.card[data-req]', grid).forEach(el => {
+    el.addEventListener('click', () => openReqDrawer(el.dataset.req));
+  });
+}
+
+function funnelHtml(stageCounts) {
+  const order = ['applied','screen','interview','offer','accepted'];
+  const total = order.reduce((s,k)=> s + (stageCounts[k]||0), 0);
+  if (!total) return '<div class="funnel"></div>';
+  return '<div class="funnel">' + order.map(k => {
+    const n = stageCounts[k] || 0;
+    if (!n) return '';
+    const pct = (n / total) * 100;
+    return `<div class="seg ${k}" style="flex:${n}; min-width:${pct < 6 ? '14px' : '0'};" title="${k}: ${n}">${pct >= 8 ? n : ''}</div>`;
+  }).join('') + '</div>';
+}
+
+function reqCardHtml(r) {
+  const sla = r.sla_status || 'in_pace';
+  const slaLabel = sla === 'in_pace' ? 'on pace' : sla;
+  return `
+    <article class="card" data-req="${esc(r.id)}" tabindex="0">
+      <div class="row">
+        <span class="req-id">${esc(r.id)}</span>
+        <span class="pill ${esc(sla)}">${esc(slaLabel)}</span>
+      </div>
+      <h3 class="req-title">${esc(r.title)}</h3>
+      <div class="req-meta">
+        ${esc(r.level)} <span class="sep">·</span> ${esc(r.location)} <span class="sep">·</span> ${esc(r.remote)} <span class="sep">·</span> ${r.days_open}d open
+      </div>
+      ${funnelHtml(r.stage_counts)}
+      <div class="cta">Open req →</div>
+    </article>
+  `;
+}
+
+// ── WAITING ────────────────────────────────────────────────
+function renderWaiting() {
+  const wrap = $('#waiting-list');
+  $('#waiting-count').textContent = state.waiting.length + ' to review';
+  if (!state.waiting.length) {
+    wrap.innerHTML = '<div class="empty">All caught up. No candidates waiting.</div>';
+    return;
+  }
+  wrap.innerHTML = state.waiting.map(c => waitCardHtml(c)).join('');
+  $$('.wait-card', wrap).forEach(el => {
+    el.addEventListener('click', () => openCandDrawer(el.dataset.cand));
+  });
+}
+
+function matchScoreFor(c) {
+  // Synthetic match score: blend experience years + level intent + a stable hash.
+  const base = 0.55 + (c.total_experience_years || 0) * 0.025;
+  const h = (c.id.charCodeAt(c.id.length-1) % 17) / 100;
+  const score = Math.max(0.42, Math.min(0.96, base + h));
+  return score;
+}
+
+function waitCardHtml(c) {
+  const req = state.reqsById[c.requisition_id];
+  const match = matchScoreFor(c);
+  const matchCls = match >= 0.8 ? '' : match >= 0.65 ? 'mid' : 'low';
+  const stageLine = c.stage === 'offer'
+    ? `Awaiting your <strong>offer approval</strong> for ${esc(req?.title || c.requisition_id)}.`
+    : `Awaiting your <strong>scorecard</strong> from technical screen — ${esc(req?.title || c.requisition_id)}.`;
+  return `
+    <article class="wait-card" data-cand="${esc(c.id)}" tabindex="0">
+      <div class="top">
+        <span class="name">${esc(c.display_name)}</span>
+        <span class="title">${esc(c.current_title)} · ${esc(c.current_company)}</span>
+        <span class="req-tag">${esc(c.requisition_id)}</span>
+      </div>
+      <div class="action-line">${stageLine}</div>
+      <div class="meta-side">
+        <span class="days">${c.days_in_stage}d waiting</span>
+        <span class="match-score ${matchCls}">${fmtPct(match)} match</span>
+        <span class="pill action">${c.stage === 'offer' ? 'Approve offer' : 'Submit scorecard'}</span>
+      </div>
+    </article>
+  `;
+}
+
+// ── CALENDAR ───────────────────────────────────────────────
+const WEEK_BLOCKS = [
+  // Thu 14 May
+  { dow: 'Thu', day: 14, mo: 'May', items: [
+    { time: '10:00–10:45', who: 'Henry Iqbal',     role: 'Tech Lead · REQ-00002', candId: 'CAND-00000046' },
+    { time: '14:00–15:00', who: 'Lara Iyer',       role: 'Backend Eng · REQ-00002 · offer chat', candId: 'CAND-00000030' },
+  ]},
+  // Fri 15 May
+  { dow: 'Fri', day: 15, mo: 'May', items: [
+    { time: '11:30–12:15', who: 'Liu Karagiannis', role: 'Software Eng · REQ-00002', candId: 'CAND-00000032' },
+  ]},
+  // Mon 18 May
+  { dow: 'Mon', day: 18, mo: 'May', items: [
+    { time: '09:30–10:15', who: 'Lucas Hughes',    role: 'Platform Eng · REQ-00024', candId: 'CAND-00000606' },
+    { time: '15:00–16:00', who: 'Irina Yousef',    role: 'Software Eng · REQ-00024 · debrief', candId: 'CAND-00000609' },
+  ]},
+];
+
+function renderCalendar() {
+  const wrap = $('#cal');
+  wrap.innerHTML = WEEK_BLOCKS.map(d => `
+    <div class="cal-day">
+      <div class="date">${d.dow}<span class="num">${d.day}</span></div>
+      <div>
+        ${d.items.map(it => `
+          <div class="cal-block">
+            <div class="time">${esc(it.time)}</div>
+            <div class="who">${esc(it.who)}</div>
+            <div class="role">${esc(it.role)}</div>
+            <button class="sc-btn" data-cand="${esc(it.candId)}" type="button">Add scorecard →</button>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  $$('.sc-btn', wrap).forEach(b => {
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      openCandDrawer(b.dataset.cand, 'scorecard');
+    });
+  });
+}
+
+// ── OFFERS ─────────────────────────────────────────────────
+function renderOffers() {
+  const grid = $('#offer-grid');
+  $('#offer-count').textContent = state.offers.length + ' pending';
+  if (!state.offers.length) {
+    grid.innerHTML = '<div class="empty">No offers awaiting approval.</div>';
+    return;
+  }
+  grid.innerHTML = state.offers.map(c => offerCardHtml(c)).join('');
+  // bind row buttons
+  $$('.offer-card', grid).forEach(card => {
+    const cid = card.dataset.cand;
+    card.querySelector('[data-act="open"]').addEventListener('click', e => { e.stopPropagation(); openCandDrawer(cid, 'offer'); });
+    card.querySelector('[data-act="approve"]').addEventListener('click', e => { e.stopPropagation(); confirmOffer(cid, 'approve'); });
+    card.querySelector('[data-act="adjust"]').addEventListener('click',  e => { e.stopPropagation(); confirmOffer(cid, 'adjust'); });
+    card.querySelector('[data-act="decline"]').addEventListener('click', e => { e.stopPropagation(); confirmOffer(cid, 'decline'); });
+  });
+}
+
+function compBreakdownFor(c) {
+  // Synthesize a base+bonus+equity from offered_comp
+  const total = c.offered_comp || 0;
+  const base   = Math.round(total * 0.78 / 1000) * 1000;
+  const bonus  = Math.round(total * 0.12 / 1000) * 1000;
+  const equity = Math.round(total * 0.10 / 1000) * 1000;
+  return { base, bonus, equity, total };
+}
+
+function compRatioFor(c) {
+  const req = state.reqsById[c.requisition_id];
+  if (!req || !req.comp_band_p50 || !c.offered_comp) return null;
+  return c.offered_comp / req.comp_band_p50;
+}
+
+function ratioCls(r) {
+  if (r == null) return '';
+  if (r < 0.93) return 'low';
+  if (r > 1.07) return 'high';
+  return 'mid';
+}
+
+function offerCardHtml(c) {
+  const req = state.reqsById[c.requisition_id];
+  const b = compBreakdownFor(c);
+  const ratio = compRatioFor(c);
+  const pred = c.predicted_offer_acceptance_probability || 0;
+  const decision = state.decisions[c.id];
+  return `
+    <article class="offer-card" data-cand="${esc(c.id)}">
+      <div class="head">
+        <div>
+          <h3 class="who">${esc(c.display_name)}</h3>
+          <div class="role">${esc(req?.title || c.current_title)} <span class="sep">·</span> ${esc(c.requisition_id)}</div>
+        </div>
+        ${decision ? `<span class="pill ${decision.decision === 'approve' ? 'in_pace' : decision.decision === 'decline' ? 'stuck' : 'aging'}">${esc(decision.decision)}d</span>` : `<span class="pill action">Action needed</span>`}
+      </div>
+      <div class="comp-breakdown">
+        <div class="comp-cell">
+          <span class="label">Base</span>
+          <span class="val">${fmtMoney(b.base)}</span>
+        </div>
+        <div class="comp-cell">
+          <span class="label">Bonus tgt</span>
+          <span class="val muted">${fmtMoney(b.bonus)}</span>
+        </div>
+        <div class="comp-cell">
+          <span class="label">Equity / yr</span>
+          <span class="val muted">${fmtMoney(b.equity)}</span>
+        </div>
+        <div class="comp-cell">
+          <span class="label">vs P50 (${fmtMoney(req?.comp_band_p50)})</span>
+          <span class="val ratio ${ratioCls(ratio)}">${ratio != null ? ratio.toFixed(2) : '—'}</span>
+        </div>
+      </div>
+      <div class="ai-pred">
+        <span class="lbl">AI acceptance prediction</span>
+        <span class="val">${fmtPct(pred)}</span>
+      </div>
+      <div class="action-row">
+        <button class="btn primary" type="button" data-act="approve">Approve</button>
+        <button class="btn"         type="button" data-act="adjust">Adjust</button>
+        <button class="btn danger"  type="button" data-act="decline">Decline</button>
+        <button class="btn ghost"   type="button" data-act="open">View letter →</button>
+      </div>
+    </article>
+  `;
+}
+
+function confirmOffer(candId, decision) {
+  const c = state.candsById[candId];
+  if (!c) return;
+  const verb = decision === 'approve' ? 'Approve' : decision === 'decline' ? 'Decline' : 'Adjust';
+  if (!confirm(`${verb} offer for ${c.display_name}?`)) return;
+  state.decisions[candId] = { decision, note: '', when: Date.now() };
+  toast(`Offer ${decision}${decision.endsWith('e') ? 'd' : 'ed'} · ${c.display_name}`);
+  renderOffers();
+}
+
+// ── SUGGESTIONS ────────────────────────────────────────────
+function renderSuggestions() {
+  // 4 hand-tuned recommendations grounded in the data
+  const r47 = state.reqsById['REQ-00047'];
+  const r30 = state.reqsById['REQ-00030'];
+  const liu = state.candsById['CAND-00000032'];
+  const lara = state.candsById['CAND-00000030'];
+
+  const items = [
+    {
+      tag: 'PIPELINE · REQ-00047',
+      body: `<strong>${r47 ? r47.stage_counts.screen + ' qualified' : '5 qualified'} candidates</strong> in screen for ${esc(r47?.title || 'Software Engineer II · Mobile')}. Consider scheduling an onsite loop.`,
+      why: 'aging req · 86d open · 7 in interview already',
+      action: () => { openReqDrawer('REQ-00047'); }
+    },
+    {
+      tag: 'STALLED · REQ-00030',
+      body: `<strong>Open 80 days.</strong> ${esc(r30?.title || 'Principal Engineer · Security')} — consider expanding location or comp band.`,
+      why: 'aging · 0 offers extended · SF-only · P50 $250k',
+      action: () => { openReqDrawer('REQ-00030'); }
+    },
+    {
+      tag: 'CANDIDATE RISK',
+      body: `<strong>${esc(liu?.display_name || 'Liu Karagiannis')}</strong> waiting <strong>${liu?.days_in_stage || 17} days</strong> for your offer decision — risk of disengagement.`,
+      why: 'offer stage · acceptance prob ' + (liu ? fmtPct(liu.predicted_offer_acceptance_probability) : '68%'),
+      action: () => { if (liu) openCandDrawer(liu.id, 'offer'); }
+    },
+    {
+      tag: 'OFFER EXPIRES FRIDAY',
+      body: `Offer to <strong>${esc(lara?.display_name || 'Lara Iyer')}</strong> expires Friday. AI predicts <strong>${lara ? fmtPct(lara.predicted_offer_acceptance_probability) : '60%'}</strong> acceptance — consider a sweetener.`,
+      why: '38d in stage · below P50 (' + (lara ? (compRatioFor(lara)||0).toFixed(2) : '0.85') + ')',
+      action: () => { if (lara) openCandDrawer(lara.id, 'offer'); }
+    },
+  ];
+
+  const wrap = $('#suggest-list');
+  wrap.innerHTML = items.map((it, i) => `
+    <article class="suggest-card" data-i="${i}" tabindex="0">
+      <span class="tag">${it.tag}</span>
+      <div class="body">${it.body}</div>
+      <span class="why">${esc(it.why)}</span>
+    </article>
+  `).join('');
+  $$('.suggest-card', wrap).forEach((el,i) => {
+    el.addEventListener('click', () => items[i].action());
+  });
+}
+
+// ────────────────────────── DRAWER ─────────────────────────
+function openDrawer(eyebrow, title, bodyHtml, onMount) {
+  $('#drawer-eyebrow').textContent = eyebrow;
+  $('#drawer-title').innerHTML = title;
+  $('#drawer-body').innerHTML = bodyHtml;
+  $('#scrim').classList.add('is-open');
+  $('#drawer').classList.add('is-open');
+  $('#drawer').setAttribute('aria-hidden','false');
+  if (onMount) onMount($('#drawer-body'));
+}
+function closeDrawer() {
+  $('#scrim').classList.remove('is-open');
+  $('#drawer').classList.remove('is-open');
+  $('#drawer').setAttribute('aria-hidden','true');
+}
+$('#scrim').addEventListener('click', closeDrawer);
+$('#drawer-close').addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+
+// ── REQ DRAWER ─────────────────────────────────────────────
+function openReqDrawer(reqId) {
+  const r = state.reqsById[reqId];
+  if (!r) return;
+  const myReqCands = state.cands.filter(c => c.requisition_id === reqId);
+  const sc = r.stage_counts;
+  const slowestInInterview = myReqCands
+    .filter(c => c.stage === 'interview')
+    .sort((a,b) => b.days_in_stage - a.days_in_stage)[0];
+
+  const body = `
+    <div class="drawer-section">
+      <h3>§ Req summary</h3>
+      <div class="kv-grid">
+        <div class="kv"><span class="k">Req ID</span><span class="v">${esc(r.id)}</span></div>
+        <div class="kv"><span class="k">Status</span><span class="v">${esc(r.sla_status === 'in_pace' ? 'On pace' : r.sla_status)}</span></div>
+        <div class="kv"><span class="k">Level</span><span class="v">${esc(r.level)}</span></div>
+        <div class="kv"><span class="k">Days open</span><span class="v">${r.days_open}</span></div>
+        <div class="kv"><span class="k">Location</span><span class="v">${esc(r.location)} · ${esc(r.remote)}</span></div>
+        <div class="kv"><span class="k">Comp P50</span><span class="v">${fmtMoney(r.comp_band_p50)}</span></div>
+        <div class="kv"><span class="k">Target close</span><span class="v">${esc(r.target_close_date)}</span></div>
+        <div class="kv"><span class="k">Priority</span><span class="v">${esc(r.priority)}</span></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>§ Pipeline by stage</h3>
+      <div class="req-stage-funnel">
+        <div class="cell"><span class="n">${sc.applied||0}</span><span class="l">Applied</span></div>
+        <div class="cell ${sc.screen>4?'warn':''}"><span class="n">${sc.screen||0}</span><span class="l">Screen</span></div>
+        <div class="cell ${sc.interview>5?'warn':''}"><span class="n">${sc.interview||0}</span><span class="l">Interview</span></div>
+        <div class="cell ${sc.offer>2?'warn':''}"><span class="n">${sc.offer||0}</span><span class="l">Offer</span></div>
+        <div class="cell"><span class="n">${sc.accepted||0}</span><span class="l">Accepted</span></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>§ What matters for you</h3>
+      <p>${r.sla_status === 'stuck' ? 'This req is <strong>stuck</strong>. Your recruiter is escalating, but a few unblocking moves are within your control:' : r.sla_status === 'aging' ? 'This req is <strong>aging</strong>. Below are the levers you can pull.' : 'Pace is healthy. Below are the open threads on your plate.'}</p>
+      <ul style="font-family:var(--serif);font-size:1rem;color:var(--ink-2);padding-left:1.1rem;line-height:1.6;">
+        ${sc.screen > 4 ? `<li><strong>${sc.screen} screens</strong> pending — push debriefs to unblock.</li>` : ''}
+        ${slowestInInterview ? `<li><strong>${esc(slowestInInterview.display_name)}</strong> has been in interview ${slowestInInterview.days_in_stage}d — needs a decision.</li>` : ''}
+        ${sc.offer > 0 ? `<li><strong>${sc.offer} offers</strong> in flight — review comp ratios before they expire.</li>` : ''}
+        ${r.days_open > 60 ? `<li>Over <strong>60 days open</strong> — discuss broadening location, comp band, or req level with your recruiter.</li>` : ''}
+      </ul>
+    </div>
+
+    <div class="drawer-section">
+      <h3>§ Quick actions</h3>
+      <div class="action-row">
+        <button class="btn primary" type="button" id="rq-debrief">Schedule debrief</button>
+        <button class="btn"         type="button" id="rq-expand">Expand search</button>
+        <button class="btn ghost"   type="button" id="rq-comp">Open comp review</button>
+      </div>
+    </div>
+  `;
+  openDrawer('§ Req detail', `<em>${esc(r.id)}</em> · ${esc(r.title)}`, body, (el) => {
+    el.querySelector('#rq-debrief').addEventListener('click', () => { toast('Debrief request sent to your recruiter'); });
+    el.querySelector('#rq-expand').addEventListener('click',  () => { toast('Search expansion request logged'); });
+    el.querySelector('#rq-comp').addEventListener('click',    () => { toast('Comp review opened in HRIS'); });
+  });
+}
+
+// ── CANDIDATE DRAWER ───────────────────────────────────────
+function openCandDrawer(candId, focus) {
+  const c = state.candsById[candId];
+  if (!c) { toast('Candidate not found in dataset'); return; }
+  const req = state.reqsById[c.requisition_id];
+  const match = matchScoreFor(c);
+  const isOffer = c.stage === 'offer';
+  const wantsScorecard = focus === 'scorecard' || (!isOffer && focus !== 'offer');
+
+  const reasoning = isOffer
+    ? `${esc(c.display_name)} indexed strongly on systems-thinking signals and shipped ${c.total_experience_years.toFixed(1)} years of relevant backend work at ${esc(c.current_company)}. Acceptance probability is driven by sub-P50 base (${(compRatioFor(c)||0).toFixed(2)}× band) and competing pipeline at two FAANG-adjacent companies. <strong>Recommendation: approve with a $${Math.round((req?.comp_band_p50 || 0)*0.05/1000)}k signing-bonus sweetener.</strong>`
+    : `Match driven by tenure at ${esc(c.current_company)}, level alignment (${esc(c.highest_level_indicated)} vs req ${esc(req?.level || '?')}), and a clean technical-screen signal. Risk: ${c.flight_risk_at_current_employer < 0.3 ? 'low flight risk at current employer — may need stronger pull.' : 'high flight risk at current — moving fast is to your advantage.'} <strong>Recommendation: bring to onsite if your team has 90 min to invest.</strong>`;
+
+  let actionSection = '';
+  if (isOffer) {
+    const b = compBreakdownFor(c);
+    const ratio = compRatioFor(c);
+    actionSection = `
+      <div class="drawer-section">
+        <h3>§ Offer letter (draft)</h3>
+        <div class="offer-letter">Dear ${esc(c.given_name)},
+
+We are delighted to extend an offer to join Tessera as <strong>${esc(req?.title || c.current_title)}</strong> on the ${esc(req?.team || 'Engineering')} team, based in ${esc(req?.location || '—')}.
+
+Base salary:     ${fmtMoney(b.base)}
+Target bonus:    ${fmtMoney(b.bonus)} (${Math.round((b.bonus/b.base)*100)}% target)
+Equity / yr:     ${fmtMoney(b.equity)}
+Total OTE:       <strong>${fmtMoney(b.total)}</strong>
+
+Versus market P50 of ${fmtMoney(req?.comp_band_p50)} for this band, this represents a <strong>${(ratio||0).toFixed(2)}× ratio</strong>. AI-predicted acceptance probability: <strong>${fmtPct(c.predicted_offer_acceptance_probability)}</strong>.
+
+We expect a written response by EOW.</div>
+        <div class="action-row" style="margin-top:.9rem;">
+          <button class="btn ghost" type="button" id="ai-redraft">AI redraft →</button>
+        </div>
+      </div>
+
+      <div class="drawer-section">
+        <h3>§ Your decision</h3>
+        <div class="action-row">
+          <button class="btn primary" type="button" data-act="approve">Approve</button>
+          <button class="btn"         type="button" data-act="adjust">Adjust comp</button>
+          <button class="btn danger"  type="button" data-act="decline">Decline</button>
+        </div>
+      </div>
+    `;
+  } else if (wantsScorecard) {
+    const Qs = [
+      'Technical depth · did the candidate demonstrate strong fundamentals?',
+      'Problem-solving · how did they decompose ambiguity?',
+      'Communication · could they explain trade-offs clearly?',
+      'Collaboration · would they raise the team\'s bar on culture?',
+      'Bar raise · overall, would you hire this person?'
+    ];
+    actionSection = `
+      <div class="drawer-section">
+        <h3>§ Scorecard · technical screen</h3>
+        <form id="sc-form">
+          ${Qs.map((q,i)=>`
+            <div class="scorecard-q">
+              <label><span class="qnum">Q${i+1}</span>${esc(q)}</label>
+              <div class="rating-row" data-q="${i}">
+                ${[1,2,3,4,5].map(n => `<button type="button" class="star" data-val="${n}">${n}</button>`).join('')}
+              </div>
+            </div>
+          `).join('')}
+          <div class="scorecard-q">
+            <label><span class="qnum">Notes</span>Optional written feedback for the loop.</label>
+            <textarea id="sc-notes" placeholder="One thing they did well · one thing to dig into next round…"></textarea>
+          </div>
+          <div class="action-row">
+            <button type="submit" class="btn primary">Submit scorecard</button>
+            <button type="button" class="btn ghost" id="sc-skip">Skip · need more time</button>
+          </div>
+        </form>
+      </div>
+    `;
+  }
+
+  const body = `
+    <div class="drawer-section">
+      <h3>§ Candidate summary</h3>
+      <div class="kv-grid">
+        <div class="kv"><span class="k">Current</span><span class="v">${esc(c.current_title)}</span></div>
+        <div class="kv"><span class="k">Company</span><span class="v">${esc(c.current_company)}</span></div>
+        <div class="kv"><span class="k">Experience</span><span class="v">${c.total_experience_years.toFixed(1)} years</span></div>
+        <div class="kv"><span class="k">Level signal</span><span class="v">${esc(c.highest_level_indicated)}</span></div>
+        <div class="kv"><span class="k">Location</span><span class="v">${esc(c.location_preference)}</span></div>
+        <div class="kv"><span class="k">Source</span><span class="v">${esc(c.source)}${c.is_referral ? ' · referral' : ''}</span></div>
+        <div class="kv"><span class="k">Match score</span><span class="v">${fmtPct(match)}</span></div>
+        <div class="kv"><span class="k">Days in ${esc(c.stage)}</span><span class="v">${c.days_in_stage}d</span></div>
+      </div>
+    </div>
+
+    <div class="drawer-section">
+      <h3>§ AI match reasoning</h3>
+      <div class="ai-reasoning">
+        <span class="lbl">Stratum AI · grounded in people graph</span>
+        ${reasoning}
+      </div>
+    </div>
+
+    ${actionSection}
+  `;
+
+  openDrawer(
+    isOffer ? '§ Offer review' : '§ Candidate review',
+    `<em>${esc(c.given_name)}</em> ${esc(c.family_name)}`,
+    body,
+    (el) => bindCandDrawerEvents(el, c)
+  );
+}
+
+function bindCandDrawerEvents(el, c) {
+  // Star ratings
+  el.querySelectorAll('.rating-row').forEach(row => {
+    row.querySelectorAll('.star').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const v = parseInt(btn.dataset.val, 10);
+        row.querySelectorAll('.star').forEach(s => {
+          s.classList.toggle('is-on', parseInt(s.dataset.val,10) <= v);
+        });
+        row.dataset.value = v;
+      });
+    });
+  });
+
+  // Scorecard submit
+  const form = el.querySelector('#sc-form');
+  if (form) {
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const ratings = $$('.rating-row', form).map(r => parseInt(r.dataset.value || '0', 10));
+      const missing = ratings.filter(r => !r).length;
+      if (missing) { toast(`Rate all 5 questions (${5 - missing} of 5 done)`); return; }
+      const notes = el.querySelector('#sc-notes').value;
+      state.scorecards[c.id] = { ratings, notes, submitted: true, when: Date.now() };
+      const avg = (ratings.reduce((a,b)=>a+b,0)/5).toFixed(1);
+      toast(`Scorecard submitted · avg ${avg}/5 · ${c.display_name}`);
+      // Remove from waiting list visually
+      state.waiting = state.waiting.filter(x => x.id !== c.id);
+      $('#kpi-waiting').textContent = state.waiting.length;
+      renderWaiting();
+      closeDrawer();
+    });
+    el.querySelector('#sc-skip').addEventListener('click', () => {
+      toast('Skipped · candidate stays in your queue');
+      closeDrawer();
+    });
+  }
+
+  // Offer decisions
+  el.querySelectorAll('[data-act]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const act = btn.dataset.act;
+      const verb = act === 'approve' ? 'Approve' : act === 'decline' ? 'Decline' : 'Adjust';
+      let note = '';
+      if (act === 'decline' || act === 'adjust') {
+        note = prompt(`${verb} reason / details:`, '');
+        if (note === null) return;
+      } else {
+        if (!confirm(`${verb} offer for ${c.display_name}?`)) return;
+      }
+      state.decisions[c.id] = { decision: act, note, when: Date.now() };
+      toast(`Offer ${act}${act.endsWith('e') ? 'd' : 'ed'} · ${c.display_name}`);
+      // Refresh offers + waiting
+      state.offers = state.offers.filter(x => x.id !== c.id || act === 'adjust');
+      state.waiting = state.waiting.filter(x => x.id !== c.id);
+      $('#kpi-offers').textContent = state.offers.length;
+      $('#kpi-waiting').textContent = state.waiting.length;
+      renderOffers();
+      renderWaiting();
+      closeDrawer();
+    });
+  });
+
+  const aiBtn = el.querySelector('#ai-redraft');
+  if (aiBtn) aiBtn.addEventListener('click', () => toast('AI redrafting · added a $7.5k signing bonus & relocation clause'));
+}
+
+// ─── KICKOFF ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', boot);
+
+})();
+</script>
+</body>
+</html>
