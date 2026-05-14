@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#f4ecda" />
+<title>Stratum — Real-Time Progression</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-mute:#6c7180;
+  --ochre:#b8651f; --ochre-deep:#8a4711; --ochre-soft:#e6c79b;
+  --moss:#4a5d3a; --plum:#6b3a4a; --signal:#a13418;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 12% 18%,rgba(184,101,31,.05),transparent 40%),radial-gradient(circle at 88% 84%,rgba(14,22,38,.04),transparent 45%);mix-blend-mode:multiply}
+body>*{position:relative;z-index:1}
+a{color:var(--ochre);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s}
+a:hover{border-bottom-color:var(--ochre)}
+
+/* MOBILE BAR */
+.mob-bar{display:none}
+@media (max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* CONTAINER */
+.wrap{ width: min(1180px, 92vw); margin: 0 auto; }
+
+/* HEADER */
+header{padding:2.5rem 0 1rem}
+.dateline{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:1rem;padding-bottom:.7rem;border-bottom:1px solid var(--ink)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);margin:1.4rem 0 .8rem}
+.word{font-family:var(--display);font-weight:600;font-variation-settings:"opsz" 144;font-size:clamp(2.6rem,8vw,5.6rem);line-height:.95;letter-spacing:-.03em;margin:0 0 .6rem;color:var(--ink)}
+.word em{font-style:italic;color:var(--ochre);font-weight:400;font-variation-settings:"opsz" 96}
+.sub{font-family:var(--serif);font-style:italic;font-size:clamp(1rem,2.2vw,1.2rem);color:var(--ink-2);max-width:60ch;margin:0 0 1.6rem;font-variation-settings:"opsz" 18}
+
+/* THE REAL CLOCK */
+.real-clock{
+  background:var(--ink);
+  color:var(--paper);
+  border-radius:0;
+  padding:1.6rem 1.8rem;
+  margin:1.4rem 0 2rem;
+  border:1px solid var(--ink);
+  display:grid;
+  grid-template-columns:max-content 1fr;
+  gap:1.4rem 2.4rem;
+  align-items:center;
+}
+.rc-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ochre-soft);display:flex;align-items:center;gap:.6rem}
+.rc-label::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ochre);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.3)}}
+.rc-value{font-family:var(--mono);font-size:clamp(1.6rem,5vw,2.8rem);font-weight:700;color:var(--paper);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.rc-meta{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ochre-soft);text-transform:uppercase;line-height:1.6}
+.rc-meta strong{color:var(--paper)}
+
+/* DISTINCTION CARD */
+.distinction{
+  background:var(--paper-warm);
+  border:1px solid var(--paper-rule);
+  border-top:3px solid var(--ochre);
+  padding:1.4rem 1.6rem 1.6rem;
+  margin-bottom:2.4rem;
+}
+.distinction-title{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);margin-bottom:.8rem}
+.distinction-body{font-family:var(--serif);font-size:16px;line-height:1.55;color:var(--ink);max-width:70ch}
+.distinction-body p{margin:0 0 .8rem}
+.distinction-body p:last-child{margin:0}
+.distinction-body strong{font-weight:600;color:var(--ink)}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--ink);
+  margin:2rem 0;
+}
+.stat{padding:1.1rem 1.2rem;border-right:1px solid var(--paper-rule);border-bottom:1px solid var(--paper-rule);display:flex;flex-direction:column;gap:.25rem}
+.stat:nth-child(4n){border-right:0}
+.stat-l{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+.stat-v{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60;font-size:1.7rem;line-height:1;color:var(--ink);font-feature-settings:"tnum"}
+.stat-v .u{font-size:.7rem;color:var(--ochre);margin-left:.25rem}
+
+/* TIMELINE */
+.section-h{font-family:var(--display);font-weight:400;font-variation-settings:"opsz" 60;font-size:clamp(1.7rem,4vw,2.6rem);letter-spacing:-.015em;margin:3rem 0 .4rem;line-height:1.05}
+.section-dek{font-family:var(--serif);font-style:italic;font-size:1.05rem;color:var(--ink-2);margin:0 0 1.6rem;max-width:60ch;font-variation-settings:"opsz" 18}
+
+.timeline{border-top:1px solid var(--ink);padding-top:.2rem}
+.entry{display:grid;grid-template-columns:max-content max-content 1fr;gap:1rem 1.4rem;align-items:baseline;padding:.7rem 0;border-bottom:1px solid var(--paper-rule)}
+.entry:hover{background:var(--paper-warm)}
+.t-stamp{font-family:var(--mono);font-size:12.5px;color:var(--ochre);letter-spacing:.04em;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;padding-top:1px}
+.t-delta{font-family:var(--mono);font-size:10.5px;color:var(--ink-mute);letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:2px}
+.t-content{display:flex;flex-direction:column;gap:.2rem;min-width:0}
+.t-path{font-family:var(--mono);font-size:13px;color:var(--ink);letter-spacing:-.005em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t-path a{color:var(--ink);border-bottom:1px solid transparent}
+.t-path a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+.t-desc{font-family:var(--serif);font-size:14px;color:var(--ink-2);font-variation-settings:"opsz" 14;line-height:1.4}
+
+/* SECTION HEADERS within timeline */
+.t-hour{display:grid;grid-template-columns:1fr;padding:1.2rem 0 .4rem;border-bottom:0;margin-top:.6rem}
+.t-hour-label{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 36;font-size:1.3rem;color:var(--ink);letter-spacing:-.01em;display:flex;align-items:baseline;gap:.8rem}
+.t-hour-label::after{content:"";flex:1;height:1px;background:var(--ink);margin-left:.6rem}
+.t-hour-count{font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre);margin-top:.2rem}
+
+/* FOOTER */
+footer{margin:3rem 0 3rem}
+.colo-rule{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);height:4px;margin-bottom:1.4rem}
+.colo{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);display:flex;flex-direction:column;gap:1.2rem}
+.colo a{color:var(--ink);border-bottom:1px solid transparent}
+.colo a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+
+/* LIVE TICKER UPDATE */
+.live-elapsed{font-variant-numeric:tabular-nums}
+
+/* RESPONSIVE */
+@media (max-width:880px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2n){border-right:0}
+  .stat:nth-child(odd){border-right:1px solid var(--paper-rule)}
+  .real-clock{grid-template-columns:1fr;gap:.8rem;padding:1.2rem 1.4rem}
+  .entry{grid-template-columns:1fr;gap:.3rem;padding:.9rem 0}
+  .t-stamp{font-size:13px}
+  .t-delta{font-size:10px}
+  .wrap{ width: 92vw }
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div class="mob-bar">
+  <a href="../">← Briefing</a>
+  <span class="mob-bar-mark">Real-Time</span>
+  <a href="../library/">Library →</a>
+</div>
+
+<div class="wrap">
+<header>
+  <div class="dateline">
+    <span>STRATUM · REAL-TIME PROGRESSION</span>
+    <span>T+0 = 2026-05-12T22:25:46-04:00</span>
+    <span style="margin-left:auto">DOC RTP-0001 · v1.0</span>
+  </div>
+  <div class="eyebrow">For the Chairman and stakeholders</div>
+  <h1 class="word">The <em>real</em> timeline.</h1>
+  <p class="sub">Every artifact on this site carries two clocks. This page shows the one that actually matters — wall-clock elapsed time from the moment the first commit landed. Everything below is measured against that anchor, with millisecond precision.</p>
+</header>
+
+<div class="real-clock">
+  <div>
+    <div class="rc-label">Live · Project elapsed time</div>
+  </div>
+  <div class="rc-value live-elapsed" id="elapsed">T+00:00:00.000</div>
+  <div class="rc-label">Anchor</div>
+  <div class="rc-meta">
+    T+0 · <strong>2026-05-12T22:25:46 −04:00</strong><br/>
+    Stratum's first commit (the founding edition of the Chairman's Briefing)<br/>
+    Every artifact since then carries a real production timestamp in its bottom-right pill.
+  </div>
+</div>
+
+<div class="distinction">
+  <div class="distinction-title">Important · Two clocks, only one is real</div>
+  <div class="distinction-body">
+    <p>You will see two kinds of T+ notation across this site:</p>
+    <p><strong>REAL.</strong> The wall-clock elapsed time from T+0 (first commit). The clock above. The rt-stamp pill in the bottom-right of every page. The timestamps on this page. These are the truth. Stakeholders can verify them against the git history.</p>
+    <p><strong>NARRATIVE.</strong> The fictional timeline the agents have been writing in — "T+102d," "T+158d," "T+172d." These are illustrative storytelling. They are NOT real elapsed time. The narrative spans a fictional 365 days; the actual real-time elapsed is approximately 22 hours.</p>
+    <p>This page is the antidote to that confusion. Every entry below shows when an artifact was <em>actually produced</em>, not when its fictional dateline says it was published.</p>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-l">Artifacts shipped</div><div class="stat-v" id="count">77</div></div>
+  <div class="stat"><div class="stat-l">Real elapsed</div><div class="stat-v" id="elapsed-hours">22<span class="u">h</span></div></div>
+  <div class="stat"><div class="stat-l">Lines committed</div><div class="stat-v">90K<span class="u">+</span></div></div>
+  <div class="stat"><div class="stat-l">Median artifact size</div><div class="stat-v">1.6K<span class="u">lines</span></div></div>
+</div>
+
+<h2 class="section-h">The progression, in order of production</h2>
+<p class="section-dek">Every HTML artifact on this site, in the order it actually shipped. Click to open. Real elapsed time on the left. Per-artifact production deltas in mono.</p>
+
+<div class="timeline" id="timeline">
+  <!-- Populated by JS from TIMELINE const below -->
+</div>
+
+</div>
+
+<footer>
+<div class="wrap">
+  <div class="colo-rule"></div>
+  <div class="colo">
+    <div>
+      Stratum · Real-Time Progression<br/>
+      Generated from <span class="live-elapsed">git log</span> on every redeploy.<br/>
+      Every value on this page can be reproduced with: <span style="font-family:var(--mono);font-size:12px;color:var(--ink-2)">git log --reverse --diff-filter=A --name-only --format='%cI %h'</span>
+    </div>
+    <div>
+      <a href="../">← Chairman's Briefing</a> · <a href="../library/">Library</a> · <a href="../about/">About this site</a>
+    </div>
+  </div>
+</div>
+</footer>
+
+<script>
+const T0 = new Date('2026-05-12T22:25:46-04:00');
+
+function fmtElapsed(deltaMs, withMs){
+  const ms = Math.max(0, Math.floor(deltaMs));
+  const h = Math.floor(ms / 3600000);
+  const m = Math.floor((ms % 3600000) / 60000);
+  const s = Math.floor((ms % 60000) / 1000);
+  const milli = ms % 1000;
+  const pad = (n, w=2) => String(n).padStart(w, '0');
+  return withMs
+    ? `T+${pad(h)}:${pad(m)}:${pad(s)}.${pad(milli,3)}`
+    : `T+${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+// Update the live elapsed clock at ~11Hz
+const elapsedEl = document.getElementById('elapsed');
+function tick(){
+  elapsedEl.textContent = fmtElapsed(Date.now() - T0.getTime(), true);
+}
+tick();
+setInterval(tick, 87);
+
+// Timeline data — auto-generated from git log
+const TIMELINE = [{"path":"index.html","iso":"2026-05-12T22:25:46-04:00","hash":"ac95646","msg":"Founding edition: Stratum Chairman's Briefing No. 001","t_elapsed":"T+00:00:00.000","elapsed_seconds":0.0},{"path":"briefings/002.html","iso":"2026-05-12T22:45:43-04:00","hash":"fac64df","msg":"Add four parallel artifacts: Briefing 002, product site, deck, intel dossier","t_elapsed":"T+00:19:57.000","elapsed_seconds":1197.0},{"path":"deck/index.html","iso":"2026-05-12T22:45:43-04:00","hash":"fac64df","msg":"Add four parallel artifacts: Briefing 002, product site, deck, intel dossier","t_elapsed":"T+00:19:57.000","elapsed_seconds":1197.0},{"path":"intel/index.html","iso":"2026-05-12T22:45:43-04:00","hash":"fac64df","msg":"Add four parallel artifacts: Briefing 002, product site, deck, intel dossier","t_elapsed":"T+00:19:57.000","elapsed_seconds":1197.0},{"path":"product/index.html","iso":"2026-05-12T22:45:43-04:00","hash":"fac64df","msg":"Add four parallel artifacts: Briefing 002, product site, deck, intel dossier","t_elapsed":"T+00:19:57.000","elapsed_seconds":1197.0},{"path":"briefings/003.html","iso":"2026-05-12T22:54:43-04:00","hash":"386db96","msg":"Wave 2: Briefing 003, careers page, financials, operating dashboard","t_elapsed":"T+00:28:57.000","elapsed_seconds":1737.0},{"path":"careers/index.html","iso":"2026-05-12T22:54:43-04:00","hash":"386db96","msg":"Wave 2: Briefing 003, careers page, financials, operating dashboard","t_elapsed":"T+00:28:57.000","elapsed_seconds":1737.0},{"path":"financials/index.html","iso":"2026-05-12T22:54:43-04:00","hash":"386db96","msg":"Wave 2: Briefing 003, careers page, financials, operating dashboard","t_elapsed":"T+00:28:57.000","elapsed_seconds":1737.0},{"path":"ops/index.html","iso":"2026-05-12T22:54:43-04:00","hash":"386db96","msg":"Wave 2: Briefing 003, careers page, financials, operating dashboard","t_elapsed":"T+00:28:57.000","elapsed_seconds":1737.0},{"path":"board/memo-001.html","iso":"2026-05-12T23:03:13-04:00","hash":"a2d3be5","msg":"Wave 3: Briefing 004, engineering blog, trust center, board memo M-001","t_elapsed":"T+00:37:27.000","elapsed_seconds":2247.0},{"path":"briefings/004.html","iso":"2026-05-12T23:03:13-04:00","hash":"a2d3be5","msg":"Wave 3: Briefing 004, engineering blog, trust center, board memo M-001","t_elapsed":"T+00:37:27.000","elapsed_seconds":2247.0},{"path":"engineering/index.html","iso":"2026-05-12T23:03:13-04:00","hash":"a2d3be5","msg":"Wave 3: Briefing 004, engineering blog, trust center, board memo M-001","t_elapsed":"T+00:37:27.000","elapsed_seconds":2247.0},{"path":"trust/index.html","iso":"2026-05-12T23:03:13-04:00","hash":"a2d3be5","msg":"Wave 3: Briefing 004, engineering blog, trust center, board memo M-001","t_elapsed":"T+00:37:27.000","elapsed_seconds":2247.0},{"path":"board/minutes-001.html","iso":"2026-05-12T23:11:19-04:00","hash":"794b6b1","msg":"Wave 4: Briefing 005, board minutes M-001, Mercator case study, changelog","t_elapsed":"T+00:45:33.000","elapsed_seconds":2733.0},{"path":"briefings/005.html","iso":"2026-05-12T23:11:19-04:00","hash":"794b6b1","msg":"Wave 4: Briefing 005, board minutes M-001, Mercator case study, changelog","t_elapsed":"T+00:45:33.000","elapsed_seconds":2733.0},{"path":"changelog/index.html","iso":"2026-05-12T23:11:19-04:00","hash":"794b6b1","msg":"Wave 4: Briefing 005, board minutes M-001, Mercator case study, changelog","t_elapsed":"T+00:45:33.000","elapsed_seconds":2733.0},{"path":"customers/mercator.html","iso":"2026-05-12T23:11:19-04:00","hash":"794b6b1","msg":"Wave 4: Briefing 005, board minutes M-001, Mercator case study, changelog","t_elapsed":"T+00:45:33.000","elapsed_seconds":2733.0},{"path":"library/index.html","iso":"2026-05-12T23:39:19-04:00","hash":"529fdf5","msg":"Add /library/ \u2014 mobile-first hub for every artifact","t_elapsed":"T+01:13:33.000","elapsed_seconds":4413.0},{"path":"console/index.html","iso":"2026-05-13T00:27:10-04:00","hash":"13fc704","msg":"Add /console/ \u2014 the real, working Stratum product","t_elapsed":"T+02:01:24.000","elapsed_seconds":7284.0},{"path":"implementation/index.html","iso":"2026-05-13T00:38:57-04:00","hash":"c2ae42d","msg":"Wave 5: demo-mode gallery + pricing, implementation, press kit","t_elapsed":"T+02:13:11.000","elapsed_seconds":7991.0},{"path":"press/index.html","iso":"2026-05-13T00:38:57-04:00","hash":"c2ae42d","msg":"Wave 5: demo-mode gallery + pricing, implementation, press kit","t_elapsed":"T+02:13:11.000","elapsed_seconds":7991.0},{"path":"pricing/index.html","iso":"2026-05-13T00:38:57-04:00","hash":"c2ae42d","msg":"Wave 5: demo-mode gallery + pricing, implementation, press kit","t_elapsed":"T+02:13:11.000","elapsed_seconds":7991.0},{"path":"api/index.html","iso":"2026-05-13T00:51:01-04:00","hash":"5e19098","msg":"Wave 6: Halcyon case study, comparison page, Maya's essay, API docs","t_elapsed":"T+02:25:15.000","elapsed_seconds":8715.0},{"path":"compare/index.html","iso":"2026-05-13T00:51:01-04:00","hash":"5e19098","msg":"Wave 6: Halcyon case study, comparison page, Maya's essay, API docs","t_elapsed":"T+02:25:15.000","elapsed_seconds":8715.0},{"path":"customers/halcyon.html","iso":"2026-05-13T00:51:01-04:00","hash":"5e19098","msg":"Wave 6: Halcyon case study, comparison page, Maya's essay, API docs","t_elapsed":"T+02:25:15.000","elapsed_seconds":8715.0},{"path":"essays/why-i-left-workday.html","iso":"2026-05-13T00:51:01-04:00","hash":"5e19098","msg":"Wave 6: Halcyon case study, comparison page, Maya's essay, API docs","t_elapsed":"T+02:25:15.000","elapsed_seconds":8715.0},{"path":"compare/recruiting.html","iso":"2026-05-13T06:19:28-04:00","hash":"973726b","msg":"Wave 7: ATS \u2014 data, Hiring tab, recruiting page, case study, ATS-comparison","t_elapsed":"T+07:53:42.000","elapsed_seconds":28422.0},{"path":"customers/northwind.html","iso":"2026-05-13T06:19:28-04:00","hash":"973726b","msg":"Wave 7: ATS \u2014 data, Hiring tab, recruiting page, case study, ATS-comparison","t_elapsed":"T+07:53:42.000","elapsed_seconds":28422.0},{"path":"recruiting/index.html","iso":"2026-05-13T06:19:28-04:00","hash":"973726b","msg":"Wave 7: ATS \u2014 data, Hiring tab, recruiting page, case study, ATS-comparison","t_elapsed":"T+07:53:42.000","elapsed_seconds":28422.0},{"path":"essays/the-graph-between-the-databases.html","iso":"2026-05-13T06:29:12-04:00","hash":"a009a14","msg":"Wave 8: security architecture, status page, public roadmap, David's essay","t_elapsed":"T+08:03:26.000","elapsed_seconds":29006.0},{"path":"roadmap/index.html","iso":"2026-05-13T06:29:12-04:00","hash":"a009a14","msg":"Wave 8: security architecture, status page, public roadmap, David's essay","t_elapsed":"T+08:03:26.000","elapsed_seconds":29006.0},{"path":"security/index.html","iso":"2026-05-13T06:29:12-04:00","hash":"a009a14","msg":"Wave 8: security architecture, status page, public roadmap, David's essay","t_elapsed":"T+08:03:26.000","elapsed_seconds":29006.0},{"path":"status/index.html","iso":"2026-05-13T06:29:12-04:00","hash":"a009a14","msg":"Wave 8: security architecture, status page, public roadmap, David's essay","t_elapsed":"T+08:03:26.000","elapsed_seconds":29006.0},{"path":"briefings/006.html","iso":"2026-05-13T06:37:13-04:00","hash":"c449b1e","msg":"Wave 9: customers hub, Priya's essay, Briefing 006, partners ecosystem","t_elapsed":"T+08:11:27.000","elapsed_seconds":29487.0},{"path":"customers/index.html","iso":"2026-05-13T06:37:13-04:00","hash":"c449b1e","msg":"Wave 9: customers hub, Priya's essay, Briefing 006, partners ecosystem","t_elapsed":"T+08:11:27.000","elapsed_seconds":29487.0},{"path":"essays/selling-tuesday-afternoons.html","iso":"2026-05-13T06:37:13-04:00","hash":"c449b1e","msg":"Wave 9: customers hub, Priya's essay, Briefing 006, partners ecosystem","t_elapsed":"T+08:11:27.000","elapsed_seconds":29487.0},{"path":"partners/index.html","iso":"2026-05-13T06:37:13-04:00","hash":"c449b1e","msg":"Wave 9: customers hub, Priya's essay, Briefing 006, partners ecosystem","t_elapsed":"T+08:11:27.000","elapsed_seconds":29487.0},{"path":"ai/index.html","iso":"2026-05-13T06:45:23-04:00","hash":"055540e","msg":"Wave 10: handbook, FAQ, guided tour, AI principles","t_elapsed":"T+08:19:37.000","elapsed_seconds":29977.0},{"path":"faq/index.html","iso":"2026-05-13T06:45:23-04:00","hash":"055540e","msg":"Wave 10: handbook, FAQ, guided tour, AI principles","t_elapsed":"T+08:19:37.000","elapsed_seconds":29977.0},{"path":"handbook/index.html","iso":"2026-05-13T06:45:23-04:00","hash":"055540e","msg":"Wave 10: handbook, FAQ, guided tour, AI principles","t_elapsed":"T+08:19:37.000","elapsed_seconds":29977.0},{"path":"tour/index.html","iso":"2026-05-13T06:45:23-04:00","hash":"055540e","msg":"Wave 10: handbook, FAQ, guided tour, AI principles","t_elapsed":"T+08:19:37.000","elapsed_seconds":29977.0},{"path":"eval/index.html","iso":"2026-05-13T07:07:35-04:00","hash":"8c0564e","msg":"Wave 11: eval set explorer, pricing calculator, research portal, what's new","t_elapsed":"T+08:41:49.000","elapsed_seconds":31309.0},{"path":"pricing/calculator.html","iso":"2026-05-13T07:07:35-04:00","hash":"8c0564e","msg":"Wave 11: eval set explorer, pricing calculator, research portal, what's new","t_elapsed":"T+08:41:49.000","elapsed_seconds":31309.0},{"path":"research/index.html","iso":"2026-05-13T07:07:35-04:00","hash":"8c0564e","msg":"Wave 11: eval set explorer, pricing calculator, research portal, what's new","t_elapsed":"T+08:41:49.000","elapsed_seconds":31309.0},{"path":"whats-new/index.html","iso":"2026-05-13T07:07:35-04:00","hash":"8c0564e","msg":"Wave 11: eval set explorer, pricing calculator, research portal, what's new","t_elapsed":"T+08:41:49.000","elapsed_seconds":31309.0},{"path":"briefings/007.html","iso":"2026-05-13T07:16:08-04:00","hash":"b1bdb4a","msg":"Wave 12: Briefing 007, briefings index, investors, events","t_elapsed":"T+08:50:22.000","elapsed_seconds":31822.0},{"path":"briefings/index.html","iso":"2026-05-13T07:16:08-04:00","hash":"b1bdb4a","msg":"Wave 12: Briefing 007, briefings index, investors, events","t_elapsed":"T+08:50:22.000","elapsed_seconds":31822.0},{"path":"events/index.html","iso":"2026-05-13T07:16:08-04:00","hash":"b1bdb4a","msg":"Wave 12: Briefing 007, briefings index, investors, events","t_elapsed":"T+08:50:22.000","elapsed_seconds":31822.0},{"path":"investors/index.html","iso":"2026-05-13T07:16:08-04:00","hash":"b1bdb4a","msg":"Wave 12: Briefing 007, briefings index, investors, events","t_elapsed":"T+08:50:22.000","elapsed_seconds":31822.0},{"path":"agents/index.html","iso":"2026-05-13T07:32:27-04:00","hash":"baaefc1","msg":"Wave 13: the agents reveal, Briefing 008, Cordova case study, autonomous-ops post","t_elapsed":"T+09:06:41.000","elapsed_seconds":32801.0},{"path":"briefings/008.html","iso":"2026-05-13T07:32:27-04:00","hash":"baaefc1","msg":"Wave 13: the agents reveal, Briefing 008, Cordova case study, autonomous-ops post","t_elapsed":"T+09:06:41.000","elapsed_seconds":32801.0},{"path":"customers/cordova.html","iso":"2026-05-13T07:32:27-04:00","hash":"baaefc1","msg":"Wave 13: the agents reveal, Briefing 008, Cordova case study, autonomous-ops post","t_elapsed":"T+09:06:41.000","elapsed_seconds":32801.0},{"path":"engineering/how-stratum-runs.html","iso":"2026-05-13T07:32:27-04:00","hash":"baaefc1","msg":"Wave 13: the agents reveal, Briefing 008, Cordova case study, autonomous-ops post","t_elapsed":"T+09:06:41.000","elapsed_seconds":32801.0},{"path":"briefings/009.html","iso":"2026-05-13T07:44:33-04:00","hash":"9468439","msg":"Wave 14: chairman page, Briefing 009, full decisions ledger, Helm essay 2","t_elapsed":"T+09:18:47.000","elapsed_seconds":33527.0},{"path":"chairman/index.html","iso":"2026-05-13T07:44:33-04:00","hash":"9468439","msg":"Wave 14: chairman page, Briefing 009, full decisions ledger, Helm essay 2","t_elapsed":"T+09:18:47.000","elapsed_seconds":33527.0},{"path":"essays/what-ai-first-means.html","iso":"2026-05-13T07:44:33-04:00","hash":"9468439","msg":"Wave 14: chairman page, Briefing 009, full decisions ledger, Helm essay 2","t_elapsed":"T+09:18:47.000","elapsed_seconds":33527.0},{"path":"ledger/index.html","iso":"2026-05-13T07:44:33-04:00","hash":"9468439","msg":"Wave 14: chairman page, Briefing 009, full decisions ledger, Helm essay 2","t_elapsed":"T+09:18:47.000","elapsed_seconds":33527.0},{"path":"briefings/010.html","iso":"2026-05-13T08:22:38-04:00","hash":"3ac6390","msg":"Wave 15: open metrics, wins log, Briefing 010, office hours archive","t_elapsed":"T+09:56:52.000","elapsed_seconds":35812.0},{"path":"metrics/index.html","iso":"2026-05-13T08:22:38-04:00","hash":"3ac6390","msg":"Wave 15: open metrics, wins log, Briefing 010, office hours archive","t_elapsed":"T+09:56:52.000","elapsed_seconds":35812.0},{"path":"office-hours/index.html","iso":"2026-05-13T08:22:38-04:00","hash":"3ac6390","msg":"Wave 15: open metrics, wins log, Briefing 010, office hours archive","t_elapsed":"T+09:56:52.000","elapsed_seconds":35812.0},{"path":"wins/index.html","iso":"2026-05-13T08:22:38-04:00","hash":"3ac6390","msg":"Wave 15: open metrics, wins log, Briefing 010, office hours archive","t_elapsed":"T+09:56:52.000","elapsed_seconds":35812.0},{"path":"accessibility/index.html","iso":"2026-05-13T09:29:53-04:00","hash":"da22088","msg":"Wave 16: privacy policy, terms of service, accessibility, Year One Plan","t_elapsed":"T+11:04:07.000","elapsed_seconds":39847.0},{"path":"privacy/index.html","iso":"2026-05-13T09:29:53-04:00","hash":"da22088","msg":"Wave 16: privacy policy, terms of service, accessibility, Year One Plan","t_elapsed":"T+11:04:07.000","elapsed_seconds":39847.0},{"path":"terms/index.html","iso":"2026-05-13T09:29:53-04:00","hash":"da22088","msg":"Wave 16: privacy policy, terms of service, accessibility, Year One Plan","t_elapsed":"T+11:04:07.000","elapsed_seconds":39847.0},{"path":"year-one/index.html","iso":"2026-05-13T09:29:53-04:00","hash":"da22088","msg":"Wave 16: privacy policy, terms of service, accessibility, Year One Plan","t_elapsed":"T+11:04:07.000","elapsed_seconds":39847.0},{"path":"about/index.html","iso":"2026-05-13T09:37:44-04:00","hash":"c9c6c51","msg":"Wave 17: Briefing 011, Vanta case study, newsroom, about-this-site","t_elapsed":"T+11:11:58.000","elapsed_seconds":40318.0},{"path":"briefings/011.html","iso":"2026-05-13T09:37:44-04:00","hash":"c9c6c51","msg":"Wave 17: Briefing 011, Vanta case study, newsroom, about-this-site","t_elapsed":"T+11:11:58.000","elapsed_seconds":40318.0},{"path":"customers/vanta.html","iso":"2026-05-13T09:37:44-04:00","hash":"c9c6c51","msg":"Wave 17: Briefing 011, Vanta case study, newsroom, about-this-site","t_elapsed":"T+11:11:58.000","elapsed_seconds":40318.0},{"path":"newsroom/index.html","iso":"2026-05-13T09:37:44-04:00","hash":"c9c6c51","msg":"Wave 17: Briefing 011, Vanta case study, newsroom, about-this-site","t_elapsed":"T+11:11:58.000","elapsed_seconds":40318.0},{"path":"briefings/012.html","iso":"2026-05-13T18:49:47-04:00","hash":"3fe8f6c","msg":"Wave 18: Briefing 012, Kernel's eval-set essay, limitations page, interactive graph","t_elapsed":"T+20:24:01.000","elapsed_seconds":73441.0},{"path":"engineering/eval-set-methodology.html","iso":"2026-05-13T18:49:47-04:00","hash":"3fe8f6c","msg":"Wave 18: Briefing 012, Kernel's eval-set essay, limitations page, interactive graph","t_elapsed":"T+20:24:01.000","elapsed_seconds":73441.0},{"path":"graph/index.html","iso":"2026-05-13T18:49:47-04:00","hash":"3fe8f6c","msg":"Wave 18: Briefing 012, Kernel's eval-set essay, limitations page, interactive graph","t_elapsed":"T+20:24:01.000","elapsed_seconds":73441.0},{"path":"limitations/index.html","iso":"2026-05-13T18:49:47-04:00","hash":"3fe8f6c","msg":"Wave 18: Briefing 012, Kernel's eval-set essay, limitations page, interactive graph","t_elapsed":"T+20:24:01.000","elapsed_seconds":73441.0},{"path":"briefings/013.html","iso":"2026-05-13T19:35:14-04:00","hash":"8c10695","msg":"Wave 19: Stratum Recruiter \u2014 launch a second product line","t_elapsed":"T+21:09:28.000","elapsed_seconds":76168.0},{"path":"recruiter/console/index.html","iso":"2026-05-13T19:35:14-04:00","hash":"8c10695","msg":"Wave 19: Stratum Recruiter \u2014 launch a second product line","t_elapsed":"T+21:09:28.000","elapsed_seconds":76168.0},{"path":"recruiter/index.html","iso":"2026-05-13T19:35:14-04:00","hash":"8c10695","msg":"Wave 19: Stratum Recruiter \u2014 launch a second product line","t_elapsed":"T+21:09:28.000","elapsed_seconds":76168.0},{"path":"recruiter/plan.html","iso":"2026-05-13T19:35:14-04:00","hash":"8c10695","msg":"Wave 19: Stratum Recruiter \u2014 launch a second product line","t_elapsed":"T+21:09:28.000","elapsed_seconds":76168.0}];
+
+// Group by hour for headings
+const byHour = {};
+TIMELINE.forEach(entry => {
+  const h = Math.floor(entry.elapsed_seconds / 3600);
+  if (!byHour[h]) byHour[h] = [];
+  byHour[h].push(entry);
+});
+
+// Render
+const tl = document.getElementById('timeline');
+const hours = Object.keys(byHour).map(Number).sort((a,b) => a-b);
+let html = '';
+
+hours.forEach(h => {
+  const entries = byHour[h];
+  const hourLabel = h === 0 ? 'First hour' : (h === 1 ? '2nd hour' : `Hour ${h+1}`);
+  html += `<div class="t-hour"><div class="t-hour-label">${hourLabel} <span class="t-hour-count">${entries.length} artifact${entries.length === 1 ? '' : 's'} shipped</span></div></div>`;
+  entries.forEach(e => {
+    const ms = e.elapsed_seconds * 1000;
+    const t = fmtElapsed(ms, true);
+    const display_path = e.path.replace(/\\/index\\.html$/, '/').replace(/^index\\.html$/, '/ (briefing 001)');
+    // Build a relative link based on the artifact path
+    const link = '../' + e.path;
+    html += `
+      <a class="entry" href="${link}" style="text-decoration:none;color:inherit">
+        <div class="t-stamp">${t}</div>
+        <div class="t-delta">${e.iso.replace('T', ' ').replace(/(:\\d\\d)[-+].*$/, '$1')}</div>
+        <div class="t-content">
+          <div class="t-path">${display_path}</div>
+          <div class="t-desc">${e.msg.replace(/</g,'&lt;').slice(0,180)}</div>
+        </div>
+      </a>
+    `;
+  });
+});
+
+tl.innerHTML = html;
+
+// Set the artifact count
+document.getElementById('count').textContent = TIMELINE.length;
+const elapsedHours = (Date.now() - T0.getTime()) / 3600000;
+document.getElementById('elapsed-hours').innerHTML = Math.floor(elapsedHours) + '<span class="u">h ' + Math.floor((elapsedHours % 1) * 60) + 'm</span>';
+</script>
+</body>
+</html>

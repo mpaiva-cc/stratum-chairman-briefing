@@ -64,6 +64,7 @@
     </div>
     <nav class="masthead-nav">
       <a href="agents/">The Agents</a>
+      <a href="real-time/" style="color:var(--ochre)">Real time</a>
       <a href="#decisions">Ledger</a>
       <a href="library/">The Library</a>
       <a href="briefings/008.html">Briefing 008</a>
@@ -133,6 +134,53 @@
   </div>
   <a class="ticker-source" href="ops/">Open ops →</a>
 </aside>
+
+<!-- ─────────────────────────────── REAL vs NARRATIVE BANNER ── -->
+<aside class="rn-banner">
+  <div class="rn-inner">
+    <div class="rn-headline">
+      <span class="rn-tag">Note for stakeholders</span>
+      <div class="rn-text">
+        <strong>Two clocks on this site.</strong> Real elapsed time from the first commit
+        is <span id="rn-elapsed">T+00:00:00</span> — that's the only clock that matters.
+        Narrative dates like &ldquo;T+102d&rdquo; in the briefings are illustrative storytelling, not real time.
+      </div>
+    </div>
+    <a href="real-time/" class="rn-cta">See the real progression →</a>
+  </div>
+</aside>
+<style>
+.rn-banner{width:min(1180px,92vw);margin:.8rem auto 0;background:var(--paper-warm);border:1px solid var(--paper-rule);border-left:4px solid var(--ochre);padding:.8rem 1.1rem;font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--ink)}
+.rn-inner{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.rn-headline{display:flex;gap:.9rem;align-items:flex-start;min-width:0;flex:1}
+.rn-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);font-weight:700;padding-top:2px;white-space:nowrap}
+.rn-text{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--ink);line-height:1.45;font-variation-settings:"opsz" 14}
+.rn-text strong{font-style:normal;font-weight:600}
+.rn-text #rn-elapsed{font-family:var(--mono);font-style:normal;color:var(--ochre);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.rn-cta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);font-weight:700;border-bottom:0;white-space:nowrap}
+.rn-cta:hover{color:var(--ochre-deep)}
+@media (max-width:720px){
+  .rn-banner{font-size:11px}
+  .rn-text{font-size:13px}
+  .rn-cta{padding-top:.4rem}
+}
+</style>
+<script>
+(function(){
+  var T0 = new Date('2026-05-12T22:25:46-04:00');
+  var el = document.getElementById('rn-elapsed');
+  function pad(n,w){w=w||2;return String(n).padStart(w,'0')}
+  function tick(){
+    var ms = Date.now() - T0.getTime();
+    var h = Math.floor(ms/3600000);
+    var m = Math.floor((ms%3600000)/60000);
+    var s = Math.floor((ms%60000)/1000);
+    el.textContent = 'T+'+pad(h)+':'+pad(m)+':'+pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 
 <!-- ─────────────────────────────────────────────────── MOBILE NAV ── -->
 <nav class="quicknav" aria-label="Jump to artifacts">
