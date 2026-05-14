@@ -1,0 +1,3053 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Recruiter — Ninety seconds with the AI-first ATS. The guided tour.</title>
+<meta name="description" content="A 90-second auto-playing walkthrough of Stratum Recruiter — the AI-first applicant tracking system. From open requisition to signed offer, in eight scenes. No login. No demo request." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Stratum Recruiter · /recruiter/tour/ — scroll-driven tour
+   90 seconds. Eight scenes. Cream paper, deep ink, ochre, moss.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-card:   #fbf6e7;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-tight:    min(900px, 90vw);
+  --radius:       4px;
+  --radius-lg:    8px;
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+
+  --shadow-sm:    0 1px 2px rgba(14,22,38,.06), 0 2px 6px rgba(14,22,38,.04);
+  --shadow-md:    0 6px 24px rgba(14,22,38,.10), 0 1px 3px rgba(14,22,38,.05);
+  --shadow-lg:    0 24px 60px rgba(14,22,38,.18), 0 4px 12px rgba(14,22,38,.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 16%, rgba(184, 101, 31, 0.05), transparent 42%),
+    radial-gradient(circle at 86% 82%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+body > * { position: relative; z-index: 1; }
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+::selection { background: var(--ochre); color: var(--paper); }
+
+/* ─────────────────────────────────────── MOBILE BAR ── */
+
+.mobile-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.mobile-bar-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem 0;
+}
+.mobile-bar a {
+  color: var(--paper);
+  border-bottom: 0;
+  opacity: .8;
+  transition: opacity .2s, color .2s;
+}
+.mobile-bar a:hover { opacity: 1; color: var(--ochre); }
+.mobile-bar .mb-center {
+  color: var(--ochre);
+  letter-spacing: .18em;
+}
+.mobile-bar .mb-center .sl { color: var(--paper); opacity: .6; }
+
+/* ─────────────────────────────────────── TOP NAV ── */
+
+.nav {
+  position: sticky;
+  top: 30px;
+  z-index: 55;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .95rem 0;
+}
+
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.45rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--ochre); }
+.nav-mark .sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  margin-left: .5rem;
+  font-weight: 500;
+  vertical-align: 4px;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.nav-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.nav-links a.is-current { color: var(--ink); }
+.nav-links a.is-current::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+
+.nav-cta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  padding: .55rem .95rem;
+  border: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  transition: background .2s, color .2s;
+  border-bottom: 1px solid var(--ink);
+}
+.nav-cta:hover {
+  background: var(--ochre);
+  border-color: var(--ochre);
+  border-bottom-color: var(--ochre);
+}
+.nav-cta .arr { color: var(--ochre); transition: color .2s; }
+.nav-cta:hover .arr { color: var(--ink); }
+
+@media (max-width: 980px) {
+  .nav-links { display: none; }
+}
+
+/* ─────────────────────────────────────── SCENES ── */
+
+main { display: block; }
+
+.scene {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5rem var(--gutter);
+  position: relative;
+  scroll-snap-align: start;
+}
+
+@supports (scroll-snap-type: y proximity) {
+  main { scroll-snap-type: y proximity; }
+}
+
+.scene-inner {
+  width: var(--col);
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1);
+}
+.scene.is-visible .scene-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-inner { opacity: 1; transform: none; transition: none; }
+}
+
+.scene-counter {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+  margin-bottom: 1.4rem;
+}
+.scene-counter .bar {
+  height: 1px;
+  width: 36px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────── INTRO ── */
+
+.scene-intro h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(2.6rem, 8.5vw, 7rem);
+  line-height: .94;
+  letter-spacing: -.038em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+}
+.scene-intro h1 em {
+  font-style: italic;
+  color: var(--ochre);
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+}
+
+.scene-intro .dek {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 720px;
+  margin: 0 auto 2.6rem;
+  line-height: 1.5;
+}
+
+.cta-row {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.4rem;
+}
+
+.btn-primary {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 1rem 1.6rem;
+  background: var(--ochre);
+  color: var(--ink);
+  border: 1px solid var(--ochre);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  border-bottom: 1px solid var(--ochre);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.btn-primary:hover {
+  background: var(--ink);
+  color: var(--ochre);
+  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.btn-ghost {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 1rem 1.6rem;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  border-bottom: 1px solid var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+.progress-meter {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+}
+.progress-meter .bar {
+  height: 1px;
+  width: 32px;
+  background: var(--paper-rule-2);
+  display: inline-block;
+}
+
+/* ─────────────────────────────────────── SCENE TYPOGRAPHY ── */
+
+.scene-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: 1.2rem;
+}
+
+.scene-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  line-height: 1.04;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.scene-title em { font-style: italic; color: var(--ochre); }
+
+.scene-pull {
+  font-family: var(--serif);
+  font-size: clamp(1.3rem, 2.3vw, 1.85rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 820px;
+  margin: 0 auto 1.4rem;
+  line-height: 1.45;
+}
+
+.scene-caption {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1rem;
+}
+
+.scene-footline {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-top: 2.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+}
+.scene-footline .bar {
+  height: 1px;
+  width: 48px;
+  background: var(--ochre);
+  display: inline-block;
+}
+
+.scene-dek {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+  color: var(--ink-2);
+  max-width: 720px;
+  margin: 2rem auto 0;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────── CONSOLE FRAME ── */
+
+.console-frame {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  text-align: left;
+}
+
+.frame-chrome {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .55rem .9rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.frame-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--paper-rule-2);
+  display: inline-block;
+}
+.frame-dot.r { background: #c87a6c; }
+.frame-dot.y { background: #d9b66a; }
+.frame-dot.g { background: var(--moss); }
+.frame-url {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+}
+
+.frame-topbar {
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .7rem 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+.frame-brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.frame-brand .sl { color: var(--ochre); }
+.frame-meta {
+  color: var(--ink-mute);
+  font-size: 10.5px;
+  letter-spacing: .1em;
+}
+.frame-user {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--ink-2);
+}
+.frame-user .av {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--ochre);
+  font-size: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .04em;
+}
+
+/* The Recruiter has a left rail in the real app; we'll show a compact horizontal nav strip */
+.frame-railstrip {
+  background: var(--paper-warm);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 0 1.1rem;
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  overflow-x: auto;
+}
+.frame-railstrip::-webkit-scrollbar { display: none; }
+.rail-tab {
+  padding: .75rem 0;
+  color: var(--ink-mute);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+}
+.rail-tab .sec {
+  color: var(--ochre);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+}
+.rail-tab.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--ochre);
+}
+.rail-tab .badge {
+  background: var(--paper-deep);
+  color: var(--ink-3);
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 9.5px;
+  letter-spacing: .04em;
+}
+
+.frame-body {
+  padding: 1.4rem 1.5rem 1.6rem;
+  background: var(--paper-card);
+}
+
+/* ─────────────────────────────────────── SCENE 2 · DASHBOARD MOCK ── */
+
+.dash-hero {
+  margin-bottom: 1.4rem;
+}
+.dash-eye {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .55rem;
+}
+.dash-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 80;
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  line-height: 1.1;
+  letter-spacing: -.022em;
+  color: var(--ink);
+  margin: 0 0 .55rem;
+}
+.dash-h em { font-style: italic; color: var(--ochre); }
+.dash-sub {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+  line-height: 1.5;
+  max-width: 760px;
+  margin: 0;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .8rem;
+  margin-bottom: 1.2rem;
+}
+@media (max-width: 720px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+.kpi {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  padding: .75rem .85rem;
+  border-radius: var(--radius);
+}
+.kpi .lbl {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .25rem;
+}
+.kpi .val {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.kpi .delta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  margin-top: .25rem;
+  color: var(--moss);
+}
+.kpi .delta.bad { color: #b85040; }
+.kpi .delta.flat { color: var(--ink-mute); }
+
+.dash-grid-mock {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 760px) {
+  .dash-grid-mock { grid-template-columns: 1fr; }
+}
+.mini-card {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+}
+.mini-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .65rem;
+}
+.mini-card-eye {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.mini-card-meta {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+}
+.mini-card.ai .mini-card-eye::before {
+  content: "AI";
+  display: inline-block;
+  background: var(--ink);
+  color: var(--ochre);
+  font-weight: 700;
+  font-size: 8.5px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-right: .4rem;
+  letter-spacing: .1em;
+}
+
+.todo-list { list-style: none; padding: 0; margin: 0; }
+.todo-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  padding: .45rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  font-family: var(--serif);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+}
+.todo-list li:last-child { border-bottom: 0; }
+.todo-list .pri {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 2px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+.todo-list .pri.crit { background: #c87a6c; color: var(--paper); }
+.todo-list .pri.high { background: var(--ochre); color: var(--ink); }
+.todo-list .pri.med  { background: var(--paper-deep); color: var(--ink-3); }
+.todo-list .who { color: var(--ink-mute); font-style: italic; }
+
+.ai-sugs { list-style: none; padding: 0; margin: 0; }
+.ai-sugs li {
+  padding: .55rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  font-family: var(--serif);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.45;
+  position: relative;
+  padding-left: 1.1rem;
+}
+.ai-sugs li:last-child { border-bottom: 0; }
+.ai-sugs li::before {
+  content: "›";
+  color: var(--ochre);
+  font-family: var(--mono);
+  position: absolute;
+  left: 0;
+  top: .55rem;
+  font-weight: 700;
+}
+.ai-sugs .conf {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .08em;
+  margin-top: .15rem;
+}
+
+/* ─────────────────────────────────────── SCENE 3 · PIPELINE KANBAN ── */
+
+.pipeline-mock {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .55rem;
+  align-items: start;
+}
+@media (max-width: 820px) {
+  .pipeline-mock { grid-template-columns: repeat(3, 1fr); }
+  .pipeline-mock .col:nth-child(n+4) { display: none; }
+}
+@media (max-width: 520px) {
+  .pipeline-mock { grid-template-columns: repeat(2, 1fr); }
+  .pipeline-mock .col:nth-child(n+3) { display: none; }
+}
+.pipe-col {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .6rem .55rem;
+  min-height: 280px;
+}
+.pipe-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .55rem;
+}
+.pipe-col-name {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+}
+.pipe-col-count {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.pipe-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: 3px;
+  padding: .55rem .55rem .5rem;
+  margin-bottom: .4rem;
+  font-family: var(--serif);
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--ink-2);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+.pipe-card.is-dragging {
+  outline: 1px dashed var(--ochre);
+  background: var(--paper-deep);
+}
+.pipe-card-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 12.5px;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  margin-bottom: .15rem;
+}
+.pipe-card-role {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+  margin-bottom: .25rem;
+}
+.pipe-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: .3rem;
+}
+.match-pill {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  padding: 1px 5px;
+  border-radius: 2px;
+  background: var(--moss-soft);
+  color: var(--moss-deep);
+  font-weight: 700;
+}
+.match-pill.mid { background: var(--ochre-soft); color: var(--ochre-deep); }
+.match-pill.low { background: var(--paper-deep); color: var(--ink-3); }
+.pipe-tag {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .1em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────── SCENE 4 · CANDIDATE DRAWER ── */
+
+.cand-drawer {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  text-align: left;
+  box-shadow: var(--shadow-md);
+}
+.cand-head {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 1rem;
+}
+.cand-av {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--ochre);
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -.01em;
+}
+.cand-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 80;
+  font-size: 1.55rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin: 0 0 .3rem;
+}
+.cand-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.cand-meta .dot { color: var(--ochre); margin: 0 .35rem; }
+.match-big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: .55rem .8rem;
+  background: var(--moss);
+  color: var(--paper);
+  border-radius: var(--radius);
+  font-family: var(--display);
+  min-width: 72px;
+  text-align: center;
+}
+.match-big .n {
+  font-size: 1.7rem;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  line-height: 1;
+}
+.match-big .lbl {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  margin-top: .25rem;
+  color: var(--ochre-soft);
+}
+
+.ai-block {
+  border-left: 3px solid var(--ochre);
+  background: var(--paper);
+  padding: .85rem 1rem;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+}
+.ai-block-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.ai-block-head .ai-glyph {
+  display: inline-block;
+  background: var(--ink);
+  color: var(--ochre);
+  font-size: 8.5px;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 2px;
+  letter-spacing: .12em;
+}
+.ai-summary {
+  font-family: var(--serif);
+  font-size: 14px;
+  font-style: italic;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin: 0;
+}
+.ai-summary strong {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reasoning-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 680px) {
+  .reasoning-grid { grid-template-columns: 1fr; }
+}
+.reasoning-col h5 {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  font-weight: 700;
+  margin: 0 0 .55rem;
+}
+.reasoning-col.strengths h5 { color: var(--moss-deep); }
+.reasoning-col.gaps h5 { color: var(--ochre-deep); }
+.reasoning-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.reasoning-col li {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink-2);
+  line-height: 1.5;
+  padding: .25rem 0;
+  padding-left: 1rem;
+  position: relative;
+}
+.reasoning-col.strengths li::before {
+  content: "+";
+  color: var(--moss);
+  font-family: var(--mono);
+  font-weight: 700;
+  position: absolute;
+  left: 0;
+  top: .25rem;
+}
+.reasoning-col.gaps li::before {
+  content: "−";
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-weight: 700;
+  position: absolute;
+  left: 0;
+  top: .25rem;
+}
+
+.cand-actions {
+  display: flex;
+  gap: .5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.cand-btn {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .5rem .85rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  font-weight: 600;
+}
+.cand-btn.primary {
+  background: var(--ochre);
+  border-color: var(--ochre);
+}
+.cand-btn.ink {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+/* ─────────────────────────────────────── SCENE 5 · SCHEDULING ── */
+
+.sched-mock {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 1rem;
+  text-align: left;
+}
+@media (max-width: 760px) {
+  .sched-mock { grid-template-columns: 1fr; }
+}
+.sched-panel {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .9rem 1rem;
+}
+.sched-panel h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin: 0 0 .75rem;
+}
+.sched-cand {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  color: var(--ink);
+  font-weight: 500;
+  margin-bottom: .15rem;
+  letter-spacing: -.01em;
+}
+.sched-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: .9rem;
+}
+.interviewer-row {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .45rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.interviewer-row:last-child { border-bottom: 0; }
+.interviewer-row .av-sm {
+  width: 26px; height: 26px;
+  background: var(--ink);
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+}
+.interviewer-row .iv-name {
+  font-family: var(--serif);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  flex: 1;
+}
+.interviewer-row .iv-name b {
+  display: block;
+  font-family: var(--display);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.interviewer-row .iv-name span {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+}
+.iv-load {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background: var(--moss-soft);
+  color: var(--moss-deep);
+  letter-spacing: .1em;
+  font-weight: 700;
+}
+.iv-load.mid { background: var(--ochre-soft); color: var(--ochre-deep); }
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: 60px repeat(5, 1fr);
+  gap: 3px;
+}
+.slot-grid .hd {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: center;
+  padding: .35rem 0;
+}
+.slot-grid .hr {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-3);
+  text-align: right;
+  padding: .35rem .4rem .35rem 0;
+}
+.slot {
+  background: var(--paper-deep);
+  border-radius: 2px;
+  height: 22px;
+  cursor: pointer;
+}
+.slot.avail { background: var(--paper-card); border: 1px solid var(--paper-rule); }
+.slot.busy { background: var(--paper-rule); }
+.slot.picked { background: var(--ochre); outline: 2px solid var(--ochre-deep); position: relative; }
+.slot.picked::after {
+  content: "✓";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sched-foot {
+  margin-top: .85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.sched-foot .copy {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.sched-foot .copy b {
+  color: var(--ink);
+  font-style: normal;
+  font-weight: 600;
+}
+.sched-btn {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .55rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+}
+
+/* ─────────────────────────────────────── SCENE 6 · PANEL SUGGESTIONS ── */
+
+.panel-stack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: .85rem;
+  text-align: left;
+}
+@media (max-width: 760px) {
+  .panel-stack { grid-template-columns: 1fr; }
+}
+.panel-card {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: .85rem .95rem;
+}
+.panel-card.is-pick {
+  border: 1px solid var(--ochre);
+  background: var(--paper-card);
+  box-shadow: var(--shadow-md);
+  position: relative;
+}
+.panel-card.is-pick::before {
+  content: "AI · top pick";
+  position: absolute;
+  top: -8px;
+  left: .85rem;
+  background: var(--ink);
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .55rem;
+}
+.panel-name {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+.panel-score {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.panel-score .n { color: var(--moss-deep); }
+.panel-people {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 .65rem;
+}
+.panel-people li {
+  font-family: var(--serif);
+  font-size: 13px;
+  color: var(--ink-2);
+  padding: .25rem 0;
+  border-bottom: 1px dashed var(--paper-rule);
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+.panel-people li:last-child { border-bottom: 0; }
+.panel-people .pp-av {
+  width: 22px; height: 22px;
+  background: var(--ink);
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.panel-people .pp-role {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+  margin-left: auto;
+}
+.panel-why {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink-3);
+  line-height: 1.45;
+  border-top: 1px solid var(--paper-rule);
+  padding-top: .55rem;
+}
+.panel-attrib {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-mute);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-top: .55rem;
+  text-align: right;
+}
+
+/* ─────────────────────────────────────── SCENE 7 · OFFER ── */
+
+.offer-mock {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1rem;
+  text-align: left;
+}
+@media (max-width: 820px) {
+  .offer-mock { grid-template-columns: 1fr; }
+}
+.offer-comp {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.offer-comp h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin: 0 0 .8rem;
+}
+.comp-rows { display: grid; gap: .55rem; }
+.comp-row {
+  display: grid;
+  grid-template-columns: 90px 1fr auto;
+  align-items: baseline;
+  gap: .55rem;
+  padding-bottom: .45rem;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.comp-row:last-child { border-bottom: 0; }
+.comp-row .lbl {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ochre);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.comp-row .v {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.comp-row .sub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+}
+.predict {
+  margin-top: 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .85rem 1rem;
+  border-radius: var(--radius);
+}
+.predict-head {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin-bottom: .55rem;
+}
+.predict-head .ai-glyph {
+  background: var(--ochre);
+  color: var(--ink);
+  font-size: 8.5px;
+  padding: 2px 5px;
+  border-radius: 2px;
+}
+.predict-bar {
+  position: relative;
+  background: rgba(244,236,218,.18);
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.predict-fill {
+  position: absolute;
+  inset: 0;
+  width: 78%;
+  background: linear-gradient(90deg, var(--ochre-deep), var(--ochre));
+}
+.predict-stat {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: .55rem;
+}
+.predict-stat .num {
+  font-family: var(--display);
+  font-size: 1.85rem;
+  font-weight: 500;
+  letter-spacing: -.02em;
+  color: var(--paper);
+}
+.predict-stat .num em { color: var(--ochre); }
+.predict-stat .note {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .08em;
+  color: var(--ochre-soft);
+}
+
+.offer-letter {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+  position: relative;
+}
+.offer-letter h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin: 0 0 .25rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.offer-letter h5 .tag {
+  background: var(--ink);
+  color: var(--ochre);
+  padding: 2px 5px;
+  font-size: 8.5px;
+  border-radius: 2px;
+  letter-spacing: .1em;
+}
+.offer-letter .meta-line {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+  margin-bottom: .9rem;
+}
+.offer-letter p {
+  font-family: var(--serif);
+  font-size: 13.5px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  margin: 0 0 .7rem;
+}
+.offer-letter p:last-of-type { margin-bottom: 1rem; }
+.offer-letter p strong { color: var(--ink); font-weight: 600; }
+.offer-letter .sig {
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: .55rem;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+/* ─────────────────────────────────────── SCENE 8 · ANALYTICS ── */
+
+.analytics-mock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  text-align: left;
+}
+@media (max-width: 760px) {
+  .analytics-mock { grid-template-columns: 1fr; }
+}
+.analy-card {
+  background: var(--paper);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius);
+  padding: 1rem 1.1rem;
+}
+.analy-card h5 {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+  margin: 0 0 .85rem;
+}
+.analy-card .ssub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--ink-mute);
+  letter-spacing: .06em;
+  margin-bottom: .35rem;
+}
+.analy-card svg { width: 100%; height: auto; display: block; }
+
+.funnel-mock { display: grid; gap: .35rem; }
+.funnel-row {
+  display: grid;
+  grid-template-columns: 96px 1fr 70px;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--ink-2);
+}
+.funnel-row .stage {
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 9.5px;
+}
+.funnel-row .bar {
+  background: var(--paper-deep);
+  height: 22px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.funnel-row .fill {
+  height: 100%;
+  background: var(--ochre);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 10px;
+  padding-right: .35rem;
+}
+.funnel-row .n {
+  text-align: right;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.cost-rows { display: grid; gap: .45rem; }
+.cost-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 80px;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.cost-row .src {
+  font-family: var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-size: 9.5px;
+  color: var(--ink);
+  font-weight: 700;
+}
+.cost-row .bar {
+  background: var(--paper-deep);
+  height: 16px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.cost-row .fill { height: 100%; background: var(--moss); }
+.cost-row .fill.expensive { background: #c87a6c; }
+.cost-row .v {
+  text-align: right;
+  font-weight: 700;
+  color: var(--ink);
+  font-family: var(--mono);
+}
+
+/* ─────────────────────────────────────── SCENE 9 · CLOSE ── */
+
+.scene-close h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3.2rem, 10vw, 8rem);
+  line-height: .94;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  margin: 0 0 1.4rem;
+}
+.scene-close h2 em { font-style: italic; color: var(--ochre); }
+.scene-close .dek {
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+  font-style: italic;
+  color: var(--ink-2);
+  max-width: 720px;
+  margin: 0 auto 2.4rem;
+  line-height: 1.5;
+}
+.scene-close .fine {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--ink-mute);
+  margin-top: 1.6rem;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  text-transform: none;
+}
+
+.btn-big-ochre {
+  font-family: var(--mono);
+  font-size: 13.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 1.2rem 2rem;
+  background: var(--ochre);
+  color: var(--ink);
+  border: 1px solid var(--ochre);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  border-bottom: 1px solid var(--ochre);
+}
+.btn-big-ochre:hover {
+  background: var(--ink);
+  color: var(--ochre);
+  border-color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* ─────────────────────────────────────── OUTRO ── */
+
+.outro {
+  width: var(--col);
+  margin: 0 auto;
+  padding: 6rem 0 4rem;
+}
+.outro-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  text-align: center;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .8rem;
+}
+.outro-eyebrow .bar { height: 1px; width: 48px; background: var(--ochre); display: inline-block; }
+.outro-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 96, "SOFT" 0;
+  font-size: clamp(2rem, 4.4vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -.028em;
+  color: var(--ink);
+  text-align: center;
+  margin: 0 0 3rem;
+}
+.outro-title em { font-style: italic; color: var(--ochre); }
+.outro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+@media (max-width: 820px) { .outro-grid { grid-template-columns: 1fr; } }
+.outro-card {
+  background: var(--paper-card);
+  border: 1px solid var(--paper-rule);
+  border-radius: var(--radius-lg);
+  padding: 1.8rem 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1px solid var(--paper-rule);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  min-height: 200px;
+}
+.outro-card:hover {
+  border-color: var(--ochre);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-bottom-color: var(--ochre);
+}
+.outro-card .step {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+.outro-card h3 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  color: var(--ink);
+  margin: 0;
+  letter-spacing: -.018em;
+}
+.outro-card h3 em { font-style: italic; color: var(--ochre); }
+.outro-card p {
+  font-family: var(--serif);
+  color: var(--ink-3);
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.outro-card .arrow {
+  margin-top: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────── FOOTER ── */
+
+.footer {
+  border-top: 1px solid var(--paper-rule);
+  padding: 2.8rem 0 3.4rem;
+  margin-top: 3rem;
+  background: var(--paper-warm);
+}
+.footer-inner {
+  width: var(--col);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+}
+.footer-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.footer-mark .dot { color: var(--ochre); }
+.footer-mark .sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--ochre);
+  text-transform: uppercase;
+  margin-left: .4rem;
+  font-weight: 500;
+  vertical-align: 3px;
+}
+.footer-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.footer-links {
+  display: flex;
+  gap: 1.4rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.footer-links a {
+  color: var(--ink-3);
+  border-bottom: 0;
+}
+.footer-links a:hover { color: var(--ochre); }
+
+/* ─────────────────────────────────────── FIXED CONTROLS ── */
+
+.scene-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: transparent;
+  z-index: 100;
+  pointer-events: none;
+}
+.scene-progress-fill {
+  height: 100%;
+  background: var(--ochre);
+  width: 0%;
+  transition: width .15s linear;
+}
+
+.play-toggle {
+  position: fixed;
+  bottom: 22px;
+  left: 22px;
+  z-index: 80;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .75rem 1rem;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  box-shadow: var(--shadow-md);
+  transition: background .15s, color .15s;
+}
+.play-toggle:hover { background: var(--ochre); color: var(--ink); border-color: var(--ochre); }
+.play-toggle.is-playing { background: var(--ochre); color: var(--ink); border-color: var(--ochre); }
+.play-toggle .glyph { display: inline-block; width: 10px; text-align: center; }
+
+.scene-pos {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  z-index: 80;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: .75rem 1rem;
+  background: var(--paper-card);
+  color: var(--ink);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  box-shadow: var(--shadow-sm);
+}
+.scene-pos .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ochre);
+}
+
+@media (max-width: 520px) {
+  .play-toggle, .scene-pos {
+    bottom: 12px;
+    padding: .55rem .75rem;
+    font-size: 10px;
+    letter-spacing: .14em;
+  }
+  .play-toggle { left: 12px; }
+  .scene-pos { right: 12px; }
+}
+
+/* ─────────────────────────────────────── SKIP LINK ── */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .5rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  z-index: 200;
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
+
+.center { text-align: center; }
+.muted { color: var(--ink-mute); }
+
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-13T09:00:00-04:00" data-this="2026-05-13T11:14:08-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+02:14:08.000</strong> · <span style="opacity:.6">2026-05-13T15:14:08.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<a href="#scene-intro" class="skip-link">Skip to tour</a>
+
+<!-- Scroll progress bar -->
+<div class="scene-progress" aria-hidden="true">
+  <div class="scene-progress-fill" id="scene-progress-fill"></div>
+</div>
+
+<!-- Mobile bar -->
+<div class="mobile-bar" role="navigation" aria-label="Section navigation">
+  <div class="mobile-bar-inner">
+    <a href="../../library/">← Library</a>
+    <span class="mb-center">Recruiter <span class="sl">/</span> Tour</span>
+    <a href="../../briefings/">Briefing →</a>
+  </div>
+</div>
+
+<!-- Top nav -->
+<header class="nav" id="nav" role="banner">
+  <div class="nav-inner">
+    <a href="../../" class="nav-mark">Stratum<span class="dot">.</span><span class="sub">/Recruiter</span></a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="../../product/">Product</a>
+      <a href="../../customers/">Customers</a>
+      <a href="../../pricing/">Pricing</a>
+      <a href="../../compare/recruiting.html">Compare</a>
+      <a href="../">Recruiter</a>
+      <a href="./" class="is-current" aria-current="page">Tour</a>
+      <a href="../console/">Console</a>
+    </nav>
+    <a href="mailto:recruiter-beta@stratum.ai" class="nav-cta">Talk to us <span class="arr">→</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ─────────────────────── SCENE 0 · INTRO -->
+  <section class="scene scene-intro" id="scene-intro" data-scene="0" aria-label="Tour intro">
+    <div class="scene-inner">
+      <div class="scene-counter">
+        <span class="bar"></span>
+        <span>Scene 0 of 8 · The trailer</span>
+        <span class="bar"></span>
+      </div>
+      <h1>Ninety seconds with<br/><em>Stratum Recruiter.</em></h1>
+      <p class="dek">
+        An AI-first ATS, shown end-to-end.<br/>
+        Press play or scroll.
+      </p>
+      <div class="cta-row">
+        <button class="btn-primary" id="start-tour-btn" type="button">
+          <span aria-hidden="true">▶</span> Start the tour
+        </button>
+        <a href="#scene-1" class="btn-ghost">
+          Scroll yourself <span aria-hidden="true">↓</span>
+        </a>
+      </div>
+      <div class="progress-meter">
+        <span class="bar"></span>
+        <span id="progress-meter">Scene 0 of 8</span>
+        <span class="bar"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 1 · THE RECRUITER'S PROBLEM -->
+  <section class="scene" id="scene-1" data-scene="1" aria-label="Scene 1, the recruiter's problem">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 1 · The recruiter's problem</div>
+      <p class="scene-pull">
+        Your senior engineering req has been open for <strong style="font-style:normal;color:var(--ochre);">47 days.</strong>
+        You have <strong style="font-style:normal;color:var(--ochre);">1,141 applicants.</strong>
+        Your ATS shows them as a list. Your CHRO wants to know why hiring is slow.
+        You have <strong style="font-style:normal;color:var(--ochre);">30 minutes</strong> before your next interview.
+      </p>
+      <div class="scene-caption">Scenario reported by 8 of 11 enterprise TA leaders we have interviewed</div>
+      <div class="scene-footline">
+        <span class="bar"></span>
+        <span>Watch what Stratum Recruiter does next</span>
+        <span>→</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 2 · OPEN THE CONSOLE -->
+  <section class="scene" id="scene-2" data-scene="2" aria-label="Scene 2, open the recruiter console">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 2 · Open the Console</div>
+      <h2 class="scene-title">It already knows which reqs need <em>attention.</em></h2>
+
+      <div class="console-frame" role="img" aria-label="Stratum Recruiter dashboard mock">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/console</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">Demo · 140 reqs · 3,756 candidates · v0.4</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas · Recruiter</span>
+          </span>
+        </div>
+        <div class="frame-railstrip">
+          <span class="rail-tab is-active"><span class="sec">§ 01</span>Dashboard</span>
+          <span class="rail-tab"><span class="sec">§ 02</span>Requisitions <span class="badge">140</span></span>
+          <span class="rail-tab"><span class="sec">§ 03</span>Pipeline</span>
+          <span class="rail-tab"><span class="sec">§ 04</span>Candidates <span class="badge">3,756</span></span>
+          <span class="rail-tab"><span class="sec">§ 05</span>Scheduling</span>
+          <span class="rail-tab"><span class="sec">§ 06</span>Offers <span class="badge">12</span></span>
+          <span class="rail-tab"><span class="sec">§ 07</span>Analytics</span>
+        </div>
+        <div class="frame-body">
+          <div class="dash-hero">
+            <div class="dash-eye">§ Wednesday · 13 May 2026</div>
+            <h3 class="dash-h">Welcome back, <em>Sofia.</em></h3>
+            <p class="dash-sub">You have 12 offers in flight and 3 candidates aging in screen for over a week. The funnel for <strong>REQ-00042 · Senior Software Engineer</strong> dropped 40% in velocity this week — worth a look.</p>
+          </div>
+
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="lbl">Open reqs</div>
+              <div class="val">140</div>
+              <div class="delta">+4 vs last week</div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">Candidates in pipe</div>
+              <div class="val">3,756</div>
+              <div class="delta">+312 vs last week</div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">Offers in flight</div>
+              <div class="val">12</div>
+              <div class="delta flat">no change</div>
+            </div>
+            <div class="kpi">
+              <div class="lbl">Time-to-fill · median</div>
+              <div class="val">38d</div>
+              <div class="delta bad">+5d vs last week</div>
+            </div>
+          </div>
+
+          <div class="dash-grid-mock">
+            <div class="mini-card">
+              <div class="mini-card-head">
+                <div class="mini-card-eye">§ Today's priorities</div>
+                <span class="mini-card-meta">5 items · sorted by urgency</span>
+              </div>
+              <ul class="todo-list">
+                <li>
+                  <span class="pri crit">Crit</span>
+                  <span>Liu Chen has been in <em>Offer</em> for 6 days — <span class="who">prep counter-offer with Marcus</span></span>
+                </li>
+                <li>
+                  <span class="pri high">High</span>
+                  <span>Panel needed for REQ-00042 · 4 candidates waiting <span class="who">scheduler queued</span></span>
+                </li>
+                <li>
+                  <span class="pri high">High</span>
+                  <span>Aging in <em>Screen</em>: Priya N., Jordan K., Mei L. <span class="who">past 7 days</span></span>
+                </li>
+                <li>
+                  <span class="pri med">Med</span>
+                  <span>5 offer letters drafted by AI — review and approve <span class="who">due Thu</span></span>
+                </li>
+                <li>
+                  <span class="pri med">Med</span>
+                  <span>Referral submitted by Sasha P. — quick screen <span class="who">submitted 2h ago</span></span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mini-card ai">
+              <div class="mini-card-head">
+                <div class="mini-card-eye">Suggestions</div>
+                <span class="mini-card-meta">refreshed 12m ago</span>
+              </div>
+              <ul class="ai-sugs">
+                <li>
+                  Re-engage 11 silver-medalist candidates from REQ-00018 — they fit the new Staff IC req.
+                  <span class="conf">Confidence · 0.84 · based on skill overlap</span>
+                </li>
+                <li>
+                  REQ-00042 panel velocity dropped — Marcus K. has 6 interviews queued. Suggest re-load to Priya O.
+                  <span class="conf">Confidence · 0.79 · based on load balance</span>
+                </li>
+                <li>
+                  Referral source is converting 3.4× better than agency on senior backend. Lean in there this month.
+                  <span class="conf">Confidence · 0.91 · 30-day rolling window</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">You open Stratum Recruiter. It already knows which reqs need attention.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 3 · THE PIPELINE -->
+  <section class="scene" id="scene-3" data-scene="3" aria-label="Scene 3, the pipeline kanban">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 3 · The pipeline · REQ-00042 · Senior Software Engineer</div>
+      <h2 class="scene-title">A <em>kanban</em> that logs every move.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/pipeline/REQ-00042</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">REQ-00042 · Sr Software Engineer · 47 candidates</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-railstrip">
+          <span class="rail-tab"><span class="sec">§ 01</span>Dashboard</span>
+          <span class="rail-tab"><span class="sec">§ 02</span>Requisitions</span>
+          <span class="rail-tab is-active"><span class="sec">§ 03</span>Pipeline</span>
+          <span class="rail-tab"><span class="sec">§ 04</span>Candidates</span>
+          <span class="rail-tab"><span class="sec">§ 05</span>Scheduling</span>
+          <span class="rail-tab"><span class="sec">§ 06</span>Offers</span>
+          <span class="rail-tab"><span class="sec">§ 07</span>Analytics</span>
+        </div>
+        <div class="frame-body">
+          <div class="pipeline-mock">
+
+            <div class="pipe-col col">
+              <div class="pipe-col-head">
+                <span class="pipe-col-name">Applied</span>
+                <span class="pipe-col-count">1,141</span>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Diego R.</div>
+                <div class="pipe-card-role">Sr SWE · Madrid</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill mid">62</span>
+                  <span class="pipe-tag">5d ago</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Asha P.</div>
+                <div class="pipe-card-role">Sr SWE · Remote</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill low">48</span>
+                  <span class="pipe-tag">2d ago</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Sven L.</div>
+                <div class="pipe-card-role">Sr SWE · Berlin</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill mid">71</span>
+                  <span class="pipe-tag">1d ago</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pipe-col col">
+              <div class="pipe-col-head">
+                <span class="pipe-col-name">Screened</span>
+                <span class="pipe-col-count">245</span>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Priya N.</div>
+                <div class="pipe-card-role">Sr SWE · London</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">81</span>
+                  <span class="pipe-tag">8d aging</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Marcus J.</div>
+                <div class="pipe-card-role">Sr SWE · NYC</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill mid">74</span>
+                  <span class="pipe-tag">3d</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pipe-col col">
+              <div class="pipe-col-head">
+                <span class="pipe-col-name">Interview</span>
+                <span class="pipe-col-count">47</span>
+              </div>
+              <div class="pipe-card is-dragging">
+                <div class="pipe-card-name">Liu Chen</div>
+                <div class="pipe-card-role">Sr SWE · SF</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">87</span>
+                  <span class="pipe-tag">moving →</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Mei L.</div>
+                <div class="pipe-card-role">Sr SWE · Toronto</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">83</span>
+                  <span class="pipe-tag">panel today</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Jordan K.</div>
+                <div class="pipe-card-role">Sr SWE · Austin</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill mid">79</span>
+                  <span class="pipe-tag">debrief due</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pipe-col col">
+              <div class="pipe-col-head">
+                <span class="pipe-col-name">Offer</span>
+                <span class="pipe-col-count">12</span>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Aiyana B.</div>
+                <div class="pipe-card-role">Sr SWE · Seattle</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">89</span>
+                  <span class="pipe-tag">sent T+2</span>
+                </div>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Raj T.</div>
+                <div class="pipe-card-role">Sr SWE · Bangalore</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">85</span>
+                  <span class="pipe-tag">verbal yes</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pipe-col col">
+              <div class="pipe-col-head">
+                <span class="pipe-col-name">Accepted</span>
+                <span class="pipe-col-count">8</span>
+              </div>
+              <div class="pipe-card">
+                <div class="pipe-card-name">Tomás S.</div>
+                <div class="pipe-card-role">Sr SWE · CDMX</div>
+                <div class="pipe-card-foot">
+                  <span class="match-pill">91</span>
+                  <span class="pipe-tag">start Jun 16</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Drag a candidate to advance them. Stratum logs the stage change and records the citation.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 4 · AI MATCH REASONING -->
+  <section class="scene" id="scene-4" data-scene="4" aria-label="Scene 4, AI match reasoning">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 4 · The candidate drawer · Liu Chen</div>
+      <h2 class="scene-title">Every score has its <em>reasoning</em> attached.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/candidates/c-1184</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">Candidate · c-1184 · REQ-00042</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-body">
+          <div class="cand-drawer">
+            <div class="cand-head">
+              <div class="cand-av">LC</div>
+              <div>
+                <h3 class="cand-name">Liu Chen</h3>
+                <div class="cand-meta">
+                  Senior Software Engineer<span class="dot">·</span>
+                  San Francisco<span class="dot">·</span>
+                  c-1184<span class="dot">·</span>
+                  Source: referral · Sasha P.
+                </div>
+              </div>
+              <div class="match-big">
+                <div class="n">87</div>
+                <div class="lbl">Match</div>
+              </div>
+            </div>
+
+            <div class="ai-block">
+              <div class="ai-block-head"><span class="ai-glyph">AI</span> Summary</div>
+              <p class="ai-summary">
+                <strong>Liu is a strong fit for REQ-00042.</strong> Seven years building distributed payment systems at Stripe and Square, with direct experience scaling Postgres past 30 TB — the exact pain point on this team's roadmap. <em>The one open question is leadership scope: their last 18 months have been heads-down IC work, not the mentoring this req asks for.</em>
+              </p>
+            </div>
+
+            <div class="reasoning-grid">
+              <div class="reasoning-col strengths">
+                <h5>Strengths · 3</h5>
+                <ul>
+                  <li><strong>Distributed systems depth</strong> — Stripe (4y) · Square (3y) · Postgres at 30TB+</li>
+                  <li><strong>Referral signal</strong> — referred by Sasha P., one of our highest-converting referrers</li>
+                  <li><strong>Compensation in range</strong> — current $158K · target range $155K–$180K</li>
+                </ul>
+              </div>
+              <div class="reasoning-col gaps">
+                <h5>Gaps · 2</h5>
+                <ul>
+                  <li><strong>Mentorship signal is thin</strong> — last formal mentor role was 2022; req asks for 1–2 reports</li>
+                  <li><strong>No regulated-industry exposure</strong> — req lists HIPAA/SOC2 as nice-to-have, not present</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="cand-actions">
+              <button class="cand-btn ink" type="button">Advance to interview</button>
+              <button class="cand-btn primary" type="button">Schedule panel</button>
+              <button class="cand-btn" type="button">Send AI message</button>
+              <button class="cand-btn" type="button">Add note</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Every candidate has an AI summary. The reasoning is explicit. Stratum will never auto-reject.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 5 · SCHEDULE AN INTERVIEW -->
+  <section class="scene" id="scene-5" data-scene="5" aria-label="Scene 5, scheduling an interview">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 5 · Scheduling · Liu Chen · onsite panel</div>
+      <h2 class="scene-title">Pick a panel. Pick a time. <em>Done</em> in 45 seconds.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/scheduling/c-1184</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">Schedule onsite · 4 rounds · 3.5h</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-body">
+          <div class="sched-mock">
+
+            <div class="sched-panel">
+              <h5>§ Panel · 4 interviewers</h5>
+              <div class="sched-cand">Liu Chen · Sr SWE</div>
+              <div class="sched-meta">REQ-00042 · onsite · panel format</div>
+
+              <div class="interviewer-row">
+                <div class="av-sm">MK</div>
+                <div class="iv-name">
+                  <b>Marcus K.</b>
+                  <span>Hiring manager · Eng director</span>
+                </div>
+                <span class="iv-load mid">6 / wk</span>
+              </div>
+              <div class="interviewer-row">
+                <div class="av-sm">PO</div>
+                <div class="iv-name">
+                  <b>Priya O.</b>
+                  <span>Staff engineer · systems</span>
+                </div>
+                <span class="iv-load">3 / wk</span>
+              </div>
+              <div class="interviewer-row">
+                <div class="av-sm">JR</div>
+                <div class="iv-name">
+                  <b>Jordan R.</b>
+                  <span>Sr engineer · platform</span>
+                </div>
+                <span class="iv-load">2 / wk</span>
+              </div>
+              <div class="interviewer-row">
+                <div class="av-sm">DK</div>
+                <div class="iv-name">
+                  <b>Devi K.</b>
+                  <span>Eng manager · payments</span>
+                </div>
+                <span class="iv-load">4 / wk</span>
+              </div>
+            </div>
+
+            <div class="sched-panel">
+              <h5>§ Time slots · this week · all four free</h5>
+              <div class="slot-grid" aria-label="Time slot grid">
+                <span class="hd"></span>
+                <span class="hd">Mon 18</span>
+                <span class="hd">Tue 19</span>
+                <span class="hd">Wed 20</span>
+                <span class="hd">Thu 21</span>
+                <span class="hd">Fri 22</span>
+
+                <span class="hr">9 am</span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+
+                <span class="hr">10 am</span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot picked"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+
+                <span class="hr">11 am</span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+
+                <span class="hr">1 pm</span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+
+                <span class="hr">2 pm</span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+
+                <span class="hr">3 pm</span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot busy"></span>
+                <span class="slot avail"></span>
+                <span class="slot avail"></span>
+              </div>
+
+              <div class="sched-foot">
+                <span class="copy"><b>Wed 20 May · 10:00–13:30 PT</b> — all four interviewers free · room E-4 reserved</span>
+                <button class="sched-btn">Send invites →</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Pick a panel. Pick a time. Send invites. Done in forty-five seconds.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 6 · AI PANEL SUGGESTIONS -->
+  <section class="scene" id="scene-6" data-scene="6" aria-label="Scene 6, AI panel suggestions">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 6 · Panel suggestion · REQ-00042</div>
+      <h2 class="scene-title">Stratum suggests. <em>You</em> approve.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/panels/REQ-00042</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">3 panels suggested · scored on balance, load, seniority</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-body">
+          <div class="panel-stack">
+
+            <div class="panel-card is-pick">
+              <div class="panel-head">
+                <span class="panel-name">§ Panel A</span>
+                <span class="panel-score"><span class="n">94</span> / 100</span>
+              </div>
+              <ul class="panel-people">
+                <li><span class="pp-av">MK</span> Marcus K. <span class="pp-role">HM</span></li>
+                <li><span class="pp-av">PO</span> Priya O. <span class="pp-role">Staff IC</span></li>
+                <li><span class="pp-av">JR</span> Jordan R. <span class="pp-role">Sr IC</span></li>
+                <li><span class="pp-av">DK</span> Devi K. <span class="pp-role">EM · cross-team</span></li>
+              </ul>
+              <p class="panel-why">Balanced for gender and tenure. Devi brings the cross-team perspective for a staff-level scope question. Load is moderate — no one above 6/wk.</p>
+              <div class="panel-attrib">AI · trace #p-94a · approve to schedule</div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <span class="panel-name">§ Panel B</span>
+                <span class="panel-score"><span class="n">87</span> / 100</span>
+              </div>
+              <ul class="panel-people">
+                <li><span class="pp-av">MK</span> Marcus K. <span class="pp-role">HM</span></li>
+                <li><span class="pp-av">RT</span> Raul T. <span class="pp-role">Staff IC</span></li>
+                <li><span class="pp-av">NB</span> Nadia B. <span class="pp-role">Sr IC</span></li>
+                <li><span class="pp-av">JF</span> Julien F. <span class="pp-role">EM · payments</span></li>
+              </ul>
+              <p class="panel-why">Strong domain alignment with payments. Slightly less diverse than Panel A; Raul is over his weekly load target.</p>
+              <div class="panel-attrib">AI · trace #p-87b</div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-head">
+                <span class="panel-name">§ Panel C</span>
+                <span class="panel-score"><span class="n">81</span> / 100</span>
+              </div>
+              <ul class="panel-people">
+                <li><span class="pp-av">SO</span> Sam O. <span class="pp-role">HM proxy</span></li>
+                <li><span class="pp-av">PO</span> Priya O. <span class="pp-role">Staff IC</span></li>
+                <li><span class="pp-av">LK</span> Lila K. <span class="pp-role">Sr IC</span></li>
+                <li><span class="pp-av">TR</span> Tomás R. <span class="pp-role">EM · infra</span></li>
+              </ul>
+              <p class="panel-why">Backup if Marcus is OOO. Strong infra angle but lighter on payments domain. Use when calendar conflicts force a reshuffle.</p>
+              <div class="panel-attrib">AI · trace #p-81c</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Stratum suggests the optimal panel — balanced for diversity, load, and seniority. You can override.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 7 · THE OFFER -->
+  <section class="scene" id="scene-7" data-scene="7" aria-label="Scene 7, the offer">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 7 · The offer · Liu Chen</div>
+      <h2 class="scene-title">Stratum drafts. Predicts acceptance. <em>You</em> approve.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/offers/o-08812</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">Offer · o-08812 · REQ-00042 · in flight</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-body">
+          <div class="offer-mock">
+
+            <div class="offer-comp">
+              <h5>§ Compensation · proposed</h5>
+              <div class="comp-rows">
+                <div class="comp-row">
+                  <span class="lbl">Base</span>
+                  <span class="v">$165,000</span>
+                  <span class="sub">P60 of band L5 · SF</span>
+                </div>
+                <div class="comp-row">
+                  <span class="lbl">Sign-on</span>
+                  <span class="v">$30,000</span>
+                  <span class="sub">one-time</span>
+                </div>
+                <div class="comp-row">
+                  <span class="lbl">Equity</span>
+                  <span class="v">0.50%</span>
+                  <span class="sub">4y · 1y cliff</span>
+                </div>
+                <div class="comp-row">
+                  <span class="lbl">Target bonus</span>
+                  <span class="v">15%</span>
+                  <span class="sub">annual · perf-tied</span>
+                </div>
+                <div class="comp-row">
+                  <span class="lbl">Start</span>
+                  <span class="v">16 Jun 2026</span>
+                  <span class="sub">4-week notice</span>
+                </div>
+              </div>
+
+              <div class="predict">
+                <div class="predict-head"><span class="ai-glyph">AI</span> Acceptance predictor</div>
+                <div class="predict-bar"><span class="predict-fill"></span></div>
+                <div class="predict-stat">
+                  <span class="num">78<em>%</em></span>
+                  <span class="note">High confidence · n=412 comparable offers</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="offer-letter">
+              <h5>Offer letter <span class="tag">AI draft · v3</span></h5>
+              <div class="meta-line">Approved structure · Marcus K. · Eng director · 11 May</div>
+
+              <p>Dear Liu,</p>
+
+              <p>On behalf of the engineering team, I'm delighted to extend an offer for the <strong>Senior Software Engineer</strong> position on our payments platform team, reporting to Marcus Kashyap. Our panel was clear: your depth in distributed systems and your work scaling Postgres at Stripe make this a strong match for the problems we're tackling this year.</p>
+
+              <p>The offer details are summarized at left — <strong>$165,000 base, $30,000 sign-on, and 0.50% equity</strong> on our standard four-year vest. Health, retirement, and PTO follow our standard plan; full benefits summary attached. We'd love to have you start <strong>Monday 16 June</strong>, which gives you the four weeks of notice we discussed.</p>
+
+              <p>This offer is open until <strong>Friday 22 May</strong>. I'll call Thursday afternoon to walk through any questions, and Marcus is happy to chat about the team's roadmap whenever works for you. We hope you'll say yes.</p>
+
+              <div class="sig">
+                <span>— Sofia Vargas · Talent · sofia@tessera.example</span>
+                <span>Draft · 11 May 14:42 · trace #ol-a2c9e8</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">Stratum drafts the letter. Predicts acceptance probability. You approve.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 8 · ANALYTICS -->
+  <section class="scene" id="scene-8" data-scene="8" aria-label="Scene 8, analytics">
+    <div class="scene-inner">
+      <div class="scene-eyebrow">§ Scene 8 · Analytics · the data your CHRO has been asking for</div>
+      <h2 class="scene-title">Pipeline funnel. Cost per hire. <em>Methodology</em> attached.</h2>
+
+      <div class="console-frame">
+        <div class="frame-chrome">
+          <span class="frame-dot r"></span>
+          <span class="frame-dot y"></span>
+          <span class="frame-dot g"></span>
+          <span class="frame-url">stratum.ai/recruiter/analytics</span>
+        </div>
+        <div class="frame-topbar">
+          <span class="frame-brand">Stratum<span class="sl">/</span>Recruiter</span>
+          <span class="frame-meta">Analytics · all reqs · trailing 90 days</span>
+          <span class="frame-user">
+            <span class="av">SV</span>
+            <span>Sofia Vargas</span>
+          </span>
+        </div>
+        <div class="frame-body">
+          <div class="analytics-mock">
+
+            <div class="analy-card">
+              <h5>§ Pipeline funnel · REQ-00042</h5>
+              <div class="ssub">As of 13 May 2026 · synthetic dataset</div>
+              <div class="funnel-mock">
+                <div class="funnel-row">
+                  <span class="stage">Applied</span>
+                  <div class="bar"><div class="fill" style="width:100%">1,141</div></div>
+                  <span class="n">1,141</span>
+                </div>
+                <div class="funnel-row">
+                  <span class="stage">Screened</span>
+                  <div class="bar"><div class="fill" style="width:21.5%">245</div></div>
+                  <span class="n">245</span>
+                </div>
+                <div class="funnel-row">
+                  <span class="stage">Interview</span>
+                  <div class="bar"><div class="fill" style="width:4.1%">47</div></div>
+                  <span class="n">47</span>
+                </div>
+                <div class="funnel-row">
+                  <span class="stage">Offer</span>
+                  <div class="bar"><div class="fill" style="width:1.05%">12</div></div>
+                  <span class="n">12</span>
+                </div>
+                <div class="funnel-row">
+                  <span class="stage">Accepted</span>
+                  <div class="bar"><div class="fill" style="width:0.7%">8</div></div>
+                  <span class="n">8</span>
+                </div>
+              </div>
+              <div class="ssub" style="margin-top:.85rem">
+                Method: cumulative count at each stage · cohort = REQ-00042 · trace #fn-042a
+              </div>
+            </div>
+
+            <div class="analy-card">
+              <h5>§ Cost per hire · by source · trailing 90d</h5>
+              <div class="ssub">Median fully-loaded cost · across 47 closed reqs</div>
+              <div class="cost-rows">
+                <div class="cost-row">
+                  <span class="src">Referrals</span>
+                  <div class="bar"><div class="fill" style="width:18%"></div></div>
+                  <span class="v">$9K</span>
+                </div>
+                <div class="cost-row">
+                  <span class="src">Inbound</span>
+                  <div class="bar"><div class="fill" style="width:24%"></div></div>
+                  <span class="v">$12K</span>
+                </div>
+                <div class="cost-row">
+                  <span class="src">University</span>
+                  <div class="bar"><div class="fill" style="width:31%"></div></div>
+                  <span class="v">$15K</span>
+                </div>
+                <div class="cost-row">
+                  <span class="src">LinkedIn</span>
+                  <div class="bar"><div class="fill" style="width:48%"></div></div>
+                  <span class="v">$24K</span>
+                </div>
+                <div class="cost-row">
+                  <span class="src">Agencies</span>
+                  <div class="bar"><div class="fill expensive" style="width:96%"></div></div>
+                  <span class="v">$48K</span>
+                </div>
+              </div>
+              <div class="ssub" style="margin-top:.85rem">
+                Includes sourcing fees, hours-loaded, tooling allocation · trace #cph-90d
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <p class="scene-dek">The data your CHRO has been asking for. With the methodology. In thirty seconds.</p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── SCENE 9 · TRY IT YOURSELF -->
+  <section class="scene scene-close" id="scene-9" data-scene="9" aria-label="Scene 9, try it yourself">
+    <div class="scene-inner">
+      <div class="scene-counter">
+        <span class="bar"></span>
+        <span>Scene 9 · The close</span>
+        <span class="bar"></span>
+      </div>
+      <h2>Now <em>you</em> try.</h2>
+      <p class="dek">
+        All ninety seconds you just watched, in your own browser.<br/>
+        No login. No demo request. Synthetic 140-req / 3,756-candidate dataset to explore.
+      </p>
+      <div class="cta-row">
+        <a href="../console/" class="btn-big-ochre">
+          Open Stratum Recruiter <span aria-hidden="true">→</span>
+        </a>
+      </div>
+      <p class="fine">
+        Beta in production with three commercial customers. To talk to us about your own deployment,<br/>
+        email <a href="mailto:recruiter-beta@stratum.ai">recruiter-beta@stratum.ai</a> — a founder reads every note.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─────────────────────── OUTRO -->
+  <section class="outro" id="outro" aria-label="Where to next">
+    <div class="outro-eyebrow">
+      <span class="bar"></span>
+      <span>Where to next</span>
+      <span class="bar"></span>
+    </div>
+    <h2 class="outro-title">Three <em>paths</em> from here.</h2>
+    <div class="outro-grid">
+      <a href="../#pricing" class="outro-card">
+        <span class="step">§ 01 · Pricing</span>
+        <h3>I want <em>pricing.</em></h3>
+        <p>The numbers, the tiers, the implementation timeline. No "talk to sales" wall.</p>
+        <span class="arrow">See pricing →</span>
+      </a>
+      <a href="../../compare/recruiting.html" class="outro-card">
+        <span class="step">§ 02 · Compare</span>
+        <h3>I want to compare to my <em>current ATS.</em></h3>
+        <p>Greenhouse, Lever, Workday Recruiting — feature-by-feature. Where we win, where we don't.</p>
+        <span class="arrow">See comparison →</span>
+      </a>
+      <a href="../plan.html" class="outro-card">
+        <span class="step">§ 03 · The long version</span>
+        <h3>I want to read the <em>long version.</em></h3>
+        <p>The build plan: architecture, evidence, what we're shipping next, what we won't ship.</p>
+        <span class="arrow">Read the plan →</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-inner">
+    <span class="footer-mark">Stratum<span class="dot">.</span><span class="sub">/Recruiter</span></span>
+    <span class="footer-meta">© Stratum · AI-first ATS · 2026</span>
+    <div class="footer-links">
+      <a href="../../">Home</a>
+      <a href="../">Recruiter</a>
+      <a href="../console/">Console</a>
+      <a href="../../pricing/">Pricing</a>
+      <a href="mailto:recruiter-beta@stratum.ai">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Fixed controls -->
+<button class="play-toggle" id="play-toggle" type="button" aria-pressed="false" aria-label="Play or pause the auto-advancing tour">
+  <span class="glyph" id="play-glyph" aria-hidden="true">▶</span>
+  <span id="play-label">Play tour</span>
+</button>
+
+<div class="scene-pos" id="scene-pos" aria-live="polite">
+  <span class="dot" aria-hidden="true"></span>
+  <span id="scene-pos-text">Scene 0 of 9</span>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ─── Reduced motion ────────────────────────────────────────
+  var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ─── Scenes ────────────────────────────────────────────────
+  var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+  var totalScenes = 9; // scenes 1..9 (intro is 0)
+  var currentScene = 0;
+
+  // ─── Counter / progress text ───────────────────────────────
+  var sceneEls = {
+    pos: document.getElementById('scene-pos-text'),
+    progressMeter: document.getElementById('progress-meter')
+  };
+
+  function setSceneIndex(i) {
+    if (i === currentScene) return;
+    currentScene = i;
+    var label = 'Scene ' + i + ' of ' + totalScenes;
+    if (sceneEls.pos) sceneEls.pos.textContent = label;
+    if (sceneEls.progressMeter) sceneEls.progressMeter.textContent = label;
+  }
+
+  // ─── IntersectionObserver · reveal scenes ──────────────────
+  var io;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          var idx = parseInt(entry.target.getAttribute('data-scene') || '0', 10);
+          if (entry.intersectionRatio >= 0.45 || entry.boundingClientRect.top < window.innerHeight * 0.5) {
+            setSceneIndex(idx);
+          }
+        }
+      });
+    }, {
+      threshold: [0.15, 0.45, 0.75],
+      rootMargin: '0px 0px -10% 0px'
+    });
+    scenes.forEach(function (s) { io.observe(s); });
+  } else {
+    scenes.forEach(function (s) { s.classList.add('is-visible'); });
+  }
+
+  // ─── Scroll progress bar ──────────────────────────────────
+  var progressFill = document.getElementById('scene-progress-fill');
+  function updateProgress() {
+    if (!progressFill) return;
+    var h = document.documentElement;
+    var st = h.scrollTop || document.body.scrollTop;
+    var sh = h.scrollHeight - h.clientHeight;
+    var pct = sh > 0 ? (st / sh) * 100 : 0;
+    progressFill.style.width = pct + '%';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ─── Nav scroll state ─────────────────────────────────────
+  var nav = document.getElementById('nav');
+  function updateNav() {
+    if (!nav) return;
+    if (window.scrollY > 40) nav.classList.add('is-scrolled');
+    else nav.classList.remove('is-scrolled');
+  }
+  document.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // ─── Auto-advance / play tour ─────────────────────────────
+  var playBtn = document.getElementById('play-toggle');
+  var playGlyph = document.getElementById('play-glyph');
+  var playLabel = document.getElementById('play-label');
+  var startBtn = document.getElementById('start-tour-btn');
+  var isPlaying = false;
+  var advanceTimer = null;
+  var SCENE_DURATION_MS = 6000;
+
+  function nextSceneIndex() {
+    var bestIdx = 0;
+    var bestDist = Infinity;
+    var vp = window.scrollY;
+    scenes.forEach(function (s, i) {
+      var top = s.offsetTop;
+      var d = Math.abs(top - vp);
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    });
+    return Math.min(bestIdx + 1, scenes.length - 1);
+  }
+
+  function scrollToScene(i) {
+    var s = scenes[i];
+    if (!s) return;
+    s.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+  }
+
+  function tick() {
+    var nextIdx = nextSceneIndex();
+    var atEnd = nextIdx >= scenes.length - 1 && Math.abs(window.scrollY - scenes[scenes.length - 1].offsetTop) < 80;
+    if (atEnd) {
+      stopAutoAdvance();
+      return;
+    }
+    scrollToScene(nextIdx);
+  }
+
+  function startAutoAdvance() {
+    if (prefersReducedMotion) return;
+    if (isPlaying) return;
+    isPlaying = true;
+    if (playBtn) {
+      playBtn.classList.add('is-playing');
+      playBtn.setAttribute('aria-pressed', 'true');
+    }
+    if (playGlyph) playGlyph.textContent = '❚❚';
+    if (playLabel) playLabel.textContent = 'Pause tour';
+    advanceTimer = setInterval(tick, SCENE_DURATION_MS);
+  }
+
+  function stopAutoAdvance() {
+    isPlaying = false;
+    if (playBtn) {
+      playBtn.classList.remove('is-playing');
+      playBtn.setAttribute('aria-pressed', 'false');
+    }
+    if (playGlyph) playGlyph.textContent = '▶';
+    if (playLabel) playLabel.textContent = 'Play tour';
+    if (advanceTimer) { clearInterval(advanceTimer); advanceTimer = null; }
+  }
+
+  function togglePlay() {
+    if (isPlaying) stopAutoAdvance();
+    else startAutoAdvance();
+  }
+
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
+  if (startBtn) {
+    startBtn.addEventListener('click', function () {
+      scrollToScene(1);
+      if (!prefersReducedMotion) {
+        setTimeout(function () { startAutoAdvance(); }, 800);
+      }
+    });
+  }
+
+  // ─── Escape · exit tour ───────────────────────────────────
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      stopAutoAdvance();
+      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+    }
+  });
+
+  // ─── Pause auto-advance if user scrolls manually ──────────
+  document.addEventListener('wheel', function () {
+    if (isPlaying) stopAutoAdvance();
+  }, { passive: true });
+  document.addEventListener('touchmove', function () {
+    if (isPlaying) stopAutoAdvance();
+  }, { passive: true });
+
+})();
+</script>
+
+</body>
+</html>

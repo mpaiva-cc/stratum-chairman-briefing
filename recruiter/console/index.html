@@ -38,11 +38,21 @@
         <span class="user-avatar">SV</span>
         <span class="user-name">Sofia Vargas<span class="role">· Recruiter</span></span>
       </div>
+      <span class="cost-meter" id="cost-meter" title="Estimated spend this session">$0.0000 this session</span>
+      <button class="gear-btn" id="topbar-gear" type="button" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+        </svg>
+      </button>
       <a href="../../console/" class="back-link">← Stratum HCM</a>
       <a href="../../library/" class="back-link">← Library</a>
     </div>
   </div>
 </header>
+
+<!-- Demo-mode banner (only when no API key) -->
+<div class="demo-banner" id="demo-banner" role="status" aria-live="polite" style="display:none;"></div>
 
 <!-- ────────────────────────── APP SHELL ──────────────────────── -->
 <div class="shell" id="shell">
@@ -330,31 +340,28 @@
           <div class="eyebrow">§ Interview scheduling</div>
           <h1 class="hero sm">The <em>schedule.</em></h1>
         </div>
+        <span class="count-pill"><span id="sched-pending-count">0</span> pending · <span id="sched-week-count">0</span> this week</span>
       </header>
 
       <div class="sched-grid">
         <article class="card">
           <div class="card-head">
             <div class="card-eyebrow">§ Pending schedules</div>
-            <span class="card-meta">8 candidates awaiting panel</span>
+            <span class="card-meta" id="pending-meta">awaiting panel</span>
           </div>
           <ul class="pending-list" id="pending-list"></ul>
         </article>
 
         <article class="card span-2">
           <div class="card-head">
-            <div class="card-eyebrow">§ This week · 11–17 May</div>
-            <span class="card-meta">28 interviews scheduled</span>
+            <div class="card-eyebrow">§ This week · 11–15 May</div>
+            <span class="card-meta" id="cal-meta">interviews scheduled</span>
           </div>
           <div class="cal-wrap" id="cal-wrap"></div>
         </article>
 
-        <article class="card span-3 ai-card">
-          <div class="card-head">
-            <div class="card-eyebrow ai"><span class="ai-mark">AI</span> Panel suggestion</div>
-            <span class="card-meta">balances availability · diversity · interview load</span>
-          </div>
-          <div class="panel-suggest" id="panel-suggest"></div>
+        <article class="card span-3" id="sched-bottom-card">
+          <!-- Either AI panel suggest (default) OR workflow (when scheduling) -->
         </article>
       </div>
     </section>
@@ -433,71 +440,7 @@
         <h1 class="hero sm">Tune the <em>recruiter.</em></h1>
       </header>
 
-      <div class="settings-grid-v">
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ Account</div></div>
-          <dl class="kv">
-            <dt>Name</dt><dd>Sofia Vargas</dd>
-            <dt>Email</dt><dd>sofia.vargas@stratum.example</dd>
-            <dt>Role</dt><dd>Recruiter — TA, EMEA</dd>
-            <dt>Region</dt><dd>EMEA + LATAM</dd>
-            <dt>2FA</dt><dd>Enabled · authenticator app</dd>
-          </dl>
-        </article>
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ Team</div></div>
-          <dl class="kv">
-            <dt>Workspace</dt><dd>Tessera Bank</dd>
-            <dt>Seats</dt><dd>24 of 50 in use</dd>
-            <dt>Admins</dt><dd>4</dd>
-            <dt>Recruiters</dt><dd>18</dd>
-            <dt>Coordinators</dt><dd>2</dd>
-          </dl>
-        </article>
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ Branding</div></div>
-          <dl class="kv">
-            <dt>Company name</dt><dd>Tessera Bank</dd>
-            <dt>Careers domain</dt><dd>jobs.tessera.example</dd>
-            <dt>Primary color</dt><dd>#0e1626 (deep ink)</dd>
-            <dt>Accent color</dt><dd>#b8651f (ochre)</dd>
-            <dt>Email sender</dt><dd>talent@tessera.example</dd>
-          </dl>
-        </article>
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ AI policies</div></div>
-          <dl class="kv">
-            <dt>Match scoring</dt><dd>Enabled · v2 model</dd>
-            <dt>JD drafting</dt><dd>Enabled · human review required</dd>
-            <dt>Sourcing outreach</dt><dd>Drafts only · no auto-send</dd>
-            <dt>Acceptance prediction</dt><dd>Advisory · not used in decisions</dd>
-            <dt>Bias audit</dt><dd>Quarterly · last run 2026-04-18</dd>
-          </dl>
-        </article>
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ Compliance</div></div>
-          <dl class="kv">
-            <dt>EEO/OFCCP</dt><dd>Compliant · last audit 2026-03</dd>
-            <dt>NYC AEDT</dt><dd>Bias audit on file · 2026-04-18</dd>
-            <dt>EU AI Act</dt><dd>High-risk system · transparency log on</dd>
-            <dt>GDPR</dt><dd>SCC + DPIA on file</dd>
-            <dt>Data retention</dt><dd>24 months (rejected) · 7 years (hired)</dd>
-          </dl>
-        </article>
-        <article class="card">
-          <div class="card-head"><div class="card-eyebrow">§ API keys</div></div>
-          <dl class="kv">
-            <dt>Public key</dt><dd>pk_live_•••••••••• 4k2x</dd>
-            <dt>Webhooks</dt><dd>3 endpoints · 2 healthy</dd>
-            <dt>Rate limit</dt><dd>1,000 req/min · enterprise</dd>
-            <dt>Last rotation</dt><dd>2026-04-02</dd>
-          </dl>
-        </article>
-        <article class="card span-3">
-          <div class="card-head"><div class="card-eyebrow">§ Audit log</div><span class="card-meta">last 6 entries</span></div>
-          <ul class="activity" id="audit-list"></ul>
-        </article>
-      </div>
+      <div class="settings-grid-v" id="settings-grid"></div>
     </section>
 
   </main>
@@ -516,6 +459,81 @@
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
   <button class="modal-close" id="modal-close">×</button>
   <div id="modal-body"></div>
+</div>
+
+
+<!-- ────────────────────────── ONBOARDING MODAL ─────────────── -->
+<div class="modal-backdrop" id="onboard-modal" role="dialog" aria-modal="true" aria-labelledby="onboard-title" aria-hidden="true">
+  <div class="modal">
+    <button class="modal-close" id="onboard-close" type="button" aria-label="Close">×</button>
+    <div class="modal-inner">
+      <div class="modal-eyebrow">§ First-run setup</div>
+      <h2 class="modal-title" id="onboard-title">Connect Stratum Recruiter to <em>Claude</em>.</h2>
+      <p class="modal-body">
+        Stratum Recruiter runs entirely in your browser. Your API key is stored only in this browser's
+        <strong>localStorage</strong>; calls go directly from this page to <code>api.anthropic.com</code>.
+        Nothing transits Stratum servers, and no traffic is proxied.
+      </p>
+      <p class="modal-body">
+        Bring your own Anthropic API key. You can revoke it at any time from your Anthropic console.
+      </p>
+      <form id="onboard-form" autocomplete="off">
+        <label class="modal-label" for="onboard-key">Your Anthropic API key</label>
+        <input type="password" id="onboard-key" class="modal-input" placeholder="sk-ant-…" autocomplete="off" required />
+        <div class="modal-row">
+          <a class="modal-link" href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer">Get a key →</a>
+          <span style="flex:1"></span>
+          <button type="button" class="btn btn-ghost" id="onboard-skip-demo">Skip · stay in demo mode</button>
+          <button type="submit" class="btn btn-ochre" id="onboard-submit">Connect</button>
+        </div>
+        <div class="modal-status" id="onboard-status"></div>
+        <div class="modal-reason err" id="onboard-reason" style="display:none;"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────────────── SETTINGS MODAL ──────────────── -->
+<div class="modal-backdrop" id="settings-modal-r" role="dialog" aria-modal="true" aria-labelledby="settings-title" aria-hidden="true">
+  <div class="modal modal-wide">
+    <button class="modal-close" id="settings-close" type="button" aria-label="Close">×</button>
+    <div class="modal-inner">
+      <div class="modal-eyebrow">§ Recruiter settings</div>
+      <h2 class="modal-title" id="settings-title">Tune the <em>recruiter copilot.</em></h2>
+
+      <div class="settings-grid">
+        <div class="settings-row">
+          <label class="modal-label">Claude model</label>
+          <select id="set-model" class="modal-input">
+            <option value="claude-sonnet-4-6">Sonnet 4.6 · balanced default</option>
+            <option value="claude-opus-4-7">Opus 4.7 · deepest reasoning</option>
+            <option value="claude-haiku-4-5-20251001">Haiku 4.5 · fastest, cheapest</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label class="modal-label">Reasoning effort</label>
+          <select id="set-effort" class="modal-input">
+            <option value="quick">Quick · no extended thinking</option>
+            <option value="standard">Standard · 2K thinking budget</option>
+            <option value="deep">Deep · 8K thinking budget</option>
+          </select>
+        </div>
+        <div class="settings-row">
+          <label class="modal-label">API key</label>
+          <div class="settings-key-row">
+            <span class="modal-status" id="set-key-status">Not connected</span>
+            <button type="button" class="btn btn-ghost btn-danger" id="set-forget">Forget API key</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-row" style="margin-top:1.4rem;">
+        <button type="button" class="btn btn-ghost" id="set-reset">Reset session</button>
+        <span style="flex:1"></span>
+        <button type="button" class="btn btn-ochre" id="set-done">Done</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ────────────────────────── SHORTCUTS HELP ─────────────── -->
