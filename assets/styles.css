@@ -1457,6 +1457,51 @@ section {
   to   { transform: scaleX(1); }
 }
 
+
+/* ── A11Y Sprint 2 — 2026-05-15
+   --ink-mute-aa deployed to muted label selectors (WCAG 1.4.3 AA pass, 5.98:1 on paper)
+   Previously --ink-mute was #6c7180, 4.14:1 — failed AA.
+   Scoped to semantic "supporting text" roles: .ink-mute, .muted, .hint, .helper.
+   Decorative uses retain --ink-mute; text-carrying uses get --ink-mute-aa. */
+.ink-mute,
+.muted,
+.hint,
+.helper-text {
+  color: var(--ink-mute-aa);
+}
+
+/* ── A11Y Sprint 2 — WCAG 2.5.5 AAA: Target size minimum 44×44px
+   Applied to primary interactive elements across the site.
+   Scoped to .btn, .cta, .filter-btn — not toolbar compacts
+   (those are below 44px by design; they carry the advisory note).
+   Using min-block-size + min-inline-size (logical properties) with display:inline-flex
+   as the layout mechanism for centering. */
+.btn,
+.cta,
+.filter-btn {
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Utility class for one-off 44×44 targets */
+.target-aaa {
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ── A11Y Sprint 2 — sn-col-head ochre-link fix
+   Any .site-nav block that inlines --ochre for column heads needs --ochre-link.
+   This global rule makes the fix available without touching per-page <style> blocks
+   for pages that use assets/styles.css. Pages with inline <style> are fixed directly. */
+.site-nav .sn-col-head {
+  color: var(--ochre-link, #7a3d0a);
+}
+
 /* ─────────────────────────────────────────────── PRINT ── */
 
 @media print {

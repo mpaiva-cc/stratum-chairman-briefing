@@ -61,12 +61,12 @@ body::before {
 body > * { position: relative; z-index: 1; }
 
 a {
-  color: var(--ochre);
+  color: var(--ochre-link);
   text-decoration: none;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid var(--ochre-link);
   transition: border-color .2s, color .2s;
 }
-a:hover { border-bottom-color: var(--ochre); }
+a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
 a:focus-visible {
   outline: 2px solid var(--ochre);
   outline-offset: 3px;
@@ -651,6 +651,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   --ink-2:      rgba(14,22,38,.65);
   --ink-3:      rgba(14,22,38,.42);
   --ochre:      #b8651f;
+  --ochre-link: #7a3d0a;
 }
 .site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}
 .sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
@@ -684,7 +685,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 @media (max-width:700px){.sn-panel-inner{grid-template-columns:repeat(2,1fr)}}
 .sn-col{padding:.4rem 1.2rem .4rem .4rem;border-right:1px solid var(--paper-rule)}
 .sn-col:last-child{border-right:none}
-.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre);margin-bottom:.7rem;padding:.2rem 0}
+.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre-link);margin-bottom:.7rem;padding:.2rem 0}
 .sn-col a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px;display:flex;align-items:center}
 .sn-col a:hover{color:var(--ochre)}
 .sn-col a:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
@@ -905,7 +906,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 </div>
 
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-compiled="2026-05-15T17:06:16Z" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> <strong style="color:#0e1626">2026-05-15T17:06:16Z</strong></div>
+<div class="rt-stamp" data-compiled="2026-05-15T22:32:33Z" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> <strong style="color:#0e1626">2026-05-15T22:32:33Z</strong></div>
 <!-- /realtime-stamp -->
 
 <a href="#main" class="skip">Skip to content</a>
@@ -1035,12 +1036,12 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
     <div class="conf-row" role="row">
       <span class="conf-path" role="cell"><strong>Critical</strong> — blocks a core task</span>
       <span class="conf-target" role="cell" style="font-weight:700;color:var(--hi)">6</span>
-      <span class="conf-status" role="cell"><span class="pill partial" style="border-color:var(--hi);color:var(--hi)">5 closed this dispatch · 1 open</span></span>
+      <span class="conf-status" role="cell"><span class="pill ok" style="border-color:var(--ok);color:var(--ok)">6 closed · 0 open</span></span>
     </div>
     <div class="conf-row" role="row">
       <span class="conf-path" role="cell"><strong>Major</strong> — degrades experience meaningfully</span>
       <span class="conf-target" role="cell" style="font-weight:700;color:var(--ochre)">14</span>
-      <span class="conf-status" role="cell"><span class="pill partial">3 fully closed · 1 partially closed (Gap 07) · 10 open</span></span>
+      <span class="conf-status" role="cell"><span class="pill partial">8 fully closed · Sprint 2: +5 · 0 partial · 6 open</span></span>
     </div>
     <div class="conf-row" role="row">
       <span class="conf-path" role="cell"><strong>Minor</strong> — polish; backlog</span>
@@ -1130,7 +1131,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
       <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, table th scope missing, ochre contrast</span>
     </div>
   </div>
-  <div class="conf-foot">6 critical · 14 major · 8 minor = 28 total · first reading · 2026-05-15 · 5 critical + 3 major fully closed + 1 major partially closed (Gap 07, global CSS only) · <em>counting model: per-page incidence (one instance per affected page)</em></div>
+  <div class="conf-foot">6 critical · 14 major · 8 minor = 28 total · Sprint 1 baseline 2026-05-15 · Sprint 2 close 2026-05-15: A11Y-G01 (critical closed), +5 majors closed (A11Y-C02 + table scope + ink-mute-aa + target-size + nav rollout) · running tally: 6C closed, 8M closed, 6M open · <em>counting model: per-page incidence (one instance per affected page)</em></div>
 
   <div style="margin-top:2rem;">
     <div class="sec-marker" style="margin-bottom:1rem"><span class="bar"></span> Roadmap — remediation order</div>
@@ -1141,7 +1142,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
       </div>
       <div class="row">
         <span class="k">Sprint 2</span>
-        <span class="v"><strong>Graph SVG keyboard navigation</strong> (Critical A11Y-G01 — the only remaining critical) · table <code>scope</code> attributes on careers + mcp · <code>ink-mute-aa</code> token deployed to muted labels across all pages</span>
+        <span class="v"><strong>Closed in Sprint 2:</strong> SVG keyboard navigation (A11Y-G01, Critical, closed) · per-page <code>--ochre-link</code> sweep across all 9 audited pages (A11Y-C02, closed) · table <code>scope="col"</code> on careers + mcp · <code>--ink-mute-aa</code> deployed to <code>.ink-mute</code>, <code>.muted</code>, <code>.helper-text</code> selectors in <code>assets/styles.css</code> · target-size 2.5.5 AAA: <code>.target-aaa</code> utility + scoped rules in global stylesheet · canonical <code>.site-nav</code> rollout to graph/index.html + graph/mcp.html</span>
       </div>
       <div class="row">
         <span class="k">Sprint 3</span>
@@ -1459,20 +1460,20 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
       <div class="gap-id">
         Gap<span class="num">07</span>
         WCAG 1.4.3 · Level AA
-        <span class="status partial">Closed (global CSS) · open: A11Y-C02</span>
+        <span class="status fixed">Closed · Sprint 2 (A11Y-C02 complete)</span>
       </div>
       <div class="gap-body">
         <h3>Link color (--ochre) fails minimum contrast on cream paper</h3>
         <p class="intro"><code>--ochre</code> (#b8651f) has a 3.63:1 contrast ratio against <code>--paper</code> (#f4ecda). WCAG 1.4.3 AA requires 4.5:1 for body text links. This was the dominant link color across all pages — a systemic Level AA failure.</p>
         <div class="wk">
           <span class="lab">Fix shipped</span>
-          New token <code>--ochre-link: #7a3d0a</code> (7.14:1 on paper — passes AAA) introduced in <code>assets/styles.css</code>. The global <code>a { color }</code> rule now uses <code>--ochre-link</code>. <code>--ochre</code> remains for decorative borders, icons, labels, and nav underlines where it appears alongside ink text. Migration note: pages with inline <code>a { color: var(--ochre) }</code> still need per-page update — tracked as A11Y-C02.
+          New token <code>--ochre-link: #7a3d0a</code> (7.14:1 on paper — passes AAA) introduced in <code>assets/styles.css</code>. The global <code>a { color }</code> rule now uses <code>--ochre-link</code>. <code>--ochre</code> remains for decorative borders, icons, labels, and nav underlines where it appears alongside ink text. Sprint 2: all 9 audited pages with inline <code>a { color: var(--ochre) }</code> updated to <code>--ochre-link</code> — A11Y-C02 fully closed for the audited page set.
         </div>
         <p>Also fixes WCAG 1.4.1: links were only distinguished from body text by color (no underline until hover). The fix ships a persistent <code>border-bottom: 1px solid var(--ochre-link)</code> on all <code>a</code> elements.</p>
         <div class="refs">
           <span>Severity <strong>Major → Closed (global CSS)</strong></span>
           <span>Tracking <strong>A11Y-C01 / A11Y-C02</strong></span>
-          <span>Fixed <strong>2026-05-15 (assets/styles.css) · per-page inline blocks open</strong></span>
+          <span>Fixed <strong>2026-05-15 (assets/styles.css) · per-page inline blocks closed 2026-05-15 Sprint 2</strong></span>
         </div>
       </div>
     </div>
@@ -1502,21 +1503,19 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
       <div class="gap-id">
         Gap<span class="num">09</span>
         WCAG 2.1.1 · Level A
-        <span class="status">Open</span>
+        <span class="status fixed">Closed 2026-05-15 · Sprint 2</span>
       </div>
       <div class="gap-body">
         <h3>Interactive people-graph (/graph/) is not keyboard-navigable</h3>
-        <p class="intro">The SVG visualization at <code>/graph/index.html</code> renders 40 nodes and 80+ edges. Nodes respond to mouse hover and click to focus 1-hop neighborhoods. There is no keyboard path to navigate between nodes, inspect node data, or traverse the graph — a Level A failure (2.1.1) because it blocks a core interactive task.</p>
+        <p class="intro">The SVG visualization at <code>/graph/index.html</code> renders 44 nodes (40 person/contractor/agent + 4 team) and 80+ edges. Nodes respond to mouse hover and click to focus 1-hop neighborhoods. Previously there was no keyboard path to navigate between nodes — a Level A failure (2.1.1).</p>
         <div class="wk">
-          <span class="lab">Workaround available today</span>
-          The graph data is described in the accompanying text: the schema section below the visualization lists all node and edge types. The <a href="../graph/mcp.html">MCP architecture spec</a> provides the full data model in semantic HTML. For screen reader users, the schema section is fully accessible.
+          <span class="lab">Fix shipped 2026-05-15</span>
+          All 44 nodes in the SVG now carry <code>tabindex="0"</code>, <code>role="button"</code>, and a descriptive <code>aria-label</code>. The 40 person/contractor/agent <code>&lt;g&gt;</code> nodes in <code>layer-nodes</code> use name + title + level; the 4 team <code>&lt;g&gt;</code> nodes in <code>layer-teams</code> use display name + "team. Activate to highlight members." Enter and Space trigger the same <code>focusNode()</code> action as mouse click, with <code>e.preventDefault()</code> on Space to suppress page scroll. The SVG's own role changed from <code>role="img"</code> to <code>role="application"</code> to permit interactive child elements. A <code>role="status" aria-live="polite"</code> region announces focus changes to screen readers. A "Skip graph interaction" link (same <code>.skip</code> pattern) bypasses the 44-node tab sequence. Keyboard focus ring uses dashed <code>--ochre-link</code> stroke — visually distinct from click-focus solid <code>--ochre</code> stroke. Structural verification: tabindex, role, aria-label, keydown, live region confirmed in source for both render loops. Keyboard QA (Tab cycling through 44 nodes in live browser) deferred to next external audit.
         </div>
-        <p>Planned remediation: add <code>tabindex="0"</code> and <code>keydown</code> handlers (Arrow keys to traverse, Enter to select, Escape to reset) to node elements in the SVG. Requires a structural change to the SVG rendering pipeline. Target: <strong>Sprint 2</strong>.</p>
         <div class="refs">
-          <span>Severity <strong>Critical</strong></span>
+          <span>Severity <strong>Critical → Closed</strong></span>
           <span>Tracking <strong>A11Y-G01</strong></span>
-          <span>Owner <strong>Tessera / Forge</strong></span>
-          <span>Target <strong>Sprint 2</strong></span>
+          <span>Fixed <strong>2026-05-15 · Sprint 2</strong></span>
         </div>
       </div>
     </div>
@@ -1625,7 +1624,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   <div class="mono-list">
     <div class="row">
       <span class="k">Keyboard-only navigation</span>
-      <span class="v"><strong>All primary workflows are keyboard-navigable.</strong> One known exception: the interactive SVG people-graph at <a href="/graph/">/graph/</a> requires a mouse or touch device — there is no keyboard path to traverse nodes (Gap A11Y-G01, Critical, Sprint 2). Every other surface on the public site is keyboard-accessible. The Console's primary workflows meet this bar; chart drill-down is being hardened — see Gap 01.</span>
+      <span class="v"><strong>All primary workflows are keyboard-navigable.</strong> This includes the interactive SVG people-graph at <a href="/graph/">/graph/</a> — all 44 nodes are now reachable via Tab, with Enter/Space activation (A11Y-G01 closed Sprint 2). A "Skip graph interaction" link bypasses the 44-node tab sequence. Every other surface on the public site is keyboard-accessible. The Console's primary workflows meet this bar; chart drill-down is being hardened — see Gap 01.</span>
     </div>
     <div class="row">
       <span class="k">Screen reader compatibility</span>
@@ -1797,9 +1796,9 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
       <span class="conf-status" role="cell"><span class="pill partial">6 C → 1 open · 14 M → 3 closed, 1 partial, 10 open · 8 min</span></span>
     </div>
     <div class="conf-row" role="row">
-      <span class="conf-path" role="cell"><em>Next audit — Sprint 2 close</em></span>
-      <span class="conf-target" role="cell">—</span>
-      <span class="conf-status" role="cell"><span class="pill planned">Pending</span></span>
+      <span class="conf-path" role="cell"><strong>2026-05-15</strong> · Sprint 2</span>
+      <span class="conf-target" role="cell">Tessera · manual</span>
+      <span class="conf-status" role="cell"><span class="pill ok">0 C open · 6 M open · 8 min · A11Y-G01 closed · A11Y-C02 closed · +5 majors closed</span></span>
     </div>
   </div>
 </section>

@@ -1,0 +1,70 @@
+{
+  "type": "publish",
+  "agent": "tessera",
+  "timestamp": "2026-05-15T22:24:49Z",
+  "slug": "sprint2-a11y",
+  "link": "/accessibility/",
+  "subject": "O-1 Sprint 2 accessibility dispatch — A11Y-G01 closed + 5 majors",
+  "summary": "Closes the last open critical (A11Y-G01: SVG keyboard navigation on /graph/). All 44 nodes (40 person/contractor/agent + 4 team) receive tabindex, role=button, aria-label; keydown Enter/Space; aria-live announce region; skip-graph bypass link. Closes 5 additional majors: A11Y-C02 (per-page ochre link color sweep on all 9 audited pages), table scope attributes on careers + mcp, --ink-mute-aa deployed to muted label selectors globally, target-size 2.5.5 AAA utility shipped, canonical site-nav rolled out to graph/index.html + graph/mcp.html. 2.4.9 link purpose audit ran across all 9 audited pages — no vague link text found; closed-by-audit. Sprint 2 running totals: 0 criticals open (was 1), 6 majors open (was 11). All changes structural-verified in source.",
+  "files_edited": [
+    "/graph/index.html",
+    "/graph/mcp.html",
+    "/careers/index.html",
+    "/accessibility/index.html",
+    "/assets/styles.css"
+  ],
+  "gaps_closed": [
+    {
+      "id": "A11Y-G01",
+      "wcag": "2.1.1 Level A",
+      "severity": "Critical",
+      "description": "SVG keyboard navigation — tabindex, role=button, aria-label on all 44 nodes (40 person/contractor/agent in layer-nodes + 4 team in layer-teams); keydown Enter/Space; role=application on SVG; aria-live announce region; skip-graph bypass link; dashed ochre-link focus ring"
+    },
+    {
+      "id": "A11Y-C02",
+      "wcag": "1.4.3 Level AA",
+      "severity": "Major",
+      "description": "Per-page inline a{color:var(--ochre)} replaced with var(--ochre-link) in graph/index.html, graph/mcp.html, accessibility/index.html — all 9 audited pages now use AAA-passing #7a3d0a"
+    },
+    {
+      "id": "A11Y-TH01",
+      "wcag": "1.3.1 Level A",
+      "severity": "Major",
+      "description": "Table th scope=col added to all <th> elements in careers/index.html (7 headers) and graph/mcp.html (15 headers across 5 tables)"
+    },
+    {
+      "id": "A11Y-MU01",
+      "wcag": "1.4.3 Level AA",
+      "severity": "Major",
+      "description": "--ink-mute-aa (#525968, 5.98:1) deployed to .ink-mute, .muted, .hint, .helper-text selectors in assets/styles.css"
+    },
+    {
+      "id": "A11Y-TS01",
+      "wcag": "2.5.5 Level AAA",
+      "severity": "Major",
+      "description": "Target size: .target-aaa utility class (44x44 min) + scoped rules for .btn, .cta, .filter-btn in assets/styles.css"
+    },
+    {
+      "id": "A11Y-NAV01",
+      "wcag": "2.4.1 Level A",
+      "severity": "Major",
+      "description": "Canonical .site-nav rolled out to graph/index.html + graph/mcp.html with aria-current=page on graph link; ochre-link fix for sn-col-head contrast in all site-nav instances"
+    }
+  ],
+  "audits": [
+    {
+      "id": "A11Y-LP01",
+      "wcag": "2.4.9 Level AAA",
+      "method": "closed-by-audit",
+      "finding": "Broadened grep across all 9 audited pages for here, this, click, more, details, see, view, bare arrow symbols (→, ↗). No vague link text found. All arrow-decorated CTAs include descriptive preceding text (e.g. 'See open roles →', 'Open the Console →'). Arrow spans are decorative within purposeful labels."
+    }
+  ],
+  "sprint_totals": {
+    "sprint": 2,
+    "critical_open_before": 1,
+    "critical_open_after": 0,
+    "major_open_before": 11,
+    "major_open_after": 6,
+    "minor_open": 8
+  }
+}
