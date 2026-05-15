@@ -3465,13 +3465,172 @@ async function renderAnswerLive(question) {
   }
 }
 
+// Mini-markdown renderer — handles headings, tables, hr, lists, inline marks.
+// Intentionally not a full CommonMark implementation; tuned for the kinds of
+// outputs the agents produce (pipe tables, ATX headings, em/strong, code fences).
 function renderInlineMd(s) {
-  return escapeHtml(s)
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    .replace(/(^|[^*])\*([^*\n]+)\*([^*]|$)/g, '$1<em>$2</em>$3')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\n\n+/g, '</p><p>')
-    .replace(/\n/g, '<br>');
+  if (!s) return '';
+
+  // Inline transforms applied to a text fragment (after escapeHtml).
+  // Order matters: code first (so its contents are not bold/italic-parsed), then strong, then em.
+  function inline(text) {
+    return text
+      .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+  }
+
+  // Pre-escape the whole string ONCE, then walk lines.
+  // We do this before block parsing so HTML in the markdown is neutralized.
+  const lines = escapeHtml(s).split('\n');
+  const out = [];
+  let i = 0;
+  let inCode = false;
+  let codeBuf = [];
+  let paraBuf = [];
+  let listBuf = [];        // current list (each entry: html)
+  let listType = null;     // 'ul' | 'ol'
+
+  function flushPara() {
+    if (paraBuf.length === 0) return;
+    const txt = paraBuf.join('<br>');
+    out.push('<p>' + inline(txt) + '</p>');
+    paraBuf = [];
+  }
+  function flushList() {
+    if (listBuf.length === 0) return;
+    const tag = listType === 'ol' ? 'ol' : 'ul';
+    out.push('<' + tag + '>' + listBuf.map(li => '<li>' + inline(li) + '</li>').join('') + '</' + tag + '>');
+    listBuf = [];
+    listType = null;
+  }
+  function flushAll() {
+    flushPara();
+    flushList();
+  }
+
+  function isTableSeparator(line) {
+    // A separator row: only |, -, :, and whitespace
+    return /^\s*\|?[\s\-:|]+\|?\s*$/.test(line) && /-/.test(line);
+  }
+  function splitRow(line) {
+    let t = line.trim();
+    if (t.startsWith('|')) t = t.slice(1);
+    if (t.endsWith('|')) t = t.slice(0, -1);
+    return t.split('|').map(c => c.trim());
+  }
+
+  while (i < lines.length) {
+    const raw = lines[i];
+    const line = raw;
+
+    // Code fence
+    if (/^\s*```/.test(line)) {
+      if (inCode) {
+        out.push('<pre><code>' + codeBuf.join('\n') + '</code></pre>');
+        codeBuf = [];
+        inCode = false;
+      } else {
+        flushAll();
+        inCode = true;
+      }
+      i++; continue;
+    }
+    if (inCode) {
+      codeBuf.push(line);
+      i++; continue;
+    }
+
+    // Blank line — paragraph break
+    if (/^\s*$/.test(line)) {
+      flushAll();
+      i++; continue;
+    }
+
+    // Horizontal rule
+    if (/^\s*(---|\*\*\*|___)\s*$/.test(line)) {
+      flushAll();
+      out.push('<hr>');
+      i++; continue;
+    }
+
+    // ATX heading (## Heading)
+    const hMatch = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+    if (hMatch) {
+      flushAll();
+      // Map heading levels into a denser range so they fit inside the answer card:
+      // # → h3, ## → h4, ### → h5, etc.
+      const level = Math.min(6, hMatch[1].length + 2);
+      out.push('<h' + level + '>' + inline(hMatch[2]) + '</h' + level + '>');
+      i++; continue;
+    }
+
+    // Pipe table — detect header row + separator row + body rows
+    if (/^\s*\|/.test(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+      flushAll();
+      const headers = splitRow(line);
+      i += 2; // skip header + separator
+      const rows = [];
+      while (i < lines.length && /^\s*\|/.test(lines[i]) && !isTableSeparator(lines[i])) {
+        rows.push(splitRow(lines[i]));
+        i++;
+      }
+      let html = '<div class="md-table-wrap"><table class="md-table"><thead><tr>';
+      headers.forEach(h => { html += '<th>' + inline(h) + '</th>'; });
+      html += '</tr></thead><tbody>';
+      rows.forEach(r => {
+        html += '<tr>';
+        // Pad/truncate to header length
+        for (let c = 0; c < headers.length; c++) {
+          html += '<td>' + inline(r[c] || '') + '</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      out.push(html);
+      continue;
+    }
+
+    // Unordered list
+    const ulMatch = /^\s*[-*]\s+(.+)$/.exec(line);
+    if (ulMatch) {
+      flushPara();
+      if (listType && listType !== 'ul') flushList();
+      listType = 'ul';
+      listBuf.push(ulMatch[1]);
+      i++; continue;
+    }
+
+    // Ordered list
+    const olMatch = /^\s*\d+\.\s+(.+)$/.exec(line);
+    if (olMatch) {
+      flushPara();
+      if (listType && listType !== 'ol') flushList();
+      listType = 'ol';
+      listBuf.push(olMatch[1]);
+      i++; continue;
+    }
+
+    // Blockquote
+    if (/^\s*>\s?/.test(line)) {
+      flushList();
+      paraBuf.push('<span class="md-quote-mark">›</span> ' + line.replace(/^\s*>\s?/, ''));
+      i++; continue;
+    }
+
+    // Anything else: paragraph line
+    flushList();
+    paraBuf.push(line);
+    i++;
+  }
+
+  if (inCode) {
+    // Unclosed code fence — close it
+    out.push('<pre><code>' + codeBuf.join('\n') + '</code></pre>');
+  }
+  flushAll();
+
+  return out.join('\n');
 }
 
 function describeFilterCall(fi) {

@@ -1511,6 +1511,132 @@ button { font-family: inherit; cursor: pointer; }
   font-style: italic;
 }
 
+/* Markdown block elements rendered inside the live answer */
+.answer-live-text h3,
+.answer-live-text h4,
+.answer-live-text h5,
+.answer-live-text h6 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  color: var(--ink);
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  margin: 1.4rem 0 .55rem;
+}
+.answer-live-text h3 { font-size: 1.45rem; }
+.answer-live-text h4 { font-size: 1.25rem; }
+.answer-live-text h5 { font-size: 1.1rem; }
+.answer-live-text h6 { font-size: 1rem; color: var(--ink-2); }
+
+.answer-live-text hr {
+  border: 0;
+  border-top: 1px solid var(--paper-rule);
+  margin: 1.4rem 0;
+  height: 0;
+}
+
+.answer-live-text ul,
+.answer-live-text ol {
+  margin: .4rem 0 .9rem;
+  padding-left: 1.3rem;
+  font-family: var(--serif);
+  font-size: clamp(1rem, 1.5vw, 1.05rem);
+  line-height: 1.55;
+}
+.answer-live-text li { margin: .25rem 0; }
+.answer-live-text li::marker { color: var(--ochre); }
+
+.answer-live-text blockquote {
+  margin: .6rem 0;
+  padding: .3rem 0 .3rem 1rem;
+  border-left: 2px solid var(--ochre-soft);
+  color: var(--ink-2);
+  font-style: italic;
+}
+
+.answer-live-text pre {
+  margin: .6rem 0 1rem;
+  padding: .85rem 1rem;
+  background: var(--paper-deep);
+  border-left: 2px solid var(--ochre);
+  border-radius: 2px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.55;
+}
+.answer-live-text pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* Tables — the bug fix the user flagged */
+.answer-live-text .md-table-wrap {
+  margin: .8rem 0 1.2rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  border-radius: 2px;
+}
+.answer-live-text .md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-feature-settings: "tnum";
+}
+.answer-live-text .md-table thead th {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-align: left;
+  padding: .65rem .8rem;
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper);
+}
+.answer-live-text .md-table tbody td {
+  padding: .55rem .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+  color: var(--ink);
+  font-family: var(--mono);
+  vertical-align: top;
+  line-height: 1.45;
+}
+.answer-live-text .md-table tbody tr:last-child td { border-bottom: 0; }
+.answer-live-text .md-table tbody tr:hover { background: rgba(184,101,31,.04); }
+.answer-live-text .md-table strong {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 24;
+  color: var(--ochre-deep);
+  font-size: 1.1em;
+}
+.answer-live-text .md-table em {
+  font-style: italic;
+  color: var(--ink-2);
+}
+
+.answer-live-text .md-quote-mark {
+  color: var(--ochre);
+  font-weight: 700;
+  margin-right: .25rem;
+}
+
+@media (max-width: 700px) {
+  .answer-live-text h3 { font-size: 1.25rem; }
+  .answer-live-text h4 { font-size: 1.1rem; }
+  .answer-live-text .md-table { font-size: 12px; }
+  .answer-live-text .md-table thead th,
+  .answer-live-text .md-table tbody td { padding: .5rem .55rem; }
+}
+
 .stream-cursor {
   display: inline-block;
   width: 2px;

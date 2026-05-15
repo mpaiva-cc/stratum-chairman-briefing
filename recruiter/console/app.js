@@ -3175,18 +3175,101 @@ Use only ids that appear in the interviewer_pool you received. Each panel's reas
     return span;
   }
   function _appendStreamText(el, txt, plainText = false) {
-    // Remove cursor, append, re-append
-    const cur = el.querySelector('.streaming-cursor');
-    if (cur) cur.remove();
+    // Accumulate the delta into a buffer attached to the element, then
+    // re-render the whole buffer as markdown. Avoids the trailing-table
+    // partial-parse problem and gives proper headings / lists / tables.
+    if (!el._streamBuf) el._streamBuf = '';
+    el._streamBuf += txt;
     if (plainText) {
-      el.appendChild(document.createTextNode(txt));
+      el.textContent = el._streamBuf;
     } else {
-      // permissive HTML append
-      const tmp = document.createElement('span');
-      tmp.innerHTML = txt;
-      while (tmp.firstChild) el.appendChild(tmp.firstChild);
+      el.innerHTML = _renderMd(el._streamBuf);
     }
     el.appendChild(_cursorEl());
+  }
+
+  // Mini-markdown renderer for the Recruiter's streaming AI outputs.
+  // Handles: ATX headings, pipe tables, horizontal rules, lists,
+  // blockquotes, code fences, inline bold / italic / inline-code.
+  function _renderMd(s) {
+    if (!s) return '';
+    function inline(t) {
+      return t
+        .replace(/`([^`\n]+)`/g, '<code>$1</code>')
+        .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+    }
+    function esc(t) {
+      return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    const lines = esc(s).split('\n');
+    const out = [];
+    let i = 0, inCode = false, codeBuf = [], paraBuf = [], listBuf = [], listType = null;
+    function flushPara() {
+      if (paraBuf.length) { out.push('<p>' + inline(paraBuf.join('<br>')) + '</p>'); paraBuf = []; }
+    }
+    function flushList() {
+      if (listBuf.length) {
+        const tag = listType === 'ol' ? 'ol' : 'ul';
+        out.push('<' + tag + '>' + listBuf.map(li => '<li>' + inline(li) + '</li>').join('') + '</' + tag + '>');
+        listBuf = []; listType = null;
+      }
+    }
+    function flushAll() { flushPara(); flushList(); }
+    function isSep(l) { return /^\s*\|?[\s\-:|]+\|?\s*$/.test(l) && /-/.test(l); }
+    function splitRow(l) {
+      let t = l.trim();
+      if (t.startsWith('|')) t = t.slice(1);
+      if (t.endsWith('|')) t = t.slice(0, -1);
+      return t.split('|').map(c => c.trim());
+    }
+    while (i < lines.length) {
+      const line = lines[i];
+      if (/^\s*```/.test(line)) {
+        if (inCode) { out.push('<pre><code>' + codeBuf.join('\n') + '</code></pre>'); codeBuf = []; inCode = false; }
+        else { flushAll(); inCode = true; }
+        i++; continue;
+      }
+      if (inCode) { codeBuf.push(line); i++; continue; }
+      if (/^\s*$/.test(line)) { flushAll(); i++; continue; }
+      if (/^\s*(---|\*\*\*|___)\s*$/.test(line)) { flushAll(); out.push('<hr>'); i++; continue; }
+      const h = /^(#{1,6})\s+(.+?)\s*#*\s*$/.exec(line);
+      if (h) {
+        flushAll();
+        const level = Math.min(6, h[1].length + 2);
+        out.push('<h' + level + '>' + inline(h[2]) + '</h' + level + '>');
+        i++; continue;
+      }
+      if (/^\s*\|/.test(line) && i + 1 < lines.length && isSep(lines[i + 1])) {
+        flushAll();
+        const headers = splitRow(line);
+        i += 2;
+        const rows = [];
+        while (i < lines.length && /^\s*\|/.test(lines[i]) && !isSep(lines[i])) { rows.push(splitRow(lines[i])); i++; }
+        let html = '<div class="md-table-wrap"><table class="md-table"><thead><tr>';
+        headers.forEach(h => html += '<th>' + inline(h) + '</th>');
+        html += '</tr></thead><tbody>';
+        rows.forEach(r => {
+          html += '<tr>';
+          for (let c = 0; c < headers.length; c++) html += '<td>' + inline(r[c] || '') + '</td>';
+          html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+        out.push(html);
+        continue;
+      }
+      const ul = /^\s*[-*]\s+(.+)$/.exec(line);
+      if (ul) { flushPara(); if (listType && listType !== 'ul') flushList(); listType = 'ul'; listBuf.push(ul[1]); i++; continue; }
+      const ol = /^\s*\d+\.\s+(.+)$/.exec(line);
+      if (ol) { flushPara(); if (listType && listType !== 'ol') flushList(); listType = 'ol'; listBuf.push(ol[1]); i++; continue; }
+      if (/^\s*>\s?/.test(line)) { flushList(); paraBuf.push('<span class="md-quote-mark">›</span> ' + line.replace(/^\s*>\s?/, '')); i++; continue; }
+      flushList();
+      paraBuf.push(line);
+      i++;
+    }
+    if (inCode) out.push('<pre><code>' + codeBuf.join('\n') + '</code></pre>');
+    flushAll();
+    return out.join('\n');
   }
   function _finalizeStream(el) {
     const cur = el.querySelector('.streaming-cursor');
