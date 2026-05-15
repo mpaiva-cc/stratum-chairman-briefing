@@ -883,6 +883,55 @@ strong { font-weight: 600; color: var(--ink); }
   body { background: white; color: black; font-size: 11pt; }
   .entry { page-break-inside: avoid; }
 }
+
+/* ─────────────────────────────────────────── ISSUE JUMP STRIP ── */
+.jump-strip {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 1.4rem 0 0;
+}
+.jump-strip-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-bottom: .75rem;
+}
+.jump-tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+.jump-tile {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: .35rem .7rem;
+  border-radius: 2px;
+  border-bottom: 1px solid var(--paper-rule);
+  transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.jump-tile:hover {
+  background: var(--paper-deep);
+  border-color: var(--paper-rule-2);
+  color: var(--ochre);
+}
+.jump-tile.is-latest {
+  color: var(--ochre);
+  border-color: var(--ochre-soft);
+  background: rgba(184, 101, 31, 0.05);
+}
+@media (max-width: 640px) {
+  .jump-tiles { gap: .3rem; }
+  .jump-tile { font-size: 10.5px; padding: .3rem .6rem; }
+}
+
 </style>
 </head>
 <body>
@@ -895,7 +944,7 @@ strong { font-weight: 600; color: var(--ink); }
 <div class="mob-bar">
   <a href="../library/" aria-label="The Library">← Library</a>
   <span class="mob-bar-mark">Stratum / Briefings</span>
-  <a href="./007.html" aria-label="Latest briefing">Briefing →</a>
+  <a href="./015.html" aria-label="Latest briefing">015 →</a>
 </div>
 
 <!-- ─────────────────────────────────────────── NAV ── -->
@@ -934,6 +983,29 @@ strong { font-weight: 600; color: var(--ink); }
     <span>FOUNDED 06 MAY 2026</span><span class="sep">·</span>
     <span>LATEST <strong>BRIEFING 015 · MCP</strong></span>
   </div>
+
+<!-- ─────────────────────────────────────────── ISSUE JUMP STRIP ── -->
+<div class="jump-strip" aria-label="Jump to issue">
+  <div class="jump-strip-label">Jump to issue</div>
+  <div class="jump-tiles">
+    <a class="jump-tile" href="../index.html">001</a>
+    <a class="jump-tile" href="#b-002">002</a>
+    <a class="jump-tile" href="#b-003">003</a>
+    <a class="jump-tile" href="#b-004">004</a>
+    <a class="jump-tile" href="#b-005">005</a>
+    <a class="jump-tile" href="#b-006">006</a>
+    <a class="jump-tile" href="#b-007">007</a>
+    <a class="jump-tile" href="#b-008">008</a>
+    <a class="jump-tile" href="#b-009">009</a>
+    <a class="jump-tile" href="#b-010">010</a>
+    <a class="jump-tile" href="#b-011">011</a>
+    <a class="jump-tile" href="#b-012">012</a>
+    <a class="jump-tile" href="#b-013">013</a>
+    <a class="jump-tile" href="#b-014">014</a>
+    <a class="jump-tile is-latest" href="#b-015">015 ·&thinsp;latest</a>
+  </div>
+</div>
+
 </header>
 
 <!-- ─────────────────────────────────────────── FEATURED ── -->
@@ -1024,7 +1096,7 @@ strong { font-weight: 600; color: var(--ink); }
   </p>
 
   <!-- 015 -->
-  <a class="entry" href="./015.html">
+  <a class="entry" id="b-015" href="./015.html">
     <div class="entry-num">Briefing No. 015<span class="name">· T+~13d real-elapsed · The protocol layer</span></div>
     <h3 class="entry-title">The <em>protocol</em> layer.</h3>
     <p class="entry-dek">
@@ -1052,7 +1124,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 014 -->
-  <a class="entry" href="./014.html">
+  <a class="entry" id="b-014" href="./014.html">
     <div class="entry-num">Briefing No. 014<span class="name">· T+~55h real-elapsed · The autonomy redirect</span></div>
     <h3 class="entry-title">The <em>autonomy</em> redirect.</h3>
     <p class="entry-dek">
@@ -1080,7 +1152,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 013 -->
-  <a class="entry" href="./013.html">
+  <a class="entry" id="b-013" href="./013.html">
     <div class="entry-num">Briefing No. 013<span class="name">· T+172d · Day 173</span></div>
     <h3 class="entry-title">A <em>two-product</em> company.</h3>
     <p class="entry-dek">
@@ -1107,7 +1179,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 012 -->
-  <a class="entry" href="./012.html">
+  <a class="entry" id="b-012" href="./012.html">
     <div class="entry-num">Briefing No. 012<span class="name">· T+158d · Day 159</span></div>
     <h3 class="entry-title"><em>Naomi</em> joins.</h3>
     <p class="entry-dek">
@@ -1135,7 +1207,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 011 -->
-  <a class="entry" href="./011.html">
+  <a class="entry" id="b-011" href="./011.html">
     <div class="entry-num">Briefing No. 011<span class="name">· T+144d · Day 145</span></div>
     <h3 class="entry-title">When the <em>door</em> opens.</h3>
     <p class="entry-dek">
@@ -1162,7 +1234,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 010 -->
-  <a class="entry" href="./010.html">
+  <a class="entry" id="b-010" href="./010.html">
     <div class="entry-num">Briefing No. 010<span class="name">· T+130d · Day 131</span></div>
     <h3 class="entry-title">The first decade of <em>decisions.</em></h3>
     <p class="entry-dek">
@@ -1190,7 +1262,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 009 -->
-  <a class="entry" href="./009.html">
+  <a class="entry" id="b-009" href="./009.html">
     <div class="entry-num">Briefing No. 009<span class="name">· T+116d · Day 117</span></div>
     <h3 class="entry-title">What we <em>owe</em> Cordova.</h3>
     <p class="entry-dek">
@@ -1218,7 +1290,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 008 -->
-  <a class="entry" href="./008.html">
+  <a class="entry" id="b-008" href="./008.html">
     <div class="entry-num">Briefing No. 008<span class="name">· T+102d · Day 103</span></div>
     <h3 class="entry-title">The first briefing <em>after</em> the reveal.</h3>
     <p class="entry-dek">
@@ -1246,7 +1318,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 007 -->
-  <a class="entry" href="./007.html">
+  <a class="entry" id="b-007" href="./007.html">
     <div class="entry-num">Briefing No. 007<span class="name">· T+88d · Day 89</span></div>
     <h3 class="entry-title">Twelve weeks in. The <em>shape</em> of the company.</h3>
     <p class="entry-dek">
@@ -1273,7 +1345,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 006 -->
-  <a class="entry" href="./006.html">
+  <a class="entry" id="b-006" href="./006.html">
     <div class="entry-num">Briefing No. 006<span class="name">· T+74d · Day 75</span></div>
     <h3 class="entry-title">The Eval Set, <em>in public.</em></h3>
     <p class="entry-dek">
@@ -1300,7 +1372,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 005 -->
-  <a class="entry" href="./005.html">
+  <a class="entry" id="b-005" href="./005.html">
     <div class="entry-num">Briefing No. 005<span class="name">· T+60d · Day 61</span></div>
     <h3 class="entry-title">After the board, <em>before</em> the storm.</h3>
     <p class="entry-dek">
@@ -1327,7 +1399,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 004 -->
-  <a class="entry" href="./004.html">
+  <a class="entry" id="b-004" href="./004.html">
     <div class="entry-num">Briefing No. 004<span class="name">· T+46d · Day 47</span></div>
     <h3 class="entry-title">Five of five, and <em>a downgrade.</em></h3>
     <p class="entry-dek">
@@ -1354,7 +1426,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 003 -->
-  <a class="entry" href="./003.html">
+  <a class="entry" id="b-003" href="./003.html">
     <div class="entry-num">Briefing No. 003<span class="name">· T+32d · Day 33</span></div>
     <h3 class="entry-title">The first connector, the <em>first wobble.</em></h3>
     <p class="entry-dek">
@@ -1381,7 +1453,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 002 -->
-  <a class="entry" href="./002.html">
+  <a class="entry" id="b-002" href="./002.html">
     <div class="entry-num">Briefing No. 002<span class="name">· T+18d · Day 19</span></div>
     <h3 class="entry-title">The first <em>twelve days.</em></h3>
     <p class="entry-dek">
@@ -1408,7 +1480,7 @@ strong { font-weight: 600; color: var(--ink); }
   </a>
 
   <!-- 001 -->
-  <a class="entry" href="../index.html">
+  <a class="entry" id="b-001" href="../index.html">
     <div class="entry-num">Briefing No. 001<span class="name">· T+6d · Day 7 · Founding Edition</span></div>
     <h3 class="entry-title">The <em>Founding</em> Edition.</h3>
     <p class="entry-dek">
