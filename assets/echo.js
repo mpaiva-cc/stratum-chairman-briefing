@@ -21,7 +21,8 @@
   display: inline-flex;
   align-items: center;
   gap: .45rem;
-  padding: .55rem .85rem;
+  padding: .7rem .95rem;
+  min-height: 44px;
   background: rgba(14, 22, 38, 0.92);
   color: #f4ecda;
   font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
@@ -196,9 +197,17 @@
 }
 
 @media (max-width: 600px) {
-  .echo-btn { font-size: 10px; padding: .5rem .7rem; }
-  .echo-btn-label { display: none; }
-  .echo-panel { width: calc(100vw - 24px); }
+  /* Lift the button above the rt-stamp pill, which sits at bottom-right
+     and can grow wide enough to overlap the bottom-left on phones.
+     Keep the label visible — an unlabeled dot was being mistaken for a
+     broken icon. Preserve a ≥44px touch target per WCAG 2.5.5 (AAA). */
+  .echo-btn {
+    bottom: 56px;
+    font-size: 10.5px;
+    padding: .7rem .95rem;
+    min-height: 44px;
+  }
+  .echo-panel { width: calc(100vw - 24px); bottom: 100px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
