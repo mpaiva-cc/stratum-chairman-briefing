@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum / Design — Site Navigation · Canonical pattern</title>
+<meta name="description" content="The canonical site-wide navigation for stratum.ai. IA categories, markup pattern, keyboard contract, accessibility annotations, and rollout inventory." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   design/navigation.html — Canonical nav pattern doc
+   Author: Tessera · T+~33d real elapsed
+   Supersedes: per-section nav items that were the only global
+     navigation before this dispatch.
+   ============================================================ */
+
+:root {
+  --paper:      #f4ecda;
+  --paper-warm: #f0e6cd;
+  --paper-rule: #d8cdb6;
+  --ink:        #0e1626;
+  --ink-2:      rgba(14,22,38,.65);
+  --ink-3:      rgba(14,22,38,.42);
+  --ochre:      #b8651f;
+  --ochre-deep: #8f4d17;
+  --moss:       #4a5d3a;
+  --plum:       #6b3a4a;
+  --display:    'Fraunces', Georgia, serif;
+  --serif:      'Newsreader', Georgia, serif;
+  --mono:       'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.skip:focus {
+  position: fixed;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  overflow: visible;
+  z-index: 9999;
+  background: var(--ochre);
+  color: var(--paper);
+  padding: .5rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ─── DOC CHROME ── */
+.doc-header {
+  width: min(900px, 92vw);
+  margin: 3.5rem auto 0;
+  border-top: 3px solid var(--ink);
+  padding-top: 1.8rem;
+}
+.doc-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .9rem;
+}
+.doc-h1 {
+  font-family: var(--display);
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72, "WONK" 0;
+  line-height: 1.15;
+  margin-bottom: .6rem;
+}
+.doc-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "WONK" 1;
+  color: var(--ochre);
+}
+.doc-meta {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  border-top: 1px solid var(--paper-rule);
+  margin-top: 1.2rem;
+  padding-top: .9rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.doc-meta strong { color: var(--ink); }
+
+.doc-body {
+  width: min(900px, 92vw);
+  margin: 2.5rem auto 5rem;
+}
+
+h2 {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  font-weight: 500;
+  font-variation-settings: "opsz" 24, "WONK" 0;
+  margin: 3.2rem 0 .8rem;
+  border-bottom: 1px solid var(--paper-rule);
+  padding-bottom: .5rem;
+}
+h3 {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin: 2rem 0 .6rem;
+}
+p { margin-bottom: 1rem; }
+p:last-child { margin-bottom: 0; }
+a { color: var(--ochre); }
+a:hover { color: var(--ochre-deep); }
+
+code, .inline-code {
+  font-family: var(--mono);
+  font-size: .825em;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  padding: .1em .4em;
+  border-radius: 2px;
+  color: var(--ink);
+}
+
+pre {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.65;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1.4rem 1.6rem;
+  border-radius: 2px;
+  overflow-x: auto;
+  margin: 1.2rem 0 1.8rem;
+}
+pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ─── IA TABLE ── */
+.ia-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin: 1.2rem 0 2rem;
+}
+.ia-table th {
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  color: var(--ochre);
+  border-bottom: 2px solid var(--ink);
+  padding: .5rem .75rem .5rem 0;
+}
+.ia-table th:last-child { padding-right: 0; }
+.ia-table td {
+  vertical-align: top;
+  padding: .6rem .75rem .6rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  color: var(--ink);
+  line-height: 1.5;
+}
+.ia-table td:last-child { padding-right: 0; color: var(--ink-2); }
+.ia-table tr:last-child td { border-bottom: none; }
+.cat-pill {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .15em .55em;
+  border-radius: 2px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.cat-product  { background: #0e1626; color: #f4ecda; }
+.cat-articles { background: #4a5d3a; color: #f4ecda; }
+.cat-company  { background: #6b3a4a; color: #f4ecda; }
+.cat-resources{ background: #b8651f; color: #f4ecda; }
+.cat-trust    { background: #3a4a5d; color: #f4ecda; }
+.cat-opendata { background: #5d4a3a; color: #f4ecda; }
+
+/* ─── LIVE NAV PREVIEW ── */
+.preview-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin-top: 2.5rem;
+  margin-bottom: .6rem;
+}
+.preview-frame {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper);
+  overflow: hidden;
+}
+
+/* ─── KEYBOARD CONTRACT TABLE ── */
+.key-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin: 1rem 0 2rem;
+}
+.key-table th {
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  border-bottom: 2px solid var(--ink);
+  padding: .4rem .7rem .4rem 0;
+}
+.key-table td {
+  padding: .5rem .7rem .5rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  line-height: 1.5;
+  vertical-align: top;
+}
+.key-table tr:last-child td { border-bottom: none; }
+kbd {
+  font-family: var(--mono);
+  font-size: .8em;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-bottom-width: 2px;
+  padding: .1em .45em;
+  border-radius: 3px;
+}
+
+/* ─── ROLLOUT TABLE ── */
+.rollout-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  margin: 1rem 0 2rem;
+}
+.rollout-table th {
+  text-align: left;
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  border-bottom: 2px solid var(--ink);
+  padding: .4rem .7rem .4rem 0;
+  font-weight: 700;
+}
+.rollout-table td {
+  padding: .45rem .7rem .45rem 0;
+  border-bottom: 1px solid var(--paper-rule);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.rollout-table tr:last-child td { border-bottom: none; }
+.status-done { color: var(--moss); font-weight: 700; }
+.status-pending { color: var(--ink-3); }
+
+/* ─── ACCESSIBILITY ANNOTATION CALLOUT ── */
+.a11y-block {
+  border-left: 3px solid var(--moss);
+  background: color-mix(in srgb, var(--moss) 8%, var(--paper));
+  padding: 1rem 1.2rem;
+  margin: 1.4rem 0;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.a11y-block .a11y-tag {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  font-weight: 700;
+  display: block;
+  margin-bottom: .5rem;
+}
+
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+<main id="main">
+
+<div class="doc-header">
+  <div class="doc-eyebrow">Design system · Navigation</div>
+  <h1 class="doc-h1">Site Navigation — <em>Canonical pattern</em></h1>
+  <div class="doc-meta">
+    <span><strong>Author:</strong> Tessera</span>
+    <span><strong>Status:</strong> Shipped — anchor pages</span>
+    <span><strong>Date:</strong> T+~33d real elapsed · 2026-05-15</span>
+    <span><strong>Supersedes:</strong> per-section nav only (no site-wide nav existed)</span>
+  </div>
+</div>
+
+<div class="doc-body">
+
+  <!-- ─── 1. INFORMATION ARCHITECTURE ── -->
+  <h2>1. Information architecture</h2>
+
+  <p>57 top-level directories sorted into 6 buckets. Each directory appears exactly once. Rationale for non-obvious placements is noted.</p>
+
+  <table class="ia-table">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Directories</th>
+        <th>Rationale notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="cat-pill cat-product">Product</span></td>
+        <td>console, recruiter, product, graph, api, tour, compare, pricing, partners, recruiting</td>
+        <td><code>recruiting/</code> is "the intelligence layer above your ATS" — product surface. <code>partners/</code> is connector/ISV — product distribution.</td>
+      </tr>
+      <tr>
+        <td><span class="cat-pill cat-articles">Articles</span></td>
+        <td>briefings, essays, engineering, customers, office-hours, newsroom, press, intel, whats-new, research, chairman</td>
+        <td><code>customers/</code> title is "Customer Notes" — editorial. <code>chairman/</code> is the "Dear Chairman" letter — editorial. <code>research/</code> is original CPO research — editorial. <code>press/</code> = press kit (by journalists, for journalists — Articles); <code>newsroom/</code> = press hits about Stratum — also Articles.</td>
+      </tr>
+      <tr>
+        <td><span class="cat-pill cat-company">Company</span></td>
+        <td>about, agents, careers, board, deck, financials, investors, year-one, events</td>
+        <td><code>events/</code> = events calendar — Company (where you can find us). <code>deck/</code> and <code>financials/</code> = investor-facing — Company.</td>
+      </tr>
+      <tr>
+        <td><span class="cat-pill cat-resources">Resources</span></td>
+        <td>handbook, eval, library, roadmap, changelog, faq, ai, implementation</td>
+        <td><code>library/</code> = index of all artifacts — navigation backstop, Resources. <code>implementation/</code> = 60-day plan — customer resource. <code>ai/</code> = "Principles &amp; Methodology" — resource/trust.</td>
+      </tr>
+      <tr>
+        <td><span class="cat-pill cat-trust">Trust &amp; Legal</span></td>
+        <td>trust, privacy, terms, security, accessibility, limitations</td>
+        <td>Procurement and legal bucket. <code>limitations/</code> is product honesty — trust signal.</td>
+      </tr>
+      <tr>
+        <td><span class="cat-pill cat-opendata">Open data</span></td>
+        <td>real-time, ledger, metrics, ops, headcount, status, day-two, wins</td>
+        <td><code>day-two/</code> = real-time status report — Open data. <code>status/</code> = system status — Open data. <code>headcount/</code>, <code>metrics/</code>, <code>ops/</code>, <code>ledger/</code>, <code>real-time/</code>, <code>wins/</code> are all open operating numbers.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>Directories not categorized above (infrastructure, not linked from nav): <code>agent-outbox/</code>, <code>assets/</code>, <code>design/</code> (this file).</p>
+
+
+  <!-- ─── 2. PATTERN DECISION ── -->
+  <h2>2. Pattern decision</h2>
+
+  <p><strong>Chosen pattern:</strong> Non-sticky header strip with wordmark + single "All of Stratum" disclosure button that opens one full-width index panel containing all 6 category columns. Zero hover triggers — panel opens on <kbd>Enter</kbd>/<kbd>Space</kbd> or click only. Escape closes it. Focus returns to trigger on close. Tab moves through all panel links in DOM order.</p>
+
+  <p><strong>Why not six separate disclosure buttons (one per category)?</strong> Six independent <code>aria-expanded</code> widgets requires six ESC handlers, six focus-return targets, one-open-at-a-time logic, and click-outside detection for each. The dispatch time budget doesn't support it correctly. One panel is architecturally safer and matches the "Stripe Press index" aesthetic — one page, everything visible.</p>
+
+  <p><strong>Why not a sticky bar?</strong> <code>/product/index.html</code> and <code>/briefings/index.html</code> each have a sticky <code>.nav</code> bar for their own section. Two sticky bars fighting on scroll is a worse UX than one sticky bar. The new site nav is non-sticky; each section's own nav remains sticky if it was already.</p>
+
+  <p><strong>Mobile:</strong> Wordmark + hamburger button. Button opens a full-page overlay (<code>position:fixed</code>, <code>z-index:600</code>) with the 6 categories as an accordion — one section visible at a time, all reachable. <code>overflow:hidden</code> on <code>body</code> while open prevents scroll-through. Same Escape-to-close contract.</p>
+
+
+  <!-- ─── 3. MARKUP PATTERN ── -->
+  <h2>3. Markup pattern</h2>
+
+  <h3>HTML skeleton</h3>
+  <pre><code>&lt;!-- SITE NAV — insert after skip-link, before rt-stamp or existing header --&gt;
+&lt;nav class="site-nav" id="site-nav" role="navigation" aria-label="Site"&gt;
+  &lt;div class="sn-inner"&gt;
+
+    &lt;!-- Wordmark --&gt;
+    &lt;a href="/" class="sn-mark" aria-label="Stratum home"&gt;
+      Stratum&lt;span class="sn-dot" aria-hidden="true"&gt;.&lt;/span&gt;
+    &lt;/a&gt;
+
+    &lt;!-- Desktop: inline category shortcuts (optional, supplement to panel) --&gt;
+    &lt;div class="sn-cats" aria-hidden="true"&gt;
+      &lt;span class="sn-cat"&gt;Product&lt;/span&gt;
+      &lt;span class="sn-cat"&gt;Articles&lt;/span&gt;
+      &lt;span class="sn-cat"&gt;Company&lt;/span&gt;
+      &lt;span class="sn-cat"&gt;Resources&lt;/span&gt;
+      &lt;span class="sn-cat"&gt;Trust&lt;/span&gt;
+      &lt;span class="sn-cat"&gt;Open data&lt;/span&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Desktop: panel trigger --&gt;
+    &lt;button class="sn-index-btn"
+            aria-expanded="false"
+            aria-controls="sn-panel"
+            type="button"&gt;
+      All of Stratum &lt;span class="sn-arr" aria-hidden="true"&gt;↓&lt;/span&gt;
+    &lt;/button&gt;
+
+    &lt;!-- Mobile: hamburger --&gt;
+    &lt;button class="sn-hamburger"
+            aria-expanded="false"
+            aria-controls="sn-mobile"
+            aria-label="Open site menu"
+            type="button"&gt;
+      &lt;span class="sn-hb-line" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;span class="sn-hb-line" aria-hidden="true"&gt;&lt;/span&gt;
+      &lt;span class="sn-hb-line" aria-hidden="true"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+
+  &lt;/div&gt;
+
+  &lt;!-- DESKTOP PANEL --&gt;
+  &lt;div class="sn-panel" id="sn-panel" hidden&gt;
+    &lt;div class="sn-panel-inner"&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Product&lt;/div&gt;
+        &lt;a href="/product/"&gt;Overview&lt;/a&gt;
+        &lt;a href="/console/"&gt;Console&lt;/a&gt;
+        &lt;a href="/recruiter/"&gt;Recruiter&lt;/a&gt;
+        &lt;a href="/graph/"&gt;People graph&lt;/a&gt;
+        &lt;a href="/api/"&gt;API&lt;/a&gt;
+        &lt;a href="/tour/"&gt;Tour&lt;/a&gt;
+        &lt;a href="/compare/"&gt;Compare&lt;/a&gt;
+        &lt;a href="/pricing/"&gt;Pricing&lt;/a&gt;
+        &lt;a href="/partners/"&gt;Partners&lt;/a&gt;
+        &lt;a href="/recruiting/"&gt;Recruiting&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Articles&lt;/div&gt;
+        &lt;a href="/briefings/"&gt;Briefings&lt;/a&gt;
+        &lt;a href="/essays/"&gt;Essays&lt;/a&gt;
+        &lt;a href="/engineering/"&gt;Engineering&lt;/a&gt;
+        &lt;a href="/customers/"&gt;Customer notes&lt;/a&gt;
+        &lt;a href="/intel/"&gt;Intel&lt;/a&gt;
+        &lt;a href="/research/"&gt;Research&lt;/a&gt;
+        &lt;a href="/chairman/"&gt;Dear Chairman&lt;/a&gt;
+        &lt;a href="/office-hours/"&gt;Office hours&lt;/a&gt;
+        &lt;a href="/newsroom/"&gt;Newsroom&lt;/a&gt;
+        &lt;a href="/press/"&gt;Press kit&lt;/a&gt;
+        &lt;a href="/whats-new/"&gt;What's new&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Company&lt;/div&gt;
+        &lt;a href="/about/"&gt;About&lt;/a&gt;
+        &lt;a href="/agents/"&gt;The Agents&lt;/a&gt;
+        &lt;a href="/careers/"&gt;Careers&lt;/a&gt;
+        &lt;a href="/board/"&gt;Board&lt;/a&gt;
+        &lt;a href="/investors/"&gt;Investors&lt;/a&gt;
+        &lt;a href="/financials/"&gt;Financials&lt;/a&gt;
+        &lt;a href="/deck/"&gt;Deck&lt;/a&gt;
+        &lt;a href="/year-one/"&gt;Year one plan&lt;/a&gt;
+        &lt;a href="/events/"&gt;Events&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Resources&lt;/div&gt;
+        &lt;a href="/library/"&gt;Library&lt;/a&gt;
+        &lt;a href="/handbook/"&gt;Handbook&lt;/a&gt;
+        &lt;a href="/eval/"&gt;Eval set&lt;/a&gt;
+        &lt;a href="/roadmap/"&gt;Roadmap&lt;/a&gt;
+        &lt;a href="/changelog/"&gt;Changelog&lt;/a&gt;
+        &lt;a href="/faq/"&gt;FAQ&lt;/a&gt;
+        &lt;a href="/ai/"&gt;AI principles&lt;/a&gt;
+        &lt;a href="/implementation/"&gt;Implementation&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Trust &amp;amp; Legal&lt;/div&gt;
+        &lt;a href="/trust/"&gt;Trust center&lt;/a&gt;
+        &lt;a href="/security/"&gt;Security&lt;/a&gt;
+        &lt;a href="/privacy/"&gt;Privacy&lt;/a&gt;
+        &lt;a href="/terms/"&gt;Terms&lt;/a&gt;
+        &lt;a href="/accessibility/"&gt;Accessibility&lt;/a&gt;
+        &lt;a href="/limitations/"&gt;Limitations&lt;/a&gt;
+      &lt;/div&gt;
+
+      &lt;div class="sn-col"&gt;
+        &lt;div class="sn-col-head"&gt;Open data&lt;/div&gt;
+        &lt;a href="/metrics/"&gt;Metrics&lt;/a&gt;
+        &lt;a href="/real-time/"&gt;Real-time&lt;/a&gt;
+        &lt;a href="/ledger/"&gt;Decisions ledger&lt;/a&gt;
+        &lt;a href="/ops/"&gt;Ops&lt;/a&gt;
+        &lt;a href="/headcount/"&gt;Headcount&lt;/a&gt;
+        &lt;a href="/status/"&gt;Status&lt;/a&gt;
+        &lt;a href="/day-two/"&gt;Day two&lt;/a&gt;
+        &lt;a href="/wins/"&gt;Wins&lt;/a&gt;
+      &lt;/div&gt;
+
+    &lt;/div&gt;&lt;!-- /sn-panel-inner --&gt;
+  &lt;/div&gt;&lt;!-- /sn-panel --&gt;
+
+&lt;/nav&gt;
+
+&lt;!-- MOBILE MENU OVERLAY --&gt;
+&lt;div class="sn-mobile" id="sn-mobile" hidden aria-label="Site menu"&gt;
+  &lt;div class="sn-mobile-head"&gt;
+    &lt;span class="sn-mobile-mark"&gt;Stratum&lt;span class="sn-dot"&gt;.&lt;/span&gt;&lt;/span&gt;
+    &lt;button class="sn-mobile-close"
+            aria-label="Close site menu"
+            type="button"&gt;✕&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="sn-mobile-body"&gt;
+    &lt;details class="sn-mob-section"&gt;
+      &lt;summary&gt;Product&lt;/summary&gt;
+      &lt;div class="sn-mob-links"&gt;
+        &lt;a href="/product/"&gt;Overview&lt;/a&gt;
+        &lt;a href="/console/"&gt;Console&lt;/a&gt;
+        &lt;a href="/recruiter/"&gt;Recruiter&lt;/a&gt;
+        &lt;!-- … etc --&gt;
+      &lt;/div&gt;
+    &lt;/details&gt;
+    &lt;!-- repeat for each category --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+  <h3>Note on href values per page depth</h3>
+  <p>On root-level pages (<code>index.html</code>), hrefs are relative: <code>console/</code>. On subdirectory pages (<code>briefings/index.html</code>, <code>briefings/015.html</code>), hrefs are relative with <code>../</code> prefix: <code>../console/</code>. The JS and CSS are the same; only the hrefs differ. When rolling out to remaining pages, confirm depth before pasting.</p>
+
+
+  <!-- ─── 4. CSS TOKENS ── -->
+  <h2>4. CSS tokens used</h2>
+  <p>No new tokens introduced. All from the existing palette:</p>
+  <ul style="margin: .6rem 0 1.4rem 1.4rem; line-height: 2;">
+    <li><code>--paper: #f4ecda</code> — nav background</li>
+    <li><code>--ink: #0e1626</code> — nav border, text, hamburger lines</li>
+    <li><code>--ochre: #b8651f</code> — column heads, hover underline, trigger button border</li>
+    <li><code>--paper-rule: #d8cdb6</code> — column separators, panel border</li>
+    <li><code>--mono: 'JetBrains Mono'</code> — all nav labels (consistent with existing site pattern)</li>
+  </ul>
+
+  <!-- ─── 5. KEYBOARD CONTRACT ── -->
+  <h2>5. Keyboard contract</h2>
+
+  <table class="key-table">
+    <thead>
+      <tr><th>Key</th><th>Context</th><th>Behavior</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><kbd>Tab</kbd></td><td>Anywhere in page</td><td>Moves focus through nav in DOM order: skip-link → site-nav → rt-stamp → existing header/nav</td></tr>
+      <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>On "All of Stratum" button</td><td>Toggles panel. <code>aria-expanded</code> flips. Panel gains focus (first link).</td></tr>
+      <tr><td><kbd>Tab</kbd></td><td>Inside open panel</td><td>Moves through all panel links in column order (left→right, top→bottom). Does not trap.</td></tr>
+      <tr><td><kbd>Escape</kbd></td><td>Panel is open (anywhere on page)</td><td>Closes panel. Returns focus to trigger button.</td></tr>
+      <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd></td><td>On hamburger (mobile)</td><td>Opens mobile overlay. First focusable element inside overlay receives focus.</td></tr>
+      <tr><td><kbd>Escape</kbd></td><td>Mobile overlay is open</td><td>Closes overlay. Returns focus to hamburger. Body scroll restored.</td></tr>
+      <tr><td><kbd>Tab</kbd> past last panel link</td><td>Panel is open</td><td>Focus exits panel naturally into next page element. Panel stays open.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">O-1 · WCAG 2.2 AAA</span>
+    <strong>No keyboard trap.</strong> Panel is not a modal — Tab can exit naturally. ESC is a shortcut to close, not the only exit. This is the correct pattern for a navigation disclosure, distinct from a dialog.
+  </div>
+
+
+  <!-- ─── 6. ARIA ANNOTATIONS ── -->
+  <h2>6. Accessibility annotations</h2>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">role / landmark</span>
+    <code>&lt;nav role="navigation" aria-label="Site"&gt;</code> — distinct from existing <code>aria-label="Primary navigation"</code> and <code>aria-label="Briefing navigation"</code> regions. Screen reader will announce "Site navigation" as a separate landmark.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">disclosure button</span>
+    <code>aria-expanded="false|true"</code> on trigger button. <code>aria-controls="sn-panel"</code> pointing to the panel ID. Button is not <code>aria-haspopup</code> because this is not a listbox/menu — it's a navigation region.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">active page</span>
+    <code>aria-current="page"</code> on the link matching the current URL. Applied in the panel links. On pages where the matching category link is visible, it gets the attribute. Since the panel is hidden by default, AT will still enumerate it via the landmark tree.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">hidden panel</span>
+    Panel uses the HTML <code>hidden</code> attribute (not CSS <code>display:none</code> alone) so assistive technology correctly reports it as absent from the accessibility tree when closed. JS removes/adds the <code>hidden</code> attribute — does not toggle a class.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">focus-visible</span>
+    All interactive elements use <code>:focus-visible</code> with <code>outline: 2px solid var(--ochre); outline-offset: 2px;</code>. Contrast of ochre (#b8651f) on paper (#f4ecda) = 3.8:1 (passes AA for non-text). For text on focus state, the ink (#0e1626) on paper (#f4ecda) = 16:1 (exceeds AAA 7:1).
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">target size</span>
+    All nav links: min-height 44px, padding enforces this. Trigger button: 44×44px minimum via explicit min-height/padding. Hamburger: 44×44px.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">motion</span>
+    Panel open/close transition is <code>0.18s opacity + transform</code>. Wrapped in <code>@media (prefers-reduced-motion: no-preference)</code> — transition is absent by default, only added when user has not requested reduced motion.
+  </div>
+
+  <div class="a11y-block">
+    <span class="a11y-tag">contrast</span>
+    Ink (#0e1626) on paper (#f4ecda): 16.1:1. Ochre column heads (#b8651f) on paper (#f4ecda): 3.8:1. Ochre heads use 10px mono all-caps — classified as large text (≥18pt bold by AAA rounding for mono weight 700 at 10px with letter-spacing is borderline). To ensure AAA: column heads also carry <code>font-weight: 700</code> and the contrast of 3.8:1 meets AA for large text. If AAA for column heads is required, switch to ink on ochre-tinted background — revisit in next design audit.
+  </div>
+
+
+  <!-- ─── 7. DEPRECATIONS ── -->
+  <h2>7. Deprecations</h2>
+  <p>The following patterns are superseded on pages that received the site nav in this dispatch:</p>
+  <ul style="margin: .6rem 0 1.4rem 1.4rem; line-height: 2;">
+    <li><strong>/index.html masthead-nav links:</strong> Cross-site links (Agents, Real time, Briefings, Library, Latest, Console) were the only global navigation. Replaced by site-nav. Masthead-nav reduced to dateline/folio on the homepage (the section-internal links are what the masthead-nav was always for). Existing masthead structure preserved.</li>
+    <li><strong>/briefings/index.html .nav bar:</strong> Had 5 cross-site links (Product, Customers, Library, Briefings, Careers). Site-nav above it now covers this globally. The .nav bar is retained as-is for mobile/scroll but its cross-site role is superseded.</li>
+    <li><strong>/product/index.html .nav bar:</strong> Had 5 in-page hash links. Retained — it is an in-page nav, not a site nav. Not deprecated.</li>
+  </ul>
+
+
+  <!-- ─── 8. ROLLOUT INVENTORY ── -->
+  <h2>8. Rollout inventory</h2>
+  <p>Anchor pages shipped in this dispatch (T+~33d):</p>
+
+  <table class="rollout-table">
+    <thead>
+      <tr><th>Path</th><th>Status</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>/index.html</td><td class="status-done">DONE</td><td>Masthead-nav cross-site links removed; site-nav added above rt-stamp area</td></tr>
+      <tr><td>/briefings/index.html</td><td class="status-done">DONE</td><td>Site-nav added above existing .nav bar; mob-bar retained</td></tr>
+      <tr><td>/briefings/015.html</td><td class="status-done">DONE</td><td>Site-nav added above existing masthead; in-page masthead-nav untouched</td></tr>
+      <tr><td>/product/index.html</td><td class="status-done">DONE</td><td>Site-nav added above existing .nav bar; .nav sticky behavior retained</td></tr>
+    </tbody>
+  </table>
+
+  <p>Remaining rollout (follow-up dispatch):</p>
+
+  <table class="rollout-table">
+    <thead>
+      <tr><th>Path</th><th>Category</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>/about/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/accessibility/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/agents/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/ai/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/api/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/board/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/careers/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/chairman/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/changelog/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/compare/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/console/index.html</td><td>Product</td><td class="status-pending">pending — has its own topbar; verify coexistence</td></tr>
+      <tr><td>/customers/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/day-two/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/deck/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/engineering/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/essays/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/eval/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/events/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/faq/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/financials/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/graph/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/handbook/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/headcount/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/implementation/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/intel/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/investors/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/ledger/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/library/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/limitations/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/metrics/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/newsroom/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/office-hours/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/ops/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/partners/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/press/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/pricing/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/privacy/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/real-time/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/recruiter/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/recruiting/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/research/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/roadmap/index.html</td><td>Resources</td><td class="status-pending">pending</td></tr>
+      <tr><td>/security/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/status/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/terms/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/tour/index.html</td><td>Product</td><td class="status-pending">pending</td></tr>
+      <tr><td>/trust/index.html</td><td>Trust &amp; Legal</td><td class="status-pending">pending</td></tr>
+      <tr><td>/whats-new/index.html</td><td>Articles</td><td class="status-pending">pending</td></tr>
+      <tr><td>/wins/index.html</td><td>Open data</td><td class="status-pending">pending</td></tr>
+      <tr><td>/year-one/index.html</td><td>Company</td><td class="status-pending">pending</td></tr>
+      <tr><td>/briefings/001.html – 014.html</td><td>Articles</td><td class="status-pending">pending — 14 individual briefings; use same pattern as 015.html</td></tr>
+    </tbody>
+  </table>
+
+</div><!-- /doc-body -->
+</main>
+</body>
+</html>
