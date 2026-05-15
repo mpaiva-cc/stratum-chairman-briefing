@@ -734,7 +734,13 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
 .forward-section  { animation-delay: .40s; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Target animated and transitioned elements directly — no !important needed. */
+  .intro, .snapshot, .frame-section, .arch-section, .conversation,
+  .decisions, .scorecard, .shipped-section, .risk-section, .forward-section,
+  .bar-fill {
+    animation: none;
+  }
+  a { transition: none; }
 }
 .bar-fill {
   transform-origin: left center;
@@ -844,6 +850,7 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
 </style>
 </head>
 <body>
+<a href="#main" class="skip">Skip to main content</a>
 <!-- ─── BRIEFING MOB-BAR ── -->
 <div class="briefing-mob-bar">
   <a href="014.html" aria-label="Previous briefing">← 014</a>
@@ -865,7 +872,7 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
       <span class="dateline">Compiled at T+~13d real-elapsed · Palo Alto</span>
       <span class="folio">Vol. I · No. 015</span>
     </div>
-    <nav class="masthead-nav">
+    <nav class="masthead-nav" aria-label="Briefing navigation">
       <a href="#letter">Letter</a>
       <a href="#snapshot">Snapshot</a>
       <a href="#frame">Frame</a>
@@ -894,7 +901,7 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
   </div>
 </header>
 
-
+<main id="main">
 <!-- ─────────────────────────────────────────────────────── LETTER ── -->
 <section id="letter" class="intro">
   <div class="intro-grid">
@@ -2318,6 +2325,7 @@ scopes:
     </div>
 
 <!-- ─── END-OF-BRIEFING NAV ── -->
+</main>
 <footer class="colophon">
   <div class="colophon-rule double"></div>
   <div class="colophon-row">

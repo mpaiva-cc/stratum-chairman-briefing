@@ -798,10 +798,46 @@ p { margin: 0 0 1.15em; }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── REDUCED MOTION (a11y, 2026-05-15 · WCAG 2.3.3 · Level AAA)
+   Targets the actual animated and transitioned elements rather than
+   the universal selector. Cascade wins by source order (no !important
+   needed — these class selectors appear after the animation rules). */
+@media (prefers-reduced-motion: reduce) {
+  .post-header,
+  .section-nav,
+  .post,
+  .closing,
+  .footer {
+    animation: none;
+    transition: none;
+  }
+  a,
+  .nav,
+  .nav-cta,
+  .nav-cta .arr {
+    transition: none;
+  }
+}
+
+/* ── SKIP LINK (a11y, 2026-05-15 · WCAG 2.4.1 · Level A)
+   Page-local definition; global .skip in assets/styles.css not loaded here. */
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 9000;
+  background: #0e1626; color: #f4ecda; padding: .6rem 1rem;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  text-decoration: none; border-bottom: 0;
+}
+.skip:focus { left: 1rem; top: 1rem; }
+
+/* ── FOCUS VISIBLE (a11y, 2026-05-15 · WCAG 2.4.7 · Level AA) */
+:focus-visible { outline: 2px solid #b8651f; outline-offset: 3px; border-radius: 2px; }
+
 </style>
 </head>
 
 <body>
+<a href="#main" class="skip">Skip to main content</a>
 
 <!-- realtime-stamp -->
 <div class="rt-stamp"
@@ -868,6 +904,7 @@ p { margin: 0 0 1.15em; }
   </div>
 </header>
 
+<main id="main">
 <!-- ─────────────────────────────── SECTION NAV ── -->
 <nav class="section-nav" aria-label="Sections">
   <div class="sn-h">Sections</div>
@@ -1669,6 +1706,7 @@ p { margin: 0 0 1.15em; }
 </section>
 
 <!-- ─────────────────────────────── FOOTER ── -->
+</main>
 <footer class="footer">
   <div class="footer-grid">
 

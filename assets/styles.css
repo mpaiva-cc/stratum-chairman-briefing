@@ -14,6 +14,13 @@
   --ink-2:        #2a3344;
   --ink-3:        #4b5365;
   --ink-mute:     #6c7180;
+  /* A11Y-supplemental — added 2026-05-15 audit dispatch
+     --ink-mute-aa: darkened muted text, 5.98:1 on --paper (was 4.14, failed AA)
+     --ochre-link:  link-specific ochre, 7.14:1 on --paper (AAA body text pass)
+     --ochre still used for decorative borders, icons, labels — 3.63 is fine there
+     Deprecation: body <a> color moves from --ochre to --ochre-link; --ochre survives */
+  --ink-mute-aa:  #525968;
+  --ochre-link:   #7a3d0a;
 
   /* Accent */
   --ochre:        #b8651f;
@@ -70,11 +77,44 @@ body::before {
 
 body > * { position: relative; z-index: 1; }
 
-a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
-a:hover { border-bottom-color: var(--ochre); }
+/* ── LINK DEFAULTS (a11y-hardened 2026-05-15)
+   Use --ochre-link (#7a3d0a, 7.14:1 on paper) for text links — AAA pass.
+   Underline is always visible (not just on hover) — fixes 1.4.1 link distinguishability.
+   --ochre remains for decorative borders, swatches, icons, nav underlines. */
+a { color: var(--ochre-link); text-decoration: none; border-bottom: 1px solid var(--ochre-link); transition: border-color .2s, color .2s; }
+a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
 
 em { font-style: italic; font-variation-settings: "opsz" 14; }
 strong { font-weight: 600; color: var(--ink); }
+
+/* ── SKIP NAVIGATION (a11y, 2026-05-15 · WCAG 2.4.1 · Level A)
+   Shared across all pages via this stylesheet.
+   Pages that inline their own <style> should replicate these two rules. */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 9000;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .6rem 1rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  border-bottom: 0;
+}
+.skip:focus { left: 1rem; top: 1rem; border-bottom: 0; }
+
+/* ── FOCUS VISIBLE (a11y, 2026-05-15 · WCAG 2.4.7 / 2.4.11 · Level AA/AAA)
+   2px ochre ring + 2px paper offset — visible on both light and dark surfaces.
+   Uses :focus-visible to avoid the ring on mouse click (progressive enhancement).
+   Browser fallback: :focus fires where :focus-visible is unsupported. */
+:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
 /* ──────────────────────────────────────────────────── MASTHEAD ── */
 
@@ -241,9 +281,10 @@ section {
   font-family: var(--serif);
   font-style: italic;
   font-variation-settings: "opsz" 18;
-  margin-top: 1.6rem !important;
   color: var(--ink-2);
 }
+/* Specificity raised to (0,2,1) to beat .intro-letter p { margin: 0 0 1rem } — no !important needed */
+.intro-letter .signoff { margin-top: 1.6rem; }
 .signoff-meta {
   font-family: var(--mono);
   font-style: normal;
@@ -1393,7 +1434,15 @@ section {
 .open        { animation-delay: .60s; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Target the actual animated elements (fade-up + bar-grow) and global link
+     transitions. Cascade wins by source order — no !important needed. */
+  .masthead, .intro, .snapshot, .founders, .conversation,
+  .decisions, .scorecard, .thesis, .roadmap, .cap, .hires, .risk, .open,
+  .bar-fill {
+    animation: none;
+    transition: none;
+  }
+  a { transition: none; }
 }
 
 /* ─────────────────────────────────────────────── BAR FILL TRANSITION ── */

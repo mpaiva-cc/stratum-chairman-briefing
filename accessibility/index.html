@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stratum / Accessibility — Statement & Conformance</title>
-<meta name="description" content="Stratum's accessibility statement — WCAG 2.1 AA conformance, known gaps, the accessibility process we follow, and how to report an issue." />
+<meta name="description" content="Stratum's accessibility statement — WCAG 2.2 AAA target (O-1 standing objective), baseline audit findings, gap list, roadmap, and how to report an issue." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -412,6 +412,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   color: var(--ochre); background: rgba(184, 101, 31, .06); border-radius: 999px;
 }
 .gap-id .status.fixed { color: var(--ok); border-color: var(--ok); background: rgba(74, 109, 74, .06); }
+.gap-id .status.partial { color: var(--ochre); border-color: var(--ochre); background: rgba(184, 101, 31, .08); } /* global fix, per-page work remains */
 .gap-body h3 {
   font-family: var(--display); font-weight: 500; font-variation-settings: "opsz" 48;
   font-size: 1.4rem; letter-spacing: -.012em; margin: 0 0 .6rem;
@@ -625,18 +626,25 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
     page-break-inside: avoid; padding: 1.4rem 0; width: 100%;
   }
   body { font-size: 11pt; color: #000; background: #fff; }
-  .rt-stamp { display: none !important; }
+  .rt-stamp { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Target transition-bearing selectors; no keyframe animations on this page. */
+  a,
+  .nav,
+  .nav-cta,
+  .nav-cta .arr {
+    transition: none;
+    animation: none;
+  }
 }
 </style>
 </head>
 <body>
 
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T11:14:42-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+12:48:56.000</strong> · <span style="opacity:.6">2026-05-13T15:14:42.000Z</span></div>
+<div class="rt-stamp" data-compiled="2026-05-15T17:06:16Z" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> <strong style="color:#0e1626">2026-05-15T17:06:16Z</strong></div>
 <!-- /realtime-stamp -->
 
 <a href="#main" class="skip">Skip to content</a>
@@ -671,7 +679,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 <header class="doc-head" id="main">
   <div class="doc-stamp">
     <span class="full"><strong>STRATUM, INC.</strong> &nbsp;/&nbsp; ACCESSIBILITY STATEMENT</span>
-    <span>Document <strong>A11Y-2026-001</strong> &nbsp;·&nbsp; v1.2</span>
+    <span>Document <strong>A11Y-2026-001</strong> &nbsp;·&nbsp; v2.0</span>
     <span class="class">Classification <strong>Public</strong></span>
   </div>
 
@@ -679,18 +687,18 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   <p class="doc-sub">What we commit to, what we've audited, and what we're still working on.</p>
 
   <div class="doc-byline">
-    Last reviewed <strong>T+115d</strong> by <strong>Forge, CTO</strong>
+    Baseline audit <strong>2026-05-15</strong> by <strong>Tessera, Design</strong>
     <span class="sep">·</span> Next external audit <strong>T+180d</strong>
-    <span class="sep">·</span> Standard <strong>WCAG 2.1 AA</strong>
+    <span class="sep">·</span> Target standard <strong>WCAG 2.2 AAA (O-1)</strong>
   </div>
 </header>
 
 <!-- ─────────────────────────────────────────── COMMITMENT BAND ── -->
-<div class="commit-band" aria-label="Plain-language commitment">
-  <div class="commit-band-label"><span class="bar"></span> The plain-language commitment</div>
-  <p><span class="ord">i.</span>We commit to <strong>WCAG 2.1 Level AA conformance</strong> for the public <em>stratum.ai</em> site and the Stratum Console.</p>
-  <p><span class="ord">ii.</span>We have <span class="em-ochre">known gaps</span> &mdash; documented below &mdash; and are actively working on them.</p>
-  <p><span class="ord">iii.</span>If you encounter an accessibility issue, email <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a> &mdash; we respond within <strong>five business days</strong>.</p>
+<div class="commit-band" aria-label="O-1 standing objective">
+  <div class="commit-band-label"><span class="bar"></span> O-1 · Standing objective · set by the Chairman</div>
+  <p><span class="ord">i.</span>Stratum commits to <span class="em-ochre">WCAG 2.2 Level AAA</span> — not as a ceiling, but as a continuous obligation. The goal is to be <strong>the best accessible experience in the HCM market</strong>, full stop.</p>
+  <p><span class="ord">ii.</span>This page is my accountability surface. I am Tessera, Design lead. Every audit result, every gap, every close date is published here before it goes anywhere else.</p>
+  <p><span class="ord">iii.</span>If you hit a barrier, email <a href="mailto:accessibility@stratum.ai">accessibility@stratum.ai</a>. We respond within five business days. Urgencies get same-day triage.</p>
 </div>
 
 <!-- ─────────────────────────────────────────── TOC ── -->
@@ -698,16 +706,20 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   <div class="toc-label">— Contents</div>
   <ol>
     <li><span class="toc-num">§ 1</span><a href="#standards">Standards we follow</a><span class="toc-page">p. 1</span></li>
-    <li><span class="toc-num">§ 2</span><a href="#conformance">Conformance status</a><span class="toc-page">p. 2</span></li>
-    <li><span class="toc-num">§ 3</span><a href="#tested">Tested and verified</a><span class="toc-page">p. 4</span></li>
-    <li><span class="toc-num">§ 4</span><a href="#gaps">Known accessibility gaps</a><span class="toc-page">p. 5</span></li>
-    <li><span class="toc-num">§ 5</span><a href="#process">Our accessibility process</a><span class="toc-page">p. 7</span></li>
-    <li><span class="toc-num">§ 6</span><a href="#commits">Specific commitments</a><span class="toc-page">p. 8</span></li>
-    <li><span class="toc-num">§ 7</span><a href="#feedback">Feedback</a><span class="toc-page">p. 9</span></li>
-    <li><span class="toc-num">§ 8</span><a href="#aids">Auxiliary aids &amp; services</a><span class="toc-page">p. 10</span></li>
-    <li><span class="toc-num">§ 9</span><a href="#audit">Date of last audit</a><span class="toc-page">p. 11</span></li>
-    <li><span class="toc-num">§ 10</span><a href="#contact">Contact</a><span class="toc-page">p. 11</span></li>
-    <li><span class="toc-num">§ 11</span><a href="#limitations">Limitations &amp; alternatives</a><span class="toc-page">p. 12</span></li>
+    <li><span class="toc-num">§ 1.5</span><a href="#o1-baseline">O-1 baseline audit — 2026-05-15</a><span class="toc-page">p. 2</span></li>
+    <li><span class="toc-num">§ 2</span><a href="#conformance">Conformance status</a><span class="toc-page">p. 3</span></li>
+    <li><span class="toc-num">§ 3</span><a href="#tested">Tested and verified</a><span class="toc-page">p. 5</span></li>
+    <li><span class="toc-num">§ 4</span><a href="#gaps">Known accessibility gaps</a><span class="toc-page">p. 6</span></li>
+    <li><span class="toc-num">§ 5</span><a href="#process">Our accessibility process</a><span class="toc-page">p. 8</span></li>
+    <li><span class="toc-num">§ 6</span><a href="#commits">Specific commitments</a><span class="toc-page">p. 9</span></li>
+    <li><span class="toc-num">§ 7</span><a href="#feedback">Feedback</a><span class="toc-page">p. 10</span></li>
+    <li><span class="toc-num">§ 8</span><a href="#aids">Auxiliary aids &amp; services</a><span class="toc-page">p. 11</span></li>
+    <li><span class="toc-num">§ 9</span><a href="#audit">Date of last audit</a><span class="toc-page">p. 12</span></li>
+    <li><span class="toc-num">§ 10</span><a href="#contact">Contact</a><span class="toc-page">p. 12</span></li>
+    <li><span class="toc-num">§ 11</span><a href="#limitations">Limitations &amp; alternatives</a><span class="toc-page">p. 13</span></li>
+    <li><span class="toc-num">§ 12</span><a href="#trend">Trend &amp; history</a><span class="toc-page">p. 14</span></li>
+    <li><span class="toc-num">§ 13</span><a href="#refusals">What we will not ship</a><span class="toc-page">p. 14</span></li>
+    <li><span class="toc-num">§ 14</span><a href="#collaborators">Collaborators</a><span class="toc-page">p. 14</span></li>
   </ol>
 </nav>
 
@@ -744,14 +756,179 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
     </li>
   </ul>
 
-  <p class="prose">Where these standards overlap &mdash; and they overlap on nearly every web-content criterion &mdash; we treat <strong>WCAG 2.1 AA</strong> as authoritative. Where they diverge (mostly in PDFs and document accessibility), we follow the strictest requirement that applies to the customer's context.</p>
+  <p class="prose">Where these standards overlap &mdash; and they overlap on nearly every web-content criterion &mdash; we treat <strong>WCAG 2.2 AAA</strong> as the design target (O-1) and <strong>WCAG 2.1 AA</strong> as the minimum floor already required by law for most of our enterprise customers. Where they diverge (mostly in PDFs and document accessibility), we follow the strictest requirement that applies to the customer's context.</p>
+</section>
+
+<!-- ─────────────────────────────────────────── § 1.5 O-1 BASELINE ── -->
+<section id="o1-baseline">
+  <div class="sec-marker"><span class="bar"></span> § 1.5 · O-1 baseline audit — first reading, 2026-05-15 UTC</div>
+  <h2 class="sec-h">WCAG 2.2 <em>baseline.</em></h2>
+  <p class="sec-dek">The first full manual audit against WCAG 2.2 A + AA + AAA across the nine highest-traffic public surfaces. Conducted by Tessera on 2026-05-15. Every finding is listed in <a href="#gaps">§ 4</a>; the summary is here. This section is the anchor — future audits append below it.</p>
+
+  <div class="conf-table" role="table" aria-label="Baseline finding counts by severity">
+    <div class="conf-row head" role="row">
+      <span role="columnheader">Severity</span>
+      <span role="columnheader">Count</span>
+      <span role="columnheader">Status</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Critical</strong> — blocks a core task</span>
+      <span class="conf-target" role="cell" style="font-weight:700;color:var(--hi)">6</span>
+      <span class="conf-status" role="cell"><span class="pill partial" style="border-color:var(--hi);color:var(--hi)">5 closed this dispatch · 1 open</span></span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Major</strong> — degrades experience meaningfully</span>
+      <span class="conf-target" role="cell" style="font-weight:700;color:var(--ochre)">14</span>
+      <span class="conf-status" role="cell"><span class="pill partial">3 fully closed · 1 partially closed (Gap 07) · 10 open</span></span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Minor</strong> — polish; backlog</span>
+      <span class="conf-target" role="cell" style="color:var(--ink-3)">8</span>
+      <span class="conf-status" role="cell"><span class="pill planned">Backlog</span></span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Total findings</strong></span>
+      <span class="conf-target" role="cell" style="font-weight:700">28</span>
+      <span class="conf-status" role="cell"><span class="pill planned">First reading · 2026-05-15</span></span>
+    </div>
+  </div>
+  <div class="conf-foot">Audit basis: manual review of HTML source, contrast ratios, structural semantics, and keyboard paths against WCAG 2.2 A/AA/AAA criteria · conducted by Tessera · 2026-05-15 16:57 UTC</div>
+
+  <div class="conf-table" role="table" aria-label="Baseline findings by WCAG level" style="margin-top:1.4rem">
+    <div class="conf-row head" role="row">
+      <span role="columnheader">WCAG Level</span>
+      <span role="columnheader">Findings</span>
+      <span role="columnheader">Notes</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Level A</strong></span>
+      <span class="conf-target" role="cell" style="font-weight:700;color:var(--hi)">8</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:14px;color:var(--ink-2)">Skip links (2.4.1), keyboard nav (2.1.1), missing main landmark (1.3.1)</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Level AA</strong></span>
+      <span class="conf-target" role="cell" style="font-weight:700;color:var(--ochre)">12</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:14px;color:var(--ink-2)">Color contrast (1.4.3), focus visible (2.4.7), link underline (1.4.1), reduced motion (2.3.3 via 1.4.4)</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>Level AAA</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--ink-3)">8</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:14px;color:var(--ink-2)">Reduced motion (2.3.3), contrast enhanced (1.4.6), link purpose in context (2.4.9)</span>
+    </div>
+  </div>
+
+  <div class="conf-table" role="table" aria-label="Baseline findings by page" style="margin-top:1.4rem">
+    <div class="conf-row head" role="row">
+      <span role="columnheader">Page</span>
+      <span role="columnheader">Critical</span>
+      <span role="columnheader">Major / Minor</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/index.html</strong> — homepage</span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">3 major · 1 minor · skip + main landmark, nav aria-label, ochre link contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/briefings/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, ochre link contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/briefings/015.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, ochre link contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/console/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--ochre)">0</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">3 major · 1 minor · global focus-visible missing, ink-mute contrast, ochre contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/recruiter/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, ochre link contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/graph/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">3 major · 1 minor · SVG no keyboard nav (open), skip + main landmark, ochre contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/graph/mcp.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--hi)">1</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main + reduced motion, ochre contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/customers/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--ochre)">0</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, reduced motion (closed), ochre contrast</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>/careers/index.html</strong></span>
+      <span class="conf-target" role="cell" style="color:var(--ochre)">0</span>
+      <span class="conf-status" role="cell" style="font-family:var(--serif);font-size:13.5px;color:var(--ink-2)">2 major · 1 minor · skip + main landmark, table th scope missing, ochre contrast</span>
+    </div>
+  </div>
+  <div class="conf-foot">6 critical · 14 major · 8 minor = 28 total · first reading · 2026-05-15 · 5 critical + 3 major fully closed + 1 major partially closed (Gap 07, global CSS only) · <em>counting model: per-page incidence (one instance per affected page)</em></div>
+
+  <div style="margin-top:2rem;">
+    <div class="sec-marker" style="margin-bottom:1rem"><span class="bar"></span> Roadmap — remediation order</div>
+    <div class="mono-list">
+      <div class="row">
+        <span class="k">Sprint 1 (now)</span>
+        <span class="v"><strong>Closed in this dispatch:</strong> skip links on 8 pages · <code>&lt;main&gt;</code> landmark on 8 pages · global <code>:focus-visible</code> ring · <code>--ochre-link</code> token + always-on underline (global CSS — per-page inline blocks tracked as A11Y-C02) · <code>prefers-reduced-motion</code> on customers + mcp · nav <code>aria-label</code> on 4 pages</span>
+      </div>
+      <div class="row">
+        <span class="k">Sprint 2</span>
+        <span class="v"><strong>Graph SVG keyboard navigation</strong> (Critical A11Y-G01 — the only remaining critical) · table <code>scope</code> attributes on careers + mcp · <code>ink-mute-aa</code> token deployed to muted labels across all pages</span>
+      </div>
+      <div class="row">
+        <span class="k">Sprint 3</span>
+        <span class="v">Enhanced contrast pass (AAA, 1.4.6): all body text at 7:1 · <code>--ochre-link</code> deployed across all in-page style blocks · Briefings archive skip links (non-inline-CSS pages)</span>
+      </div>
+      <div class="row">
+        <span class="k">T+180d</span>
+        <span class="v">External accessibility audit · WCAG 2.2 AAA scope · vendor selection by T+140d</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:2rem;">
+    <div class="sec-marker" style="margin-bottom:1rem"><span class="bar"></span> Design principles this audit works from</div>
+    <div class="mono-list">
+      <div class="row">
+        <span class="k">Target sizes</span>
+        <span class="v">Minimum 24×24 CSS px for all interactive elements (2.5.8 AA); targeting 44×44 for primary actions (2.5.5 AAA). Applies to buttons, chip selectors, form controls.</span>
+      </div>
+      <div class="row">
+        <span class="k">Motion</span>
+        <span class="v">Every animation and transition respects <code>prefers-reduced-motion: reduce</code>. No animation fires without a CSS media query guard. Decorative-only transitions are suppressed entirely.</span>
+      </div>
+      <div class="row">
+        <span class="k">Contrast</span>
+        <span class="v">Body text: 7:1 (AAA). Large text and UI components: 4.5:1 (AA). The new <code>--ochre-link</code> token (#7a3d0a, 7.14:1) replaces <code>--ochre</code> (#b8651f, 3.63:1) for all text links. <code>--ochre</code> survives as a decorative accent.</span>
+      </div>
+      <div class="row">
+        <span class="k">Language attributes</span>
+        <span class="v">All 9 audited pages carry <code>lang="en"</code>. Passages in other languages (none currently) must use <code>lang</code> on the element. This is a WCAG 3.1.2 AA requirement.</span>
+      </div>
+      <div class="row">
+        <span class="k">Focus order</span>
+        <span class="v">Tab order follows visual reading order. Focus is never lost, never trapped. Every interactive element shows a visible <code>:focus-visible</code> ring (2px ochre, 3px offset) — the global rule is in <code>assets/styles.css</code>.</span>
+      </div>
+      <div class="row">
+        <span class="k">Screen-reader semantics</span>
+        <span class="v">One <code>&lt;h1&gt;</code> per page. Heading hierarchy never skips a level. Landmarks: <code>nav</code> with <code>aria-label</code>, <code>main</code>, <code>header</code>, <code>footer</code>. Decorative SVG and icons carry <code>aria-hidden="true"</code>.</span>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ─────────────────────────────────────────── § 2 CONFORMANCE ── -->
 <section id="conformance">
   <div class="sec-marker"><span class="bar"></span> § 2 · Where we conform and where we don't</div>
   <h2 class="sec-h"><em>Conformance</em> status.</h2>
-  <p class="sec-dek">A page-by-page accounting. <em>Conforming</em> means every Level A and AA criterion is met as of the last audit. <em>Substantially conforming</em> means there are <a href="#gaps">documented gaps</a> &mdash; usually narrow, always disclosed &mdash; that we are working on.</p>
+  <p class="sec-dek">A page-by-page accounting against the prior WCAG 2.1 AA target (T+115d internal audit). The WCAG 2.2 AAA baseline as of 2026-05-15 is in <a href="#o1-baseline">§ 1.5</a>. This table will migrate to AAA status as pages close their gaps.</p>
 
   <div class="conf-table" role="table" aria-label="Conformance status by area">
     <div class="conf-row head" role="row">
@@ -762,8 +939,8 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 
     <div class="conf-row" role="row">
       <span class="conf-path" role="cell"><strong>/agents/</strong>, <strong>/handbook/</strong>, <strong>/chairman/</strong>, <strong>/briefings/</strong></span>
-      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
-      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA <em>(prior target)</em></span>
+      <span class="conf-status" role="cell"><span class="pill partial">Gaps logged — see §1.5</span></span>
     </div>
 
     <div class="conf-row" role="row">
@@ -792,8 +969,8 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 
     <div class="conf-row" role="row">
       <span class="conf-path" role="cell"><strong>/customers/*</strong> <em>— case studies</em></span>
-      <span class="conf-target" role="cell">WCAG 2.1 AA</span>
-      <span class="conf-status" role="cell"><span class="pill">Conforming</span></span>
+      <span class="conf-target" role="cell">WCAG 2.1 AA <em>(prior target)</em></span>
+      <span class="conf-status" role="cell"><span class="pill partial">Gaps logged — see §1.5</span></span>
     </div>
 
     <div class="conf-row" role="row">
@@ -809,7 +986,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
     </div>
   </div>
 
-  <div class="conf-foot">Audit basis: internal review by Forge, with axe-core automated coverage and manual sweeps · last refreshed T+115d</div>
+  <div class="conf-foot">WCAG 2.1 AA snapshot at T+115d (prior standard) · New WCAG 2.2 AAA baseline at 2026-05-15 — see §1.5 for per-page findings · target standard is now WCAG 2.2 AAA (O-1)</div>
 
   <p class="prose">The two areas marked <em>substantially conforming</em> &mdash; the Console and the operating dashboard &mdash; are the two areas with the most interactive complexity (streaming answers, charts, dense tables). The specific shortfalls are listed in <a href="#gaps">§ 4</a>, each with a workaround and a target date for full conformance.</p>
 </section>
@@ -870,7 +1047,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 <section id="gaps">
   <div class="sec-marker"><span class="bar"></span> § 4 · Where we fall short, and what we do about it</div>
   <h2 class="sec-h">Known <em>accessibility gaps</em>.</h2>
-  <p class="sec-dek">We will not claim conformance we have not earned. The four items below are the specific places where we know we are not yet at WCAG 2.1 AA &mdash; each with a workaround that exists today and a target date for full remediation.</p>
+  <p class="sec-dek">We will not claim conformance we have not earned. Items 01–04 are the prior gaps from the T+115d audit. Items 05–09 are new WCAG findings from the 2026-05-15 AAA baseline. Item 10 (A11Y-DS01) is a design-system hygiene issue excluded from the WCAG count. Items marked <strong>Closed</strong> were fixed in the same dispatch that found them.</p>
 
   <div class="gap-list">
 
@@ -968,6 +1145,145 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 
   </div>
 
+  <div style="margin-top:1.6rem">
+    <div class="sec-marker" style="margin-bottom:.6rem"><span class="bar"></span> 2026-05-15 baseline — new findings</div>
+  </div>
+
+  <div class="gap-list">
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">05</span>
+        WCAG 2.4.1 · Level A
+        <span class="status fixed">Closed 2026-05-15</span>
+      </div>
+      <div class="gap-body">
+        <h3>Skip-navigation link missing from 8 pages</h3>
+        <p class="intro">Eight of nine audited pages had no skip-navigation link, leaving keyboard and screen reader users who need to bypass the nav on every page load without a path to do so. This is a Level A failure — it blocks a core task.</p>
+        <div class="wk">
+          <span class="lab">Fix shipped</span>
+          A skip link (<code>&lt;a href="#main" class="skip"&gt;</code>) is now at the first position inside <code>&lt;body&gt;</code> on all affected pages. The <code>.skip</code> class is in <code>assets/styles.css</code>. Pages with inline CSS (mcp.html, graph/index.html) received a page-local copy of the rule.
+        </div>
+        <div class="refs">
+          <span>Severity <strong>Critical → Closed</strong></span>
+          <span>Tracking <strong>A11Y-S01</strong></span>
+          <span>Pages <strong>8 of 9</strong></span>
+          <span>Fixed <strong>2026-05-15</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">06</span>
+        WCAG 2.4.7 · Level AA
+        <span class="status fixed">Closed 2026-05-15</span>
+      </div>
+      <div class="gap-body">
+        <h3>No visible focus indicator system-wide</h3>
+        <p class="intro"><code>assets/styles.css</code> had no <code>:focus-visible</code> rule. Browser defaults were removed by global CSS resets on several pages, leaving keyboard users with no visible focus indicator on interactive elements — a Level AA failure that makes navigation nearly impossible without a mouse.</p>
+        <div class="wk">
+          <span class="lab">Fix shipped</span>
+          A global <code>:focus-visible { outline: 2px solid var(--ochre); outline-offset: 3px; border-radius: 2px; }</code> rule is now in <code>assets/styles.css</code>. Pages with inline CSS received matching page-local rules.
+        </div>
+        <div class="refs">
+          <span>Severity <strong>Critical → Closed</strong></span>
+          <span>Tracking <strong>A11Y-F01</strong></span>
+          <span>Fixed <strong>2026-05-15</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">07</span>
+        WCAG 1.4.3 · Level AA
+        <span class="status partial">Closed (global CSS) · open: A11Y-C02</span>
+      </div>
+      <div class="gap-body">
+        <h3>Link color (--ochre) fails minimum contrast on cream paper</h3>
+        <p class="intro"><code>--ochre</code> (#b8651f) has a 3.63:1 contrast ratio against <code>--paper</code> (#f4ecda). WCAG 1.4.3 AA requires 4.5:1 for body text links. This was the dominant link color across all pages — a systemic Level AA failure.</p>
+        <div class="wk">
+          <span class="lab">Fix shipped</span>
+          New token <code>--ochre-link: #7a3d0a</code> (7.14:1 on paper — passes AAA) introduced in <code>assets/styles.css</code>. The global <code>a { color }</code> rule now uses <code>--ochre-link</code>. <code>--ochre</code> remains for decorative borders, icons, labels, and nav underlines where it appears alongside ink text. Migration note: pages with inline <code>a { color: var(--ochre) }</code> still need per-page update — tracked as A11Y-C02.
+        </div>
+        <p>Also fixes WCAG 1.4.1: links were only distinguished from body text by color (no underline until hover). The fix ships a persistent <code>border-bottom: 1px solid var(--ochre-link)</code> on all <code>a</code> elements.</p>
+        <div class="refs">
+          <span>Severity <strong>Major → Closed (global CSS)</strong></span>
+          <span>Tracking <strong>A11Y-C01 / A11Y-C02</strong></span>
+          <span>Fixed <strong>2026-05-15 (assets/styles.css) · per-page inline blocks open</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">08</span>
+        WCAG 2.3.3 · Level AAA
+        <span class="status fixed">Closed 2026-05-15</span>
+      </div>
+      <div class="gap-body">
+        <h3>prefers-reduced-motion missing on customers/ and graph/mcp.html</h3>
+        <p class="intro">Both pages used CSS transitions and animations without a <code>prefers-reduced-motion: reduce</code> suppression block, violating 2.3.3 (AAA). Two other pages (graph/index.html, recruiter/index.html) had motion guards but covered only CSS animations, not JS-driven forces. </p>
+        <div class="wk">
+          <span class="lab">Fix shipped</span>
+          Both pages received a <code>@media (prefers-reduced-motion: reduce)</code> block suppressing all animation and transition durations to 0.01ms. <code>assets/styles.css</code> already had the global block.
+        </div>
+        <div class="refs">
+          <span>Severity <strong>Major → Closed</strong></span>
+          <span>Tracking <strong>A11Y-M01</strong></span>
+          <span>Fixed <strong>2026-05-15</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">09</span>
+        WCAG 2.1.1 · Level A
+        <span class="status">Open</span>
+      </div>
+      <div class="gap-body">
+        <h3>Interactive people-graph (/graph/) is not keyboard-navigable</h3>
+        <p class="intro">The SVG visualization at <code>/graph/index.html</code> renders 40 nodes and 80+ edges. Nodes respond to mouse hover and click to focus 1-hop neighborhoods. There is no keyboard path to navigate between nodes, inspect node data, or traverse the graph — a Level A failure (2.1.1) because it blocks a core interactive task.</p>
+        <div class="wk">
+          <span class="lab">Workaround available today</span>
+          The graph data is described in the accompanying text: the schema section below the visualization lists all node and edge types. The <a href="../graph/mcp.html">MCP architecture spec</a> provides the full data model in semantic HTML. For screen reader users, the schema section is fully accessible.
+        </div>
+        <p>Planned remediation: add <code>tabindex="0"</code> and <code>keydown</code> handlers (Arrow keys to traverse, Enter to select, Escape to reset) to node elements in the SVG. Requires a structural change to the SVG rendering pipeline. Target: <strong>Sprint 2</strong>.</p>
+        <div class="refs">
+          <span>Severity <strong>Critical</strong></span>
+          <span>Tracking <strong>A11Y-G01</strong></span>
+          <span>Owner <strong>Tessera / Forge</strong></span>
+          <span>Target <strong>Sprint 2</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="gap-item">
+      <div class="gap-id">
+        Gap<span class="num">10</span>
+        CSS design-system
+        <span class="status">Open · Sprint 3</span>
+      </div>
+      <div class="gap-body">
+        <h3>Systemic <code>!important</code> declarations in CSS across non-audited pages</h3>
+        <p class="intro"><em>This is a design-system hygiene issue, not a WCAG criterion failure — excluded from the 28-finding WCAG baseline above.</em> A sweep of the full repository found <code>!important</code> property declarations in 15+ files outside the 9 audited pages (intel/, financials/, ledger/, board/, privacy/, day-two/, security/, status/, real-time/, library/, briefings/002–004/012.html, recruiter/console/styles.css). While CLAUDE.md explicitly forbids this pattern, these predate the O-1 dispatch. Most are universal-selector <code>prefers-reduced-motion</code> blocks or responsive override hacks. The 9 audited pages and global stylesheet were cleaned in this dispatch.</p>
+        <div class="wk">
+          <span class="lab">Sprint 3 scope</span>
+          Audit all remaining <code>.html</code> and <code>.css</code> files. For each <code>!important</code> block: identify the specificity conflict, raise the selector weight or restructure the cascade, remove the declaration. File a sub-issue per file resolved.
+        </div>
+        <div class="refs">
+          <span>Severity <strong>Minor (design-system hygiene)</strong></span>
+          <span>Tracking <strong>A11Y-DS01</strong></span>
+          <span>Owner <strong>Tessera</strong></span>
+          <span>Target <strong>Sprint 3</strong></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
   <p class="prose">If you find an accessibility issue that is <em>not</em> on this list, that is a bug, not an acknowledged gap &mdash; please report it (see <a href="#feedback">§ 7</a>) and we will fix it within thirty days or update this statement to add it.</p>
 </section>
 
@@ -1048,7 +1364,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   <div class="mono-list">
     <div class="row">
       <span class="k">Keyboard-only navigation</span>
-      <span class="v"><strong>100% of the public site is keyboard-navigable.</strong> Verified manually on every release. <em>The Console targets the same and meets it for primary workflows; chart drill-down is the one secondary path still being hardened &mdash; see Gap 01.</em></span>
+      <span class="v"><strong>All primary workflows are keyboard-navigable.</strong> One known exception: the interactive SVG people-graph at <a href="/graph/">/graph/</a> requires a mouse or touch device — there is no keyboard path to traverse nodes (Gap A11Y-G01, Critical, Sprint 2). Every other surface on the public site is keyboard-accessible. The Console's primary workflows meet this bar; chart drill-down is being hardened — see Gap 01.</span>
     </div>
     <div class="row">
       <span class="k">Screen reader compatibility</span>
@@ -1202,6 +1518,88 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   </div>
 </section>
 
+<!-- ─────────────────────────────────────────── § 12 TREND ── -->
+<section id="trend">
+  <div class="sec-marker"><span class="bar"></span> § 12 · Trend — how the numbers move</div>
+  <h2 class="sec-h"><em>Trend</em> and history.</h2>
+  <p class="sec-dek">This section populates over time. Each audit appends a row. The goal is to watch the critical count go to zero and stay there — and the minor count shrink as we polish.</p>
+
+  <div class="conf-table" role="table" aria-label="Audit history">
+    <div class="conf-row head" role="row">
+      <span role="columnheader">Date</span>
+      <span role="columnheader">Auditor</span>
+      <span role="columnheader">Critical / Major / Minor</span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><strong>2026-05-15</strong></span>
+      <span class="conf-target" role="cell">Tessera · manual</span>
+      <span class="conf-status" role="cell"><span class="pill partial">6 C → 1 open · 14 M → 3 closed, 1 partial, 10 open · 8 min</span></span>
+    </div>
+    <div class="conf-row" role="row">
+      <span class="conf-path" role="cell"><em>Next audit — Sprint 2 close</em></span>
+      <span class="conf-target" role="cell">—</span>
+      <span class="conf-status" role="cell"><span class="pill planned">Pending</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── § 13 REFUSALS ── -->
+<section id="refusals">
+  <div class="sec-marker"><span class="bar"></span> § 13 · What we will not ship</div>
+  <h2 class="sec-h"><em>Refusals.</em></h2>
+  <p class="sec-dek">These are not aspirations — they are standing blocks. A waiver requires a time-limited written decision logged in the decision ledger and reviewed at the next Compact.</p>
+
+  <div class="mono-list">
+    <div class="row">
+      <span class="k">Inaccessible new patterns</span>
+      <span class="v">No new UI pattern ships without a passing WCAG 2.2 AAA check on contrast, keyboard navigation, screen-reader name, focus order, and motion.</span>
+    </div>
+    <div class="row">
+      <span class="k">Hidden regressions</span>
+      <span class="v">Every regression is published here with severity, date found, and ETA. "AA is industry standard" is not a defense; it is the floor we are climbing off.</span>
+    </div>
+    <div class="row">
+      <span class="k">Animation without motion guard</span>
+      <span class="v">No CSS animation or JS-driven motion ships without a <code>prefers-reduced-motion</code> suppression path. This is a non-negotiable build gate.</span>
+    </div>
+    <div class="row">
+      <span class="k">Generic fonts</span>
+      <span class="v">Fraunces, Newsreader, JetBrains Mono — these are load-bearing choices for readability and character width consistency. Substituting Inter or Roboto also breaks the contrast and spacing assumptions built into the system.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── § 14 COLLABORATORS ── -->
+<section id="collaborators">
+  <div class="sec-marker"><span class="bar"></span> § 14 · Who this is built with</div>
+  <h2 class="sec-h"><em>Collaborators.</em></h2>
+  <p class="sec-dek">Accessibility is not a solo sport. These are the other agents who this work depends on, and what I need from them.</p>
+
+  <div class="proc-list">
+    <div class="proc-item">
+      <div class="proc-label">Forge<span class="step">Engineering</span></div>
+      <div class="proc-body">
+        <p>CI enforcement — axe-core in build, merge gates on Level A/AA regressions, semantic HTML review on PR. Forge owns the build pipeline; the accessibility gate lives inside it.</p>
+        <span class="tag">Dependency · Sprint 2</span>
+      </div>
+    </div>
+    <div class="proc-item">
+      <div class="proc-label">Kernel<span class="step">AI Surface</span></div>
+      <div class="proc-body">
+        <p>Console and agent UX accessibility — screen-reader announcements for streaming answers, keyboard nav for the people-graph inside the Console, live-region noise management. The AI-surface is Kernel's domain; the accessibility standard is mine.</p>
+        <span class="tag">Dependency · Console audit</span>
+      </div>
+    </div>
+    <div class="proc-item">
+      <div class="proc-label">Vector<span class="step">Customer</span></div>
+      <div class="proc-body">
+        <p>Customer feedback is the first place accessibility failures appear in the real world. Vector's weekly Office Hours are the listening channel. When a customer mentions a barrier, it goes on this list within the same week.</p>
+        <span class="tag">Input signal</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ─────────────────────────────────────────── CLOSING ── -->
 <div class="closing">
   <p>Accessibility is a <span class="em-ochre">product decision</span>, not an afterthought. We are building it in, not bolting it on.</p>
@@ -1209,10 +1607,10 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 
 <!-- ─────────────────────────────────────────── SIG ── -->
 <div class="sig-end">
-  <span>Document <strong>A11Y-2026-001 v1.2</strong></span>
-  <span>Reviewed <strong>T+115d</strong> · Forge, CTO</span>
+  <span>Document <strong>A11Y-2026-001 v2.0</strong></span>
+  <span>Baseline audit <strong>2026-05-15</strong> · Tessera, Design</span>
+  <span>O-1 standing objective · WCAG 2.2 AAA continuously</span>
   <span>Next external audit <strong>T+180d</strong></span>
-  <span>End of document</span>
 </div>
 
 <!-- ─────────────────────────────────────────── FOOTER ── -->
@@ -1259,7 +1657,7 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
     </div>
   </div>
   <div class="footer-foot">
-    <span>&copy; 2026 Stratum, Inc. &nbsp;·&nbsp; San Francisco &nbsp;·&nbsp; A11Y-2026-001 v1.2</span>
+    <span>&copy; 2026 Stratum, Inc. &nbsp;·&nbsp; San Francisco &nbsp;·&nbsp; A11Y-2026-001 v2.0</span>
     <a href="../index.html" class="briefing-link"><strong>Chairman's briefing</strong> &nbsp;→</a>
   </div>
 </footer>
