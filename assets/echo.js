@@ -404,13 +404,38 @@
   // ── playback state ─────────────────────────────────────────
   const state = {
     chunks: [],
-    index: 0,
+    batches: [],       // grouped chunks for openai (one fetch = one batch)
+    index: 0,          // current paragraph index (for highlight)
+    batchIdx: 0,       // current batch index (for openai)
     playing: false,
     paused: false,
     engine: 'browser', // or 'openai'
     audio: null,       // for openai
     abortKey: 0,       // increments on stop to invalidate in-flight openai requests
   };
+
+  // Group adjacent chunks into batches sized for a single OpenAI request.
+  // OpenAI TTS accepts up to 4096 chars; we target ~3000 to leave headroom
+  // for the JSON envelope and avoid sentence truncation.
+  function groupIntoBatches(chunks) {
+    const MAX = 3000;
+    const batches = [];
+    let cur = null;
+    chunks.forEach((c, i) => {
+      if (!cur) {
+        cur = { text: c.text, firstIdx: i, lastIdx: i, indices: [i] };
+      } else if (cur.text.length + c.text.length + 2 <= MAX) {
+        cur.text += '\n\n' + c.text;
+        cur.lastIdx = i;
+        cur.indices.push(i);
+      } else {
+        batches.push(cur);
+        cur = { text: c.text, firstIdx: i, lastIdx: i, indices: [i] };
+      }
+    });
+    if (cur) batches.push(cur);
+    return batches;
+  }
 
   function setStatus(msg, kind) {
     els.status.innerHTML = (kind ? `<span class="${kind}">${msg}</span>` : msg);
@@ -487,71 +512,126 @@
   }
 
   // ── OpenAI engine ──────────────────────────────────────────
+  function highlightBatch(batch) {
+    state.chunks.forEach(c => c.el.classList.remove('echo-spoken'));
+    if (!batch) return;
+    batch.indices.forEach(i => {
+      if (state.chunks[i]) state.chunks[i].el.classList.add('echo-spoken');
+    });
+  }
+
+  async function fetchBatchAudio(batch, settings, key, abortKey) {
+    const resp = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + key,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'tts-1-hd',
+        voice: settings.openaiVoice,
+        input: batch.text,
+        speed: settings.rate,
+      }),
+    });
+    if (abortKey !== state.abortKey) {
+      const err = new Error('aborted'); err.aborted = true; throw err;
+    }
+    if (!resp.ok) {
+      const errText = await resp.text().catch(() => '');
+      console.error('Echo · OpenAI ' + resp.status + ':', errText);
+      throw new Error('OpenAI ' + resp.status);
+    }
+    const blob = await resp.blob();
+    return URL.createObjectURL(blob);
+  }
+
   async function playOpenAI() {
     const key = getOpenAIKey();
     if (!key) { setStatus('Add OpenAI key', 'warn'); return; }
     if (state.chunks.length === 0) state.chunks = extractChunks();
     if (state.chunks.length === 0) { setStatus('No readable text found', 'warn'); return; }
+    if (state.batches.length === 0) state.batches = groupIntoBatches(state.chunks);
+
     setPlaying(true);
     const settings = captureSettings();
     const myKey = ++state.abortKey;
 
-    const speakOne = async () => {
-      if (!state.playing || myKey !== state.abortKey) return;
-      if (state.index >= state.chunks.length) {
-        stop();
-        setStatus('Finished');
-        return;
+    let i = state.batchIdx || 0;
+    const total = state.batches.length;
+    setStatus(`Loading · 1/${total}`, 'ok');
+
+    // Kick off first fetch immediately; pre-fetch each next batch while current plays.
+    let currentPromise = fetchBatchAudio(state.batches[i], settings, key, myKey);
+    let nextPromise = null;
+
+    while (state.playing && myKey === state.abortKey && i < total) {
+      // Pre-fetch the next batch in parallel with current playback
+      if (i + 1 < total) {
+        nextPromise = fetchBatchAudio(state.batches[i + 1], settings, key, myKey)
+          .catch(e => { if (!e.aborted) console.error('Echo · prefetch failed:', e); return null; });
+      } else {
+        nextPromise = null;
       }
-      const chunk = state.chunks[state.index];
-      highlight(state.index);
-      updateProgress();
-      setStatus(`Streaming · ${state.index + 1}/${state.chunks.length}`, 'ok');
+
+      let url;
       try {
-        const resp = await fetch('https://api.openai.com/v1/audio/speech', {
-          method: 'POST',
-          headers: {
-            'Authorization': 'Bearer ' + key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'tts-1-hd',
-            voice: settings.openaiVoice,
-            input: chunk.text.slice(0, 4000),
-            speed: settings.rate,
-          }),
-        });
-        if (!resp.ok) {
-          const err = await resp.text();
-          setStatus('OpenAI error: ' + resp.status, 'err');
-          console.error('Echo · OpenAI error:', err);
+        url = await currentPromise;
+        if (!url) throw new Error('pre-fetch failed');
+      } catch (e) {
+        if (e.aborted) return;
+        // Retry once inline before giving up on this batch
+        try {
+          url = await fetchBatchAudio(state.batches[i], settings, key, myKey);
+        } catch (e2) {
+          if (e2.aborted) return;
+          setStatus(e2.message || 'OpenAI error', 'err');
           stop();
           return;
         }
-        const blob = await resp.blob();
-        if (myKey !== state.abortKey) return;
-        const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        state.audio = audio;
-        audio.onended = () => {
-          URL.revokeObjectURL(url);
-          if (myKey !== state.abortKey || !state.playing) return;
-          state.index += 1;
-          speakOne();
-        };
-        audio.onerror = () => {
-          URL.revokeObjectURL(url);
-          setStatus('Audio playback failed', 'err');
-          stop();
-        };
-        await audio.play();
-      } catch (e) {
-        setStatus('Network error', 'err');
-        console.error('Echo · network error:', e);
-        stop();
       }
-    };
-    speakOne();
+      if (!state.playing || myKey !== state.abortKey) {
+        if (url) URL.revokeObjectURL(url);
+        return;
+      }
+
+      const batch = state.batches[i];
+      state.batchIdx = i;
+      state.index = batch.firstIdx;
+      highlightBatch(batch);
+      updateProgress();
+      setStatus(`Playing · ${i + 1}/${total}`, 'ok');
+
+      const audio = new Audio(url);
+      state.audio = audio;
+
+      try {
+        // Pause is handled implicitly: state.audio.pause()/play() are wired
+        // up by pauseOpenAI/resumeOpenAI; the 'ended' event only fires once
+        // playback truly completes, so this await naturally waits across pauses.
+        await new Promise((resolve, reject) => {
+          audio.addEventListener('ended', resolve, { once: true });
+          audio.addEventListener('error', () => reject(new Error('audio playback failed')), { once: true });
+          audio.play().catch(reject);
+        });
+      } catch (e) {
+        URL.revokeObjectURL(url);
+        if (myKey !== state.abortKey) return;
+        if (state.playing) {
+          console.error('Echo · batch ' + (i + 1) + ' playback error:', e);
+          setStatus('Skipped batch ' + (i + 1), 'warn');
+        }
+      }
+
+      URL.revokeObjectURL(url);
+      i += 1;
+      currentPromise = nextPromise;
+    }
+
+    if (state.playing && myKey === state.abortKey) {
+      stop();
+      setStatus('Finished');
+    }
   }
   function pauseOpenAI() {
     if (state.audio) state.audio.pause();
@@ -595,6 +675,7 @@
     setPlaying(false);
     state.paused = false;
     state.index = 0;
+    state.batchIdx = 0;
     state.chunks.forEach(c => c.el.classList.remove('echo-spoken'));
     updateProgress();
   }
