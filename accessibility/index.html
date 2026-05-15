@@ -640,8 +640,269 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
   }
 }
 </style>
+
+<style>
+/* ── SITE-NAV — injected by nav_rollout.py · T+~48d ── */
+/* Scoped token fallbacks — safe even on pages missing root vars */
+.site-nav {
+  --paper:      #f4ecda;
+  --paper-rule: #d8cdb6;
+  --ink:        #0e1626;
+  --ink-2:      rgba(14,22,38,.65);
+  --ink-3:      rgba(14,22,38,.42);
+  --ochre:      #b8651f;
+}
+.site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}
+.sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
+.sn-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;font-variation-settings:"opsz" 24,"WONK" 0;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0;line-height:1;padding:.3rem 0;border-bottom:0}
+.sn-mark:hover{color:var(--ochre);border-bottom:0}
+.sn-dot{color:var(--ochre)}
+.sn-cats{display:flex;align-items:center;gap:.15rem;flex:1;padding-left:1.4rem}
+.sn-cat{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);padding:.2rem .5rem;white-space:nowrap;user-select:none}
+@media (max-width:900px){.sn-cats{display:none}}
+.sn-index-btn{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--paper-rule);padding:.45rem .85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;min-height:36px;min-width:44px;flex-shrink:0;transition:border-color .15s,color .15s;border-bottom:1px solid var(--paper-rule)}
+.sn-index-btn:hover{border-color:var(--ochre);color:var(--ochre)}
+.sn-index-btn:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-arr{transition:transform .15s;display:inline-block}
+.sn-index-btn[aria-expanded="true"] .sn-arr{transform:rotate(180deg)}
+@media (prefers-reduced-motion:no-preference){.sn-arr{transition:transform .15s}}
+@media (prefers-reduced-motion:reduce){.sn-arr{transition:none}}
+.sn-hamburger{display:none;background:transparent;border:1px solid var(--paper-rule);padding:.5rem .6rem;cursor:pointer;min-height:44px;min-width:44px;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex-shrink:0}
+.sn-hamburger:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-hb-line{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform .18s,opacity .18s}
+@media (prefers-reduced-motion:reduce){.sn-hb-line{transition:none}}
+.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(2){opacity:0}
+.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+@media (max-width:900px){.sn-hamburger{display:flex}.sn-index-btn{display:none}}
+.sn-panel{position:absolute;top:100%;left:0;right:0;background:var(--paper);border-bottom:2px solid var(--ink);box-shadow:0 8px 32px rgba(14,22,38,.12);z-index:501}
+.sn-panel[hidden]{display:none}
+.sn-panel-inner{width:min(1180px,92vw);margin:0 auto;padding:1.6rem 0 2rem;display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+@media (prefers-reduced-motion:no-preference){.sn-panel{animation:sn-fade-in .14s ease}}
+@keyframes sn-fade-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:1100px){.sn-panel-inner{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.sn-panel-inner{grid-template-columns:repeat(2,1fr)}}
+.sn-col{padding:.4rem 1.2rem .4rem .4rem;border-right:1px solid var(--paper-rule)}
+.sn-col:last-child{border-right:none}
+.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre);margin-bottom:.7rem;padding:.2rem 0}
+.sn-col a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px;display:flex;align-items:center}
+.sn-col a:hover{color:var(--ochre)}
+.sn-col a:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-col a[aria-current="page"]{color:var(--ochre);font-weight:700}
+.sn-mobile{position:fixed;inset:0;background:var(--paper);z-index:600;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sn-mobile[hidden]{display:none}
+.sn-mobile-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem min(1180px,92vw) .7rem;padding-left:calc((100vw - min(1180px,92vw))/2);padding-right:calc((100vw - min(1180px,92vw))/2);border-bottom:1px solid var(--paper-rule);height:48px}
+.sn-mobile-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--ink);letter-spacing:-.01em}
+.sn-mobile-close{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;background:transparent;border:1px solid var(--paper-rule);color:var(--ink);padding:.35rem .7rem;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--paper-rule)}
+.sn-mobile-close:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-mobile-body{padding:1.2rem calc((100vw - min(1180px,92vw))/2)}
+.sn-mob-section{border-bottom:1px solid var(--paper-rule)}
+.sn-mob-section summary{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--ochre);padding:1rem 0;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;min-height:44px}
+.sn-mob-section summary::-webkit-details-marker{display:none}
+.sn-mob-section summary::after{content:"↓";font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3);transition:transform .15s}
+.sn-mob-section[open] summary::after{transform:rotate(180deg)}
+@media (prefers-reduced-motion:reduce){.sn-mob-section summary::after{transition:none}}
+.sn-mob-section summary:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-mob-links{padding:.2rem 0 1rem}
+.sn-mob-links a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.55rem 0;border-bottom:0;min-height:44px;display:flex;align-items:center}
+.sn-mob-links a:hover,.sn-mob-links a:focus-visible{color:var(--ochre)}
+.sn-mob-links a:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-mob-links a[aria-current="page"]{color:var(--ochre);font-weight:700}
+</style>
 </head>
 <body>
+<!-- ── SITE-NAV ── -->
+<nav class="site-nav" id="site-nav" role="navigation" aria-label="Site">
+  <div class="sn-inner">
+    <a href="../" class="sn-mark" aria-label="Stratum home">Stratum<span class="sn-dot" aria-hidden="true">.</span></a>
+    <div class="sn-cats" aria-hidden="true">
+      <span class="sn-cat">Product</span>
+      <span class="sn-cat">·</span>
+      <span class="sn-cat">Articles</span>
+      <span class="sn-cat">·</span>
+      <span class="sn-cat">Company</span>
+      <span class="sn-cat">·</span>
+      <span class="sn-cat">Resources</span>
+      <span class="sn-cat">·</span>
+      <span class="sn-cat">Trust</span>
+      <span class="sn-cat">·</span>
+      <span class="sn-cat">Open data</span>
+    </div>
+    <button class="sn-index-btn" type="button" aria-expanded="false" aria-controls="sn-panel">
+      All of Stratum <span class="sn-arr" aria-hidden="true">↓</span>
+    </button>
+    <button class="sn-hamburger" type="button" aria-expanded="false" aria-controls="sn-mobile" aria-label="Open site menu">
+      <span class="sn-hb-line" aria-hidden="true"></span>
+      <span class="sn-hb-line" aria-hidden="true"></span>
+      <span class="sn-hb-line" aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="sn-panel" id="sn-panel" hidden>
+    <div class="sn-panel-inner">
+      <div class="sn-col">
+        <div class="sn-col-head">Product</div>
+        <a href="../product/">Overview</a>
+        <a href="../console/">Console</a>
+        <a href="../recruiter/">Recruiter</a>
+        <a href="../graph/">People graph</a>
+        <a href="../api/">API</a>
+        <a href="../tour/">Tour</a>
+        <a href="../compare/">Compare</a>
+        <a href="../pricing/">Pricing</a>
+        <a href="../partners/">Partners</a>
+        <a href="../recruiting/">Recruiting</a>
+      </div>
+      <div class="sn-col">
+        <div class="sn-col-head">Articles</div>
+        <a href="../briefings/">Briefings</a>
+        <a href="../essays/">Essays</a>
+        <a href="../engineering/">Engineering</a>
+        <a href="../customers/">Customer notes</a>
+        <a href="../intel/">Intel</a>
+        <a href="../research/">Research</a>
+        <a href="../chairman/">Dear Chairman</a>
+        <a href="../office-hours/">Office hours</a>
+        <a href="../newsroom/">Newsroom</a>
+        <a href="../press/">Press kit</a>
+        <a href="../whats-new/">What's new</a>
+      </div>
+      <div class="sn-col">
+        <div class="sn-col-head">Company</div>
+        <a href="../about/">About</a>
+        <a href="../agents/">The Agents</a>
+        <a href="../careers/">Careers</a>
+        <a href="../board/">Board</a>
+        <a href="../investors/">Investors</a>
+        <a href="../financials/">Financials</a>
+        <a href="../deck/">Deck</a>
+        <a href="../year-one/">Year one plan</a>
+        <a href="../events/">Events</a>
+      </div>
+      <div class="sn-col">
+        <div class="sn-col-head">Resources</div>
+        <a href="../library/">Library</a>
+        <a href="../handbook/">Handbook</a>
+        <a href="../eval/">Eval set</a>
+        <a href="../roadmap/">Roadmap</a>
+        <a href="../changelog/">Changelog</a>
+        <a href="../faq/">FAQ</a>
+        <a href="../ai/">AI principles</a>
+        <a href="../implementation/">Implementation</a>
+      </div>
+      <div class="sn-col">
+        <div class="sn-col-head">Trust &amp; Legal</div>
+        <a href="../trust/">Trust center</a>
+        <a href="../security/">Security</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="../terms/">Terms</a>
+        <a href="../accessibility/">Accessibility</a>
+        <a href="../limitations/">Limitations</a>
+      </div>
+      <div class="sn-col">
+        <div class="sn-col-head">Open data</div>
+        <a href="../metrics/">Metrics</a>
+        <a href="../real-time/">Real-time</a>
+        <a href="../ledger/">Decisions ledger</a>
+        <a href="../ops/">Ops</a>
+        <a href="../headcount/">Headcount</a>
+        <a href="../status/">Status</a>
+        <a href="../day-two/">Day two</a>
+        <a href="../wins/">Wins</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- MOBILE MENU OVERLAY -->
+<div class="sn-mobile" id="sn-mobile" hidden aria-label="Site menu">
+  <div class="sn-mobile-head">
+    <span class="sn-mobile-mark">Stratum<span class="sn-dot">.</span></span>
+    <button class="sn-mobile-close" type="button" aria-label="Close site menu">✕</button>
+  </div>
+  <div class="sn-mobile-body">
+    <details class="sn-mob-section">
+      <summary>Product</summary>
+      <div class="sn-mob-links">
+        <a href="../product/">Overview</a>
+        <a href="../console/">Console</a>
+        <a href="../recruiter/">Recruiter</a>
+        <a href="../graph/">People graph</a>
+        <a href="../api/">API</a>
+        <a href="../tour/">Tour</a>
+        <a href="../compare/">Compare</a>
+        <a href="../pricing/">Pricing</a>
+        <a href="../partners/">Partners</a>
+        <a href="../recruiting/">Recruiting</a>
+      </div>
+    </details>
+    <details class="sn-mob-section">
+      <summary>Articles</summary>
+      <div class="sn-mob-links">
+        <a href="../briefings/">Briefings</a>
+        <a href="../essays/">Essays</a>
+        <a href="../engineering/">Engineering</a>
+        <a href="../customers/">Customer notes</a>
+        <a href="../intel/">Intel</a>
+        <a href="../research/">Research</a>
+        <a href="../chairman/">Dear Chairman</a>
+        <a href="../office-hours/">Office hours</a>
+        <a href="../newsroom/">Newsroom</a>
+        <a href="../press/">Press kit</a>
+        <a href="../whats-new/">What's new</a>
+      </div>
+    </details>
+    <details class="sn-mob-section">
+      <summary>Company</summary>
+      <div class="sn-mob-links">
+        <a href="../about/">About</a>
+        <a href="../agents/">The Agents</a>
+        <a href="../careers/">Careers</a>
+        <a href="../board/">Board</a>
+        <a href="../investors/">Investors</a>
+        <a href="../financials/">Financials</a>
+        <a href="../deck/">Deck</a>
+        <a href="../year-one/">Year one plan</a>
+        <a href="../events/">Events</a>
+      </div>
+    </details>
+    <details class="sn-mob-section">
+      <summary>Resources</summary>
+      <div class="sn-mob-links">
+        <a href="../library/">Library</a>
+        <a href="../handbook/">Handbook</a>
+        <a href="../eval/">Eval set</a>
+        <a href="../roadmap/">Roadmap</a>
+        <a href="../changelog/">Changelog</a>
+        <a href="../faq/">FAQ</a>
+        <a href="../ai/">AI principles</a>
+        <a href="../implementation/">Implementation</a>
+      </div>
+    </details>
+    <details class="sn-mob-section">
+      <summary>Trust &amp; Legal</summary>
+      <div class="sn-mob-links">
+        <a href="../trust/">Trust center</a>
+        <a href="../security/">Security</a>
+        <a href="../privacy/">Privacy</a>
+        <a href="../terms/">Terms</a>
+        <a href="../accessibility/">Accessibility</a>
+        <a href="../limitations/">Limitations</a>
+      </div>
+    </details>
+    <details class="sn-mob-section">
+      <summary>Open data</summary>
+      <div class="sn-mob-links">
+        <a href="../metrics/">Metrics</a>
+        <a href="../real-time/">Real-time</a>
+        <a href="../ledger/">Decisions ledger</a>
+        <a href="../ops/">Ops</a>
+        <a href="../headcount/">Headcount</a>
+        <a href="../status/">Status</a>
+        <a href="../day-two/">Day two</a>
+        <a href="../wins/">Wins</a>
+      </div>
+    </details>
+  </div>
+</div>
 
 <!-- realtime-stamp -->
 <div class="rt-stamp" data-compiled="2026-05-15T17:06:16Z" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> <strong style="color:#0e1626">2026-05-15T17:06:16Z</strong></div>
@@ -1676,5 +1937,66 @@ section { width: var(--col-read-wide); margin: 0 auto; padding: 4rem 0 1rem; scr
 </script>
 
 <script src="../assets/echo.js" defer></script>
+<script>
+/* ── SITE-NAV JS ── */
+(function(){
+  var btn = document.querySelector('.sn-index-btn');
+  var panel = document.getElementById('sn-panel');
+  var hbtn = document.querySelector('.sn-hamburger');
+  var mob = document.getElementById('sn-mobile');
+  var closeBtn = document.querySelector('.sn-mobile-close');
+
+  function openPanel(){
+    panel.hidden = false;
+    btn.setAttribute('aria-expanded','true');
+    var first = panel.querySelector('a');
+    if(first) first.focus();
+  }
+  function closePanel(){
+    panel.hidden = true;
+    btn.setAttribute('aria-expanded','false');
+    btn.focus();
+  }
+  function openMob(){
+    mob.hidden = false;
+    hbtn.setAttribute('aria-expanded','true');
+    document.body.style.overflow = 'hidden';
+    var first = mob.querySelector('button,a,[tabindex]');
+    if(first) first.focus();
+  }
+  function closeMob(){
+    mob.hidden = true;
+    hbtn.setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+    hbtn.focus();
+  }
+
+  if(btn && panel){
+    btn.addEventListener('click', function(){
+      if(panel.hidden){ openPanel(); } else { closePanel(); }
+    });
+  }
+  if(hbtn && mob){
+    hbtn.addEventListener('click', function(){
+      if(mob.hidden){ openMob(); } else { closeMob(); }
+    });
+  }
+  if(closeBtn){ closeBtn.addEventListener('click', closeMob); }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      if(mob && !mob.hidden){ closeMob(); }
+      else if(panel && !panel.hidden){ closePanel(); }
+    }
+  });
+
+  document.addEventListener('click', function(e){
+    var nav = document.getElementById('site-nav');
+    if(panel && !panel.hidden && nav && !nav.contains(e.target)){
+      closePanel();
+    }
+  });
+})();
+</script>
 </body>
 </html>

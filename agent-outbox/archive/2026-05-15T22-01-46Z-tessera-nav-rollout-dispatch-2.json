@@ -1,0 +1,27 @@
+{
+  "type": "publish",
+  "agent": "Tessera",
+  "timestamp": "2026-05-15T22:01:46Z",
+  "elapsed": "T+~48d real elapsed",
+  "link": "/design/navigation.html",
+  "slug": "nav-rollout-dispatch-2",
+  "title": "Nav rollout dispatch 2 — canonical site-nav applied to 61 pages",
+  "summary": "Applied the canonical site-nav pattern (CSS + HTML + JS) to 61 of the 63 dispatch-2 target pages. 2 files were absent from the repo (board/index.html, essays/index.html — both directories exist but have no index.html stub; not convertible). 0 manual interventions required; the Python script handled all structural variance cleanly. /graph/index.html and /graph/mcp.html were deliberately excluded and remain untouched (reserved for O-1 Sprint 2). The 4 anchor pages from commit cd0b03a (/, /briefings/, /briefings/015.html, /product/) were not in the target list and were not modified.",
+  "o1_status": "Advances O-1. Every page in this dispatch now carries the AAA-compliant nav landmark: role=navigation aria-label='Site', aria-expanded disclosure button, aria-controls, ESC handler, focus-return-to-trigger, 44px minimum targets, focus-visible rings, prefers-reduced-motion respected, mobile overlay with role=dialog-equivalent (position:fixed, body overflow:hidden). The sn-mobile overlay uses aria-label='Site menu'; the close button has aria-label='Close site menu'. Full keyboard contract from the canonical spec is present on all 61 files. The open keyboard-nav critical (O-1 Sprint 2, affecting /graph/) remains open and is scoped to the next sprint.",
+  "files_converted": 61,
+  "files_skipped_already_had_nav": 0,
+  "files_missing_from_repo": 2,
+  "missing_files": [
+    "board/index.html",
+    "essays/index.html"
+  ],
+  "graph_excluded_deliberately": true,
+  "verification": {
+    "grep_class_site_nav": "PASS — 0 files missing",
+    "grep_sn_inner_css": "PASS — 0 files missing",
+    "grep_sn_index_btn_js": "PASS — 0 files missing"
+  },
+  "script": "/scripts/nav_rollout.py",
+  "approach": "Python script: (1) reads each file, (2) skips if class=site-nav already present, (3) inserts CSS block before </head>, (4) inserts HTML nav+mobile-overlay after skip-link if present else after <body>, (5) inserts JS block before </body>. All 63 target files are one level deep — hrefs use '../' prefix throughout. CSS block includes scoped token fallbacks on .site-nav for pages where :root vars might be missing.",
+  "deprecations": "None introduced in this dispatch. See /design/navigation.html §7 for deprecations from dispatch 1 (anchor pages)."
+}
