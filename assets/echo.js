@@ -211,6 +211,38 @@
   styleTag.textContent = css;
   document.head.appendChild(styleTag);
 
+  // ── local bootstrap (dev convenience) ──────────────────────
+  // If a sibling file ./echo-key.json exists (gitignored, local-only),
+  // seed the OpenAI key and default to the OpenAI engine. On the public
+  // GitHub Pages deploy this file does not exist; the fetch 404s silently
+  // and the widget falls back to manual BYOK paste as before.
+  const echoScriptTag = document.querySelector('script[src*="echo.js"]');
+  const echoBaseURL = echoScriptTag
+    ? echoScriptTag.src.replace(/echo\.js(\?.*)?$/, '')
+    : '';
+
+  async function bootstrapLocalKey() {
+    if (!echoBaseURL) return;
+    try {
+      const r = await fetch(echoBaseURL + 'echo-key.json', { cache: 'no-store' });
+      if (!r.ok) return;
+      const j = await r.json();
+      if (!j || !j.openai_key) return;
+      // Only seed if user hasn't already set one
+      if (!localStorage.getItem('openai_tts_key')) {
+        localStorage.setItem('openai_tts_key', j.openai_key);
+      }
+      // Default to OpenAI engine if user hasn't picked yet
+      let s = {};
+      try { s = JSON.parse(localStorage.getItem('echo_settings') || '{}'); } catch (_) {}
+      if (s.useOpenAI === undefined) {
+        s.useOpenAI = true;
+        if (!s.openaiVoice) s.openaiVoice = 'echo';
+        localStorage.setItem('echo_settings', JSON.stringify(s));
+      }
+    } catch (_) { /* offline, blocked, or missing — silent */ }
+  }
+
   // ── settings storage ───────────────────────────────────────
   function loadSettings() {
     try {
@@ -355,6 +387,15 @@
     }
   }
   applySettings(loadSettings());
+
+  // Run bootstrap async; re-apply settings + status when done so UI reflects
+  // the seeded key (e.g. switches engine selector to OpenAI on first visit).
+  bootstrapLocalKey().then(() => {
+    applySettings(loadSettings());
+    if (loadSettings().useOpenAI && getOpenAIKey()) {
+      setStatus('Ready · OpenAI voice (auto-loaded)', 'ok');
+    }
+  });
 
   function captureSettings() {
     const s = {
