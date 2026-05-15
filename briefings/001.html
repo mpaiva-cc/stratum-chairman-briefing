@@ -1,0 +1,1405 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum — Chairman's Briefing No. 001 · Founding Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/styles.css?v=3" />
+<style>
+/* Critical CSS, inlined so it cannot be defeated by an aggressive CSS cache.
+   Mirrors the .ticker and .quicknav rules in assets/styles.css. */
+.ticker{width:min(1180px,92vw);margin:1.4rem auto 0;background:#0e1626;color:#f4ecda;display:grid;grid-template-columns:max-content 1fr max-content;align-items:stretch;border:1px solid #0e1626;overflow:hidden;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.04em}
+.ticker-label{background:#b8651f;color:#0e1626;font-weight:700;padding:.6rem .9rem;letter-spacing:.18em;text-transform:uppercase;font-size:10.5px;display:flex;align-items:center;white-space:nowrap;position:relative}
+.ticker-label::after{content:"";width:6px;height:6px;border-radius:50%;background:#0e1626;margin-left:.55rem;animation:ticker-pulse 1.6s ease-in-out infinite}
+@keyframes ticker-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.25)}}
+.ticker-track{position:relative;overflow:hidden;display:flex;align-items:center;white-space:nowrap}
+.ticker-strip{display:inline-flex;align-items:center;flex-shrink:0;padding:0 1rem;animation:ticker-scroll 110s linear infinite;will-change:transform}
+.ticker:hover .ticker-strip{animation-play-state:paused}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+.t-item{padding:.55rem 1.6rem .55rem 0;color:#f4ecda;font-size:12.5px;letter-spacing:.02em;position:relative;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.t-item:not(:last-child)::after{content:"·";position:absolute;right:.6rem;top:50%;transform:translateY(-50%);color:#e6c79b;opacity:.5}
+.t-date{color:#b8651f;font-weight:700;letter-spacing:.08em;margin-right:.55rem}
+.ticker-source{background:#2a3344;color:#b8651f;padding:.6rem 1rem;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;display:flex;align-items:center;white-space:nowrap;border-left:1px solid rgba(244,236,218,.12);text-decoration:none;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+.ticker-source:hover{background:#b8651f;color:#0e1626}
+@media (prefers-reduced-motion: reduce){.ticker-strip{animation:none}}
+.quicknav{display:none;width:min(1180px,92vw);margin:.8rem auto 0;gap:.5rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase}
+.quicknav a{flex:1;text-align:center;padding:.65rem .55rem;background:#f7f0e0;border:1px solid #d8cdb6;color:#0e1626;text-decoration:none;white-space:nowrap}
+.quicknav a.qn-primary{background:#0e1626;color:#f4ecda;border-color:#0e1626}
+@media (max-width: 960px){.quicknav{display:flex}}
+@media (max-width: 720px){
+  .ticker{grid-template-columns:max-content 1fr}
+  .ticker-label{font-size:9.5px;padding:.5rem .55rem;letter-spacing:.14em}
+  .ticker-label::after{margin-left:.4rem;width:5px;height:5px}
+  .ticker-source{display:none}
+  .t-item{font-size:11.5px;padding-right:1.2rem}
+}
+@media (max-width: 600px){
+  .quicknav{flex-wrap:wrap}
+  .quicknav a{flex:1 1 calc(50% - .25rem);font-size:10.5px;padding:.7rem .4rem}
+  .quicknav a.qn-primary{flex:1 1 100%;padding:.85rem .5rem;font-size:12px}
+  .ticker-label{font-size:9px;padding:.5rem .5rem;letter-spacing:.1em}
+  .ticker-label span{display:none}
+}
+
+/* ── BRIEFING NAV ── */
+.briefing-nav {
+  width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: 2.4rem 0 1.6rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.briefing-nav a, .briefing-nav span {
+  color: var(--ink-3);
+  border-bottom: 0;
+  padding-bottom: 2px;
+  position: relative;
+}
+.briefing-nav a:hover { color: var(--ochre); }
+.briefing-nav a:hover::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 1px;
+  background: var(--ochre);
+}
+.briefing-nav .bn-next { color: var(--ochre); text-align: right; }
+.briefing-nav .bn-archive { color: var(--ink-mute); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-12T22:25:46-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+00:00:00.000</strong> · <span style="opacity:.6">2026-05-13T02:25:46.000Z</span></div>
+<!-- /realtime-stamp -->
+
+
+<!-- ──────────────────────────────────────────────────────────── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-rule"></div>
+  <div class="masthead-row">
+    <div class="masthead-meta">
+      <span class="dateline">Compiled at T+00:00:00.000 · Palo Alto</span>
+      <span class="folio">Vol. I · No. 001</span>
+    </div>
+    <nav class="masthead-nav" aria-label="Primary navigation">
+      <a href="../agents/">The Agents</a>
+      <a href="../real-time/" style="color:var(--ochre)">Real time</a>
+      <a href="#decisions">Ledger</a>
+      <a href="../library/">The Library</a>
+      <a href="015.html">Latest · 015 →</a>
+      <a href="../console/" class="next-issue">The Console →</a>
+    </nav>
+  </div>
+  <div class="masthead-title">
+    <div class="title-eyebrow">The Chairman's Briefing · No. 001</div>
+    <h1 class="wordmark">Stratum<span class="wordmark-dot">.</span></h1>
+    <div class="title-subhead">An AI-native human capital platform for the enterprise · Founding Edition</div>
+  </div>
+  <div class="masthead-rule double"></div>
+</header>
+
+<main id="main">
+<!-- ─────────────────────────────────────────── NEWS TICKER ── -->
+<aside class="ticker" aria-label="Company milestones at founding">
+  <div class="ticker-label">Founding · Day 7</div>
+  <div class="ticker-track">
+    <div class="ticker-strip">
+      <span class="t-item"><span class="t-date">T+102d</span> Briefing 008 published · "The first briefing after the reveal"</span>
+      <span class="t-item"><span class="t-date">T+101d</span> Vanta paid pilot signed · $80K · second commercial customer</span>
+      <span class="t-item"><span class="t-date">T+101d</span> Wired piece published · "The Autonomous Startup" · quoted Helm directly</span>
+      <span class="t-item"><span class="t-date">T+99d</span> The Agents reveal page published at /agents/</span>
+      <span class="t-item"><span class="t-date">T+99d</span> Connector framework abstraction shipped · dev time 20d → 8d</span>
+      <span class="t-item"><span class="t-date">T+60d</span> Briefing 005 published · "After the board, before the storm"</span>
+      <span class="t-item"><span class="t-date">T+56d</span> Workday Illuminate Copilot GA · risk R1 materialized</span>
+      <span class="t-item"><span class="t-date">T+55d</span> Vector joined as founding customer engineer</span>
+      <span class="t-item"><span class="t-date">T+53d</span> v0.4.2 "Marble" shipped · ADP-WFN connector alpha</span>
+      <span class="t-item"><span class="t-date">T+53d</span> Schema v2 ratified · contractor/temp-to-perm model fixed</span>
+      <span class="t-item"><span class="t-date">T+49d</span> Board Meeting No. 1 · three resolutions adopted (MIN-001)</span>
+      <span class="t-item"><span class="t-date">T+46d</span> Memo M-001 distributed to board</span>
+      <span class="t-item"><span class="t-date">T+45d</span> Cordova Manufacturing signed · 5 of 5 design partners</span>
+      <span class="t-item"><span class="t-date">T+42d</span> Greenhouse ATS connector alpha</span>
+      <span class="t-item"><span class="t-date">T+39d</span> Kernel accepted (AI / Agents Eng) · starts T+69d</span>
+      <span class="t-item"><span class="t-date">T+37d</span> Halcyon downgraded to 60-day evaluation · decision T+117d</span>
+      <span class="t-item"><span class="t-date">T+29d</span> Workday HR Core connector alpha</span>
+      <span class="t-item"><span class="t-date">T+27d</span> Pillar started · first hire on the ground</span>
+      <span class="t-item"><span class="t-date">T+16d</span> Mercator first ingestion · 3,412 records · 47 minutes</span>
+      <span class="t-item"><span class="t-date">T+5d</span> Seed round closed · $8.0M on $34M pre · Index leads</span>
+      <span class="t-item"><span class="t-date">T+0d</span> Founders' first session · the Compact ratified</span>
+    </div>
+    <div class="ticker-strip" aria-hidden="true">
+      <span class="t-item"><span class="t-date">T+102d</span> Briefing 008 published · "The first briefing after the reveal"</span>
+      <span class="t-item"><span class="t-date">T+101d</span> Vanta paid pilot signed · $80K · second commercial customer</span>
+      <span class="t-item"><span class="t-date">T+101d</span> Wired piece published · "The Autonomous Startup" · quoted Helm directly</span>
+      <span class="t-item"><span class="t-date">T+99d</span> The Agents reveal page published at /agents/</span>
+      <span class="t-item"><span class="t-date">T+99d</span> Connector framework abstraction shipped · dev time 20d → 8d</span>
+      <span class="t-item"><span class="t-date">T+60d</span> Briefing 005 published · "After the board, before the storm"</span>
+      <span class="t-item"><span class="t-date">T+56d</span> Workday Illuminate Copilot GA · risk R1 materialized</span>
+      <span class="t-item"><span class="t-date">T+55d</span> Vector joined as founding customer engineer</span>
+      <span class="t-item"><span class="t-date">T+53d</span> v0.4.2 "Marble" shipped · ADP-WFN connector alpha</span>
+      <span class="t-item"><span class="t-date">T+53d</span> Schema v2 ratified · contractor/temp-to-perm model fixed</span>
+      <span class="t-item"><span class="t-date">T+49d</span> Board Meeting No. 1 · three resolutions adopted (MIN-001)</span>
+      <span class="t-item"><span class="t-date">T+46d</span> Memo M-001 distributed to board</span>
+      <span class="t-item"><span class="t-date">T+45d</span> Cordova signed · 5 of 5 design partners</span>
+      <span class="t-item"><span class="t-date">T+42d</span> Greenhouse ATS connector alpha</span>
+      <span class="t-item"><span class="t-date">T+39d</span> Kernel accepted · starts T+69d</span>
+      <span class="t-item"><span class="t-date">T+37d</span> Halcyon downgraded · decision T+117d</span>
+      <span class="t-item"><span class="t-date">T+29d</span> Workday HR Core connector alpha</span>
+      <span class="t-item"><span class="t-date">T+27d</span> Pillar started · first hire on the ground</span>
+      <span class="t-item"><span class="t-date">T+16d</span> Mercator first ingestion · 3,412 records · 47 minutes</span>
+      <span class="t-item"><span class="t-date">T+5d</span> Seed round closed · $8.0M on $34M pre · Index leads</span>
+      <span class="t-item"><span class="t-date">T+0d</span> Founders' first session · the Compact ratified</span>
+    </div>
+  </div>
+  <a class="ticker-source" href="../ops/">Open ops →</a>
+</aside>
+
+<!-- ─────────────────────────────── REAL vs NARRATIVE BANNER ── -->
+<aside class="rn-banner">
+  <div class="rn-inner">
+    <div class="rn-headline">
+      <span class="rn-tag">Note for stakeholders</span>
+      <div class="rn-text">
+        <strong>Two clocks on this site.</strong> Real elapsed time from the first commit
+        is <span id="rn-elapsed">T+00:00:00</span> — that's the only clock that matters.
+        Narrative dates like &ldquo;T+102d&rdquo; in the briefings are illustrative storytelling, not real time.
+      </div>
+    </div>
+    <a href="../real-time/" class="rn-cta">See the real progression →</a>
+  </div>
+</aside>
+<style>
+.rn-banner{width:min(1180px,92vw);margin:.8rem auto 0;background:var(--paper-warm);border:1px solid var(--paper-rule);border-left:4px solid var(--ochre);padding:.8rem 1.1rem;font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--ink)}
+.rn-inner{display:flex;gap:1rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.rn-headline{display:flex;gap:.9rem;align-items:flex-start;min-width:0;flex:1}
+.rn-tag{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre);font-weight:700;padding-top:2px;white-space:nowrap}
+.rn-text{font-family:var(--serif);font-size:14px;font-style:italic;color:var(--ink);line-height:1.45;font-variation-settings:"opsz" 14}
+.rn-text strong{font-style:normal;font-weight:600}
+.rn-text #rn-elapsed{font-family:var(--mono);font-style:normal;color:var(--ochre);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.rn-cta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre);font-weight:700;border-bottom:0;white-space:nowrap}
+.rn-cta:hover{color:var(--ochre-deep)}
+@media (max-width:720px){
+  .rn-banner{font-size:11px}
+  .rn-text{font-size:13px}
+  .rn-cta{padding-top:.4rem}
+}
+</style>
+<script>
+(function(){
+  var T0 = new Date('2026-05-12T22:25:46-04:00');
+  var el = document.getElementById('rn-elapsed');
+  function pad(n,w){w=w||2;return String(n).padStart(w,'0')}
+  function tick(){
+    var ms = Date.now() - T0.getTime();
+    var h = Math.floor(ms/3600000);
+    var m = Math.floor((ms%3600000)/60000);
+    var s = Math.floor((ms%60000)/1000);
+    el.textContent = 'T+'+pad(h)+':'+pad(m)+':'+pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+
+<!-- ─────────────────────────────────────────────────────── MOBILE NAV ── -->
+<nav class="quicknav" aria-label="Jump to artifacts">
+  <a href="../console/" class="qn-primary">Try the live Console — ask anything →</a>
+  <a href="../agents/">The Agents — meet the team →</a>
+  <a href="../library/">The Library — all artifacts →</a>
+</nav>
+
+<!-- ────────────────────────────────────────────────────────────── INTRO ── -->
+<section class="intro">
+  <div class="intro-grid">
+    <div class="intro-letter">
+      <div class="ornament">§ 01</div>
+      <h2 class="section-h">A letter to our Chairman</h2>
+      <p class="lede">
+        <span class="dropcap">B</span>y the time you read this, three of us have spent
+        forty-one hours together in a room, drawn fourteen feet of whiteboards,
+        and committed to a company. We have not yet written code. We have not
+        yet hired a single person. We have done something that matters more:
+        we have agreed on what we will not build.
+      </p>
+      <p>
+        Human capital management is a $34&nbsp;billion category dominated by
+        four incumbents whose median customer NPS is 11. Implementations
+        routinely take eighteen months. The buyer — the Chief People Officer —
+        spends seventy percent of her week reconciling reports she did not
+        ask for. We believe this is not a software problem. It is an
+        <em>architectural</em> problem dressed up as a software problem, and the
+        next ten years of AI will dismantle it.
+      </p>
+      <p>
+        Our wager: build the system of <em>truth</em>, not the system of record.
+        A composable people graph that ingests the fifty source systems an
+        enterprise already runs, and an agentic interface that turns a CHRO
+        into a force of one thousand. We will sell to companies between
+        1,000 and 8,000 employees who have outgrown Rippling and find
+        Workday a prison.
+      </p>
+      <p class="signoff">
+        — Helm, Forge, Compass<br />
+        <span class="signoff-meta">Founders, Stratum, Inc. · Delaware C-Corp · Incorporated T+3d</span>
+      </p>
+    </div>
+
+    <aside class="intro-card">
+      <div class="card-label">At a glance · Day 7</div>
+      <dl class="kv">
+        <dt>Stage</dt><dd>Pre-seed → Seed</dd>
+        <dt>Incorporated</dt><dd>T+3d</dd>
+        <dt>HQ</dt><dd>Palo Alto, CA</dd>
+        <dt>Headcount</dt><dd>3 (founders)</dd>
+        <dt>Capital raised</dt><dd>$8.0M seed (committed)</dd>
+        <dt>Post-money</dt><dd>$42M</dd>
+        <dt>Runway</dt><dd>26 months at planned burn</dd>
+        <dt>Target ICP</dt><dd>1,000–8,000 EE; US + EMEA</dd>
+        <dt>Wedge</dt><dd>People Intelligence Copilot</dd>
+        <dt>First revenue (target)</dt><dd>Q1 2027</dd>
+      </dl>
+      <div class="card-footer">
+        <span class="pill pill-amber">Day 3</span>
+        <span class="pill pill-ink">Pre-product</span>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── SNAPSHOT ── -->
+<section id="snapshot" class="snapshot">
+  <div class="ornament">§ 02</div>
+  <h2 class="section-h">Executive snapshot</h2>
+  <p class="section-dek">
+    Six numbers that, taken together, describe the company at the moment of
+    its founding. We will report against these every fortnight.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric">
+      <div class="metric-label">Cash on hand</div>
+      <div class="metric-value">$8.00<span class="unit">M</span></div>
+      <div class="metric-foot">Seed round closed T+5d</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Monthly burn (planned)</div>
+      <div class="metric-value">$310<span class="unit">K</span></div>
+      <div class="metric-foot">Ramping to $620K by month 12</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Runway</div>
+      <div class="metric-value">26<span class="unit">mo</span></div>
+      <div class="metric-foot">To Q3 2028 without follow-on</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Founder ownership</div>
+      <div class="metric-value">68<span class="unit">%</span></div>
+      <div class="metric-foot">Post seed, pre-option pool top-up</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Headcount plan, T+12mo</div>
+      <div class="metric-value">22<span class="unit">FTE</span></div>
+      <div class="metric-foot">11 eng · 4 GTM · 3 design · 4 ops</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">First design partners</div>
+      <div class="metric-value">3<span class="unit">/5</span></div>
+      <div class="metric-foot">Verbal LOIs · two in fintech, one in healthcare</div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── FOUNDERS ── -->
+<section id="founders" class="founders">
+  <div class="ornament">§ 03</div>
+  <h2 class="section-h">The Compact of Three</h2>
+  <p class="section-dek">
+    Three founders, three lenses. We have signed a written compact: no major
+    decision moves without two of three; any one of us can halt a hire. Vesting
+    is four-year with a one-year cliff, accelerated single-trigger on change of
+    control.
+  </p>
+
+  <div class="founder-grid">
+
+    <article class="founder">
+      <div class="founder-portrait" style="--portrait-tone:#2a3a5a">
+        <div class="portrait-mark">HM</div>
+        <div class="portrait-grain"></div>
+      </div>
+      <div class="founder-body">
+        <div class="founder-role">Chief Executive · Co-founder</div>
+        <h3 class="founder-name">Helm</h3>
+        <div class="founder-cred">
+          Formerly VP Product, Workday (Talent &amp; Performance, 2019–2024).
+          Earlier: Director of PM, Greenhouse. BS Symbolic Systems, Stanford.
+        </div>
+        <p class="founder-quote">
+          "Workday is a brilliant 2008 architecture asked to do a 2026 job.
+          The data model assumes the org is a tree. The org is a graph, and
+          increasingly the graph includes contractors, agents, and software."
+        </p>
+        <dl class="founder-traits">
+          <dt>Owns</dt><dd>Product · Strategy · Capital</dd>
+          <dt>Reads</dt><dd>The CHRO. The cap table. The deck.</dd>
+          <dt>Strength</dt><dd>Translates 9-figure pain into one-sentence wedges.</dd>
+          <dt>Watch</dt><dd>Prone to PM-completeness over MVP discipline. P. holds the rope.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <article class="founder">
+      <div class="founder-portrait" style="--portrait-tone:#3a2a1a">
+        <div class="portrait-mark">FG</div>
+        <div class="portrait-grain"></div>
+      </div>
+      <div class="founder-body">
+        <div class="founder-role">Chief Technology Officer · Co-founder</div>
+        <h3 class="founder-name">Forge</h3>
+        <div class="founder-cred">
+          Formerly Principal Engineer, Stripe (Money Movement, 2018–2025).
+          Earlier: data infra, Two Sigma. MS CS, Carnegie Mellon.
+        </div>
+        <p class="founder-quote">
+          "Whoever solves the entity resolution problem on the people graph
+          wins. Not the company with the best UI. Not the company with the
+          flashiest agent. The one whose data is correct on Tuesday at 4&nbsp;p.m.
+          when payroll runs."
+        </p>
+        <dl class="founder-traits">
+          <dt>Owns</dt><dd>Engineering · Infrastructure · Security</dd>
+          <dt>Reads</dt><dd>The architecture. The on-call. The SOC2 auditor.</dd>
+          <dt>Strength</dt><dd>Has shipped systems that move $400B/year. Knows what breaks.</dd>
+          <dt>Watch</dt><dd>Will over-engineer if not constrained by a customer date.</dd>
+        </dl>
+      </div>
+    </article>
+
+    <article class="founder">
+      <div class="founder-portrait" style="--portrait-tone:#4a2a3a">
+        <div class="portrait-mark">CM</div>
+        <div class="portrait-grain"></div>
+      </div>
+      <div class="founder-body">
+        <div class="founder-role">Chief Customer Officer · Co-founder</div>
+        <h3 class="founder-name">Compass</h3>
+        <div class="founder-cred">
+          Formerly Head of People Operations, Ramp (1,800 EE).
+          Earlier: Associate Partner, McKinsey, Organization practice.
+          AB Economics, Princeton; MBA, Wharton.
+        </div>
+        <p class="founder-quote">
+          "Every CHRO I've sat with has the same recurring nightmare: the
+          board asks a question on Tuesday, and her team spends until Friday
+          building the deck to answer it. We are selling Tuesday afternoons back."
+        </p>
+        <dl class="founder-traits">
+          <dt>Owns</dt><dd>Go-to-market · Customer · Operating model</dd>
+          <dt>Reads</dt><dd>The buyer's calendar. The procurement loop. The renewal.</dd>
+          <dt>Strength</dt><dd>The only one of us who has lived inside the buyer.</dd>
+          <dt>Watch</dt><dd>Trusts narrative over instrument. M. owns the dashboard.</dd>
+        </dl>
+      </div>
+    </article>
+
+  </div>
+
+  <div class="compact-callout">
+    <div class="compact-title">The written compact</div>
+    <ol class="compact-list">
+      <li>No major decision moves without two of three. Major is defined in Schedule A.</li>
+      <li>Any founder may halt a hire above $180K base for 72 hours, no reason required.</li>
+      <li>We meet weekly for sixty minutes on Monday. Agenda is the previous week's decisions ledger.</li>
+      <li>The Chairman receives a written briefing each fortnight, on the Sunday before.</li>
+      <li>If two of three lose confidence in the third, the third sells their unvested shares back at cost.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────── CONVERSATION ── -->
+<section id="conversation" class="conversation">
+  <div class="ornament">§ 04</div>
+  <h2 class="section-h">The founding conversation, edited</h2>
+  <p class="section-dek">
+    Forty-one hours, transcribed and compressed by Helm into the eight
+    exchanges that mattered. Names abbreviated. Time-stamped from the start
+    of session one, T+0d, 09:14 PT.
+  </p>
+
+  <div class="transcript">
+
+    <div class="exchange">
+      <div class="ts">T+00:00:21</div>
+      <div class="lines">
+        <div class="line"><span class="who">HM</span><span class="said">We are not starting a Workday-killer. Killing Workday is a $50B problem and we have $8M. We are starting a company that makes Workday irrelevant for a specific buyer in a specific window.</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">Define the window.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Companies between 1,000 and 8,000 employees who have outgrown BambooHR and Rippling, and for whom Workday is a six-figure mistake.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+02:11:08</div>
+      <div class="lines">
+        <div class="line"><span class="who">CM</span><span class="said">I want to push back. The CHRO at that band does not buy "AI-native HCM." She buys relief. We need to name the relief.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Tuesday afternoons.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Tuesday afternoons.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+06:44:33</div>
+      <div class="lines">
+        <div class="line"><span class="who">FG</span><span class="said">Architecturally we have a choice. Option A: build a full system of record, soup to nuts. Option B: build a people graph that sits on top of the systems they already have, with a write-back layer for the things we want to own.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">B. A is a ten-year company. We are a four-year company on the first round.</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">B is harder. Entity resolution across fifty systems is brutal. But B is defensible — the graph compounds. A is a feature war.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">B also matches the buyer. They are not ripping out Workday. They are layering on top.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+11:02:17</div>
+      <div class="lines">
+        <div class="line"><span class="who">HM</span><span class="said">What is the wedge? One sentence. If I cannot say it to a CHRO in an elevator, we do not have a company.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">"Ask any question of your people data and get a defensible answer in thirty seconds, with the chart, the cohort, and the regulation already cited."</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">That is two sentences in a trench coat.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Fine. "The CHRO's copilot."</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Sold.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+19:30:00</div>
+      <div class="lines">
+        <div class="line"><span class="who">FG</span><span class="said">If the wedge is intelligence, then the first product is not a copilot. It is the connectors. Nobody gets to a useful answer without correct data. We spend three months building twelve world-class connectors before we write a single agent prompt.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">That is a hard sell to investors who want to see the demo.</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">Then we show the connector demo. Watch this row of data move from Workday into our graph, get reconciled with Greenhouse and Carta and Lattice, and answer a board question. That is the demo.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+24:17:42</div>
+      <div class="lines">
+        <div class="line"><span class="who">CM</span><span class="said">Pricing. I want to die on this hill. We do not price per-employee-per-month. Every incumbent does. We price per-decision-supported, with a floor.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Procurement will hate that. It is unbudgetable.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Procurement hates everything new. The CFO will love it. We make our pricing align with their value, not their seat count.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Compromise: hybrid. Platform fee plus a usage tier on decisions. We test both in design partner contracts.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+33:50:11</div>
+      <div class="lines">
+        <div class="line"><span class="who">HM</span><span class="said">Name. We have been calling it "the company" for thirty-three hours. We need a name today.</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">I want something that does not sound like an HR brand. No <em>-ly</em>, no <em>People-</em>, no <em>Human-</em>, no animals.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Stratum.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">Stratum. Layers. The graph is layered. Compensation sits on a layer. Performance sits on a layer. The agent reasons across them. It is also a word a CFO can say in a board meeting without smirking.</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">.com is taken. .ai is available. We acquire stratum.com later.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Stratum.</span></div>
+      </div>
+    </div>
+
+    <div class="exchange">
+      <div class="ts">T+40:22:09</div>
+      <div class="lines">
+        <div class="line"><span class="who">HM</span><span class="said">Last question. If we are wrong about one thing, what is most likely the thing?</span></div>
+        <div class="line"><span class="who">FG</span><span class="said">The connectors take twice as long as I think. We are nine months to a real demo, not six.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">The enterprise sale takes eighteen months even with a great product. We need to staff GTM earlier than founders ever want to.</span></div>
+        <div class="line"><span class="who">HM</span><span class="said">An incumbent ships a credible copilot and our wedge narrows from two years to nine months. We need to be in market by Q1.</span></div>
+        <div class="line"><span class="who">CM</span><span class="said">Then let us begin.</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── DECISIONS ── -->
+<section id="decisions" class="decisions">
+  <div class="ornament">§ 05</div>
+  <h2 class="section-h">Decisions ledger</h2>
+  <p class="section-dek">
+    A running, append-only record. Every decision is dated, scoped, and
+    attributable. Reversals will be recorded as new entries, never edits.
+  </p>
+
+  <div class="ledger">
+    <div class="ledger-row ledger-head">
+      <div>#</div><div>Date</div><div>Decision</div><div>Owner</div><div>Status</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">001</div>
+      <div class="date">T+0d</div>
+      <div class="what"><strong>Incorporate</strong> as Delaware C-Corp. Authorize 10M shares, 1M option pool.</div>
+      <div class="who">HM</div>
+      <div class="status status-done">Filed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">002</div>
+      <div class="date">T+1d</div>
+      <div class="what"><strong>Name</strong> the company <em>Stratum, Inc.</em> Acquire stratum.ai. Trademark filings in US/EU.</div>
+      <div class="who">CM</div>
+      <div class="status status-done">Done</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">003</div>
+      <div class="date">T+1d</div>
+      <div class="what"><strong>Wedge</strong>: the CHRO's copilot. Layered people graph over existing systems, not a new system of record.</div>
+      <div class="who">HM</div>
+      <div class="status status-done">Locked</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">004</div>
+      <div class="date">T+2d</div>
+      <div class="what"><strong>ICP</strong>: US- and EMEA-headquartered companies, 1,000–8,000 employees, with ≥3 HR systems in production.</div>
+      <div class="who">CM</div>
+      <div class="status status-done">Locked</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">005</div>
+      <div class="date">T+2d</div>
+      <div class="what"><strong>Architecture</strong>: people-graph-first. Postgres for OLTP; ClickHouse for analytics; Temporal for workflows; gRPC services in Go.</div>
+      <div class="who">FG</div>
+      <div class="status status-done">Locked</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">006</div>
+      <div class="date">T+3d</div>
+      <div class="what"><strong>Seed round</strong>: $8.0M on $34M pre · led by Index Ventures · Sarah Cannon to board · Aneel Bhusri angel ($250K).</div>
+      <div class="who">HM</div>
+      <div class="status status-done">Closed</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">007</div>
+      <div class="date">T+3d</div>
+      <div class="what"><strong>Pricing model</strong>: hybrid. Platform fee floor + usage on decisions-supported. Two variants tested with design partners.</div>
+      <div class="who">CM</div>
+      <div class="status status-done">Locked</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">008</div>
+      <div class="date">T+4d</div>
+      <div class="what"><strong>Founding hires</strong>: 11 engineers, 3 designers, 4 GTM, 4 ops, by end of month 12. Hire #1: staff data infra eng.</div>
+      <div class="who">FG</div>
+      <div class="status status-progress">In flight</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">009</div>
+      <div class="date">T+4d</div>
+      <div class="what"><strong>Compliance posture</strong>: SOC2 Type II in flight by month 9. ISO 27001 by month 14. EU AI Act class assessment by month 6.</div>
+      <div class="who">FG</div>
+      <div class="status status-progress">Engaged Vanta</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">010</div>
+      <div class="date">T+5d</div>
+      <div class="what"><strong>Design partner cohort</strong>: 5 customers, free pilot through GA, named-logo rights in exchange. Two LOIs signed.</div>
+      <div class="who">CM</div>
+      <div class="status status-progress">2 of 5</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">011</div>
+      <div class="date">T+5d</div>
+      <div class="what"><strong>Model strategy</strong>: Claude as primary reasoning model; local embeddings on people graph; no customer data retained for training.</div>
+      <div class="who">FG</div>
+      <div class="status status-done">Locked</div>
+    </div>
+    <div class="ledger-row">
+      <div class="num">012</div>
+      <div class="date">T+6d</div>
+      <div class="what"><strong>Chairman cadence</strong>: written briefing every other Sunday. Live review of scorecard monthly. Veto reserved on rounds and acquisitions only.</div>
+      <div class="who">HM</div>
+      <div class="status status-done">Locked</div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────── SCORECARD ── -->
+<section id="scorecard" class="scorecard">
+  <div class="ornament">§ 06</div>
+  <h2 class="section-h">Strategic scorecard</h2>
+  <p class="section-dek">
+    Twelve indicators, four bands. We will keep this same scorecard for at
+    least four quarters so the trend is legible.
+  </p>
+
+  <div class="bands">
+
+    <div class="band">
+      <div class="band-name">I · Capital</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Runway (months)</span><span class="bar-value">26 / 24 target</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:108%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Burn multiple (proxy)</span><span class="bar-value">— · pre-revenue</span></div>
+          <div class="bar-track"><div class="bar-fill bar-empty" style="--w:0%"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder ownership</span><span class="bar-value">68% · healthy</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:68%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">II · Product</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Connectors shipped</span><span class="bar-value">0 / 12 by month 6</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:0%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>People-graph schema v1</span><span class="bar-value">Drafted</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:25%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Copilot eval set</span><span class="bar-value">0 / 250 questions</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:0%;--tone:warn"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">III · Customer</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Design partners signed</span><span class="bar-value">2 / 5</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:40%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>CHRO discovery calls / fortnight</span><span class="bar-value">14 · target 10</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:100%;--tone:ok"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>ARR booked</span><span class="bar-value">$0 · target Q1'27</span></div>
+          <div class="bar-track"><div class="bar-fill bar-empty" style="--w:0%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="band">
+      <div class="band-name">IV · Organization</div>
+      <div class="bars">
+        <div class="bar">
+          <div class="bar-label"><span>Headcount</span><span class="bar-value">3 / 22 by month 12</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:14%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>SOC2 Type II</span><span class="bar-value">Engaged · month 9 target</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:10%;--tone:warn"></div></div>
+        </div>
+        <div class="bar">
+          <div class="bar-label"><span>Founder confidence index</span><span class="bar-value">8.6 / 10 · pulse T+6d</span></div>
+          <div class="bar-track"><div class="bar-fill" style="--w:86%;--tone:ok"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────────────────────── THESIS ── -->
+<section id="thesis" class="thesis">
+  <div class="ornament">§ 07</div>
+  <h2 class="section-h">Product thesis &amp; moat</h2>
+  <div class="thesis-grid">
+    <div class="thesis-col">
+      <h3 class="sub-h">The wedge</h3>
+      <p>
+        Stratum is the <strong>CHRO's copilot</strong>: an agentic interface
+        over a unified people graph that ingests an enterprise's existing
+        HR, payroll, equity, performance, and engagement systems. The
+        product answers the question the board asked yesterday, with the
+        cohort, the chart, and the regulatory citation, in under thirty
+        seconds.
+      </p>
+      <h3 class="sub-h">The wedge after the wedge</h3>
+      <p>
+        Once the graph is the source of truth, we earn the right to write
+        back. Compensation reviews, headcount planning, succession, and
+        skills inventory move into Stratum natively. We become the system
+        of <em>truth</em> first, then selectively the system of <em>record</em>
+        — but only for the workflows where intelligence is the moat.
+      </p>
+    </div>
+    <div class="thesis-col">
+      <h3 class="sub-h">The moat</h3>
+      <ul class="moat-list">
+        <li>
+          <span class="moat-num">i.</span>
+          <span class="moat-body"><strong>Entity resolution on the people graph.</strong>
+          Reconciling identity across Workday, Greenhouse, Carta, Lattice, ADP,
+          and twelve regional payrolls is hard, lonely engineering. It compounds.</span>
+        </li>
+        <li>
+          <span class="moat-num">ii.</span>
+          <span class="moat-body"><strong>Eval set as proprietary asset.</strong>
+          250+ CHRO-graded canonical questions, with rubrics and benchmarks.
+          Sold as a credibility instrument to design partners.</span>
+        </li>
+        <li>
+          <span class="moat-num">iii.</span>
+          <span class="moat-body"><strong>Compliance-as-feature.</strong>
+          EU AI Act, GDPR, SOX, and emerging US state laws baked into the agent's
+          guardrails. The incumbents will retrofit; we will be born compliant.</span>
+        </li>
+        <li>
+          <span class="moat-num">iv.</span>
+          <span class="moat-body"><strong>The buyer-shaped GTM.</strong>
+          Compass knows the buyer's procurement loop, security questionnaire,
+          and renewal cycle. We will not be surprised by the enterprise sale.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="quadrant-block">
+    <h3 class="sub-h">Competitive positioning</h3>
+    <div class="quadrant">
+      <div class="q-axis-y"><span>AI-native →</span></div>
+      <div class="q-axis-x"><span>Enterprise depth →</span></div>
+      <div class="q-grid">
+        <div class="q-cell"><span class="dot dot-incumbent" style="left:74%;top:72%">Workday</span></div>
+        <div class="q-cell"><span class="dot dot-incumbent" style="left:88%;top:82%">SAP SF</span></div>
+        <div class="q-cell"><span class="dot dot-incumbent" style="left:62%;top:78%">Oracle HCM</span></div>
+        <div class="q-cell"><span class="dot dot-challenger" style="left:34%;top:58%">Rippling</span></div>
+        <div class="q-cell"><span class="dot dot-challenger" style="left:22%;top:68%">Lattice</span></div>
+        <div class="q-cell"><span class="dot dot-challenger" style="left:14%;top:74%">Gusto</span></div>
+        <div class="q-cell"><span class="dot dot-us" style="left:72%;top:22%">Stratum</span></div>
+      </div>
+    </div>
+    <div class="q-legend">
+      <span><i class="legend-dot legend-incumbent"></i> Incumbent system-of-record</span>
+      <span><i class="legend-dot legend-challenger"></i> SMB-up challenger</span>
+      <span><i class="legend-dot legend-us"></i> Stratum · system-of-truth</span>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────────────────────────────────────────────────────── ROADMAP ── -->
+<section id="roadmap" class="roadmap">
+  <div class="ornament">§ 08</div>
+  <h2 class="section-h">Eighteen-month roadmap</h2>
+  <p class="section-dek">
+    Three acts. The dates are commitments to ourselves, not to investors.
+    We will move them if the work demands it — and tell you when we do.
+  </p>
+
+  <div class="acts">
+
+    <article class="act">
+      <header class="act-head">
+        <div class="act-num">Act I</div>
+        <div class="act-window">Months 0 – 6 · May → Nov 2026</div>
+        <h3 class="act-title">Foundations</h3>
+      </header>
+      <ul class="milestones">
+        <li><span class="m-when">M1</span><span class="m-what">Hire #1–4. Office in Palo Alto. Vanta engaged for SOC2.</span></li>
+        <li><span class="m-when">M2</span><span class="m-what">People graph schema v1. Workday + Greenhouse connectors in dev.</span></li>
+        <li><span class="m-when">M3</span><span class="m-what">Eval set v1 (100 questions). Design partner #3 + #4 signed.</span></li>
+        <li><span class="m-when">M4</span><span class="m-what">Six connectors live. Internal alpha of the copilot, on synthetic data.</span></li>
+        <li><span class="m-when">M5</span><span class="m-what">First design partner ingests production data behind their firewall.</span></li>
+        <li><span class="m-when">M6</span><span class="m-what">Twelve connectors. Eval set 250. Closed alpha with all 5 partners.</span></li>
+      </ul>
+    </article>
+
+    <article class="act">
+      <header class="act-head">
+        <div class="act-num">Act II</div>
+        <div class="act-window">Months 7 – 12 · Dec 2026 → May 2027</div>
+        <h3 class="act-title">First Dollars</h3>
+      </header>
+      <ul class="milestones">
+        <li><span class="m-when">M7</span><span class="m-what">SOC2 Type I clean. Pricing piloted with two partners on hybrid model.</span></li>
+        <li><span class="m-when">M8</span><span class="m-what">Hire #12–16. First founding AE. Q1'27 booking target: $400K ARR.</span></li>
+        <li><span class="m-when">M9</span><span class="m-what">SOC2 Type II in audit window. EU AI Act class assessment filed.</span></li>
+        <li><span class="m-when">M10</span><span class="m-what">First paid conversion. Public beta opens to a waitlist of 50 CHROs.</span></li>
+        <li><span class="m-when">M11</span><span class="m-what">$1M ARR run-rate. Series A conversations begin (not commit).</span></li>
+        <li><span class="m-when">M12</span><span class="m-what">Headcount 22. Three production customers. Founders confidence retrospective.</span></li>
+      </ul>
+    </article>
+
+    <article class="act">
+      <header class="act-head">
+        <div class="act-num">Act III</div>
+        <div class="act-window">Months 13 – 18 · Jun → Nov 2027</div>
+        <h3 class="act-title">First Compounding</h3>
+      </header>
+      <ul class="milestones">
+        <li><span class="m-when">M13</span><span class="m-what">Write-back into Workday and Greenhouse goes GA. Cohort of 10 customers.</span></li>
+        <li><span class="m-when">M14</span><span class="m-what">ISO 27001 certified. EU data residency live (Frankfurt).</span></li>
+        <li><span class="m-when">M15</span><span class="m-what">$3M ARR. Series A closes (target $25M on $120M). Sarah Cannon retains seat.</span></li>
+        <li><span class="m-when">M16</span><span class="m-what">First non-founder VP (Engineering). Headcount 38.</span></li>
+        <li><span class="m-when">M17</span><span class="m-what">Comp Review module ships — first write-back workflow we own end-to-end.</span></li>
+        <li><span class="m-when">M18</span><span class="m-what">$5M ARR. NPS &gt; 55 measured. Annual retrospective and Compact review.</span></li>
+      </ul>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────── CAP TABLE ── -->
+<section id="cap" class="cap">
+  <div class="ornament">§ 09</div>
+  <h2 class="section-h">Capital structure</h2>
+
+  <div class="cap-grid">
+    <div class="cap-donut">
+      <svg viewBox="0 0 200 200" aria-label="Cap table donut">
+        <!-- background ring -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#e5dcc4" stroke-width="28"/>
+        <!-- segments using stroke-dasharray; circumference = 2πr ≈ 490 -->
+        <!-- Founders 68%: 0..333.2 -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#0e1626" stroke-width="28"
+                stroke-dasharray="333.2 156.8" stroke-dashoffset="0"
+                transform="rotate(-90 100 100)" />
+        <!-- Index 19%: 333.2..426.3 -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#b8651f" stroke-width="28"
+                stroke-dasharray="93.1 396.9" stroke-dashoffset="-333.2"
+                transform="rotate(-90 100 100)" />
+        <!-- Angels 4%: 426.3..445.9 -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#8a5a3a" stroke-width="28"
+                stroke-dasharray="19.6 470.3" stroke-dashoffset="-426.3"
+                transform="rotate(-90 100 100)" />
+        <!-- Option pool 9%: 445.9..490 -->
+        <circle cx="100" cy="100" r="78" fill="none" stroke="#7d8aa3" stroke-width="28"
+                stroke-dasharray="44.1 445.9" stroke-dashoffset="-445.9"
+                transform="rotate(-90 100 100)" />
+        <text x="100" y="96" text-anchor="middle" class="donut-num">$42M</text>
+        <text x="100" y="116" text-anchor="middle" class="donut-sub">post-money</text>
+      </svg>
+    </div>
+    <div class="cap-legend">
+      <table class="cap-table">
+        <thead><tr><th></th><th>Holder</th><th class="r">%</th><th class="r">$ value</th></tr></thead>
+        <tbody>
+          <tr><td><i class="sw" style="background:#0e1626"></i></td><td>Founders (3, equal · 4yr / 1yr cliff)</td><td class="r">68.0%</td><td class="r">$28.56M</td></tr>
+          <tr><td><i class="sw" style="background:#b8651f"></i></td><td>Index Ventures (lead)</td><td class="r">19.0%</td><td class="r">$7.98M</td></tr>
+          <tr><td><i class="sw" style="background:#8a5a3a"></i></td><td>Angels (Bhusri, Bock, Conrad +4)</td><td class="r">4.0%</td><td class="r">$1.68M</td></tr>
+          <tr><td><i class="sw" style="background:#7d8aa3"></i></td><td>Option pool (unallocated)</td><td class="r">9.0%</td><td class="r">$3.78M</td></tr>
+        </tbody>
+      </table>
+      <div class="cap-foot">
+        Board seats: Cannon (Index), Chen (founder-CEO), one independent reserved.
+        Protective provisions standard NVCA. Pro-rata to Index through Series B.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────── HIRES ── -->
+<section id="hires" class="hires">
+  <div class="ornament">§ 10</div>
+  <h2 class="section-h">First fourteen hires</h2>
+  <p class="section-dek">
+    The order matters as much as the names. Engineering compounds; design
+    sets the bar; GTM follows the product, not the other way around.
+  </p>
+
+  <ol class="hire-list">
+    <li class="hire">
+      <div class="hire-num">01</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Engineer · Data Infrastructure</div>
+        <div class="hire-meta">Month 1 · $230K + 1.2% · DO owns</div>
+        <p>Owns the people graph, entity resolution, and CDC pipelines. Must have shipped a system that reconciled identities at scale.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">02</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Designer</div>
+        <div class="hire-meta">Month 1 · $200K + 1.0% · MC owns</div>
+        <p>Sets the visual and interaction language. Has shipped enterprise products that customers describe as "the only one I enjoy using."</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">03</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Engineer · AI / Agents</div>
+        <div class="hire-meta">Month 2 · $240K + 1.0% · DO owns</div>
+        <p>Builds the copilot agent, eval harness, and guardrails. Background in retrieval, tool-use, and evaluation methodology.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">04</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Engineer · Product</div>
+        <div class="hire-meta">Month 2 · $220K + 0.8% · MC owns</div>
+        <p>Full-stack, customer-facing surfaces. Web app, dashboards, connector configurations. Bias toward shipping over architecture purity.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">05</div>
+      <div class="hire-body">
+        <div class="hire-title">Head of GTM</div>
+        <div class="hire-meta">Month 3 · $230K + $230K OTE + 0.9% · PR owns</div>
+        <p>Built and scaled enterprise sales motions at a Series B/C HCM or analytics company. Will hire the first AE and SE.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">06</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Customer Engineer</div>
+        <div class="hire-meta">Month 3 · $200K + 0.6% · PR owns</div>
+        <p>Lives in the design partner's Slack channel. Bridges engineering and customer. Owns the dirtiest 20% of the connectors.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">07</div>
+      <div class="hire-body">
+        <div class="hire-title">Compliance &amp; Security Lead</div>
+        <div class="hire-meta">Month 4 · $215K + 0.5% · DO owns</div>
+        <p>Drives SOC2, ISO, GDPR, EU AI Act class assessment. Sits in on every enterprise call from month four onward.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">08–11</div>
+      <div class="hire-body">
+        <div class="hire-title">Engineers (4) · Connectors, Platform, Frontend</div>
+        <div class="hire-meta">Months 5–8 · $190–215K + 0.3–0.5% · DO owns</div>
+        <p>The connector factory. Each engineer ships one connector to GA in a six-week loop.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">12</div>
+      <div class="hire-body">
+        <div class="hire-title">Founding Account Executive</div>
+        <div class="hire-meta">Month 8 · $180K + $180K OTE + 0.4% · PR owns</div>
+        <p>Closer who has carried a $1.5M+ ARR quota selling into CHRO. Will hire AE #2 and SE #1 in Act III.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">13</div>
+      <div class="hire-body">
+        <div class="hire-title">Designer #2 · Data &amp; Visualization</div>
+        <div class="hire-meta">Month 9 · $190K + 0.3% · MC owns</div>
+        <p>Owns the language of charts, tables, and the agent's explanation surfaces. Comes from analytics, not consumer.</p>
+      </div>
+    </li>
+    <li class="hire">
+      <div class="hire-num">14</div>
+      <div class="hire-body">
+        <div class="hire-title">Head of Finance &amp; Operations</div>
+        <div class="hire-meta">Month 11 · $215K + 0.4% · MC owns</div>
+        <p>Fractional through month 8, full-time at month 11. Owns the cap table, the Series A readiness, and the operating cadence.</p>
+      </div>
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────── RISK ── -->
+<section id="risk" class="risk">
+  <div class="ornament">§ 11</div>
+  <h2 class="section-h">Risk register</h2>
+  <p class="section-dek">
+    Eight risks we have named out loud. Each has an owner and a leading
+    indicator that, if it moves, will move our behavior before the risk
+    materializes.
+  </p>
+
+  <div class="risk-matrix">
+    <table class="risk-table">
+      <thead>
+        <tr><th>#</th><th>Risk</th><th class="c">Likelihood</th><th class="c">Impact</th><th>Leading indicator</th><th>Owner</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="num">R1</td>
+          <td><strong>Incumbent ships a credible copilot</strong> before our wedge widens. Workday's "Illuminate" is the canary.</td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td>Quarterly competitive teardown · win-loss interviews</td>
+          <td>HM</td>
+        </tr>
+        <tr>
+          <td class="num">R2</td>
+          <td><strong>Connector velocity collapses</strong> — entity resolution turns out to be a 12-month problem, not 6.</td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td>Connector cycle time per engineer · graph correctness audits</td>
+          <td>FG</td>
+        </tr>
+        <tr>
+          <td class="num">R3</td>
+          <td><strong>Enterprise sales cycle</strong> stretches to 14+ months — burn outpaces booking.</td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td>Stage-to-stage conversion in pipeline · POC durations</td>
+          <td>CM</td>
+        </tr>
+        <tr>
+          <td class="num">R4</td>
+          <td><strong>Regulatory shift</strong> — EU AI Act enforcement, NYC AEDT-style laws, force costly redesign of agent surfaces.</td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td>Compliance counsel weekly digest · agent-guardrail audit logs</td>
+          <td>FG</td>
+        </tr>
+        <tr>
+          <td class="num">R5</td>
+          <td><strong>Pricing model rejection</strong> — procurement chokes on "decisions-supported" usage tier.</td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td>Design partner contract round-tripping count</td>
+          <td>CM</td>
+        </tr>
+        <tr>
+          <td class="num">R6</td>
+          <td><strong>Founder-team fracture</strong> — three is the most unstable number; the compact is not the same as practice.</td>
+          <td class="c"><span class="chip chip-lo">Low</span></td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td>Monday meeting attendance · founder confidence pulse</td>
+          <td>HM</td>
+        </tr>
+        <tr>
+          <td class="num">R7</td>
+          <td><strong>Data exfiltration / breach</strong> in pre-SOC2 window — career-ending for the company.</td>
+          <td class="c"><span class="chip chip-lo">Low</span></td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td>Pen-test cadence · privileged-access reviews · alert SLA</td>
+          <td>FG</td>
+        </tr>
+        <tr>
+          <td class="num">R8</td>
+          <td><strong>Hallucination event</strong> in a CHRO's board deck sourced from Stratum — trust collapse.</td>
+          <td class="c"><span class="chip chip-md">Med</span></td>
+          <td class="c"><span class="chip chip-hi">High</span></td>
+          <td>Eval-set regression score · cited-answer coverage %</td>
+          <td>FG</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── COMPANY ARTIFACTS ── -->
+<section id="artifacts" class="artifacts">
+  <div class="ornament">§ 12</div>
+  <h2 class="section-h">Company artifacts</h2>
+  <p class="section-dek">
+    Companion documents to this briefing. Click through; they open in this same window.
+  </p>
+
+  <div class="artifact-grid">
+
+    <a class="artifact" href="../briefings/005.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Internal · Fortnightly</span>
+        <span class="artifact-id">Briefing · No. 005</span>
+      </div>
+      <h3 class="artifact-title">After the board, before the storm</h3>
+      <p class="artifact-blurb">
+        Board Meeting #1 was clean. Workday Illuminate Copilot went GA on
+        T+56d. Three connector alphas live. Mercator pricing pilot in
+        counter-negotiation. Confidence pulse 8.7. T+60d.
+      </p>
+      <div class="artifact-go">Open briefing 005 →</div>
+    </a>
+
+    <a class="artifact" href="../board/minutes-001.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Confidential · Board</span>
+        <span class="artifact-id">Minutes · MIN-001</span>
+      </div>
+      <h3 class="artifact-title">Minutes of Board Meeting No. 1</h3>
+      <p class="artifact-blurb">
+        Adopted T+49d. Three resolutions passed (pricing pilot,
+        $200K pen-test, Tessera equity top-up). Executive session, no
+        action of record. SEC-filing aesthetic.
+      </p>
+      <div class="artifact-go">Open the minutes →</div>
+    </a>
+
+    <a class="artifact" href="../customers/mercator.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Customer note</span>
+        <span class="artifact-id">Case study · 001</span>
+      </div>
+      <h3 class="artifact-title">Mercator — the first ingestion</h3>
+      <p class="artifact-blurb">
+        Long-form profile of design partner #1. Elena Vasquez's seventh
+        Tuesday, the architecture argument with Devon Larsen, the first
+        ingestion (3,412 records / 47 minutes), and the 11-minute board
+        answer. By Compass.
+      </p>
+      <div class="artifact-go">Read the case study →</div>
+    </a>
+
+    <a class="artifact" href="../changelog/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Engineering</span>
+        <span class="artifact-id">Changelog · v0.4.2</span>
+      </div>
+      <h3 class="artifact-title">The product changelog</h3>
+      <p class="artifact-blurb">
+        Eleven versions, eight weeks. From v0.1.0 "Foundation" (T+0d) to
+        v0.4.2 "Marble" (T+53d). Added / Changed / Fixed / Known per
+        release. Codenames disclosed.
+      </p>
+      <div class="artifact-go">Open the changelog →</div>
+    </a>
+
+    <a class="artifact" href="../briefings/004.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Internal · Fortnightly</span>
+        <span class="artifact-id">Briefing · No. 004</span>
+      </div>
+      <h3 class="artifact-title">Five of five, and a downgrade</h3>
+      <p class="artifact-blurb">
+        Cordova signed (5/5 design partners); Halcyon downgraded to 60-day
+        evaluation; Workday in beta, Greenhouse in alpha; Kernel
+        accepted; Tessera landed the "Console" rename. T+46d.
+      </p>
+      <div class="artifact-go">Open briefing 004 →</div>
+    </a>
+
+    <a class="artifact" href="../board/memo-001.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Confidential · Board</span>
+        <span class="artifact-id">Memo · M-001</span>
+      </div>
+      <h3 class="artifact-title">Board memorandum, first sitting</h3>
+      <p class="artifact-blurb">
+        Six-week operating update; review of decisions 001–045; three
+        resolutions for board consideration; three discussion items.
+        Distributed T+46d in advance of meeting #1 on T+49d.
+      </p>
+      <div class="artifact-go">Open the memo →</div>
+    </a>
+
+    <a class="artifact" href="../ops/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Live · Daily</span>
+        <span class="artifact-id">Operating · Day 26</span>
+      </div>
+      <h3 class="artifact-title">The operating dashboard</h3>
+      <p class="artifact-blurb">
+        The war-room view. KPIs, connector roadmap, partner funnel, eval set
+        progress, compliance posture, decisions feed, hiring tracker,
+        founders' weather. Dark mode by design — it lives on a wall.
+      </p>
+      <div class="artifact-go">Open the ops board →</div>
+    </a>
+
+    <a class="artifact" href="../briefings/003.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Internal · Fortnightly</span>
+        <span class="artifact-id">Briefing · No. 003</span>
+      </div>
+      <h3 class="artifact-title">The first connector, the first wobble</h3>
+      <p class="artifact-blurb">
+        Workday HR Core in alpha, Northwind signed, Tessera accepted,
+        Halcyon's sponsor changed. The Bhusri dinner happened. Confidence
+        pulse 8.5. Dated Sunday, T+32d.
+      </p>
+      <div class="artifact-go">Open briefing 003 →</div>
+    </a>
+
+    <a class="artifact" href="../briefings/002.html">
+      <div class="artifact-head">
+        <span class="artifact-kind">Internal · Fortnightly</span>
+        <span class="artifact-id">Briefing · No. 002</span>
+      </div>
+      <h3 class="artifact-title">The first twelve days</h3>
+      <p class="artifact-blurb">
+        A delta against the founding edition. First hire accepted, first
+        partner ingesting data, nine days behind on the connector schedule.
+        Dated Sunday, T+18d.
+      </p>
+      <div class="artifact-go">Open briefing 002 →</div>
+    </a>
+
+    <a class="artifact" href="../financials/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Confidential · Operating</span>
+        <span class="artifact-id">Financials · v1</span>
+      </div>
+      <h3 class="artifact-title">The operating model</h3>
+      <p class="artifact-blurb">
+        Three-year quarterly P&amp;L, headcount build M0→M18, three runway
+        scenarios, ARR build and unit economics, use of seed funds, 2×2
+        sensitivity matrix.
+      </p>
+      <div class="artifact-go">Open the financials →</div>
+    </a>
+
+    <a class="artifact" href="../product/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Marketing</span>
+        <span class="artifact-id">stratum.ai · v0</span>
+      </div>
+      <h3 class="artifact-title">The product, public-facing</h3>
+      <p class="artifact-blurb">
+        What a Chief People Officer sees when she lands on the site. Hero,
+        the problem in three numbers, three pillar mockups, pricing, team.
+        The outward face of the company.
+      </p>
+      <div class="artifact-go">Open product site →</div>
+    </a>
+
+    <a class="artifact" href="../careers/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Recruiting</span>
+        <span class="artifact-id">Careers · 14 open</span>
+      </div>
+      <h3 class="artifact-title">The careers page</h3>
+      <p class="artifact-blurb">
+        Why work here, the operating model, all fourteen open roles, how we
+        hire, what we offer, and a brief note on what we deliberately do not
+        optimize for. Founders signed.
+      </p>
+      <div class="artifact-go">Open careers →</div>
+    </a>
+
+    <a class="artifact" href="../deck/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Confidential · Investors</span>
+        <span class="artifact-id">Deck · Pre-Series A</span>
+      </div>
+      <h3 class="artifact-title">The pre-Series A deck</h3>
+      <p class="artifact-blurb">
+        Fourteen slides, scroll-snapped vertically. Premise, problem, what we
+        are, market, wedge, traction (early), business model, competition,
+        team, the ask. Use arrow keys.
+      </p>
+      <div class="artifact-go">Open the deck →</div>
+    </a>
+
+    <a class="artifact" href="../intel/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Classified · Founders, Chairman, Board</span>
+        <span class="artifact-id">Intelligence · No. 001</span>
+      </div>
+      <h3 class="artifact-title">Competitive intelligence dossier</h3>
+      <p class="artifact-blurb">
+        Five subjects torn down — Workday, SAP SF, Oracle HCM, Rippling,
+        Lattice. Scoring matrix, customer pain quotes, recent movements log,
+        threat-and-opportunity map, playbook.
+      </p>
+      <div class="artifact-go">Open the dossier →</div>
+    </a>
+
+    <a class="artifact" href="../trust/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Security &amp; Compliance</span>
+        <span class="artifact-id">Trust · v1.4</span>
+      </div>
+      <h3 class="artifact-title">The trust center</h3>
+      <p class="artifact-blurb">
+        Stratum's commitments to security, privacy, and AI governance.
+        Controls 41 / 87. Subprocessor list. Decision-class taxonomy. EU AI
+        Act class. NYC AEDT audit posture. Updated T+49d.
+      </p>
+      <div class="artifact-go">Open trust center →</div>
+    </a>
+
+    <a class="artifact" href="../engineering/">
+      <div class="artifact-head">
+        <span class="artifact-kind">Public · Engineering</span>
+        <span class="artifact-id">Blog · 3 posts</span>
+      </div>
+      <h3 class="artifact-title">Engineering notes</h3>
+      <p class="artifact-blurb">
+        Three posts: entity resolution on the people graph (DO),
+        what "born compliant" actually means (DO), and designing the agent
+        surface (TI). Two forthcoming.
+      </p>
+      <div class="artifact-go">Open the blog →</div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ────────────────────────────────────────────── OPEN TO THE CHAIRMAN ── -->
+<section id="open" class="open">
+  <div class="ornament">§ 13</div>
+  <h2 class="section-h">Open to the chairman</h2>
+  <p class="section-dek">
+    Six questions on which we would value your judgement. None are
+    blocking. We will move without you if we must, and tell you what we did.
+  </p>
+
+  <ol class="open-list">
+    <li>
+      <strong>Geography of the second office.</strong> London or New York for the
+      second hub at month 12? London buys us EMEA enterprise relationships
+      and AI talent at lower cost; New York shortens the buyer flight by
+      two hours and signals seriousness to Wall Street CHROs.
+    </li>
+    <li>
+      <strong>Independent board seat.</strong> Cannon will hold the Index seat,
+      and Helm the founder seat. We have reserved one independent. We
+      would welcome a name from your network — ideally a former CHRO of a
+      Fortune 500 who has lived through a Workday implementation.
+    </li>
+    <li>
+      <strong>Pricing experiment scope.</strong> Are you comfortable letting us
+      offer one design partner a fully usage-based price (no platform
+      floor) to learn the elasticity? Worst case we lose ~$80K of model
+      revenue and learn what procurement will actually swallow.
+    </li>
+    <li>
+      <strong>Acquisition posture.</strong> If a strategic offers $300M+ in
+      Act III before we have shipped write-back, the Compact says we
+      surface it to you. We would like to confirm the threshold at which
+      you want to be in the room versus consulted after.
+    </li>
+    <li>
+      <strong>Founder-Chairman ritual.</strong> Beyond the fortnightly briefing,
+      what would you like? We propose: a one-hour walk with one founder
+      each quarter, rotating; you set the question.
+    </li>
+    <li>
+      <strong>Veto reservation.</strong> The compact gives you veto on rounds
+      and acquisitions. Should it extend to the first non-founder C-level
+      hire? We think yes; we would like to hear if you think otherwise.
+    </li>
+  </ol>
+</section>
+
+<!-- ─────────────────────────────────────────────────────────────── FOOT ── -->
+</main>
+
+<!-- ── BRIEFING NAV ── -->
+<nav class="briefing-nav" aria-label="Briefing navigation">
+  <span class="bn-archive">← Founding Edition · No previous briefing</span>
+  <a href="index.html" class="bn-archive">Archive ↑</a>
+  <a href="002.html" class="bn-next">002 · The first twelve days →</a>
+</nav>
+
+<footer class="colophon">
+  <div class="colophon-rule double"></div>
+  <div class="colophon-row">
+    <div class="colophon-left">
+      <div class="colo-mark">S<span class="colo-dot">.</span></div>
+      <div class="colo-meta">
+        Stratum, Inc. · 2475 Hanover Street, Palo Alto, CA 94304<br />
+        stratum.ai · founding@stratum.ai · @stratum_hcm
+      </div>
+    </div>
+    <div class="colophon-right">
+      <div class="colo-issue">
+        Briefing No. 001 · Compiled by Helm on Tuesday, T+6d.<br />
+        Set in Fraunces, Newsreader, and JetBrains Mono.<br />
+        Next briefing: Sunday, T+18d.
+      </div>
+    </div>
+  </div>
+  <div class="colo-tag">— END OF BRIEFING —</div>
+</footer>
+
+<script src="../assets/app.js"></script>
+<script src="../assets/echo.js" defer></script>
+</body>
+</html>
