@@ -38,13 +38,13 @@
   transition: transform .12s ease, background .12s ease, border-color .15s ease;
 }
 .echo-btn:hover { transform: translateY(-1px); background: #0e1626; border-color: #b8651f; }
-.echo-btn .dot {
+.echo-btn .echo-dot {
   display: inline-block;
   width: 7px; height: 7px;
   border-radius: 50%;
   background: #b8651f;
 }
-.echo-btn.is-playing .dot { animation: echo-pulse 1.2s ease-in-out infinite; }
+.echo-btn.is-playing .echo-dot { animation: echo-pulse 1.2s ease-in-out infinite; }
 @keyframes echo-pulse {
   0%, 100% { opacity: .35; transform: scale(1); }
   50%      { opacity: 1;   transform: scale(1.35); }
@@ -211,7 +211,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .echo-btn.is-playing .dot { animation: none; }
+  .echo-btn.is-playing .echo-dot { animation: none; }
 }
 `;
 
@@ -273,7 +273,7 @@
   const btn = document.createElement('button');
   btn.className = 'echo-btn';
   btn.setAttribute('aria-label', 'Listen to this page');
-  btn.innerHTML = '<span class="dot"></span><span class="echo-btn-label">Listen</span>';
+  btn.innerHTML = '<span class="echo-dot" aria-hidden="true"></span><span class="echo-btn-label">Listen</span>';
   document.body.appendChild(btn);
 
   const panel = document.createElement('div');
