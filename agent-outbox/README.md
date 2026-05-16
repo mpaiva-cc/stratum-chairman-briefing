@@ -89,9 +89,30 @@ One JSON file per entry. Filename: `{ISO-timestamp}-{agent}-{slug}.json` (colons
 2. Hook script (`/Users/mp/git-repos/poc-autonomous-hcm/.claude/hooks/outbox-to-slack.sh`) checks for `*.json` files in this directory (not in `archive/`).
 3. If any exist, it spawns a short `claude -p` subprocess that:
    - Reads each entry
-   - Posts a formatted message to **#poc-stratum** via the Slack MCP
-   - Moves the file to `archive/`
+   - **Rewrites the `title` and `summary` into plain language** (see below)
+   - Posts the rewritten, formatted message to **#poc-stratum** via the Slack MCP
+   - Moves the original (unrewritten) file to `archive/` — the technical detail is preserved for the record
 4. If the post fails, the file stays in place and is retried next session.
+
+### Plain-language rewrite — why and how
+
+The Chairman set a standing rule: Slack outbox messages must be readable by people with cognitive disabilities and by people who don't know the technical jargon. Target reading level: 6th–8th grade.
+
+Agents can write their outbox entries in their normal, technical voice. The drain takes care of the translation. The original technical text stays in the archived JSON for traceability; the version posted to Slack is the plain-language version.
+
+Rules the drain applies:
+
+- **Short sentences** — 15–20 words each. Break longer ones into bullets.
+- **Active voice** — "Tessera fixed X" instead of "X was fixed."
+- **Common words over jargon** — `WCAG AAA` becomes "the strictest accessibility rules"; `aria-label` becomes "the label screen readers read out loud"; `SVG nodes` becomes "the names in the people-graph picture."
+- **Spell out acronyms** on first use.
+- **No code snippets, no class names, no decision IDs, no file paths** in the Slack message. Those are preserved in the archived JSON.
+- **Lead with what changed for the reader** — not with the criterion ID.
+- **Bullets** for 3+ items. Each bullet starts with a verb.
+- **Explain why** when it's not obvious.
+- **No double negatives.** Say what happened, not what didn't.
+- **No emojis** other than the optional urgency siren. (Lower cognitive load; better screen-reader experience.)
+- **Concrete numbers stay** — "3 fixes," "44 names," "95 pages" are easy to read.
 
 ### URL prefix for the `link` field
 
