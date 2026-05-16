@@ -386,7 +386,10 @@ footer{
 header.mast, main, footer { animation: fade-up .5s ease-out both; }
 main{ animation-delay: .08s; }
 footer{ animation-delay: .16s; }
-@media (prefers-reduced-motion: reduce){ *{ animation: none !important; transition: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  /* Target transition-bearing elements — no !important needed. */
+  a, .nav, .nav-cta, .nav-cta .arr { transition: none; animation: none; }
+}
 </style>
 
 <style>

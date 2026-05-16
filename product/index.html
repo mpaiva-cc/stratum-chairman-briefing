@@ -1711,18 +1711,20 @@ strong { font-weight: 600; color: var(--ink); }
   .mock-graph { height: 360px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.hero, .problem-inner, .product, .safety, .story-inner, .pricing, .team, .closing, .footer {
-  animation: fade-up .7s ease-out both;
+@media (prefers-reduced-motion: no-preference) {
+  .hero, .problem-inner, .product, .safety, .story-inner, .pricing, .team, .closing, .footer {
+    animation: fade-up .7s ease-out both;
+  }
+  .problem-inner { animation-delay: .05s; }
 }
-.problem-inner { animation-delay: .05s; }
+@media (prefers-reduced-motion: reduce) {
+  /* Target transition-bearing elements only. */
+  a, .nav, .nav-cta, .nav-cta .arr, .btn, .btn-primary, .btn-primary .arr, .toggle { transition: none; }
+}
 
 /* ── SITE-NAV · canonical · Tessera · T+~33d ── */
 .site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}

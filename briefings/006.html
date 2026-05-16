@@ -60,8 +60,8 @@ body::before {
   mix-blend-mode: multiply;
 }
 body > * { position: relative; z-index: 1; }
-a { color: var(--ochre); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .2s; }
-a:hover { border-bottom-color: var(--ochre); }
+a { color: var(--ochre-link); text-decoration: none; border-bottom: 1px solid var(--ochre-link); transition: border-color .2s, color .2s; }
+a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
 em { font-style: italic; font-variation-settings: "opsz" 14; }
 strong { font-weight: 600; color: var(--ink); }
 
@@ -171,10 +171,10 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
   float: left; padding: .3rem .55rem 0 0;
   color: var(--ochre);
 }
-.signoff {
+.intro-letter .signoff {
   font-family: var(--serif); font-style: italic;
   font-variation-settings: "opsz" 18;
-  margin-top: 1.6rem !important; color: var(--ink-2);
+  margin-top: 1.6rem; color: var(--ink-2);
 }
 .signoff-meta {
   font-family: var(--mono); font-style: normal;
@@ -653,12 +653,22 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
 .open              { animation-delay: .55s; }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Target animated and transitioned elements — no !important needed. */
+  .masthead, .intro, .snapshot, .bar-fill,
+  .conversation, .decisions, .scorecard, .learned,
+  .risk-section, .open, .connector, .situation-section,
+  .dinner-section, .queued-section, .partners-section,
+  .halcyon-section, .workday-section, .mercator-section,
+  .shipped-section, .arch-section, .frame-section,
+  .forward-section { animation: none; }
+  a { transition: none; }
 }
-.bar-fill {
-  transform-origin: left center;
-  animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
-  animation-delay: .8s;
+@media (prefers-reduced-motion: no-preference) {
+  .bar-fill {
+    transform-origin: left center;
+    animation: bar-grow 1.2s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: .8s;
+  }
 }
 @keyframes bar-grow {
   from { transform: scaleX(0); }
@@ -832,6 +842,7 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
 </style>
 </head>
 <body>
+<a href="#main" class="skip">Skip to main content</a>
 <!-- ── SITE-NAV ── -->
 <nav class="site-nav" id="site-nav" role="navigation" aria-label="Site">
   <div class="sn-inner">
@@ -1074,6 +1085,7 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
   </div>
 </header>
 
+<main id="main">
 <!-- ─────────────────────────────────────────────────────── LETTER ── -->
 <section id="letter" class="intro">
   <div class="intro-grid">
@@ -2107,5 +2119,6 @@ section { width: var(--col); margin: 0 auto; padding: 4.5rem 0 1rem; }
   });
 })();
 </script>
+</main>
 </body>
 </html>

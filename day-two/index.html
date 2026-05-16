@@ -358,7 +358,8 @@ strong { font-weight: 600; color: var(--ink); }
 }
 @media (max-width: 480px) {
   .metrics { grid-template-columns: 1fr; }
-  .metric { border-right: 0 !important; }
+  .metric,
+  .metric:nth-child(odd) { border-right: 0; }
 }
 
 /* ─────────────────────────────────────────── BUCKETS (6-hour milestones) ── */
@@ -657,7 +658,9 @@ footer .footnav a:hover { color: var(--ochre); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  /* Target animated and transitioned elements — no !important needed. */
+  .pip, .rt-stamp .pulse { animation: none; }
+  a, .nav, .nav-cta, .nav-cta .arr { transition: none; }
 }
 </style>
 
