@@ -34,6 +34,7 @@
   --moss-deep:    #364528;
   --moss-soft:    #c5cdb1;
   --plum:         #6b3a4a;
+  --ink-3-aaa:    #3d4456;
 
   --display:      "Fraunces", "Newsreader", Georgia, serif;
   --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
@@ -255,17 +256,22 @@ main { display: block; }
   max-width: 1100px;
   margin: 0 auto;
   text-align: center;
+  /* Default: fully visible — linear reading order works without JS/CSS */
+}
+
+/* Progressive enhancement: only hide-then-reveal when JS has confirmed capability */
+html.js .scene-inner {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1);
 }
-.scene.is-visible .scene-inner {
+html.js .scene.is-visible .scene-inner {
   opacity: 1;
   transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .scene-inner { opacity: 1; transform: none; transition: none; }
+  html.js .scene-inner { opacity: 1; transform: none; transition: none; }
 }
 
 .scene-counter {
@@ -999,6 +1005,11 @@ main { display: block; }
   max-width: 1000px;
   min-height: 480px;
   margin: 1rem auto 0;
+  list-style: none;
+  padding: 0;
+}
+.q-pile li {
+  position: static;
 }
 .q-card {
   position: absolute;
@@ -1016,6 +1027,10 @@ main { display: block; }
   text-align: left;
   line-height: 1.35;
   transition: transform .25s, box-shadow .25s;
+  text-decoration: none;
+  cursor: pointer;
+  display: block;
+  border-bottom: 1px solid var(--paper-rule-2);
 }
 .q-card::before {
   content: "→";
@@ -1024,15 +1039,18 @@ main { display: block; }
   font-family: var(--mono);
   margin-right: .55rem;
 }
-.q-card.q1:hover,
-.q-card.q2:hover,
-.q-card.q3:hover,
-.q-card.q4:hover,
-.q-card.q5:hover,
-.q-card.q6:hover {
+.q-card.q1:hover, .q-card.q1:focus-visible,
+.q-card.q2:hover, .q-card.q2:focus-visible,
+.q-card.q3:hover, .q-card.q3:focus-visible,
+.q-card.q4:hover, .q-card.q4:focus-visible,
+.q-card.q5:hover, .q-card.q5:focus-visible,
+.q-card.q6:hover, .q-card.q6:focus-visible {
   transform: translate(-2px, -2px) rotate(0deg);
   box-shadow: var(--shadow-lg);
   z-index: 10;
+  outline: 2px solid var(--ochre);
+  outline-offset: 3px;
+  border-bottom-color: var(--paper-rule-2);
 }
 
 .q-card.q1 { top: 0%;   left: 2%;   transform: rotate(-3deg); }
@@ -1044,6 +1062,7 @@ main { display: block; }
 
 @media (max-width: 760px) {
   .q-pile { min-height: auto; display: flex; flex-direction: column; gap: 1rem; align-items: center; }
+  .q-pile li { display: contents; }
   .q-card,
   .q-card.q1,
   .q-card.q2,
@@ -1439,6 +1458,7 @@ main { display: block; }
 .sn-mob-links a:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
 .sn-mob-links a[aria-current="page"]{color:var(--ochre);font-weight:700}
 </style>
+<script>/* Enhancement guard: set html.js class immediately so CSS can scope scroll-reveal */document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <!-- ── SITE-NAV ── -->
@@ -1634,7 +1654,7 @@ main { display: block; }
   </div>
 </div>
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T06:45:23-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+08:19:37.000</strong> · <span style="opacity:.6">2026-05-13T10:45:23.000Z</span></div>
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-15T22:36:14-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+72:10:28.000</strong> · <span style="opacity:.6">2026-05-16T02:36:14.000Z</span></div>
 <!-- /realtime-stamp -->
 
 
@@ -1704,6 +1724,7 @@ main { display: block; }
   <section class="scene" id="scene-1" data-scene="1" aria-label="Scene 1, the CHRO's question">
     <div class="scene-inner">
       <div class="scene-eyebrow">§ Scene 1 · The CHRO's question</div>
+      <h2 class="scene-title">The board chair <em>texted.</em></h2>
       <p class="scene-pull">
         It's Tuesday afternoon. Your board chair just texted:
         <br/>
@@ -1829,7 +1850,7 @@ main { display: block; }
       <div class="scene-eyebrow">§ Scene 4 · The answer · in thirty seconds</div>
       <h2 class="scene-title">Four <em>parts.</em> Always.</h2>
 
-      <div class="answer-card-mock" role="img" aria-label="Stratum answer card with ask, answer, inspect, cite sections">
+      <div class="answer-card-mock" aria-label="Stratum answer card: ask, answer, inspect, cite">
         <div class="ac-q">
           <span class="ac-q-label">Ask</span>
           <span class="ac-q-text">Show me our pay equity gap in EMEA at senior IC and M3 levels</span>
@@ -2059,14 +2080,14 @@ main { display: block; }
       <div class="scene-eyebrow">§ Scene 7 · What you can ask</div>
       <h2 class="scene-title">Six questions, <em>right now,</em> in the live demo.</h2>
 
-      <div class="q-pile" aria-label="Pile of example questions">
-        <div class="q-card q1">Show me our pay equity gap in EMEA at senior IC and M3 levels</div>
-        <div class="q-card q2">Who's at flight risk in engineering with comp below band?</div>
-        <div class="q-card q3">What's our retention story for new joiners in NA?</div>
-        <div class="q-card q4">Show me underpaid high performers</div>
-        <div class="q-card q5">Which requisitions are stuck at offer?</div>
-        <div class="q-card q6">Where do our best hires come from?</div>
-      </div>
+      <ul class="q-pile" aria-label="Example questions — click to open in the Console">
+        <li><a class="q-card q1" href="../console/?q=pay-equity-emea">Show me our pay equity gap in EMEA at senior IC and M3 levels</a></li>
+        <li><a class="q-card q2" href="../console/?q=flight-risk-eng">Who's at flight risk in engineering with comp below band?</a></li>
+        <li><a class="q-card q3" href="../console/?q=retention-na">What's our retention story for new joiners in NA?</a></li>
+        <li><a class="q-card q4" href="../console/?q=underpaid-performers">Show me underpaid high performers</a></li>
+        <li><a class="q-card q5" href="../console/?q=reqs-stuck-offer">Which requisitions are stuck at offer?</a></li>
+        <li><a class="q-card q6" href="../console/?q=best-hire-sources">Where do our best hires come from?</a></li>
+      </ul>
 
       <p class="scene-dek">Six pre-computed answers on a synthetic 2,000-employee dataset. Click any to see the full four-section card.</p>
     </div>

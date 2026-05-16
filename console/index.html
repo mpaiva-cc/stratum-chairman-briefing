@@ -274,7 +274,7 @@
   </div>
 </div>
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-13T00:27:10-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+02:01:24.000</strong> · <span style="opacity:.6">2026-05-13T04:27:10.000Z</span></div>
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-16T02:36:49Z" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+72:11:03.000</strong> · <span style="opacity:.6">2026-05-16T02:36:49.000Z</span></div>
 <!-- /realtime-stamp -->
 
 
@@ -359,7 +359,11 @@
     </div>
 
     <!-- Demo gallery / Answer card mount -->
-    <div id="answer-mount" aria-live="polite"></div>
+    <!-- Gap 03: aria-live removed from answer-mount — tokens no longer re-announced per chunk.
+         SR announcements are handled by #sr-stream-status below. -->
+    <div id="answer-mount"></div>
+    <!-- SR-only live region for stream status announcements (Gap 03) -->
+    <div id="sr-stream-status" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
 
     <!-- Slim "Connect" CTA banner shown after first demo answer -->
     <div class="demo-cta-banner" id="demo-cta-banner" role="status" aria-live="polite" hidden>
@@ -451,10 +455,30 @@
     </div>
 
     <div class="insights-grid">
-      <article class="insight-card">
-        <h3 class="insight-title"><em>Headcount</em> by department</h3>
+
+      <!-- ── Headcount by department ── -->
+      <article class="insight-card" aria-labelledby="insight-title-hc">
+        <h3 class="insight-title" id="insight-title-hc"><em>Headcount</em> by department</h3>
         <div class="insight-sub">N = 2,000 · sorted by headcount</div>
-        <div class="insight-body" id="chart-hc"></div>
+        <figure class="insight-figure" aria-labelledby="insight-title-hc" aria-describedby="insight-desc-hc">
+          <figcaption class="insight-figcaption" id="insight-desc-hc">
+            Horizontal bar chart showing employee count per department, sorted descending.
+            Source: People Graph · 2,000 records.
+          </figcaption>
+          <button class="insight-view-toggle" type="button"
+                  aria-pressed="false"
+                  aria-controls="insight-table-hc"
+                  data-chart="chart-hc"
+                  data-toggle-target="insight-table-hc">
+            Show data table
+          </button>
+          <div class="insight-chart-wrap">
+            <div class="insight-body" id="chart-hc" aria-hidden="true"></div>
+          </div>
+          <div class="insight-table-companion" id="insight-table-hc" hidden>
+            <!-- Populated by renderHeadcountChart() via buildInsightTable() -->
+          </div>
+        </figure>
         <div class="insight-foot">
           <span>Source · People Graph</span>
           <button class="insight-ask" data-q="show me headcount by department" type="button">
@@ -463,10 +487,30 @@
         </div>
       </article>
 
-      <article class="insight-card">
-        <h3 class="insight-title"><em>Compensation</em> by level</h3>
+      <!-- ── Compensation by level ── -->
+      <article class="insight-card" aria-labelledby="insight-title-comp">
+        <h3 class="insight-title" id="insight-title-comp"><em>Compensation</em> by level</h3>
         <div class="insight-sub">USD · IQR within level · band P50 marked</div>
-        <div class="insight-body" id="chart-comp"></div>
+        <figure class="insight-figure" aria-labelledby="insight-title-comp" aria-describedby="insight-desc-comp">
+          <figcaption class="insight-figcaption" id="insight-desc-comp">
+            Box-and-whisker chart of total compensation by job level (IC1–IC7, M1–M4).
+            Each box spans P25–P75; the centre line is the median; whiskers reach P10 and P90.
+            Source: People Graph · comp_total field.
+          </figcaption>
+          <button class="insight-view-toggle" type="button"
+                  aria-pressed="false"
+                  aria-controls="insight-table-comp"
+                  data-chart="chart-comp"
+                  data-toggle-target="insight-table-comp">
+            Show data table
+          </button>
+          <div class="insight-chart-wrap">
+            <div class="insight-body" id="chart-comp" aria-hidden="true"></div>
+          </div>
+          <div class="insight-table-companion" id="insight-table-comp" hidden>
+            <!-- Populated by renderCompChart() via buildInsightTable() -->
+          </div>
+        </figure>
         <div class="insight-foot">
           <span>Source · People Graph · comp_total</span>
           <button class="insight-ask" data-q="show me underpaid high performers" type="button">
@@ -475,10 +519,29 @@
         </div>
       </article>
 
-      <article class="insight-card">
-        <h3 class="insight-title"><em>Tenure</em> distribution</h3>
+      <!-- ── Tenure distribution ── -->
+      <article class="insight-card" aria-labelledby="insight-title-tenure">
+        <h3 class="insight-title" id="insight-title-tenure"><em>Tenure</em> distribution</h3>
         <div class="insight-sub">Years since hire · 6 buckets</div>
-        <div class="insight-body" id="chart-tenure"></div>
+        <figure class="insight-figure" aria-labelledby="insight-title-tenure" aria-describedby="insight-desc-tenure">
+          <figcaption class="insight-figcaption" id="insight-desc-tenure">
+            Column chart of employee count by years-of-tenure bucket (0–1, 1–2, 2–3, 3–4, 4–5, 5+).
+            Source: People Graph · hire_date field.
+          </figcaption>
+          <button class="insight-view-toggle" type="button"
+                  aria-pressed="false"
+                  aria-controls="insight-table-tenure"
+                  data-chart="chart-tenure"
+                  data-toggle-target="insight-table-tenure">
+            Show data table
+          </button>
+          <div class="insight-chart-wrap">
+            <div class="insight-body" id="chart-tenure" aria-hidden="true"></div>
+          </div>
+          <div class="insight-table-companion" id="insight-table-tenure" hidden>
+            <!-- Populated by renderTenureChart() via buildInsightTable() -->
+          </div>
+        </figure>
         <div class="insight-foot">
           <span>Source · People Graph · hire_date</span>
           <button class="insight-ask" data-q="what's the median tenure for senior engineers globally?" type="button">
@@ -487,10 +550,30 @@
         </div>
       </article>
 
-      <article class="insight-card">
-        <h3 class="insight-title"><em>Flight risk</em> · department × region</h3>
+      <!-- ── Flight risk heatmap ── -->
+      <article class="insight-card" aria-labelledby="insight-title-risk">
+        <h3 class="insight-title" id="insight-title-risk"><em>Flight risk</em> · department × region</h3>
         <div class="insight-sub">% of cohort in high band · heatmap</div>
-        <div class="insight-body" id="chart-risk"></div>
+        <figure class="insight-figure" aria-labelledby="insight-title-risk" aria-describedby="insight-desc-risk">
+          <figcaption class="insight-figcaption" id="insight-desc-risk">
+            Heatmap of high-flight-risk percentage per department (rows) and region (columns: NA, EMEA, APAC, LATAM).
+            Darker cells indicate a higher share of employees in the high-risk band.
+            Source: People Graph · attrition signal v1.
+          </figcaption>
+          <button class="insight-view-toggle" type="button"
+                  aria-pressed="false"
+                  aria-controls="insight-table-risk"
+                  data-chart="chart-risk"
+                  data-toggle-target="insight-table-risk">
+            Show data table
+          </button>
+          <div class="insight-chart-wrap">
+            <div class="insight-body" id="chart-risk" aria-hidden="true"></div>
+          </div>
+          <div class="insight-table-companion" id="insight-table-risk" hidden>
+            <!-- Populated by renderFlightRiskHeatmap() via buildInsightTable() -->
+          </div>
+        </figure>
         <div class="insight-foot">
           <span>Source · People Graph · attrition signal v1</span>
           <button class="insight-ask" data-q="who's at flight risk in engineering with comp below band?" type="button">
@@ -498,6 +581,7 @@
           </button>
         </div>
       </article>
+
     </div>
   </section>
 

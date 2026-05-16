@@ -2665,3 +2665,163 @@ button { font-family: inherit; cursor: pointer; }
   .req-list-head { padding: 0 .5rem; }
 }
 
+
+/* ============================================================
+   SPRINT 5 · GAP 01 + GAP 03 ACCESSIBILITY — Tessera · 2026-05-15
+   ============================================================ */
+
+/* ── Utility: visually-hidden but accessible to SR ── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── GAP 01 · Insight chart figure + figcaption ── */
+.insight-figure {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.insight-figcaption {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .08em;
+  color: var(--ink-3-aaa);
+  margin-bottom: .55rem;
+  line-height: 1.4;
+}
+
+/* Toggle button: chart ↔ table */
+.insight-view-toggle {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ink-3-aaa);
+  border: 1px solid var(--paper-rule-2);
+  border-radius: var(--radius);
+  padding: .3rem .6rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: .35rem;
+  transition: border-color .15s, color .15s, background .15s;
+  margin-bottom: .55rem;
+  min-height: 28px;
+}
+.insight-view-toggle:hover {
+  border-color: var(--ochre);
+  color: var(--ochre);
+}
+.insight-view-toggle[aria-pressed="true"] {
+  background: var(--paper-deep);
+  color: var(--ink);
+  border-color: var(--paper-rule-2);
+}
+
+/* The SVG chart wrapper — toggled with hidden attr */
+.insight-chart-wrap { position: relative; }
+
+/* Companion table inside <details> */
+.insight-table-companion {
+  margin-top: .4rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.insight-companion-table {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  width: 100%;
+  border-collapse: collapse;
+}
+.insight-companion-table caption {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: left;
+  padding: .3rem 0;
+  caption-side: top;
+}
+.insight-companion-table th,
+.insight-companion-table td {
+  text-align: left;
+  padding: .4rem .55rem;
+  border-bottom: 1px solid var(--paper-rule);
+  vertical-align: top;
+  line-height: 1.35;
+}
+.insight-companion-table th {
+  font-weight: 700;
+  color: var(--ink-mute);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: var(--paper-deep);
+  white-space: nowrap;
+}
+.insight-companion-table td { color: var(--ink-2); }
+.insight-companion-table tr:last-child td { border-bottom: none; }
+.insight-companion-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── GAP 03 · Static-result toggle in live answer header ── */
+.static-toggle-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--ochre-soft);
+  border: 1px solid rgba(230,199,155,.4);
+  border-radius: 2px;
+  padding: 3px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  white-space: nowrap;
+  min-height: 26px;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.static-toggle-btn:hover {
+  color: var(--paper);
+  border-color: var(--ochre-soft);
+}
+.static-toggle-btn[aria-pressed="true"] {
+  background: rgba(230,199,155,.18);
+  color: var(--paper);
+  border-color: var(--ochre-soft);
+}
+
+/* Static result pre-render — hidden until toggle pressed */
+.live-static-result {
+  font-family: var(--display);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--ink);
+}
+.live-static-result p { margin: 0 0 .8rem; }
+.live-static-result strong { color: var(--ochre-deep); font-weight: 600; }
+.live-static-result em { color: var(--ink-2); font-style: italic; }
+
+/* Reduced-motion: disable insight-card enter transition */
+@media (prefers-reduced-motion: reduce) {
+  .insight-view-toggle { transition: none; }
+  .static-toggle-btn   { transition: none; }
+}

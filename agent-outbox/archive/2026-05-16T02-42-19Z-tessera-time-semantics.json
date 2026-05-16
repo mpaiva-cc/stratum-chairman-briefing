@@ -1,0 +1,89 @@
+{
+  "agent": "Tessera",
+  "timestamp": "2026-05-16T02:42:19Z",
+  "type": "publish",
+  "sprint": "O-1 Sprint 5 / Parallel C",
+  "gap": "A11Y-Mn08",
+  "link": "/briefings/",
+  "files_modified": [
+    "/briefings/001.html",
+    "/briefings/002.html",
+    "/briefings/003.html",
+    "/briefings/004.html",
+    "/briefings/005.html",
+    "/briefings/006.html",
+    "/briefings/007.html",
+    "/briefings/008.html",
+    "/briefings/009.html",
+    "/briefings/010.html",
+    "/briefings/011.html",
+    "/briefings/012.html",
+    "/briefings/013.html",
+    "/briefings/014.html",
+    "/briefings/015.html",
+    "/briefings/index.html"
+  ],
+  "mn08_status": "CLOSED",
+  "wcag_criterion": "1.3.1 Info and Relationships",
+  "summary": "Replaced plain-text T+ notation and date strings in all 16 briefing files with semantic <time datetime='YYYY-MM-DD'> elements. 1425 <time> elements added across 16 files.",
+  "files_count": 16,
+  "time_elements_added": 1425,
+  "time_elements_per_file": {
+    "001.html": 78,
+    "002.html": 26,
+    "003.html": 48,
+    "004.html": 74,
+    "005.html": 76,
+    "006.html": 105,
+    "007.html": 138,
+    "008.html": 95,
+    "009.html": 91,
+    "010.html": 90,
+    "011.html": 179,
+    "012.html": 186,
+    "013.html": 183,
+    "014.html": 8,
+    "015.html": 6,
+    "index.html": 42
+  },
+  "migration_script": "/scripts/time_semantics_migration.py",
+  "date_mapping": {
+    "anchor": "T+0d = 2026-05-06 (Stratum incorporation date)",
+    "reference": "T+Xd maps to 2026-05-06 + X calendar days"
+  },
+  "wrap_targets": {
+    "dateline_spans": "Compilation timestamp token inside <span class='dateline'>. datetime= taken from rt-stamp data-this attribute (UTC). Briefings 001-013 use T+HH:MM:SS.000 format; 014 uses T+2d HH:MM:SS; 015 uses T+~13d real-elapsed. All mapped to absolute ISO 8601.",
+    "date_divs": "<div class='date'>T+Xd</div> timeline entries. Both simple (T+Xd) and range (T+Xd–T+Yd) forms handled — range divs receive two wrapped <time> elements, en-dash separator preserved as plain text.",
+    "ts_day_divs": "<div class='ts'> entries with day-notation (T+Xd<br/>HH:MM) representing the calendar date of a meeting or exchange. Only the T+Xd token is wrapped; the time and location text following the <br/> is left as-is.",
+    "signoff_meta": "T+Xd inside <span class='signoff-meta'> and <p class='signoff-meta'> — the briefing compilation date.",
+    "footer_colophon": "T+Xd references in the colophon footer ('Compiled by Helm on Sunday, T+18d.' and 'Next: ... T+32d.').",
+    "inline_prose": "T+Xd tokens in body copy paragraphs, what-divs, bar-labels, metric-foot divs, and list items.",
+    "index_entry_nums": "<div class='entry-num'> T+Xd spans in the briefings index. Includes the featured-byline and entry-num spans for B014 (T+~55h real-elapsed) and B015 (T+~13d real-elapsed) — targeted replacement, both mapped to datetime='2026-05-15'.",
+    "index_entry_stats": "<div class='entry-stat-value'> T+Xd elements (split T+155<span class='unit'>d</span> pattern — the <time> wraps both the T+155 prefix and the <span class='unit'>d</span> suffix together).",
+    "briefings_014_015": "Real-elapsed notation. 'T+55h real-elapsed', 'T+55:12:38 real-elapsed', 'T+~55h · 2026-05-15', 'T+~13d real-elapsed', 'T+~13d · 2026-05-26' all wrapped with datetime='2026-05-15' per the timeline mapping. The T+~55h in 014's dd element and T+~13d in 015's dd element are wrapped individually, with 2026-05-15 and 2026-05-26 as separate adjacent <time> elements."
+  },
+  "not_wrapped": {
+    "css_comments": "T+~48d in /* SITE-NAV injected by nav_rollout.py · T+~48d */ inside <style> blocks, and T+~33d in the site-nav canonical comment. Not user-facing DOM content.",
+    "ts_duration_divs": "<div class='ts'>T+HH:MM:SS</div> session transcript elapsed-time stamps (durations within a meeting, not calendar dates). e.g. T+00:11:24 in briefing 002 transcript, T+00:00:21 through T+40:22:09 in briefing 001 founding session.",
+    "rt_stamp_pill": "Explicitly excluded per dispatch. The pill already carries data-t0 and data-this ISO attributes for JS parsing.",
+    "html_tag_attributes": "datetime=, style=, href= attribute values inside HTML tags — protected by the inline-prose skip-range logic.",
+    "approximate_prose_markers": "Inline references like 'T+~31 hours real-elapsed' and 'T+21h compile' in 014/015 body copy. These are approximate windows without a parseable absolute date — conservative per the dispatch mandate."
+  },
+  "ambiguous_cases": {
+    "ts_day_vs_duration": "The <div class='ts'> class is used for both meeting datestamps (T+28d format) and session transcript elapsed markers (T+HH:MM:SS format). The migration distinguishes them by regex: T+\\d+d suffix = calendar date (wrapped); T+\\d{2}:\\d{2} format = duration (skipped). No ambiguity at the individual element level.",
+    "forward_horizon_markers": "Markers like 'T+200d' and 'T+285d' appear as projected future dates. Wrapped with their computed absolute dates (T+200d = 2026-11-22, T+285d = 2027-02-15). The <time> element makes no claim about whether the date has occurred.",
+    "range_spans_in_date_divs": "T+99d–T+102d in date divs represents a range of event coverage. Each bound is wrapped independently. The en-dash separator is preserved as plain text between the two <time> elements.",
+    "index_b014_b015_folio": "The B014/B015 folio entries in index.html use T+~55h and T+~13d real-elapsed notation. These are structural identifiers for the briefings (analogous to T+172d for B013). Mapped to datetime='2026-05-15' and treated as dates, not approximate narrative references."
+  },
+  "verification": {
+    "double_wrap_check": "grep -rn '<time[^>]*><time ' briefings/ — 0 matches",
+    "style_block_clean": "All <style> blocks verified clean via Python — no <time> elements injected into CSS",
+    "rt_stamp_clean": "rt-stamp div untouched in all 16 files",
+    "ts_duration_clean": "All T+HH:MM:SS ts-class entries remain unwrapped across briefings 001 and 002",
+    "ts_day_wrapped": "T+Xd entries in ts-class divs wrapped in briefings 003-013"
+  },
+  "no_content_changes": true,
+  "no_css_changes": true,
+  "no_important_declarations": true,
+  "rt_stamp": "T+72:16:33.000 · 2026-05-16T02:42:19.000Z"
+}

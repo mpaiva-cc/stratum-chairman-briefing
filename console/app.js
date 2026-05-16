@@ -1432,6 +1432,66 @@ function bindDrawer() {
 // INSIGHTS VIEW
 // ─────────────────────────────────────────────────────────────
 let insightsRendered = false;
+
+// Gap 01: Detect prefers-reduced-motion — used to default insight cards to table view.
+// We check at render time; the matchMedia change listener re-runs if the OS setting changes.
+const insightPRM = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function applyInsightDefaultView() {
+  // When PRM is active, default each insight card to table view so the
+  // data is immediately available to assistive technology without a toggle.
+  const tableDefault = insightPRM.matches;
+  document.querySelectorAll('.insight-view-toggle').forEach(function(btn) {
+    var targetId = btn.dataset.toggleTarget;
+    var chartId  = btn.dataset.chart;
+    if (!targetId || !chartId) return;
+    var tablePanel = document.getElementById(targetId);
+    var fig        = btn.closest('.insight-figure');
+    var chartWrap  = fig ? fig.querySelector('.insight-chart-wrap') : null;
+    if (!tablePanel || !chartWrap) return;
+    if (tableDefault) {
+      tablePanel.hidden = false;
+      chartWrap.hidden  = true;
+      btn.setAttribute('aria-pressed', 'true');
+      btn.textContent = 'Show chart';
+    } else {
+      tablePanel.hidden = true;
+      chartWrap.hidden  = false;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = 'Show data table';
+    }
+  });
+}
+
+function bindInsightToggles() {
+  document.querySelectorAll('.insight-view-toggle').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var targetId = btn.dataset.toggleTarget;
+      var chartId  = btn.dataset.chart;
+      if (!targetId || !chartId) return;
+      var tablePanel = document.getElementById(targetId);
+      var fig        = btn.closest('.insight-figure');
+      var chartWrap  = fig ? fig.querySelector('.insight-chart-wrap') : null;
+      if (!tablePanel || !chartWrap) return;
+
+      var showingTable = !tablePanel.hidden;
+      if (showingTable) {
+        tablePanel.hidden = true;
+        chartWrap.hidden  = false;
+        btn.setAttribute('aria-pressed', 'false');
+        btn.textContent = 'Show data table';
+      } else {
+        tablePanel.hidden = false;
+        chartWrap.hidden  = true;
+        btn.setAttribute('aria-pressed', 'true');
+        btn.textContent = 'Show chart';
+      }
+    });
+  });
+  // Respond to OS-level PRM changes while page is open
+  insightPRM.addEventListener('change', applyInsightDefaultView);
+}
+
 function renderInsights() {
   if (insightsRendered) return;
   renderHeadcountChart();
@@ -1440,11 +1500,16 @@ function renderInsights() {
   renderFlightRiskHeatmap();
   insightsRendered = true;
 
-  // Re-render on resize to recompute widths
-  let rzt;
-  window.addEventListener('resize', () => {
+  // Wire toggle buttons once, after charts + tables are in the DOM
+  bindInsightToggles();
+  // Apply PRM-based default view after all tables are populated
+  applyInsightDefaultView();
+
+  // Re-render SVGs on resize (tables are static; no re-render needed)
+  var rzt;
+  window.addEventListener('resize', function() {
     clearTimeout(rzt);
-    rzt = setTimeout(() => {
+    rzt = setTimeout(function() {
       renderHeadcountChart();
       renderCompChart();
       renderTenureChart();
@@ -1461,6 +1526,21 @@ function renderHeadcountChart() {
     .map(([d, n]) => ({ label: d, value: n }))
     .sort((a,b) => b.value - a.value);
   renderHorizontalBars(mount, rows, { suffix: '', color: 'var(--ochre)' });
+
+  // Gap 01: populate companion data table
+  buildInsightTable('insight-table-hc', {
+    caption: 'Headcount by department · People Graph · 2,000 records',
+    headers: [
+      { label: 'Department', scope: 'col' },
+      { label: 'Employees',  scope: 'col', className: 'num' },
+      { label: 'Share',      scope: 'col', className: 'num' },
+    ],
+    rows: rows.map(r => [
+      { text: r.label, scope: 'row', header: true },
+      { text: r.value.toLocaleString('en-US'), className: 'num' },
+      { text: (r.value / state.people.length * 100).toFixed(1) + '%', className: 'num' },
+    ]),
+  });
 }
 
 function renderCompChart() {
@@ -1545,6 +1625,29 @@ function renderCompChart() {
 
   mount.innerHTML = '';
   mount.appendChild(svg);
+
+  // Gap 01: populate companion data table for compensation IQR chart
+  buildInsightTable('insight-table-comp', {
+    caption: 'Compensation by level (USD) · IQR · People Graph · comp_total',
+    headers: [
+      { label: 'Level',  scope: 'col' },
+      { label: 'N',      scope: 'col', className: 'num' },
+      { label: 'P10',    scope: 'col', className: 'num' },
+      { label: 'P25',    scope: 'col', className: 'num' },
+      { label: 'Median', scope: 'col', className: 'num' },
+      { label: 'P75',    scope: 'col', className: 'num' },
+      { label: 'P90',    scope: 'col', className: 'num' },
+    ],
+    rows: stats.map(s => [
+      { text: s.level, scope: 'row', header: true },
+      { text: s.n.toLocaleString('en-US'), className: 'num' },
+      { text: fmt.moneyShort(s.p10),    className: 'num' },
+      { text: fmt.moneyShort(s.p25),    className: 'num' },
+      { text: fmt.moneyShort(s.median), className: 'num' },
+      { text: fmt.moneyShort(s.p75),    className: 'num' },
+      { text: fmt.moneyShort(s.p90),    className: 'num' },
+    ]),
+  });
 }
 
 function renderTenureChart() {
@@ -1607,6 +1710,21 @@ function renderTenureChart() {
 
   mount.innerHTML = '';
   mount.appendChild(svg);
+
+  // Gap 01: populate companion data table for tenure distribution
+  buildInsightTable('insight-table-tenure', {
+    caption: 'Tenure distribution · years since hire · People Graph · hire_date',
+    headers: [
+      { label: 'Tenure bucket', scope: 'col' },
+      { label: 'Employees',     scope: 'col', className: 'num' },
+      { label: 'Share',         scope: 'col', className: 'num' },
+    ],
+    rows: rows.map(r => [
+      { text: r.label + ' yrs', scope: 'row', header: true },
+      { text: r.value.toLocaleString('en-US'), className: 'num' },
+      { text: (r.value / state.people.length * 100).toFixed(1) + '%', className: 'num' },
+    ]),
+  });
 }
 
 function renderFlightRiskHeatmap() {
@@ -1692,6 +1810,77 @@ function renderFlightRiskHeatmap() {
 
   mount.innerHTML = '';
   mount.appendChild(svg);
+
+  // Gap 01: populate the companion data table for the heatmap
+  buildInsightTable('insight-table-risk', {
+    caption: 'Flight-risk rate (%) · department × region · People Graph · attrition signal v1',
+    headers: [
+      { label: 'Department', scope: 'col' },
+      { label: 'NA',    scope: 'col', className: 'num' },
+      { label: 'EMEA',  scope: 'col', className: 'num' },
+      { label: 'APAC',  scope: 'col', className: 'num' },
+      { label: 'LATAM', scope: 'col', className: 'num' },
+    ],
+    rows: data.map(row => [
+      { text: row.dept, scope: 'row', header: true },
+      ...row.cells.map(c => ({
+        text: c.n > 0 ? (c.rate * 100).toFixed(0) + '%' : '—',
+        className: 'num',
+        title: c.n > 0 ? `n=${c.n}` : 'No data',
+      })),
+    ]),
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// GAP 01 · Insight companion table builder
+// Populates the <div id="insight-table-*"> companion panels.
+// Each chart renderer calls this after SVG render.
+// ─────────────────────────────────────────────────────────────
+function buildInsightTable(mountId, { caption, headers, rows }) {
+  const mount = $('#' + mountId);
+  if (!mount) return;
+
+  const table = document.createElement('table');
+  table.className = 'insight-companion-table';
+  table.setAttribute('role', 'table');
+
+  // Caption
+  const cap = document.createElement('caption');
+  cap.textContent = caption;
+  table.appendChild(cap);
+
+  // <thead>
+  const thead = document.createElement('thead');
+  const hrow = document.createElement('tr');
+  headers.forEach(h => {
+    const th = document.createElement('th');
+    th.scope = h.scope || 'col';
+    th.textContent = h.label;
+    if (h.className) th.className = h.className;
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow);
+  table.appendChild(thead);
+
+  // <tbody>
+  const tbody = document.createElement('tbody');
+  rows.forEach(cells => {
+    const tr = document.createElement('tr');
+    cells.forEach(cell => {
+      const node = cell.header ? document.createElement('th') : document.createElement('td');
+      if (cell.header) node.scope = 'row';
+      node.textContent = cell.text;
+      if (cell.className) node.className = cell.className;
+      if (cell.title) node.setAttribute('title', cell.title);
+      tr.appendChild(node);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+
+  mount.innerHTML = '';
+  mount.appendChild(table);
 }
 
 // ═════════════════════════════════════════════════════════════
@@ -3293,6 +3482,21 @@ async function renderAnswerLive(question) {
   const mount = $('#answer-mount');
   mount.innerHTML = '';
 
+  // Gap 03: Determine whether prefers-reduced-motion demands static-by-default.
+  // When true, static result is shown immediately and streaming is visual-only.
+  const staticByDefault = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Gap 03: SR-only live region — used for start/complete announcements only.
+  // Individual streaming tokens are NOT announced (no aria-live on #live-text).
+  const srStatus = $('#sr-stream-status');
+  function announceStream(msg) {
+    if (!srStatus) return;
+    // Replace content (not append) so the next announcement reads cleanly.
+    srStatus.textContent = '';
+    // Micro-delay so the DOM mutation registers as a new live-region event.
+    requestAnimationFrame(() => { srStatus.textContent = msg; });
+  }
+
   // Build skeleton card with streaming targets
   const card = el('div', { class: 'answer-card answer-card-live', role: 'article' });
   card.innerHTML = `
@@ -3300,6 +3504,10 @@ async function renderAnswerLive(question) {
       <span class="answer-q-label">§ Ask</span>
       <span class="answer-q-text">${escapeHtml(question)}</span>
       <span class="answer-q-status" id="live-status">connecting…</span>
+      <button class="static-toggle-btn" id="live-static-toggle" type="button"
+              aria-pressed="${staticByDefault ? 'true' : 'false'}">
+        Show static result
+      </button>
     </div>
 
     <details class="answer-reasoning" id="live-reasoning">
@@ -3314,7 +3522,14 @@ async function renderAnswerLive(question) {
 
     <div class="answer-section">
       <div class="section-label"><span class="sigil">§2</span>Answer</div>
-      <div class="answer-headline answer-live-text" id="live-text"><span class="stream-cursor"></span></div>
+      <!-- Gap 03: NO aria-live here — tokens must not be re-announced per chunk. -->
+      <!-- Static pre-render (shown when toggle is pressed or PRM is active). -->
+      <div class="live-static-result" id="live-static"${staticByDefault ? '' : ' hidden'}
+           aria-label="Static response text"></div>
+      <!-- Streaming text (visual only; no aria-live). -->
+      <div class="answer-headline answer-live-text" id="live-text"${staticByDefault ? ' hidden' : ''}>
+        <span class="stream-cursor"></span>
+      </div>
     </div>
 
     <div class="answer-section">
@@ -3343,23 +3558,54 @@ async function renderAnswerLive(question) {
   `;
   mount.appendChild(card);
 
-  const textNode = $('#live-text');
-  const statusNode = $('#live-status');
-  const reasoningBody = $('#live-reasoning-body');
-  const reasoningWrap = $('#live-reasoning');
-  let textBuf = '';
-  let reasoningBuf = '';
-  let anyThinking = false;
+  const textNode       = $('#live-text');
+  const staticNode     = $('#live-static');
+  const staticToggle   = $('#live-static-toggle');
+  const statusNode     = $('#live-status');
+  const reasoningBody  = $('#live-reasoning-body');
+  const reasoningWrap  = $('#live-reasoning');
+  let textBuf       = '';
+  let reasoningBuf  = '';
+  let anyThinking   = false;
+  let isStaticMode  = staticByDefault;
+
+  // Gap 03: Toggle handler — swap streaming ↔ static view.
+  function applyToggleState() {
+    if (isStaticMode) {
+      textNode.hidden   = true;
+      staticNode.hidden = false;
+      staticToggle.setAttribute('aria-pressed', 'true');
+      // Populate static node with whatever text has buffered so far.
+      staticNode.innerHTML = renderInlineMd(textBuf) || '<em style="color:var(--ink-mute)">Generating…</em>';
+    } else {
+      textNode.hidden   = false;
+      staticNode.hidden = true;
+      staticToggle.setAttribute('aria-pressed', 'false');
+    }
+  }
+
+  staticToggle.addEventListener('click', () => {
+    isStaticMode = !isStaticMode;
+    applyToggleState();
+  });
 
   function setText() {
-    // Render markdown-lite (bold + italic) and preserve newlines
+    // Gap 03: Streaming node updated in place — no aria-live; SR is NOT notified per token.
     const html = renderInlineMd(textBuf);
     textNode.innerHTML = html + '<span class="stream-cursor"></span>';
+    // If static mode is already active (PRM or user toggle), keep static in sync.
+    if (isStaticMode) {
+      staticNode.innerHTML = html || '<em style="color:var(--ink-mute)">Generating…</em>';
+    }
   }
+
+  // Gap 03: Announce stream start.
+  announceStream('Generating response…');
 
   $('#act-stop').addEventListener('click', () => {
     LLM.session.streamAbort && LLM.session.streamAbort.abort();
     statusNode.textContent = 'stopped';
+    announceStream('Response stopped.');
   });
   $('#act-new').addEventListener('click', () => {
     mount.innerHTML = '';
@@ -3394,8 +3640,12 @@ async function renderAnswerLive(question) {
       },
     });
 
-    // Finalize cursor
-    textNode.innerHTML = renderInlineMd(textBuf);
+    // Gap 03: Finalize — render complete text without cursor, then announce completion.
+    const finalHtml = renderInlineMd(textBuf);
+    textNode.innerHTML = finalHtml;
+    staticNode.innerHTML = finalHtml;
+    // One clean SR announcement: the full text is now available.
+    announceStream('Response complete.');
 
     // Cohort filter — derive from first tool input
     const fi = result.firstInspect;
@@ -3448,18 +3698,22 @@ async function renderAnswerLive(question) {
 
   } catch (e) {
     statusNode.textContent = 'error';
+    announceStream('Response error.');
     if (e.status === 401) {
       LLM.settings.apiKey = '';
-      $('#live-text').innerHTML = '<span class="err">Your API key was rejected. Please reconnect.</span>';
+      textNode.innerHTML = '<span class="err">Your API key was rejected. Please reconnect.</span>';
+      staticNode.innerHTML = textNode.innerHTML;
       setTimeout(() => openOnboarding('Your API key was rejected. Try another.'), 600);
     } else if (e.name === 'AbortError') {
-      $('#live-text').innerHTML = '<span class="err">Stopped.</span>';
+      textNode.innerHTML = '<span class="err">Stopped.</span>';
+      staticNode.innerHTML = textNode.innerHTML;
     } else {
-      $('#live-text').innerHTML = `
+      textNode.innerHTML = `
         <span class="err">Claude call failed.</span>
         <details class="err-details"><summary>Details</summary>
           <pre>${escapeHtml(e.message || String(e))}</pre>
         </details>`;
+      staticNode.innerHTML = textNode.innerHTML;
     }
     console.error(e);
   }

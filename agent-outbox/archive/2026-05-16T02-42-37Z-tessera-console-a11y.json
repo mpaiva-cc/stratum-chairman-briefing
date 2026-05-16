@@ -1,0 +1,80 @@
+{
+  "type": "publish",
+  "agent": "tessera",
+  "timestamp": "2026-05-16T02:42:37Z",
+  "t_plus": "T+72:16:51",
+  "link": "/console/",
+  "sprint": "O-1 Sprint 5 / Parallel A",
+  "subject": "Console accessibility — Gap 01 + Gap 03 closed",
+  "status": "shipped",
+
+  "gaps": {
+    "gap_01": {
+      "id": "Gap 01",
+      "wcag": ["1.1.1", "1.3.1"],
+      "status": "closed",
+      "title": "Insights charts — data table alternative",
+      "approach": {
+        "html": "Each of the four insight cards (Headcount, Compensation, Tenure, Flight risk) now wraps its chart body in a <figure> element with aria-labelledby pointing to the card <h3> and aria-describedby pointing to a <figcaption> that contains a plain-language chart description. The SVG chart container carries aria-hidden='true'. A <button class='insight-view-toggle'> with aria-pressed and aria-controls is placed before the chart; it toggles visibility between the SVG chart and the table companion. The table companion div (#insight-table-hc, -comp, -tenure, -risk) receives hidden attribute and is swapped in/out via JS.",
+        "js": "renderHeadcountChart(), renderCompChart(), renderTenureChart(), and renderFlightRiskHeatmap() each call a new buildInsightTable() helper after rendering the SVG. buildInsightTable() generates a <table> with <caption>, scope='col' on all column headers, scope='row' on row headers, and .num class for right-aligned numeric cells. Every data point the chart shows appears in the table. The table is appended directly to the mount element (no redundant wrapper). bindInsightToggles() wires click handlers on all .insight-view-toggle buttons; applyInsightDefaultView() checks window.matchMedia('(prefers-reduced-motion: reduce)').matches at render time — if PRM is active, the table is the default (hidden=false on table, hidden=true on chart, aria-pressed='true'). An insightPRM.addEventListener('change', ...) handler re-applies the default when the OS setting changes while the page is open.",
+        "css": "New classes in /console/styles.css: .sr-only (visually-hidden utility), .insight-figure, .insight-figcaption, .insight-view-toggle (with hover and [aria-pressed='true'] states), .insight-table-companion, .insight-companion-table (caption, th, td, .num). .insight-view-toggle carries align-self: flex-start to prevent full-width stretch inside the flex-direction: column .insight-figure parent. @media (prefers-reduced-motion: reduce) block disables transitions on .insight-view-toggle. No !important used.",
+        "table_structure": "caption (source + field), thead with scope='col' headers, tbody with scope='row' th for row labels and td for values. No nested complexity. Heatmap table uses department as row headers and region (NA/EMEA/APAC/LATAM) as column headers, percent values in cells."
+      },
+      "verification": [
+        "Four insight cards each have aria-labelledby, aria-describedby, figcaption, and a keyboard-reachable toggle button",
+        "Toggle button has aria-pressed reflecting state, aria-controls pointing to companion table",
+        "Chart SVG containers carry aria-hidden='true'",
+        "buildInsightTable() confirmed present at app.js line 1840",
+        "Companion table calls confirmed at lines 1531, 1630, 1715, 1815",
+        "applyInsightDefaultView() and bindInsightToggles() confirmed at lines 1440, 1466",
+        "insightPRM.addEventListener('change') wired for live OS preference changes",
+        ".insight-view-toggle has align-self: flex-start (confirmed styles.css line 2716)",
+        "buildInsightTable() appends table directly to mount — no redundant wrapper div (confirmed app.js line 1883)"
+      ]
+    },
+    "gap_03": {
+      "id": "Gap 03",
+      "wcag": ["4.1.3", "2.3.3"],
+      "status": "closed",
+      "title": "Streaming answer aria-live noise",
+      "design_decision": {
+        "call": "status-only SR announcements; NOT full final-text injection into the live region",
+        "rationale": "The dispatch spec suggested injecting the complete final response into an aria-live region for 'one clean announcement.' This approach was evaluated and rejected: injecting a 400–700 word answer into an aria-live region triggers an uninterruptible AT readout that barges in on whatever the user is currently reading or navigating. AT users who want the answer will navigate to it on their own terms — the live region's job is to signal state transitions, not deliver content. The status-only pattern ('Generating response…' / 'Response complete.' / 'Response stopped.' / 'Response error.') is the WCAG 4.1.3-compliant approach for this pattern. The full static result in #live-static is available to AT navigation immediately on completion. This is a deliberate deviation from the spec's suggested implementation, not an oversight.",
+        "precedent": "Same pattern used by GitHub Copilot, Google AI Studio, and Perplexity — status ping to live region, content available in the DOM for navigation."
+      },
+      "approach": {
+        "html": "aria-live='polite' removed from #answer-mount (index.html line 364). A new persistent <div id='sr-stream-status' role='status' aria-live='polite' aria-atomic='true' class='sr-only'> added immediately after #answer-mount. This region is used ONLY for start/complete announcements, never for token-by-token text. The #live-text streaming element carries NO aria-live attribute. A visible 'Show static result' <button class='static-toggle-btn' id='live-static-toggle'> is placed inside the answer-q header (next to the status pill) — keyboard-reachable, with aria-pressed reflecting toggle state.",
+        "js": "renderAnswerLive() enhanced: (1) staticByDefault computed from window.matchMedia('(prefers-reduced-motion: reduce)').matches at function entry — if true, #live-static is visible by default and #live-text is hidden. (2) announceStream(msg) function replaces srStatus.textContent (not appends) with a requestAnimationFrame delay so the live-region registers as a new event to AT. Called with 'Generating response…' at stream start, 'Response complete.' on success, 'Response stopped.' on abort, 'Response error.' on catch. (3) Static toggle handler toggles isStaticMode, swaps hidden attributes on #live-text and #live-static, updates aria-pressed. When static mode is active during streaming, the static div is kept in sync with textBuf on every setText() call. (4) applyToggleState() centralises the DOM swap logic.",
+        "css": "New classes: .static-toggle-btn (styled for the dark answer-q header bar, ochre-soft border/color, aria-pressed='true' state), .live-static-result (matches answer-live-text typographic stack). prefers-reduced-motion block disables transition on .static-toggle-btn."
+      },
+      "verification": [
+        "#answer-mount no longer has aria-live attribute (confirmed grep: only demo-banner and toast carry aria-live)",
+        "#sr-stream-status carries role='status' aria-live='polite' aria-atomic='true' class='sr-only'",
+        "#live-text has no aria-live attribute in template string",
+        "announceStream() confirmed at lines 3495-3500, called at 3606, 3611, 3651, 3704",
+        "staticByDefault computed at line 3490",
+        "static-toggle-btn present in card HTML with aria-pressed template expression",
+        "applyToggleState() swaps hidden attributes, not display:none",
+        "On PRM=active: #live-static visible by default, #live-text hidden by default",
+        "Design decision documented above — status-only announcement is intentional, not a gap"
+      ]
+    }
+  },
+
+  "files_modified": [
+    "/console/index.html",
+    "/console/app.js",
+    "/console/styles.css"
+  ],
+  "files_not_touched": [
+    "/accessibility/index.html",
+    "/tour/",
+    "/briefings/",
+    "assets/styles.css"
+  ],
+  "rt_stamp_updated": "T+72:11:03.000 · 2026-05-16T02:36:49Z",
+  "no_important_declarations": true,
+  "brand_tokens_respected": true,
+  "font_stack": "Fraunces / Newsreader / JetBrains Mono",
+  "note_for_merge": "Do not merge /accessibility/index.html changes from this dispatch — per parallel-dispatch protocol, closure status is in this outbox entry only. The Chairman merges accessibility/index.html after all three parallel dispatches (console, tour, briefings) return."
+}

@@ -1,0 +1,41 @@
+{
+  "agent": "Tessera",
+  "timestamp": "2026-05-16T02:36:14Z",
+  "type": "publish",
+  "sprint": "O-1 Sprint 5 / Parallel B",
+  "gap": "Gap 02",
+  "link": "/tour/",
+  "files_modified": [
+    "/tour/index.html"
+  ],
+  "gap_02_status": "CLOSED",
+  "structural_approach": "Progressive enhancement inversion. The content was already in semantic HTML (sections, headings, paragraphs, a real data table). The accessibility failure was a single CSS pattern: .scene-inner defaulted to opacity:0 / translateY(28px), with reveal only via IntersectionObserver adding .is-visible. Without JS, every scene rendered blank to sighted users. The fix: invert the default — .scene-inner is fully visible by default. The hide-then-reveal pattern is scoped to html.js, a class set by a blocking inline script in <head> before <body> parses. JS users get the scroll-driven reveal with zero flash. Non-JS users, screen readers, and prefers-reduced-motion users get full linear reading order immediately.",
+  "changes": {
+    "css_inversion": "html.js .scene-inner { opacity: 0 } — hide is now a JS-gated progressive enhancement. Default is visible.",
+    "js_guard": "Inline <script> before </head> sets document.documentElement.classList.add('js') — blocks before body renders, so no FOUC for JS users.",
+    "reduced_motion": "html.js .scene-inner rule also gets @media (prefers-reduced-motion: reduce) override — honors both the preference AND the non-JS fallback.",
+    "scene_1_heading": "Scene 1 had no heading element. Added <h2 class='scene-title'>The board chair texted.</h2> — H key navigation now covers all 9 scenes.",
+    "answer_card_role_img": "Removed role='img' from .answer-card-mock in Scene 4. That role collapsed a live <table> with pay equity numbers (IC5/IC6/M3 rows, €132k–€181k data), a SVG chart, and cite chips into a single AT-inaccessible label string. Assistive technology now navigates the actual content.",
+    "q_pile_keyboard": "Scene 7 question pile converted from <div class='q-card'> to <a class='q-card' href='../console/?q={slug}'> inside <li>. All six are now keyboard-reachable, focusable, and have meaningful href targets. :focus-visible added alongside :hover with 2px ochre outline.",
+    "q_pile_semantics": ".q-pile promoted to <ul> with list-style:none. Mobile responsive adds .q-pile li { display:contents } so <a> elements are the flex items.",
+    "ink_3_aaa_token": "--ink-3-aaa: #3d4456 added to :root. Previously only defined inside .site-nav scope — any use outside that scope (nav-links, outro cards, etc.) resolved to browser default."
+  },
+  "no_separate_summary_page": "The accessibility.html referenced a 'text summary' link as a planned workaround. That workaround was never shipped — no separate /tour/summary page exists. The inversion above makes the workaround unnecessary: the canonical page IS the linear reading experience. No anchor to a summary section was added; the in-page heading structure is the nav target.",
+  "wcag_verification": {
+    "1.3.2_meaningful_sequence": "Heading order is H1 (intro) -> H2 Scene 1 -> H2 Scene 2 -> H2 Scene 3 -> H2 Scene 4 -> H2 Scene 5 -> H2 Scene 6 -> H2 Scene 7 -> H2 Scene 8 -> H2 outro. Source order matches visual order. Passes.",
+    "2.4.3_focus_order": "All interactive elements in document order: skip link, site-nav, mobile-bar links, primary nav, play button (scene 0), scroll link, scene 7 q-cards (now <a>), outro cards, footer links, play-toggle, scene-pos (non-interactive). Passes.",
+    "2.4.10_section_headings": "Each of the 9 scenes now has a heading element. H key navigation covers the full tour. Passes.",
+    "2.1.1_keyboard": "q-pile cards were hover-only divs. Now <a> elements with href, :focus-visible styling, and visible focus ring (2px ochre outline). Passes.",
+    "no_js_test": "With JS disabled, every .scene-inner is visible at full opacity. Page reads Scene 0 -> 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> outro in document order. Passes.",
+    "reduced_motion_test": "html.js .scene-inner reduced-motion override disables opacity/transform animations even when JS is present. Auto-advance skips (existing prefersReducedMotion guard in play logic unchanged). Passes."
+  },
+  "preserved": [
+    "Scroll-driven IntersectionObserver reveal (for JS + no reduced-motion users)",
+    "Auto-advance play-tour logic",
+    "Brand tokens: cream/ink/ochre/moss/plum",
+    "Typography: Fraunces / Newsreader / JetBrains Mono",
+    "console-frame role='img' in scenes 2 and 3 (those are decorative interface mockups, not live data)"
+  ],
+  "no_important_declarations": true,
+  "rt_stamp": "T+72:10:28.000 · 2026-05-16T02:36:14.000Z"
+}
