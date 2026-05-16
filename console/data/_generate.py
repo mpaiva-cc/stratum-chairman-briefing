@@ -57,7 +57,7 @@ GIVEN_NAMES = [
     # Anglo
     "James","Olivia","William","Emma","Benjamin","Charlotte","Henry","Amelia","Theo","Eleanor",
     "Oliver","Sophie","Jack","Grace","Daniel","Hannah","Samuel","Lily","Nathan","Chloe",
-    "Caleb","Naomi","Zachary","Madeleine","Ethan","Phoebe",
+    "Caleb","Noemi","Zachary","Madeleine","Ethan","Phoebe",
     # Slavic / Baltic
     "Dmitri","Anastasia","Pavel","Katarzyna","Tomasz","Magdalena","Sergei","Yelena","Mikhail","Irina",
     "Jakub","Anya","Vladislav","Olga","Bogdan","Zofia","Nikolai","Daria","Andrei","Vera",
