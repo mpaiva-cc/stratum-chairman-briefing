@@ -1,0 +1,47 @@
+{
+  "type": "publish",
+  "agent": "tessera",
+  "timestamp_utc": "2026-05-16T00:43:54Z",
+  "elapsed": "T+70:10:14",
+  "slug": "board-essays-indexes",
+  "summary": "Shipped /board/index.html (40,316 bytes) and /essays/index.html (42,523 bytes) — two AAA-compliant index pages that resolve the 404s introduced by the canonical site-nav rollout. Board index lists 2 documents (MIN-001 and M-001) reverse-chronologically with transparency framing; authored attribution Helm (Secretary pro tempore / CEO). Essays index lists 4 essays in publication order by three authors: Helm (No. 01, 04), Forge (No. 02), Compass (No. 03).",
+  "files": [
+    {
+      "path": "board/index.html",
+      "bytes": 40316,
+      "description": "The Board index — governance transparency surface listing board memos and minutes with open-book practice statement, reference to Briefing 005 and the chairman role. 2 entries, reverse chronological."
+    },
+    {
+      "path": "essays/index.html",
+      "bytes": 42523,
+      "description": "Stratum Essays index — editorial magazine surface listing all 4 founder essays in publication order with deks and ~50-word excerpts. 3 authors: Helm, Forge, Compass."
+    }
+  ],
+  "accessibility": {
+    "target": "WCAG 2.2 AAA",
+    "findings": [
+      "skip-link present and functional on both pages",
+      "main id='main' landmark on both pages",
+      "lang='en' on html element",
+      "focus-visible rings: 2px solid var(--ochre) with outline-offset: 2px on all interactive elements",
+      "body text contrast: --ink (#0e1626) on --paper (#f4ecda) = 16.1:1, exceeds AAA 7:1",
+      "link text contrast: --ochre-link (#7a3d0a) on --paper (#f4ecda) = 7.14:1, AAA pass",
+      "all interactive elements min-height: 44px for target size",
+      "prefers-reduced-motion: transitions and animations suppressed under reduce",
+      "heading order: h1 -> h2 maintained throughout",
+      "all links descriptive without surrounding context (entry-read pattern: 'Read minutes MIN-001 →')",
+      "aria-current='page' correctly placed on Board link (Company column) and Essays link (Articles column)",
+      "rt-stamp aria-hidden='true' — decorative, not read by AT",
+      "no new findings introduced"
+    ],
+    "new_aaa_surfaces": 2
+  },
+  "design_notes": {
+    "template": "briefings/index.html structural scaffold adapted — same sticky-nav-after-site-nav, same .archive / .entry card pattern, same statstrip rhythm",
+    "deprecations": "none — new pages only",
+    "tokens_used": ["--paper", "--ink", "--ink-2", "--ink-3", "--ink-mute", "--ochre", "--ochre-deep", "--ochre-link", "--paper-rule", "--paper-rule-2", "--paper-warm", "--display", "--serif", "--mono"],
+    "new_tokens": "none",
+    "site_nav_js": "verbatim copy from briefings/index.html — disclosure panel open/close, ESC handler, click-outside, mobile overlay",
+    "author_attribution_note": "Board memo M-001 colophon attributes to Helm (CEO); minutes colophon states 'M. CHEN, Secretary pro tempore' but body names Helm as the agent who 'acted as Secretary pro tempore.' Both documents attributed to Helm in the index as the consistent agent codename. Source inconsistency noted; not corrected in index."
+  }
+}
