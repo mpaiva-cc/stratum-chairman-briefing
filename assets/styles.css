@@ -14,13 +14,18 @@
   --ink-2:        #2a3344;
   --ink-3:        #4b5365;
   --ink-mute:     #6c7180;
-  /* A11Y-supplemental — added 2026-05-15 audit dispatch
-     --ink-mute-aa: darkened muted text, 5.98:1 on --paper (was 4.14, failed AA)
+  /* A11Y Sprints 3–4 — 2026-05-15
      --ochre-link:  link-specific ochre, 7.14:1 on --paper (AAA body text pass)
-     --ochre still used for decorative borders, icons, labels — 3.63 is fine there
-     Deprecation: body <a> color moves from --ochre to --ochre-link; --ochre survives */
-  --ink-mute-aa:  #525968;
+     --ink-mute-aa: muted text token. Was 4.14:1 (Sprint 3 lift to AA, #525968, 5.98:1);
+                    Sprint 4 upgrades to AAA: #404755, 7.93:1 on --paper.
+     --ink-3-aaa:   new AAA text tone, 8.27:1 on --paper. Use for text/UI-copy roles where
+                    --ink-3 was too light (6.55:1). --ink-3 (#4b5365) kept for decorative
+                    non-text uses: borders, bg fills, SVG fills, chart swatches.
+     --ochre stays for decorative borders/icons; --ochre-link for clickable text.
+     Deprecation: body <a> color moves from --ochre to --ochre-link; --ochre survives. */
+  --ink-mute-aa:  #404755;
   --ochre-link:   #7a3d0a;
+  --ink-3-aaa:    #3d4456;
 
   /* Accent */
   --ochre:        #b8651f;
@@ -145,7 +150,7 @@ strong { font-weight: 600; color: var(--ink); }
   font-size: 11.5px;
   letter-spacing: .04em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   padding-bottom: .8rem;
   border-bottom: 1px solid var(--paper-rule);
 }
@@ -156,7 +161,7 @@ strong { font-weight: 600; color: var(--ink); }
 
 .masthead-nav { display: flex; gap: 1.05rem; }
 .masthead-nav a {
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   border-bottom: 0;
   position: relative;
   padding-bottom: 2px;
@@ -180,7 +185,7 @@ strong { font-weight: 600; color: var(--ink); }
   font-size: 12px;
   letter-spacing: .26em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin-bottom: 1.6rem;
 }
 
@@ -309,7 +314,7 @@ section {
   font-size: 11.5px;
   letter-spacing: .22em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin-bottom: 1rem;
   border-bottom: 1px solid var(--paper-rule);
   padding-bottom: .6rem;
@@ -328,7 +333,7 @@ section {
   font-size: 11px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   padding-top: 3px;
 }
 .kv dd {
@@ -377,7 +382,7 @@ section {
   font-size: 11px;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin-bottom: .8rem;
 }
 
@@ -404,7 +409,7 @@ section {
   font-family: var(--serif);
   font-style: italic;
   font-variation-settings: "opsz" 14;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   font-size: 14px;
   margin-top: .8rem;
 }
@@ -521,7 +526,7 @@ section {
   font-size: 10.5px;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   padding-top: 2px;
 }
 .founder-traits dd { margin: 0; color: var(--ink-2); }
@@ -638,14 +643,14 @@ section {
   font-size: 10.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   background: var(--paper-warm);
   padding: .7rem .25rem;
   border-bottom: 1px solid var(--ink);
 }
 
 .ledger-row .num { color: var(--ochre); }
-.ledger-row .date { color: var(--ink-3); }
+.ledger-row .date { color: var(--ink-3-aaa); }
 .ledger-row .what {
   font-family: var(--serif);
   font-size: 16px;
@@ -699,7 +704,7 @@ section {
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: .04em;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
 }
 
 .bar-track {
@@ -773,7 +778,7 @@ section {
   font-size: 10.5px;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
 }
 .q-axis-y { left: 12px; top: 50%; transform: rotate(-90deg) translateX(50%); transform-origin: left center; }
 .q-axis-x { left: 50%; bottom: 12px; transform: translateX(-50%); }
@@ -808,7 +813,7 @@ section {
   background: currentColor;
 }
 .dot-incumbent { color: var(--ink); }
-.dot-challenger { color: var(--ink-3); }
+.dot-challenger { color: var(--ink-3-aaa); }
 .dot-us {
   color: var(--ochre);
   background: var(--ink);
@@ -830,7 +835,7 @@ section {
   font-size: 11px;
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
 }
 .legend-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: .4rem; vertical-align: middle; }
 .legend-incumbent { background: var(--ink); }
@@ -864,7 +869,7 @@ section {
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .1em;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin-top: .2rem;
 }
 .act-title {
@@ -926,7 +931,7 @@ section {
   font-size: 9.5px;
   letter-spacing: .2em;
   text-transform: uppercase;
-  fill: var(--ink-3);
+  fill: var(--ink-3-aaa);
 }
 
 .cap-table { width: 100%; border-collapse: collapse; font-family: var(--serif); font-size: 15px; }
@@ -935,7 +940,7 @@ section {
   font-size: 10.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   font-weight: 500;
   text-align: left;
   padding: .55rem .4rem;
@@ -953,7 +958,7 @@ section {
   font-family: var(--serif);
   font-style: italic;
   font-size: 14px;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin-top: 1rem;
   max-width: 60ch;
 }
@@ -995,7 +1000,7 @@ section {
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: .06em;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   margin: .3rem 0 .6rem;
 }
 .hire-body p {
@@ -1017,7 +1022,7 @@ section {
   font-size: 10.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   font-weight: 500;
   text-align: left;
   padding: .9rem .6rem;
@@ -1252,14 +1257,14 @@ section {
   font-size: 10.5px;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
   padding-bottom: .9rem;
   border-bottom: 1px solid var(--paper-rule);
   margin-bottom: 1rem;
   gap: 1rem;
 }
 .artifact-kind { color: var(--ochre); }
-.artifact-id   { color: var(--ink-3); white-space: nowrap; }
+.artifact-id   { color: var(--ink-3-aaa); white-space: nowrap; }
 
 .artifact-title {
   font-family: var(--display);
@@ -1356,7 +1361,7 @@ section {
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: .04em;
-  color: var(--ink-3);
+  color: var(--ink-3-aaa);
 }
 .colo-mark {
   font-family: var(--display);
@@ -1459,7 +1464,7 @@ section {
 
 
 /* ── A11Y Sprint 2 — 2026-05-15
-   --ink-mute-aa deployed to muted label selectors (WCAG 1.4.3 AA pass, 5.98:1 on paper)
+   --ink-mute-aa: Sprint 2 lifted to AA (#525968, 5.98:1); Sprint 4 upgrades to AAA (#404755, 7.93:1)
    Previously --ink-mute was #6c7180, 4.14:1 — failed AA.
    Scoped to semantic "supporting text" roles: .ink-mute, .muted, .hint, .helper.
    Decorative uses retain --ink-mute; text-carrying uses get --ink-mute-aa. */

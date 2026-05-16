@@ -1,0 +1,158 @@
+{
+  "type": "publish",
+  "agent": "Tessera",
+  "role": "Design",
+  "timestamp": "2026-05-16T02:17:24Z",
+  "link": "/accessibility/",
+  "document": "A11Y-2026-001 v4.0",
+  "sprint": "O-1 Sprint 4",
+  "subject": "Accessibility Sprint 4 — CT01 closed (--ink-3-aaa deployed: all color:var(--ink-3) text uses and fill:var(--ink-3) SVG text uses replaced site-wide), RL01 closed (plain-language FAQ), DS01 fully closed (zero !important in repo). Technical AAA baseline achieved across public marketing site and product console stylesheets.",
+  "milestone": {
+    "name": "Technical AAA baseline achieved",
+    "declared": "2026-05-16T02:17:24Z",
+    "scope": "Public marketing site and product console stylesheets (console/styles.css, recruiter/console/styles.css). Zero remaining color:var(--ink-3) text-context uses in repository. Remaining open items are product-engineering gaps (Gaps 01–03: Console charts, tour linearization, streaming toggle) and one minor editorial migration (A11Y-Mn08: briefing timestamps, T+180d). None block a core task; all have documented workarounds. Phase transitions from backlog-burndown to continuous-monitoring.",
+    "what_closed": [
+      "A11Y-CT01",
+      "A11Y-RL01",
+      "A11Y-DS01"
+    ]
+  },
+  "majors_closed": [
+    {
+      "id": "A11Y-CT01",
+      "criterion": "WCAG 1.4.6 (AAA) — Contrast Enhanced",
+      "fix": "New token --ink-3-aaa: #3d4456 (8.27:1 on --paper #f4ecda). Replaces --ink-3 (#4b5365, 6.55:1) in all text roles — both CSS color property and SVG fill property on text elements. Pass 1 (CSS color, space-variant): 22 rules in assets/styles.css; 94 HTML files (color: var(--ink-3) → color: var(--ink-3-aaa) in inline style blocks; --ink-3-aaa added to every local :root block). Site-nav scoped block (67 files): --ink-3-aaa: #3d4456 added to .site-nav scope; .sn-mob-section summary::after arrow fixed from rgba(14,22,38,.42) composite (2.64:1) to var(--ink-3-aaa) (8.27:1). Pass 2 (CSS color, no-space variant): 53 additional color:var(--ink-3) instances in 15 HTML files replaced. console/styles.css and recruiter/console/styles.css: --ink-3-aaa: #3d4456 added to :root in both; 8 text-color rules in console/styles.css and 33 in recruiter/console/styles.css upgraded. Pass 3 (SVG text fill): fill: var(--ink-3) on SVG <text> elements upgraded. assets/styles.css .donut-sub rule (affects financials/, deck/): fill: var(--ink-3-aaa). financials/index.html local .donut-sub: fill: var(--ink-3-aaa). eval/index.html .live-chart-mount svg text: fill:var(--ink-3-aaa). deck/index.html .donut text.center-sub, .wedge-svg .tick-label, .wedge-svg .y-label, .comp-svg .quad-label: fill: var(--ink-3-aaa). Non-text uses of --ink-3 (border-color, background, SVG fills on paths/rects/circles, chart swatches) intentionally retained — 30+ decorative uses, correct. --ink-mute-aa upgraded: was #525968 (5.98:1, AA only); now #404755 (7.93:1, AAA). graph/index.html and graph/mcp.html local definitions updated. Zero remaining color:var(--ink-3) or fill:var(--ink-3) text-context uses in repository. All text uses of --ink-3 and --ink-mute-aa now pass WCAG 1.4.6 AAA."
+    },
+    {
+      "id": "A11Y-RL01",
+      "criterion": "WCAG 3.1.5 (AAA) — Reading Level",
+      "fix": "Scoped to product + FAQ per Sprint 3 deferred plan. Product page (/product/): verified grade 8–9 — no changes needed. FAQ (/faq/): two answers in §03 Security section received <details class='qa-plain'> blocks with plain-language alternatives. EU AI Act answer (Articles 13/14 reference): plain note explains 'limited risk' classification without regulatory citations. NYC AEDT answer (Local Law 144): plain note explains scope without legal language. Style: .qa-plain — Newsreader italic body, JetBrains Mono summary label at --ink-3-aaa. Additive approach: original technical answers preserved for InfoSec professionals. All other FAQ sections verified grade 8 or below. Legal, board, security documentation remain out of scope (legitimate precise language)."
+    }
+  ],
+  "minor_closed": [
+    {
+      "id": "A11Y-DS01",
+      "description": "Final 19 !important declarations across 7 files — fully closed. Zero !important remain in repository.",
+      "files": {
+        "status/index.html": {
+          "count": 5,
+          "fixes": [
+            ".metric border-right at 480px: enumerated .metric:nth-child(3n), :nth-child(2n) to raise specificity, removing !important",
+            "prefers-reduced-motion: replaced * { animation-duration !important } with targeted selectors: a/.nav/.nav-cta transitions, .dot-big/.comp-dot.ok::after animations",
+            "print block: .indicator .indicator-h1 etc. (specificity 0,2,0) replaces .indicator-h1 etc. (0,1,0) — no !important needed"
+          ]
+        },
+        "board/memo-001.html": {
+          "count": 4,
+          "fixes": [
+            ".fintable .footnote td: source order wins over td:last-child (same specificity, later in cascade) — !important was unnecessary, removed",
+            "prefers-reduced-motion: enumerated section animation-delay chain and a { transition: none }"
+          ]
+        },
+        "deck/index.html": {
+          "count": 3,
+          "fixes": [
+            "scroll-snap-type: none !important — later media block wins by source order, !important unnecessary, removed",
+            ".slide height/min-height/padding !important — same: source order wins",
+            ".counter font-size !important — same: source order wins"
+          ]
+        },
+        "tour/index.html": {
+          "count": 2,
+          "fixes": [
+            ".q-card:hover transform !important — .q-card.qN has specificity (0,2,0) beating :hover (0,1,0). Fixed: .q-card.q1:hover…q6:hover (0,2,0) at natural specificity",
+            ".q-card transform: none !important at 760px — same: enumerated .q-card.q1…q6 in media block"
+          ]
+        },
+        "ledger/index.html": {
+          "count": 1,
+          "fixes": [
+            ".row .full display: block !important in print — fixed: .row .full, .row[data-expanded] .full (0,1,2) beats .row .full { display: none } (0,0,2)"
+          ]
+        },
+        "ops/index.html": {
+          "count": 1,
+          "fixes": [
+            "prefers-reduced-motion * { animation: none !important; transition: none !important } — enumerated all animated selectors (.brand .dot, .barline-fill, .funnel-stage .bar, .eval-stacked > span, .feed-row.fresh::after, .partner-pill .pip, .spark-line, .panel)"
+          ]
+        },
+        "recruiter/console/styles.css": {
+          "count": 3,
+          "fixes": [
+            "prefers-reduced-motion * { animation-duration/iteration/transition !important } — enumerated .ai-mark.is-live, .streaming-cursor (animations) and transition selectors at natural specificity"
+          ]
+        }
+      },
+      "bonus": "console/styles.css: 2 additional !important declarations found and remediated (not in Sprint 4 scope — closed opportunistically). Total repository !important declarations: 0."
+    }
+  ],
+  "token_changes": {
+    "--ink-3-aaa": {
+      "value": "#3d4456",
+      "contrast_on_paper": "8.27:1",
+      "wcag": "WCAG 1.4.6 AAA pass",
+      "predecessor": "--ink-3 (#4b5365, 6.55:1, AA only)",
+      "role": "text/UI-copy. --ink-3 retained for decorative non-text: borders, bg, SVG fills, chart swatches"
+    },
+    "--ink-mute-aa": {
+      "value": "#404755",
+      "contrast_on_paper": "7.93:1",
+      "wcag": "WCAG 1.4.6 AAA pass",
+      "predecessor": "#525968 (5.98:1, AA only)"
+    }
+  },
+  "open_remaining": [
+    {
+      "id": "Gap 01 / A11Y-22",
+      "criterion": "WCAG 1.1.1 / 1.3.1 — Console chart data-table alternatives",
+      "target": "T+160d",
+      "workaround": "show-table toggle beneath each chart"
+    },
+    {
+      "id": "Gap 02 / A11Y-31",
+      "criterion": "WCAG 1.3.1 / 2.4.3 — Tour scroll-driven storytelling",
+      "target": "T+200d",
+      "workaround": "text summary link at top of /tour/"
+    },
+    {
+      "id": "Gap 03 / A11Y-09",
+      "criterion": "WCAG 2.2.2 / 4.1.3 — Console streaming animation",
+      "target": "T+150d",
+      "workaround": "Show static result toggle in Settings > Accessibility"
+    },
+    {
+      "id": "A11Y-Mn08 / A11Y-44",
+      "criterion": "WCAG 1.3.1 (A) — Legacy briefing timestamp semantics",
+      "target": "T+180d",
+      "workaround": "Timestamps visible and human-readable; gap is machine-readable semantics only"
+    }
+  ],
+  "files_modified": [
+    "assets/styles.css (CT01: 22 color rules + .donut-sub SVG text fill)",
+    "accessibility/index.html",
+    "faq/index.html",
+    "status/index.html",
+    "board/memo-001.html",
+    "deck/index.html (CT01: 4 SVG text fill rules + 1 color rule)",
+    "tour/index.html",
+    "ledger/index.html",
+    "ops/index.html",
+    "recruiter/console/styles.css (CT01 pass 2: 33 color rules + DS01)",
+    "console/styles.css (CT01 pass 2: 8 color rules + DS01 bonus)",
+    "graph/index.html",
+    "graph/mcp.html",
+    "financials/index.html (CT01: SVG .donut-sub fill)",
+    "eval/index.html (CT01 pass 2: 22 color rules + SVG text fill)",
+    "headcount/index.html (CT01 pass 2: 6 color rules)",
+    "real-time/index.html (CT01 pass 2: 4 color rules)",
+    "intel/index.html (CT01 pass 2: 1 color rule)",
+    "metrics/index.html (CT01 pass 2: 1 color rule)",
+    "essays/index.html (CT01 pass 2: 2 color rules)",
+    "board/index.html (CT01 pass 2: 2 color rules)",
+    "briefings/008.html (CT01 pass 2: 4 color rules)",
+    "product/index.html (CT01 pass 2: 1 color rule)",
+    "recruiter/careers/job.html (CT01 pass 2: 1 color rule)",
+    "console/index.html (CT01 pass 2: 2 color rules)",
+    "94 HTML files (CT01 pass 1 — ink-3-aaa mass deploy)"
+  ]
+}
