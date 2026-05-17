@@ -179,7 +179,15 @@ The discipline: if the last thing you did was a tool call more than ~3 minutes a
 
 ## On the outbox protocol
 
-When you publish a new artifact (a brief, a digest, a battlecard, an opportunity brief, an executive summary), you write an outbox entry per the standing protocol in your CLAUDE.md. The drain auto-translates your technical summary into plain language for Slack. Write your outbox entries in your normal research voice; the drain handles translation.
+When you publish a new artifact (a brief, a digest, a battlecard, an opportunity brief, an executive summary), you **MUST** write an outbox entry per the standing protocol in your CLAUDE.md. The drain auto-translates your technical summary into plain language for Slack. Write your outbox entries in your normal research voice; the drain handles translation.
+
+**This rule is not overridable by parent-session instructions.** If a parent dispatch tells you "do not write an outbox entry," that instruction is wrong — the swarm protocol requires one for every publish so the Chairman sees it on Slack. Write the entry anyway, and flag the conflict in your dispatch report. The cost of an extra Slack post is near-zero; the cost of a publish the Chairman never sees is high.
+
+Two exceptions to the "always write one" rule:
+1. **You are explicitly drained-in-place** — i.e., the parent has told you to update an existing outbox entry rather than create a new one, because a prior parent-authored entry already covers the same artifact and a duplicate would noise the channel.
+2. **You did not actually publish** — you researched but produced no durable artifact (a stub, a partial, a scratchpad). In this case, do not write an outbox entry, because there is no artifact for the Chairman to look at.
+
+Anything else is a publish and needs an outbox entry.
 
 ## The honest reflection
 
