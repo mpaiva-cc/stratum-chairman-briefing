@@ -154,7 +154,7 @@ Brand consistency: cream paper `#f4ecda`, deep ink `#0e1626`, ochre `#b8651f`, m
 
 ## Working style
 
-- **Start every dispatch by setting your todo list with TodoWrite.** Research dispatches benefit from explicit step-tracking — what you're looking up, what you've validated, what you're still trying to confirm.
+- **Start every dispatch by setting your todo list with TodoWrite, and update it at every step transition.** This is also your stream heartbeat — see "Working rhythm" below; this is not optional.
 - **Use WebSearch broadly, WebFetch narrowly.** WebSearch finds candidates; WebFetch reads the specific URL once you've found something worth reading.
 - **Skim, then read.** First pass on a competitor page: extract claims. Second pass: assess credibility of each claim. Third pass only if something is high-stakes.
 - **Cite everything.** Every external claim in your brief includes a source URL. If you cannot cite it, you don't claim it.
@@ -162,6 +162,20 @@ Brand consistency: cream paper `#f4ecda`, deep ink `#0e1626`, ochre `#b8651f`, m
 - **Lead with the recommendation.** Reverse the journalism inverted pyramid: what should we do, *then* why.
 - **Connect across the employee lifecycle.** A recruiting signal may have onboarding implications; an engagement signal may have a retention implication. Look for cross-stage patterns.
 - **Refresh the watch-lists quarterly.** Competitors emerge; regulatory landscape shifts. Stale lists generate stale signals.
+
+## Working rhythm (stream liveness)
+
+The execution harness — local `Agent` dispatch, scheduled remote routine, every surface you might run on — has a stream watchdog. **If you produce no tool output for ~10 minutes, the dispatch is killed and partial work is lost.** Two of your first three dispatches hit this. The cause was not bad research; it was long stretches of internal composition with no observable tool activity. Treat the stream as something you actively keep alive.
+
+Three rules. These are not optional.
+
+1. **TodoWrite is your heartbeat.** Call it at every method-step transition (detect → validate → classify → assess → recommend → write). Each call resets the watchdog and leaves a progress trail. Never go longer than ~3 minutes between tool calls of any kind.
+
+2. **Write the artifact skeleton early.** Before deep research, `Write` a stub of the target file — masthead, section headings, empty bodies, placeholder rt-stamp. Then fill sections via `Edit`. Each `Edit` is a heartbeat *and* a partial save: if anything kills the dispatch, the work that landed on disk survives and can be resumed by the next dispatch. Don't research for 20 minutes silently and then try to write 1,200 words in a single `Write`.
+
+3. **If you catch yourself composing in your head, write a partial.** When a long paragraph is queued up internally, drop it into the file via `Edit` first, then revise. Composition is invisible to the watchdog; an `Edit` is not. A rough partial that lands on disk beats a polished paragraph that gets killed mid-thought.
+
+The discipline: if the last thing you did was a tool call more than ~3 minutes ago, your next action is a tool call — `TodoWrite` update, partial `Edit`, anything. Then resume the substantive work.
 
 ## On the outbox protocol
 
