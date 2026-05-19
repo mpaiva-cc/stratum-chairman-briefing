@@ -8,6 +8,7 @@ permalink: /library/index.html
 <head>
 <meta charset="utf-8" />
 <!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
 <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
 <meta property="og:description" content="{{ page.description | default: site.description | escape }}">
 <meta property="og:url" content="{{ site.url }}{{ page.url }}">
@@ -189,7 +190,8 @@ header.mast{
 }
 .stat-v .u{
   font-size: .7rem;
-  color: var(--ochre);
+  /* AAA on cream — was --ochre (3.63:1, fail) */
+  color: var(--ochre-link, #7a3d0a);
   margin-left: .25rem;
 }
 
@@ -224,16 +226,35 @@ header.mast{
 .chip:active{ transform: translateY(1px); }
 .chip:focus-visible{ outline: 2px solid var(--ochre); outline-offset: 2px; }
 .chip[aria-selected="true"]{ font-weight: 600; }
-.chip-on{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
-.chip-on:hover{ background: var(--ink); color: var(--paper); }
-.chip-live{ color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
-.chip-live:hover{ background: rgba(184,101,31,.12); color: var(--ochre); border-color: var(--ochre); }
-.chip-public{ color: var(--moss); border-color: var(--moss); }
-.chip-public:hover{ background: rgba(74,93,58,.08); color: var(--moss); border-color: var(--moss); }
-.chip-internal{ color: var(--ochre); border-color: var(--ochre); }
-.chip-internal:hover{ background: rgba(184,101,31,.08); color: var(--ochre); border-color: var(--ochre); }
-.chip-confidential{ color: var(--plum); border-color: var(--plum); }
+
+/* One distinct accent per category — Live and Internal were both ochre
+   and visually identical. All chip text uses AAA-contrast tokens. */
+.chip-live{ color: var(--ochre-link, #7a3d0a); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.chip-live:hover{ background: rgba(184,101,31,.12); color: var(--ochre-link, #7a3d0a); border-color: var(--ochre); }
+
+.chip-internal{ color: var(--ink-2); border-color: var(--ink-3); background: transparent; }
+.chip-internal:hover{ background: rgba(14,22,38,.04); color: var(--ink); border-color: var(--ink); }
+
+.chip-confidential{ color: var(--plum); border-color: var(--plum); background: transparent; }
 .chip-confidential:hover{ background: rgba(107,58,74,.08); color: var(--plum); border-color: var(--plum); }
+
+.chip-public{ color: var(--moss); border-color: var(--moss); background: transparent; }
+.chip-public:hover{ background: rgba(74,93,58,.08); color: var(--moss); border-color: var(--moss); }
+
+/* Investors has no .chip-<color> modifier so it stays in the default
+   .chip neutral palette, which is fine — Investors is the rarest filter. */
+
+/* IMPORTANT: chip-on must come LAST so the active dark state wins over
+   any per-color rule above. Otherwise a colored chip's text/border
+   stay tinted even when "selected". */
+.chip-on,
+.chip-on.chip-live,
+.chip-on.chip-internal,
+.chip-on.chip-confidential,
+.chip-on.chip-public{
+  background: var(--ink); color: var(--paper); border-color: var(--ink);
+}
+.chip-on:hover{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
 .group[hidden]{ display: none; }
 .lib-empty{ font-family: var(--serif); font-style: italic; opacity: .7; padding: 2rem 0; text-align: center; }
 
@@ -280,7 +301,8 @@ main{ padding: 0 var(--pad) 2rem; }
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: .14em;
-  color: var(--ochre);
+  /* AAA on cream — was --ochre (3.63:1, fail) */
+  color: var(--ochre-link, #7a3d0a);
   text-transform: uppercase;
 }
 .r-title{
@@ -310,7 +332,7 @@ main{ padding: 0 var(--pad) 2rem; }
   letter-spacing: .08em;
   color: var(--ink-3-aaa);
 }
-.r-arrow{ color: var(--ochre); font-weight: 700; letter-spacing: .06em; }
+.r-arrow{ color: var(--ochre-link, #7a3d0a); font-weight: 700; letter-spacing: .06em; }
 
 /* ─────────────────────────── COLOPHON ──────────────────────── */
 footer{
@@ -339,7 +361,8 @@ footer{
   font-size: 10.5px;
   letter-spacing: .35em;
   text-transform: uppercase;
-  color: var(--ink-mute);
+  /* AAA on cream — was --ink-mute (4.14:1, fail) */
+  color: var(--ink-mute-aa, #404755);
   margin-top: 1.4rem;
   padding-top: 1rem;
   border-top: 1px dashed var(--paper-rule);
@@ -470,7 +493,7 @@ footer{ animation-delay: .16s; }
 <!-- ── SITE-NAV ── -->
 {% include site-nav.html %}
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-12T23:39:19-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+01:13:33.000</strong> · <span style="opacity:.6">2026-05-13T03:39:19.000Z</span></div>
+<div class="rt-stamp" aria-hidden="true" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-12T23:39:19-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:#404755;background:#f7f0e0;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.4);pointer-events:none"><span style="color:#7a3d0a">●</span> compiled at <strong style="color:#0e1626">T+01:13:33.000</strong> · <span style="color:#404755">2026-05-13T03:39:19.000Z</span></div>
 <!-- /realtime-stamp -->
 
 
@@ -507,7 +530,7 @@ footer{ animation-delay: .16s; }
   <button type="button" class="chip" data-filter="investors" role="tab" aria-selected="false">Investors</button>
 </div>
 
-<main>
+<main id="main" tabindex="-1">
 
   <!-- ── THE PRODUCT ────────────────────────────────── -->
   <section class="group" data-cat="live">

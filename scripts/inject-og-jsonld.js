@@ -26,7 +26,10 @@ const OPEN  = '<!-- og-jsonld:start -->';
 const CLOSE = '<!-- og-jsonld:end -->';
 
 // Liquid-templated payload. Jekyll renders {{ ... }} at build time per page.
+// Includes the plain <meta name="description"> alongside OG/Twitter so SEO
+// tools (and Lighthouse's `meta-description` audit) find a description.
 const PAYLOAD = `${OPEN}
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
 <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
 <meta property="og:description" content="{{ page.description | default: site.description | escape }}">
 <meta property="og:url" content="{{ site.url }}{{ page.url }}">
