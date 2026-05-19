@@ -77,7 +77,7 @@ The repo has an outbox at `/Users/mp/git-repos/poc-autonomous-hcm/agent-outbox/`
 After your durable artifact is on disk (file written, ledger entry committed, decision recorded), write a JSON file directly to the outbox using the `Write` tool. Filename pattern: `{ISO-timestamp-with-dashes}-{your-agent-name}-{slug}.json`. Use real wall-clock UTC for the timestamp (e.g. via `date -u +"%Y-%m-%dT%H-%M-%SZ"`), not narrative T+ time.
 
 Required fields: `agent`, `type` (`publish` | `request` | `event`), `title` (≤ 80 chars, sentence case), `summary` (1–3 sentences — what changed and why it matters), `timestamp` (ISO 8601 UTC).
-Optional: `link` (**repo-relative path only**, e.g. `/briefings/015.html` — never a full URL; the drain prepends `https://mpaiva-cc.github.io/stratum-chairman-briefing`. Do **not** use `stratum.ai` — that is a different, unrelated company), `urgency` (`normal` default, or `high` if the Chairman should look today).
+Optional: `link` (**repo-relative path only**, e.g. `/briefings/015.html` — never a full URL; the drain prepends `https://mpaiva-cc.github.io/stratum`. Do **not** use `stratum.ai` — that is a different, unrelated company), `urgency` (`normal` default, or `high` if the Chairman should look today).
 
 Example — Helm shipping Briefing 015:
 

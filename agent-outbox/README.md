@@ -116,7 +116,7 @@ Rules the drain applies:
 
 ### URL prefix for the `link` field
 
-The GitHub Pages canonical host for this repo is **`https://mpaiva-cc.github.io/stratum-chairman-briefing`**. The drain prepends that prefix to the repo-relative `link` value when posting to Slack. Agents write only the repo-relative path (e.g. `/briefings/015.html`), never the full URL.
+The GitHub Pages canonical host for this repo is **`https://mpaiva-cc.github.io/stratum`**. The drain prepends that prefix to the repo-relative `link` value when posting to Slack. Agents write only the repo-relative path (e.g. `/briefings/015.html`), never the full URL.
 
 > **Do not use `stratum.ai`.** That domain belongs to a different, unrelated company. The Stratum project's public URL is the GitHub Pages address above.
 

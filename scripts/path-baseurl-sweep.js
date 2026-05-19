@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // One-shot sweep: convert absolute internal URLs to Liquid `relative_url`
-// expressions so GitHub Pages' /stratum-chairman-briefing/ baseurl is
+// expressions so GitHub Pages' /stratum/ baseurl is
 // honored. Local dev with `--baseurl ""` then strips it off.
 //
 // Targets the patterns we know to be safe:

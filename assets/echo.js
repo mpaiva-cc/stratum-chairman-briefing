@@ -331,7 +331,7 @@
 
       <div class="echo-foot">
         Echo is Stratum's voice agent. Your settings persist locally; your OpenAI key, if set, never leaves your browser.
-        <br><a href="/stratum-chairman-briefing/agents/" tabindex="-1">Meet the agents →</a>
+        <br><a href="/stratum/agents/" tabindex="-1">Meet the agents →</a>
       </div>
     </div>
   `;

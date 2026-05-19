@@ -16,7 +16,7 @@ REPO_ROOT="/Users/mp/git-repos/poc-autonomous-hcm"
 OUTBOX_DIR="${REPO_ROOT}/agent-outbox"
 LOG_FILE="/tmp/stratum-outbox.log"
 LOCK_FILE="/tmp/stratum-outbox.lock"
-URL_PREFIX="https://mpaiva-cc.github.io/stratum-chairman-briefing"
+URL_PREFIX="https://mpaiva-cc.github.io/stratum"
 
 shopt -s nullglob
 entries=( "${OUTBOX_DIR}"/*.json )
@@ -104,7 +104,7 @@ For each .json file at that path:
      - If there are 3+ distinct changes, list them as bullets after
        a one-sentence lead — each bullet starts with a capital
        letter and a verb, no trailing period needed
-     - {url} is "https://mpaiva-cc.github.io/stratum-chairman-briefing{link}"
+     - {url} is "https://mpaiva-cc.github.io/stratum{link}"
        (DO NOT use stratum.ai — different company)
      - If urgency=high, prepend ":rotating_light: " to the entire
        message (only allowed emoji)

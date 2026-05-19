@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const SITE = path.join(ROOT, '_site');
-const BASEURL = '/stratum-chairman-briefing'; // matches _config.yml
+const BASEURL = '/stratum'; // matches _config.yml
 
 const args = process.argv.slice(2);
 const asJson = args.includes('--json');

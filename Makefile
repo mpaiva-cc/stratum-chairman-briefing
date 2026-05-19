@@ -15,7 +15,7 @@ help:  ## Show this help
 
 serve:  ## Run the dev server with livereload (http://127.0.0.1:4000)
 	# --baseurl "" overrides the production baseurl so local dev URLs
-	# don't include the /stratum-chairman-briefing/ subpath
+	# don't include the /stratum/ subpath
 	$(BUNDLE) exec jekyll serve --livereload --baseurl ""
 
 build:  ## One-shot build into _site/
