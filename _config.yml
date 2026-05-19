@@ -24,8 +24,13 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor/
-  # Markdown source for graph/mcp; the rendered .html is the canonical page.
-  - graph/mcp.md
+  # graph/mcp.md previously caused a build conflict (both .md and .html
+  # wanted to write to /graph/mcp.html). Now /graph/mcp.html has explicit
+  # front-matter with `permalink: /graph/mcp.html` and no layout-driven
+  # markdown rendering — so the .md without front-matter copies as a
+  # static file at /graph/mcp.md (the canonical-source link target).
+  # NOTE: leaving NOT-excluded so links to /graph/mcp.md from the HTML
+  # page resolve correctly.
 
 keep_files:
   - assets

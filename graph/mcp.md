@@ -8,6 +8,12 @@ ratified: "D-258 · T+~7d real-elapsed"
 first_drafted: "T+~13d real-elapsed"
 published: "T+~13d real-elapsed · 2026-05-15"
 fortnight: "B015 · MCP-native HCM and ATS"
+# Explicit permalink keeps this file at /graph/mcp.md so the canonical-
+# source links from /graph/mcp.html resolve. Without this, Jekyll's
+# default `:output_ext` rule converts .md → .html and collides with
+# the rendered HTML page.
+permalink: /graph/mcp.md
+layout: null
 companion_artifacts:
   - "/briefings/015.html"
   - "/engineering/how-stratum-runs.html"
