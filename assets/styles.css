@@ -45,8 +45,14 @@
 .sn-mob-section summary::-webkit-details-marker{display:none}
 .sn-mob-section summary::after{content:"↓";font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3,var(--sn-ink-3));transition:transform .15s}
 .sn-mob-section[open] summary::after{transform:rotate(180deg)}
-.sn-mob-links{padding:.2rem 0 1rem}
-.sn-mob-links a:hover,.sn-mob-links a:focus-visible{color:var(--ochre,var(--sn-ochre))}
+.sn-mob-links{padding:.2rem 0 1rem;display:flex;flex-direction:column}
+/* Mobile menu links: each anchor is a full-width row with a 44px touch
+   target. Without these the global `a { border-bottom: 1px solid }` rule
+   leaves links inline and underlined, making the overlay a wall of run-on
+   underlined text. */
+.sn-mob-links a{display:flex;align-items:center;width:100%;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;letter-spacing:.06em;color:var(--ink,var(--sn-ink));text-decoration:none;border-bottom:0;padding:.7rem 0;min-height:44px;border-top:1px solid var(--paper-rule,var(--sn-rule))}
+.sn-mob-links a:first-child{border-top:0}
+.sn-mob-links a:hover,.sn-mob-links a:focus-visible{color:var(--ochre,var(--sn-ochre));border-bottom:0}
 /* Search affordance (Phase 2-unique). */
 .sn-search{display:inline-flex;align-items:center;gap:.4rem;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink,var(--sn-ink));text-decoration:none;padding:.4rem .65rem;border:1px solid var(--paper-rule,var(--sn-rule));min-height:36px;flex-shrink:0;border-bottom:1px solid var(--paper-rule,var(--sn-rule))}
 .sn-search:hover{border-color:var(--ochre,var(--sn-ochre));color:var(--ochre,var(--sn-ochre))}
