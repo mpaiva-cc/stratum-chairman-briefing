@@ -1871,4 +1871,20 @@ section h2 em{font-style:italic;color:var(--indigo)}
   .sf-foot { flex-direction: column; align-items: flex-start; gap: .35rem; }
 }
 
+/* ── HOMEPAGE / BRIEFING-style masthead tuning on mobile ─────────
+   The bare `.masthead-row` from the masthead section above (line ~145)
+   is flex with justify-content:space-between. On a phone it crams
+   "Compiled at T+xd · Palo Alto", "Vol. I · Issues 001-016", and the
+   masthead-nav link onto one wrap line. Stack them. Same for the
+   colophon row at the bottom of the page. */
+@media (max-width: 600px) {
+  .masthead-row { flex-direction: column; align-items: flex-start; gap: .5rem; padding-bottom: 1rem; }
+  .masthead-meta { flex-direction: column; gap: .35rem; }
+  .masthead-nav { align-self: flex-start; }
+  .colophon-row { flex-direction: column; align-items: flex-start; gap: 1.4rem; }
+  .colo-issue { text-align: left; }
+  /* Wordmark stays display-caps but a little smaller on small phones */
+  .wordmark { font-size: clamp(3.6rem, 18vw, 5rem); }
+}
+
 
