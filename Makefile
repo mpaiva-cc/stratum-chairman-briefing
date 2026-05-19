@@ -14,7 +14,9 @@ help:  ## Show this help
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
 serve:  ## Run the dev server with livereload (http://127.0.0.1:4000)
-	$(BUNDLE) exec jekyll serve --livereload
+	# --baseurl "" overrides the production baseurl so local dev URLs
+	# don't include the /stratum-chairman-briefing/ subpath
+	$(BUNDLE) exec jekyll serve --livereload --baseurl ""
 
 build:  ## One-shot build into _site/
 	$(BUNDLE) exec jekyll build

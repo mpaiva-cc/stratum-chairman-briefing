@@ -197,16 +197,20 @@ function stripPromotedFromPage(html, promotedHashes) {
 }
 
 function ensureStylesheetLink(html) {
+  // Already linked (Liquid-templated form) — bump version if older.
+  if (/href="\{\{ ?'\/assets\/styles\.css\?v=/i.test(html)) {
+    return html.replace(/href="\{\{ ?'\/assets\/styles\.css\?v=\d+' \| relative_url ?\}\}"/g, `href="{{ '/assets/styles.css?${CACHE_VER}' | relative_url }}"`);
+  }
+  // Already linked (raw absolute form, pre-baseurl-sweep) — upgrade.
   if (/href="\/assets\/styles\.css\?v=/i.test(html)) {
-    // Already linked — bump version if older.
-    return html.replace(/href="\/assets\/styles\.css\?v=\d+"/g, `href="/assets/styles.css?${CACHE_VER}"`);
+    return html.replace(/href="\/assets\/styles\.css\?v=\d+"/g, `href="{{ '/assets/styles.css?${CACHE_VER}' | relative_url }}"`);
   }
   // Also accept relative paths (legacy).
   if (/href="(?:\.\.\/)*assets\/styles\.css/i.test(html)) {
-    return html.replace(/href="(?:\.\.\/)*assets\/styles\.css(?:\?v=\d+)?"/g, `href="/assets/styles.css?${CACHE_VER}"`);
+    return html.replace(/href="(?:\.\.\/)*assets\/styles\.css(?:\?v=\d+)?"/g, `href="{{ '/assets/styles.css?${CACHE_VER}' | relative_url }}"`);
   }
   // Inject before the first <style> tag in <head>, or right after <head>.
-  const linkTag = `<link rel="stylesheet" href="/assets/styles.css?${CACHE_VER}">`;
+  const linkTag = `<link rel="stylesheet" href="{{ '/assets/styles.css?${CACHE_VER}' | relative_url }}">`;
   const styleIdx = html.search(/<style\b/i);
   const headOpenMatch = html.match(/<head\b[^>]*>/i);
   const headOpenEnd = headOpenMatch ? headOpenMatch.index + headOpenMatch[0].length : -1;
