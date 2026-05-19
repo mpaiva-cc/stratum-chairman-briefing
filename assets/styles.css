@@ -264,6 +264,14 @@ strong { font-weight: 600; color: var(--ink); }
 
 /* ───────────────────────────────────────────────────── SECTIONS ── */
 
+/* Bare-element selector — applies to every <section> on every page that
+   loads this stylesheet. Pre-Phase-2 only /index.html linked here so it
+   was effectively page-scoped. Now that all 126 pages link the sheet,
+   this rule leaks into dashboard layouts (e.g. /ops/ uses <section
+   class="panel"> as grid items). Pages that DON'T want this default
+   must override .their-section-class with their own width/padding —
+   bare `section` specificity is just (0,0,1) so a single-class rule
+   wins without !important. */
 section {
   width: var(--col);
   margin: 0 auto;
