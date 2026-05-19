@@ -384,6 +384,29 @@ strong { font-weight: 600; color: var(--ink); }
   width: var(--col);
 }
 .colo-tag a { color: var(--ochre-link); border-bottom: 1px solid var(--ochre-link); }
+
+/* ── MOBILE TUNING ───────────────────────────────────────────────
+   The Echo widget (Listen button) is position:fixed at bottom-left.
+   Page needs clearance so the button doesn't permanently cover the
+   last content row. The four-tier decision-class grid is unreadable
+   at 2x2 below ~540px — collapse to one column there.
+*/
+main#main { padding-bottom: 5rem; }
+
+@media (max-width: 700px) {
+  .t-hero { padding: 3.5rem 0 2rem; }
+  .t-headline { font-size: clamp(2.4rem, 9vw, 3.4rem); }
+  .t-dek { font-size: 1.08rem; }
+  .t-meta-row { gap: .7rem 1.4rem; font-size: 10.5px; }
+}
+@media (max-width: 540px) {
+  .class-grid { grid-template-columns: 1fr; }
+  .class-cell { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .class-cell:last-child { border-bottom: 0; }
+  .pricing-row { grid-template-columns: 1fr; }
+  .t-cta-row { flex-direction: column; align-items: stretch; }
+  .t-btn { justify-content: center; }
+}
 </style>
 </head>
 <body>
