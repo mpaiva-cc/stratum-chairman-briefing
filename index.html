@@ -84,7 +84,19 @@ permalink: /index.html
 .rn-text #rn-elapsed{font-family:var(--mono);font-style:normal;color:var(--ochre);font-weight:700;font-size:13px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
 .rn-cta{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ochre-link);font-weight:700;border-bottom:1px solid var(--ochre-link);white-space:nowrap}
 .rn-cta:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
-@media (max-width:720px){.rn-text{font-size:13px}.rn-cta{padding-top:.4rem}}
+/* Mobile: stack the "Note for stakeholders" banner.
+   At narrow widths the flex+wrap layout was crushing the body column
+   to ~92px wide and visually overlaying the CTA underline on top of
+   wrapping text. Stack everything vertically. */
+@media (max-width: 720px) {
+  .rn-text { font-size: 13px; }
+  .rn-cta { padding-top: .4rem; }
+  .rn-banner { padding: 1rem 1.1rem; }
+  .rn-inner { flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .rn-headline { flex-direction: column; gap: .5rem; }
+  .rn-tag { padding-top: 0; }
+  .rn-cta { white-space: normal; align-self: flex-start; }
+}
 
 /* ── HERO — latest briefing */
 .hero {
