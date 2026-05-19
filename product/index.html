@@ -385,7 +385,10 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .problem-inner {
-  width: var(--col-wide);
+  width: min(1280px, 88vw);  /* tighter inset than --col-wide (94vw) so the
+                                 headline and stat columns breathe inside the
+                                 dark band; matches the visual gutter pattern
+                                 of the cream sections above. */
   margin: 0 auto;
   position: relative;
 }
@@ -444,12 +447,16 @@ strong { font-weight: 600; color: var(--ink); }
 }
 
 .stat {
-  padding: 2.2rem 1.8rem 2rem;
+  /* extra left padding inside each cell so the first column's
+     numerals (70 / 18 / 11) don't sit flush against the section
+     gutter; matches the visual rhythm of the headline above. */
+  padding: 2.2rem 1.8rem 2rem 2rem;
   border-right: 1px solid rgba(244, 236, 218, .12);
   border-bottom: 1px solid rgba(244, 236, 218, .12);
   position: relative;
 }
-.stat:last-child { border-right: 0; }
+.stat:first-child { padding-left: 0; }
+.stat:last-child { border-right: 0; padding-right: 0; }
 
 .stat-label {
   font-family: var(--mono);
