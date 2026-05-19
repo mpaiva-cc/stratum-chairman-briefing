@@ -1,0 +1,479 @@
+---
+layout: legacy
+title: "Stratum — A door"
+description: "A small gate before the things behind. If you have a key, use it. If you don't, ask."
+permalink: /login/index.html
+sitemap: false
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+<meta name="robots" content="noindex,nofollow">
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ============================================================
+   Stratum · Login · a soft client-side gate.
+   The page is the door. The tagline is what's on the door.
+   ============================================================ */
+:root {
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-3-aaa:#3d4456;
+  --ink-mute-aa:#404755;
+  --ochre:#b8651f; --ochre-link:#7a3d0a; --ochre-soft:#e6c79b;
+  --moss:#4a5d3a; --plum:#6b3a4a;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; min-height:100vh; background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:18px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+body::before {
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(184,101,31,.06), transparent 42%),
+    radial-gradient(circle at 84% 78%, rgba(14,22,38,.04), transparent 46%);
+  mix-blend-mode: multiply;
+}
+body > * { position:relative; z-index:1; }
+
+/* Override the global a {} ochre-link underline for THIS page only —
+   we render very few links and want them quiet. */
+a { color:var(--ochre-link); text-decoration:none; border-bottom:1px solid var(--ochre-link); }
+a:hover { color:var(--ochre); border-bottom-color:var(--ochre); }
+
+main#main { padding-bottom: 5rem; }
+
+/* ── PAGE LAYOUT ─────────────────────────────────────────── */
+.gate {
+  min-height: calc(100vh - 50px);  /* leave the site-nav strip on top */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem;
+}
+.gate-card {
+  width: 100%;
+  max-width: 640px;
+  text-align: center;
+}
+
+/* Top mark */
+.gate-mark {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.3rem;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .15rem;
+}
+.gate-mark .dot { color: var(--ochre); }
+
+.gate-sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ochre-link);
+  margin-bottom: 3rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+}
+.gate-sub .pip {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ochre);
+  display: inline-block;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: .35; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gate-sub .pip { animation: none; }
+}
+
+/* The tagline — the curiosity hook */
+.gate-tagline {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2rem, 5.8vw, 3.8rem);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 0 1.6rem;
+  max-width: 18ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+.gate-tagline .above { color: var(--ochre); }
+.gate-tagline .record { color: var(--ink-3-aaa); }
+
+.gate-intro {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 42ch;
+  margin: 0 auto 2.5rem;
+  font-variation-settings: "opsz" 18;
+}
+.gate-intro strong { color: var(--ink); font-weight: 600; }
+
+/* The form */
+.gate-form {
+  display: flex;
+  gap: .5rem;
+  max-width: 420px;
+  margin: 0 auto;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: .35rem;
+  transition: border-color .2s;
+}
+.gate-form:focus-within { border-bottom-color: var(--ochre); }
+.gate-form input {
+  flex: 1;
+  font: inherit;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  color: var(--ink);
+  padding: .5rem .25rem;
+  letter-spacing: .04em;
+}
+.gate-form input::placeholder {
+  color: var(--ink-3-aaa);
+  font-style: italic;
+  letter-spacing: 0;
+}
+.gate-form button {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  padding: .5rem .85rem;
+  cursor: pointer;
+  transition: color .15s;
+}
+.gate-form button:hover,
+.gate-form button:focus-visible {
+  color: var(--ochre);
+  outline: 0;
+}
+.gate-form button .arr {
+  display: inline-block;
+  transition: transform .2s;
+  margin-left: .25rem;
+}
+.gate-form button:hover .arr { transform: translateX(3px); }
+
+.gate-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin: 1rem auto 0;
+  min-height: 1.4em;
+  color: var(--ink-3-aaa);
+  max-width: 420px;
+}
+.gate-status.error { color: var(--plum); }
+.gate-status.ok { color: var(--moss); }
+
+/* What's behind — curiosity teaser, no links */
+.gate-behind {
+  margin: 4rem auto 0;
+  max-width: 540px;
+  padding-top: 2rem;
+  border-top: 1px dashed var(--paper-rule);
+}
+.gate-behind-eyebrow {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: 1.2rem;
+}
+.gate-behind ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: .8rem 2rem;
+  text-align: left;
+}
+.gate-behind li {
+  font-family: var(--serif);
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+  padding-left: 1.2rem;
+  position: relative;
+}
+.gate-behind li::before {
+  content: "·";
+  position: absolute;
+  left: .35rem;
+  top: 0;
+  color: var(--ochre);
+  font-size: 1.6em;
+  line-height: 1;
+  font-weight: 700;
+}
+.gate-behind li strong { color: var(--ink); font-weight: 600; }
+@media (max-width: 600px) {
+  .gate-behind ul { grid-template-columns: 1fr; gap: .55rem; }
+}
+
+/* The live counter — small ambient signal */
+.gate-pulse {
+  margin: 3rem auto 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink-mute-aa);
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+}
+.gate-pulse .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--moss);
+  animation: pulse 2.2s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gate-pulse .dot { animation: none; }
+}
+.gate-pulse strong { color: var(--ink); font-feature-settings: "tnum"; font-weight: 700; }
+
+/* Help line at the bottom */
+.gate-help {
+  margin-top: 2.5rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-3-aaa);
+}
+.gate-help a {
+  color: var(--ochre-link);
+  border-bottom: 1px solid var(--ochre-link);
+}
+
+/* Print: ignore. */
+@media print { .gate, .gate-behind, .gate-pulse, .gate-help { display: none; } }
+</style>
+</head>
+<body>
+{% include site-nav.html %}
+
+<main id="main" tabindex="-1">
+<section class="gate" aria-label="Stratum login">
+  <div class="gate-card">
+
+    <p class="gate-mark">Stratum<span class="dot" aria-hidden="true">.</span></p>
+    <div class="gate-sub">
+      <span class="pip" aria-hidden="true"></span>
+      A door · <span id="gate-when">compiled at T+--:--:--</span>
+    </div>
+
+    <h1 class="gate-tagline">
+      The system of truth <span class="above">above</span> the<br>
+      <span class="record">system of record</span>.
+    </h1>
+
+    <p class="gate-intro">
+      You're at a small gate. Most of Stratum is public — sixteen briefings, three products, the engineering blog. <strong>Some of it isn't yet.</strong> If someone sent you a key, use it.
+    </p>
+
+    <form class="gate-form" id="gate-form" autocomplete="off" novalidate>
+      <label for="gate-key" class="visually-hidden" style="position:absolute;left:-9999px;">Access key</label>
+      <input
+        id="gate-key"
+        name="key"
+        type="password"
+        placeholder="The key you were given"
+        autocapitalize="off"
+        autocomplete="off"
+        spellcheck="false"
+        aria-describedby="gate-status">
+      <button type="submit" aria-label="Enter">Enter <span class="arr" aria-hidden="true">→</span></button>
+    </form>
+    <div class="gate-status" id="gate-status" role="status" aria-live="polite"></div>
+
+    <aside class="gate-behind">
+      <div class="gate-behind-eyebrow">§ What's behind</div>
+      <ul>
+        <li><strong>Tenure</strong> — the third product, in design-partner preview</li>
+        <li><strong>Eval set v1.2</strong> — ten new probes; not yet public</li>
+        <li><strong>The board memos</strong> — minutes 001 onward</li>
+        <li><strong>Customer drafts</strong> — design-partner notes pre-publish</li>
+        <li><strong>Investor packet</strong> — Series A materials</li>
+        <li><strong>The unfinished essays</strong> — the ones we haven't shipped</li>
+      </ul>
+    </aside>
+
+    <div class="gate-pulse" aria-label="Live elapsed time since the first commit">
+      <span class="dot" aria-hidden="true"></span>
+      Real-elapsed · <strong id="gate-tplus">T+--:--:--</strong>
+    </div>
+
+    <p class="gate-help">
+      Don't have a key? <a href="mailto:hello@stratum.ai?subject=Stratum%20access">hello@stratum.ai</a> · we read everything.
+    </p>
+
+  </div>
+</section>
+</main>
+
+<script>
+/* ──────────────────────────────────────────────────────────
+   Stratum login · client-side soft gate.
+
+   Honest note: this is a soft gate. Anyone who views the page
+   source can see the hash below and brute-force a short password.
+   Use it to deter casual visitors — not to protect anything that
+   would matter if a journalist saw it.
+
+   To change the password: take the SHA-256 of your new password,
+   put the hex string in STRATUM_KEY_HASH below, redeploy.
+   shell:  echo -n "your-password" | shasum -a 256
+
+   The default key is "stratum" — change it before you share the
+   link with anyone you care about.
+   ────────────────────────────────────────────────────────── */
+(function () {
+  'use strict';
+
+  const STRATUM_KEY_HASH = '616be06545e5dd7daec52338858b6674d29ee6234ff1d50120f060f79630543c';
+  const STORAGE_KEY = 'stratum.unlocked';
+  const STORAGE_EXPIRY_DAYS = 30;
+
+  const form    = document.getElementById('gate-form');
+  const input   = document.getElementById('gate-key');
+  const status  = document.getElementById('gate-status');
+  const tplus   = document.getElementById('gate-tplus');
+  const compiled = document.getElementById('gate-when');
+
+  /* ── live counter ─────────────────────────────────────── */
+  const T0 = new Date('2026-05-12T22:25:46-04:00');  /* repo first commit */
+  function fmt(deltaMs) {
+    const ms = Math.max(0, deltaMs);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000) / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    const ml = ms % 1000;
+    const time = String(h).padStart(2, '0') + ':' +
+                 String(m).padStart(2, '0') + ':' +
+                 String(s).padStart(2, '0') + '.' +
+                 String(ml).padStart(3, '0');
+    return (d > 0 ? 'T+' + d + 'd ' : 'T+') + time;
+  }
+  function tick() {
+    const t = fmt(Date.now() - T0.getTime());
+    if (tplus) tplus.textContent = t;
+    if (compiled) compiled.textContent = 'compiled at ' + t;
+  }
+  tick();
+  setInterval(tick, 87);  /* 11Hz · alive, not jittery */
+
+  /* ── auth helpers ─────────────────────────────────────── */
+  async function sha256Hex(str) {
+    const buf = new TextEncoder().encode(str);
+    const hash = await crypto.subtle.digest('SHA-256', buf);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  function setUnlocked() {
+    const expiry = Date.now() + STORAGE_EXPIRY_DAYS * 86400000;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ unlocked: true, expiry }));
+    } catch (e) {
+      /* localStorage disabled — fall back to sessionStorage */
+      try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (_) {}
+    }
+  }
+
+  function returnUrl() {
+    const params = new URLSearchParams(location.search);
+    const ret = params.get('return');
+    if (!ret) return '{{ "/" | relative_url }}';
+    /* Basic safety: only allow same-site paths. No protocol, no //host. */
+    if (ret.startsWith('/') && !ret.startsWith('//')) return ret;
+    return '{{ "/" | relative_url }}';
+  }
+
+  /* ── form handler ─────────────────────────────────────── */
+  form.addEventListener('submit', async function (ev) {
+    ev.preventDefault();
+    const key = (input.value || '').trim();
+    if (!key) {
+      status.textContent = 'No key entered.';
+      status.className = 'gate-status error';
+      input.focus();
+      return;
+    }
+    status.textContent = 'Checking…';
+    status.className = 'gate-status';
+    const hash = await sha256Hex(key);
+    if (hash === STRATUM_KEY_HASH) {
+      status.textContent = 'The door opens.';
+      status.className = 'gate-status ok';
+      setUnlocked();
+      /* small delay so the user sees the OK state before the redirect */
+      setTimeout(function () { location.href = returnUrl(); }, 500);
+    } else {
+      status.textContent = 'That key does not open this door.';
+      status.className = 'gate-status error';
+      input.select();
+    }
+  });
+
+  /* If already unlocked and a return URL is present, send through. */
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data && data.unlocked && data.expiry > Date.now()) {
+        const ret = new URLSearchParams(location.search).get('return');
+        if (ret && ret.startsWith('/') && !ret.startsWith('//')) {
+          location.href = ret;
+        }
+      }
+    }
+  } catch (_) {}
+})();
+</script>
+<script src="{{ '/assets/echo.js' | relative_url }}" defer></script>
+</body>
+</html>
