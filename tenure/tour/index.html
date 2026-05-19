@@ -1,0 +1,601 @@
+---
+layout: legacy
+title: "Stratum Tenure — The Tour"
+description: "A scripted preview of Stratum Tenure. One employee — Maria Chen — through six lifecycle moments handled by Threshold, Lattice, and Ember. The workflows you see here will run against your real worker data when Tenure goes live to design partners in Q3 2026. Today this is the storyboard."
+permalink: /tenure/tour/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | jsonify }},"url":"{{ page.url | absolute_url }}","datePublished":"2026-05-19T00:00:00Z"}</script>
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ============================================================
+   Stratum Tenure · The Tour
+   A scripted single-page walkthrough. Six scenes. One employee.
+   ============================================================ */
+:root {
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-deep:#ede4cf;
+  --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-3-aaa:#3d4456;
+  --ink-mute-aa:#404755;
+  --ochre:#b8651f; --ochre-link:#7a3d0a;
+  --moss:#4a5d3a; --plum:#6b3a4a;
+  --ok:#3d6b3a; --warn:#a76b1d; --info:#3a5d6b;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --col:min(1180px,92vw);
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:18px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+a { color:var(--ochre-link); text-decoration:none; border-bottom:1px solid var(--ochre-link); }
+a:hover { color:var(--ochre); border-bottom-color:var(--ochre); }
+em { font-style:italic; }
+strong { font-weight:600; color:var(--ink); }
+main#main { padding-bottom: 5rem; }
+
+/* PREVIEW BANNER */
+.preview-banner {
+  width: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  padding: .65rem 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  text-align: center;
+}
+.preview-banner .dot { display:inline-block; width:7px; height:7px; background:var(--ochre); border-radius:50%; margin-right:.7rem; vertical-align:middle; }
+.preview-banner strong { color:var(--paper); font-weight:600; letter-spacing:.16em; }
+.preview-banner em { font-style:normal; color:rgba(244,236,218,.7); margin-left:.7rem; font-weight:400; letter-spacing:.08em; }
+
+/* HERO */
+.tour-hero { width:var(--col); margin:0 auto; padding:4.5rem 0 3rem; border-bottom:1px solid var(--paper-rule); }
+.tour-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:1.2rem; display:flex; gap:.7rem; align-items:center; flex-wrap:wrap; }
+.tour-eyebrow .pip { width:8px; height:8px; background:var(--ochre); border-radius:50%; display:inline-block; }
+.tour-eyebrow .sep { color:var(--paper-rule-2); }
+.tour-h1 { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 120; font-size:clamp(2.8rem,6vw,4.8rem); line-height:.98; letter-spacing:-.025em; margin:0 0 1rem; max-width:22ch; }
+.tour-h1 .dot { color:var(--ochre); }
+.tour-h1 em { font-style:normal; color:var(--ochre); }
+.tour-dek { font-family:var(--serif); font-size:1.3rem; line-height:1.5; color:var(--ink-2); max-width:62ch; margin:0 0 2rem; font-variation-settings:"opsz" 24; }
+
+/* MARIA CARD - the cast */
+.cast {
+  display:grid; grid-template-columns:auto 1fr; gap:1.4rem;
+  padding:1.4rem 1.6rem; background:var(--paper-warm);
+  border:1px solid var(--paper-rule); border-left:4px solid var(--ink);
+  max-width: 620px;
+  margin-top: 1.5rem;
+}
+.cast-avatar {
+  width:64px; height:64px; border-radius:50%;
+  background: linear-gradient(135deg, var(--ochre) 0%, var(--ochre-link) 100%);
+  color:var(--paper); display:flex; align-items:center; justify-content:center;
+  font-family:var(--display); font-weight:600; font-size:1.7rem; letter-spacing:-.02em;
+}
+.cast-eyebrow { font-family:var(--mono); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:.35rem; }
+.cast-name { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 48; font-size:1.4rem; line-height:1.1; color:var(--ink); margin:0 0 .25rem; }
+.cast-meta { font-family:var(--mono); font-size:11.5px; color:var(--ink-3-aaa); line-height:1.45; }
+
+/* SCENE NAV STRIP */
+.scene-nav { width:var(--col); margin:2rem auto 0; padding:1rem 0; border-bottom:1px solid var(--paper-rule); display:flex; flex-wrap:wrap; gap:.5rem; }
+.scene-nav a { font-family:var(--mono); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; padding:.45rem .7rem; border:1px solid var(--paper-rule); border-radius:999px; color:var(--ink-2); text-decoration:none; transition:color .15s, border-color .15s; }
+.scene-nav a:hover, .scene-nav a:focus-visible { color:var(--ochre-link); border-color:var(--ochre); }
+
+/* SCENE */
+.scene { width:var(--col); margin:0 auto; padding:3.5rem 0 1rem; border-bottom:1px solid var(--paper-rule); }
+.scene:last-of-type { border-bottom:0; }
+.scene-head { display:flex; flex-wrap:wrap; gap:.6rem 1rem; align-items:center; margin-bottom:1.2rem; font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; }
+.scene-num { color:var(--ochre-link); font-weight:700; }
+.scene-when { color:var(--ink-3-aaa); }
+.scene-agent { padding:.25rem .6rem; border-radius:2px; font-weight:700; letter-spacing:.18em; }
+.scene-agent.threshold { background:rgba(14,22,38,.08); color:var(--ink); border:1px solid var(--ink-3-aaa); }
+.scene-agent.lattice { background:rgba(74,93,58,.1); color:var(--moss); border:1px solid var(--moss); }
+.scene-agent.ember { background:rgba(184,101,31,.08); color:var(--ochre-link); border:1px solid var(--ochre); }
+.scene-class { padding:.2rem .55rem; border:1px solid currentColor; border-radius:999px; font-size:10px; letter-spacing:.16em; }
+.scene-class.decide { color:var(--moss); }
+.scene-class.recommend { color:var(--ochre-link); }
+.scene-class.suggest { color:var(--ink-3-aaa); }
+.scene-class.readonly { color:var(--plum); }
+
+.scene-grid { display:grid; grid-template-columns:1fr 1.1fr; gap:2.6rem; align-items:start; }
+@media (max-width:880px) { .scene-grid { grid-template-columns:1fr; gap:1.6rem; } }
+
+.scene-h { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 72; font-size:clamp(1.7rem,3vw,2.4rem); line-height:1.1; letter-spacing:-.02em; margin:0 0 1rem; color:var(--ink); max-width:24ch; }
+.scene-h em { font-style:normal; color:var(--ochre); }
+.scene p { line-height:1.65; max-width:56ch; margin:0 0 .9rem; }
+.boundary { padding:.85rem 1.1rem; background:var(--paper-warm); border-left:3px solid var(--plum); font-family:var(--mono); font-size:11.5px; line-height:1.55; color:var(--ink-2); margin:1.2rem 0 0; }
+.boundary strong { color:var(--plum); letter-spacing:.06em; text-transform:uppercase; font-size:10.5px; display:block; margin-bottom:.35rem; }
+
+/* MOCKUPS — fake console panels */
+.mockup { background:var(--paper); border:1px solid var(--ink); border-radius:4px; font-family:var(--mono); overflow:hidden; box-shadow:0 6px 24px rgba(14,22,38,.08); }
+.mockup-bar { display:flex; align-items:center; gap:.7rem; padding:.6rem .9rem; background:var(--ink); color:var(--paper); font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; }
+.mockup-bar .dot-r { width:8px; height:8px; border-radius:50%; background:#a13418; }
+.mockup-bar .dot-y { width:8px; height:8px; border-radius:50%; background:var(--ochre); }
+.mockup-bar .dot-g { width:8px; height:8px; border-radius:50%; background:var(--moss); }
+.mockup-bar .crumb { margin-left:.5rem; opacity:.85; font-weight:400; letter-spacing:.1em; }
+.mockup-bar .agent-badge { margin-left:auto; padding:.18rem .55rem; border:1px solid rgba(244,236,218,.3); border-radius:2px; font-size:9.5px; }
+.mockup-body { padding:1rem 1.1rem 1.2rem; font-size:12px; line-height:1.55; color:var(--ink); }
+.mockup-section { padding:.7rem 0; border-bottom:1px dotted var(--paper-rule); }
+.mockup-section:last-child { border-bottom:0; }
+.mockup-section .label { font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-3-aaa); margin-bottom:.45rem; }
+.mockup-section .val { font-family:var(--display); font-weight:500; font-size:1.1rem; color:var(--ink); }
+.mockup-row { display:flex; justify-content:space-between; align-items:baseline; padding:.4rem 0; gap:.8rem; }
+.mockup-row .k { color:var(--ink-3-aaa); }
+.mockup-row .v { color:var(--ink); font-weight:500; }
+.tag { display:inline-block; font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:.1rem .5rem; border:1px solid currentColor; border-radius:999px; }
+.tag.ok { color:var(--ok); }
+.tag.warn { color:var(--warn); }
+.tag.info { color:var(--info); }
+.tag.pending { color:var(--ink-3-aaa); }
+.tag.blocked { color:var(--plum); }
+
+/* Timeline-style steps inside mockups */
+.steps { list-style:none; padding:0; margin:.4rem 0 0; font-size:11.5px; }
+.steps li { display:grid; grid-template-columns:1.6rem 1fr auto; gap:.6rem; align-items:start; padding:.45rem 0; border-bottom:1px dotted var(--paper-rule); }
+.steps li:last-child { border-bottom:0; }
+.steps .marker { font-weight:700; }
+.steps .marker.done { color:var(--moss); }
+.steps .marker.human { color:var(--ochre); }
+.steps .marker.blocked { color:var(--plum); }
+.steps .marker.future { color:var(--ink-3-aaa); }
+.steps .desc { line-height:1.4; color:var(--ink); }
+.steps .desc .who { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-3-aaa); display:block; margin-top:.15rem; }
+.steps .when { font-family:var(--mono); font-size:10px; color:var(--ink-3-aaa); letter-spacing:.06em; white-space:nowrap; }
+
+/* Form-style preview */
+.form-preview { background:#fbf6e7; border:1px solid var(--paper-rule); padding:.8rem 1rem; margin-top:.6rem; }
+.form-preview .form-eyebrow { font-family:var(--mono); font-size:9.5px; letter-spacing:.2em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:.5rem; }
+.form-preview .field { display:grid; grid-template-columns:1fr auto; gap:.5rem; padding:.35rem 0; border-bottom:1px dashed var(--paper-rule); font-size:11.5px; }
+.form-preview .field:last-of-type { border-bottom:0; }
+.form-preview .field .k { color:var(--ink-3-aaa); font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; }
+.form-preview .field .v { color:var(--ink); }
+.form-preview .sig { margin-top:.6rem; padding-top:.5rem; border-top:1px solid var(--paper-rule); font-family:var(--display); font-style:italic; font-size:14px; color:var(--ink); }
+
+/* AGENT-LOG simulated entry */
+.agent-log { padding:.8rem 1rem; background:rgba(14,22,38,.04); border-left:3px solid var(--ink); margin-top:.7rem; font-family:var(--mono); font-size:11px; line-height:1.55; }
+.agent-log .ts { color:var(--ochre-link); font-weight:700; }
+.agent-log .actor { color:var(--ink); font-weight:700; }
+.agent-log .action { color:var(--ink-2); }
+.agent-log p { margin:.2rem 0 0; max-width:none; }
+
+/* CLOSING */
+.tour-close { width:var(--col); margin:5rem auto 0; padding:3rem 1rem; background:var(--ink); color:var(--paper); border-radius:4px; text-align:center; }
+.tour-close h2 { font-family:var(--display); font-weight:500; font-size:clamp(1.8rem,3vw,2.5rem); margin:0 0 1rem; color:var(--paper); max-width:30ch; margin-left:auto; margin-right:auto; line-height:1.15; }
+.tour-close p { color:rgba(244,236,218,.85); max-width:50ch; margin:0 auto 1.6rem; }
+.tour-close .cta-row { display:flex; gap:.8rem; justify-content:center; flex-wrap:wrap; }
+.tour-close .cta { display:inline-block; padding:.85rem 1.4rem; background:var(--ochre); color:var(--paper); font-family:var(--mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase; text-decoration:none; border:1px solid var(--ochre); border-bottom:1px solid var(--ochre); }
+.tour-close .cta:hover { background:var(--ochre-link); border-color:var(--ochre-link); color:var(--paper); }
+.tour-close .cta.ghost { background:transparent; color:var(--paper); border:1px solid var(--paper); }
+.tour-close .cta.ghost:hover { background:rgba(244,236,218,.1); color:var(--paper); border-color:var(--paper); }
+
+.colo-tag { text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-mute-aa); margin:4rem auto 2rem; padding:1.4rem 0 0; border-top:1px dashed var(--paper-rule); width:var(--col); }
+.colo-tag a { color:var(--ochre-link); }
+
+@media (max-width: 540px) {
+  .scene-nav { gap:.35rem; }
+  .scene-nav a { font-size:9.5px; padding:.35rem .55rem; }
+  .cast { grid-template-columns:1fr; padding:1rem 1.1rem; }
+  .cast-avatar { width:48px; height:48px; font-size:1.3rem; }
+}
+</style>
+</head>
+<body>
+{% include site-nav.html %}
+
+<div class="preview-banner" role="status">
+  <span class="dot" aria-hidden="true"></span>
+  <strong>Preview</strong>
+  <em>Not yet generally available · Available to design partners 2026-Q3</em>
+</div>
+
+<main id="main" tabindex="-1">
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<section class="tour-hero">
+  <div class="tour-eyebrow">
+    <span class="pip" aria-hidden="true"></span>
+    Stratum / Tenure
+    <span class="sep">·</span>
+    The Tour
+    <span class="sep">·</span>
+    Six scenes · One employee
+  </div>
+  <h1 class="tour-h1">Meet Maria. <em>She joins on June 2.</em></h1>
+  <p class="tour-dek">
+    What follows is the storyboard for Stratum Tenure. Six lifecycle moments — pre-board, Day 0, the first week, an internal transfer at Day 90, a three-year anniversary, and a voluntary departure — each handled by one of three agents. Every action is bounded by an explicit decision class, and every human step is named. When Tenure goes live with your real worker data, this is the workflow that runs.
+  </p>
+  <div class="cast" aria-label="Meet the cast">
+    <div class="cast-avatar" aria-hidden="true">MC</div>
+    <div>
+      <div class="cast-eyebrow">The cast · synthetic employee</div>
+      <h2 class="cast-name">Maria Chen</h2>
+      <p class="cast-meta">
+        Senior Platform Engineer · Engineering · Palo Alto<br>
+        Hired 2026-05-12 · Starts 2026-06-02 · Manager: Priya Iyer<br>
+        Offer: $182,500 base · 12,500 RSUs · 4-year vest · 1-year cliff
+      </p>
+    </div>
+  </div>
+</section>
+
+<nav class="scene-nav" aria-label="Jump to scene">
+  <a href="#scene-1">01 · Pre-board</a>
+  <a href="#scene-2">02 · Day 0</a>
+  <a href="#scene-3">03 · Day 7</a>
+  <a href="#scene-4">04 · Day 90 · Transfer</a>
+  <a href="#scene-5">05 · 3-year anniversary</a>
+  <a href="#scene-6">06 · Voluntary departure</a>
+</nav>
+
+<!-- ─────────────────────────────────────────── SCENE 1 ── -->
+<section class="scene" id="scene-1">
+  <div class="scene-head">
+    <span class="scene-num">Scene 01 / 06</span>
+    <span class="scene-when">T −14 to T −1 · pre-board</span>
+    <span class="scene-agent threshold">Threshold</span>
+    <span class="scene-class decide">Decide</span>
+    <span class="scene-class recommend">Recommend</span>
+    <span class="scene-class readonly">Read-only</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Fourteen days before Day&nbsp;0, Threshold opens the runway.</h2>
+      <p>
+        Maria's offer is signed at 09:42 on May 12. Within thirty seconds, Threshold opens her record in the people graph, claims the joiner workflow, and starts the gates. The standard MacBook Pro is requested from Apple Business Manager. The background check is ordered through Checkr. The Section 1 of her I-9 is pre-populated from the offer-letter data and sent for her to sign. Priya — her manager — gets a brief: <em>here is what your new hire's first two weeks look like; here are the moments where you'll be needed.</em>
+      </p>
+      <p>
+        Threshold acts. It does not decide. Equipment standard tier is reversible (the agent can cancel the order until shipment). I-9 Section 2 — the part DHS forbids delegation on — sits in the Recommend column for Priya to handle in person on Day 0.
+      </p>
+      <div class="boundary">
+        <strong>Boundary</strong>
+        Threshold prepares the I-9. A human verifies the documents and signs Section 2. DHS guidance is explicit: the employer attestation cannot be made by an autonomous agent.
+      </div>
+    </div>
+    <div class="mockup" aria-label="Console — pre-board panel">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Joiners / Maria Chen</span>
+        <span class="agent-badge">Threshold</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Event · pre-board</div>
+          <div class="val">14 days · 6 hours · 18 minutes to Day 0</div>
+        </div>
+        <div class="mockup-section">
+          <div class="label">Gate status</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">Offer-letter PDF generated, sent, signed<span class="who">Threshold · auto · Suggest tier</span></span><span class="when">May 12 · 09:42</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Background check ordered (Checkr · standard package)<span class="who">Threshold · auto · Decide tier</span></span><span class="when">May 12 · 09:43</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Apple MBP M5 14" ordered · ships 5/27 to home<span class="who">Threshold · auto · Decide tier · standard SKU</span></span><span class="when">May 12 · 09:44</span></li>
+            <li><span class="marker done">✓</span><span class="desc">I-9 Section 1 pre-filled · sent to Maria<span class="who">Threshold · auto · Read-only on §2</span></span><span class="when">May 12 · 09:45</span></li>
+            <li><span class="marker human">●</span><span class="desc">Maria signs I-9 Section 1<span class="who">Human action required</span></span><span class="when">Sent · pending</span></li>
+            <li><span class="marker future">○</span><span class="desc">BGC clears (target T −2)<span class="who">Auto-gate · blocks IdP provisioning</span></span><span class="when">≈ May 31</span></li>
+            <li><span class="marker future">○</span><span class="desc">Day 0 onboarding sequence<span class="who">Threshold + Lattice handoff</span></span><span class="when">Jun 2</span></li>
+          </ul>
+        </div>
+        <div class="form-preview">
+          <div class="form-eyebrow">I-9 · Section 1 · prepared by Threshold</div>
+          <div class="field"><span class="k">Last name</span><span class="v">Chen</span></div>
+          <div class="field"><span class="k">First name</span><span class="v">Maria</span></div>
+          <div class="field"><span class="k">Address</span><span class="v">488 Page Mill Rd, Palo Alto, CA 94306</span></div>
+          <div class="field"><span class="k">Citizenship status</span><span class="v">A citizen of the United States</span></div>
+          <div class="field"><span class="k">Today's date</span><span class="v">2026-05-12</span></div>
+          <div class="sig">Maria Chen · awaiting employee signature</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SCENE 2 ── -->
+<section class="scene" id="scene-2">
+  <div class="scene-head">
+    <span class="scene-num">Scene 02 / 06</span>
+    <span class="scene-when">Day 0 · June 2, 2026 · 08:30 PT</span>
+    <span class="scene-agent threshold">Threshold</span>
+    <span class="scene-agent lattice">Lattice</span>
+    <span class="scene-class decide">Decide</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Day 0. The crossing.</h2>
+      <p>
+        At 08:30, the BGC has cleared. Threshold opens Maria's Okta account, grants her Slack and Notion seats with read-only permissions on Engineering channels, prepares her GitHub access scoped to the public-engineering repos only. Her badge is ready at the front desk; the receptionist gets a one-line note <em>("Maria Chen, Eng, Priya's hire, please collect ID for I-9 Section 2")</em>. Lattice picks up Maria's buddy assignment — paired with David Park (joined March 2026, same team, same career-level + 1) — and schedules the first three meetings.
+      </p>
+      <p>
+        Elevated privileges (admin scopes, billing access, production secrets) are not granted by Threshold. They're held in the Recommend column for Priya to approve role-by-role over Maria's first 30 days.
+      </p>
+      <div class="boundary">
+        <strong>Boundary</strong>
+        Standard-role IdP provisioning is autonomous (Decide). Admin / finance / PHI scopes always escalate (Recommend). Threshold never grants prod access on Day 0.
+      </div>
+    </div>
+    <div class="mockup" aria-label="Console — Day-0 panel">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Day 0 / Maria Chen</span>
+        <span class="agent-badge">Threshold + Lattice</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Today · Wed 2 June 2026</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">BGC cleared · Checkr report attached<span class="who">Threshold · 06:14</span></span><span class="when">2h 16m ago</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Okta account active · standard Eng template<span class="who">Threshold · 08:00</span></span><span class="when">30m ago</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Slack · joined #eng-platform, #all-hands<span class="who">Threshold · read-only on confidential channels</span></span><span class="when">08:02</span></li>
+            <li><span class="marker done">✓</span><span class="desc">GitHub · invited to org · public-eng scope only<span class="who">Threshold · admin scopes deferred</span></span><span class="when">08:05</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Notion seat · Engineering workspace<span class="who">Threshold · auto</span></span><span class="when">08:07</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Badge issued · ID pending Section 2 verify<span class="who">Front desk notified · Lattice</span></span><span class="when">08:10</span></li>
+            <li><span class="marker human">●</span><span class="desc">Priya verifies I-9 Section 2 with Maria<span class="who">In-person · 09:30 calendar block</span></span><span class="when">09:30 PT</span></li>
+          </ul>
+        </div>
+        <div class="mockup-section">
+          <div class="label">Lattice · social choreography</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">Buddy assigned: David Park · L4 · Platform<span class="who">Lattice · affinity score 0.82</span></span><span class="when">May 29</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Day-1 lunch with David booked<span class="who">Tablehouse · 12:30</span></span><span class="when">08:08</span></li>
+            <li><span class="marker done">✓</span><span class="desc">First 1:1 with Priya scheduled<span class="who">Today 14:00 · 45m</span></span><span class="when">08:08</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Team intro in #eng-platform drafted<span class="who">Lattice · awaiting Priya send</span></span><span class="when">08:09</span></li>
+          </ul>
+        </div>
+        <div class="agent-log">
+          <p><span class="ts">08:02:14</span> <span class="actor">Threshold</span> <span class="action">→ granted Slack scope=read · workspace=stratum · channels=[eng-platform, all-hands] · evidence=workflow.yaml#J-2026-0612</span></p>
+          <p><span class="ts">08:05:21</span> <span class="actor">Threshold</span> <span class="action">→ deferred GitHub.admin → Priya for explicit approval (decision class: Recommend)</span></p>
+          <p><span class="ts">08:08:03</span> <span class="actor">Lattice</span> <span class="action">→ buddy.assign(Maria, David) · score=0.82 · rationale: same team, +1 level, joined &lt;90d ago, opted-in</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SCENE 3 ── -->
+<section class="scene" id="scene-3">
+  <div class="scene-head">
+    <span class="scene-num">Scene 03 / 06</span>
+    <span class="scene-when">Day 7 · June 9, 2026</span>
+    <span class="scene-agent lattice">Lattice</span>
+    <span class="scene-class decide">Decide</span>
+    <span class="scene-class suggest">Suggest</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Day 7. The footing pulse.</h2>
+      <p>
+        A week in. Lattice runs a quiet check: paperwork audit (all forms returned), access audit (no privilege creep), buddy check-in confirmed (David and Maria had coffee twice, both rated the meetings 4/5), 30/60/90 plan drafted by Lattice from Priya's template and Maria's role brief — waiting for Priya's review before it goes to Maria. Lattice posts a one-line note to Priya: <em>everything's on track; here's the plan to review by Friday.</em>
+      </p>
+      <p>
+        No action required from anyone unless something's wrong. That's the design. Onboarding fizzles at week 3 in legacy tools because nobody owns the cadence. Lattice owns it.
+      </p>
+    </div>
+    <div class="mockup" aria-label="Console — Day-7 pulse">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Pulse · Maria Chen · Day 7</span>
+        <span class="agent-badge">Lattice</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Week-1 pulse · 2026-06-09</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">Paperwork audit · 8/8 forms returned · I-9 complete<span class="who">Lattice · auto</span></span><span class="when">All clear</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Access audit · no privilege creep · GitHub.admin still deferred<span class="who">Lattice + Threshold cross-check</span></span><span class="when">All clear</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Buddy check-in · 2 of 4 confirmed (target: 4)<span class="who">David Park · self-rated 4/5</span></span><span class="when">On track</span></li>
+            <li><span class="marker done">✓</span><span class="desc">First 1:1 with Priya done · 60 min · notes captured<span class="who">Stratum Notes · agent-summarized</span></span><span class="when">Jun 2</span></li>
+            <li><span class="marker human">●</span><span class="desc">30/60/90 plan · drafted, awaiting Priya review<span class="who">Lattice draft · Suggest tier</span></span><span class="when">Sent · pending</span></li>
+          </ul>
+        </div>
+        <div class="form-preview">
+          <div class="form-eyebrow">30/60/90 plan · draft by Lattice · awaits Priya</div>
+          <div class="field"><span class="k">Day 30 goal</span><span class="v">Land first PR · own one Platform service repo</span></div>
+          <div class="field"><span class="k">Day 60 goal</span><span class="v">Lead a design review · author RFC #1</span></div>
+          <div class="field"><span class="k">Day 90 goal</span><span class="v">Quarterly impact: ship one platform improvement</span></div>
+          <div class="field"><span class="k">Learning track</span><span class="v">Stratum eval-set methodology · Go runtime internals</span></div>
+          <div class="sig">— Lattice · drafted from role brief + Priya's prior 90-day plans</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SCENE 4 ── -->
+<section class="scene" id="scene-4">
+  <div class="scene-head">
+    <span class="scene-num">Scene 04 / 06</span>
+    <span class="scene-when">Day 90 · August 31, 2026 · Internal transfer</span>
+    <span class="scene-agent threshold">Threshold</span>
+    <span class="scene-agent lattice">Lattice</span>
+    <span class="scene-class decide">Decide</span>
+    <span class="scene-class recommend">Recommend</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Day 90. Maria moves teams.</h2>
+      <p>
+        Maria's been an obvious Infrastructure-team fit for weeks. Priya and the Infra lead, Aisha, agree the move. Maria says yes. In legacy HCM, this is a six-week paperwork exercise: requisition reapproved, comp-band re-evaluated, IdP scopes manually re-issued, emails forwarded. With Tenure, it's an event.
+      </p>
+      <p>
+        Threshold revokes Maria's Eng-team access on the day of the move, grants Infra access according to the standard Infra role template, swaps her manager edge from Priya to Aisha, archives her Eng-team Notion docs into her personal vault, and updates her payroll cost-center. Lattice schedules the team-intro choreography on the Infra side: new buddy (Sam Liu), new 1:1 cadence, new 30/60/90 starter draft. Comp doesn't change (lateral move, same band). The transfer happens in a single afternoon. The only human signs are Priya, Aisha, and Maria.
+      </p>
+      <div class="boundary">
+        <strong>Boundary</strong>
+        Internal moves that change pay band or org go to Recommend. Lateral moves at the same comp band are Decide. The decision rule is published; the audit log is permanent.
+      </div>
+    </div>
+    <div class="mockup" aria-label="Console — internal transfer">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Movers / Maria Chen → Infrastructure</span>
+        <span class="agent-badge">Threshold + Lattice</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Event · transfer · lateral</div>
+          <div class="mockup-row"><span class="k">From</span><span class="v">Engineering · Platform · L5</span></div>
+          <div class="mockup-row"><span class="k">To</span><span class="v">Engineering · Infrastructure · L5</span></div>
+          <div class="mockup-row"><span class="k">Effective</span><span class="v">2026-09-01</span></div>
+          <div class="mockup-row"><span class="k">Comp change</span><span class="v">None (lateral, same band) <span class="tag ok">Decide</span></span></div>
+          <div class="mockup-row"><span class="k">Reporting line</span><span class="v">Priya Iyer → Aisha Bhatt</span></div>
+        </div>
+        <div class="mockup-section">
+          <div class="label">Today · 2026-08-31 · 14:00–17:30</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">Eng-Platform access revoked · 7 systems<span class="who">Threshold · auto</span></span><span class="when">14:02</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Infra-role access granted · 9 systems · template applied<span class="who">Threshold · auto</span></span><span class="when">14:03</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Manager edge: Priya → Aisha · effective tomorrow<span class="who">Threshold · graph update propagated</span></span><span class="when">14:05</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Payroll cost-center updated · Workday + ADP<span class="who">Threshold · cross-system reconcile</span></span><span class="when">14:08</span></li>
+            <li><span class="marker done">✓</span><span class="desc">New buddy assigned: Sam Liu · L5 · Infra<span class="who">Lattice · affinity score 0.79</span></span><span class="when">14:11</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Notion: Eng docs archived to personal vault<span class="who">Threshold · GDPR-safe archival</span></span><span class="when">14:15</span></li>
+            <li><span class="marker human">●</span><span class="desc">Aisha countersigns the move<span class="who">DocuSign sent · expected within 24h</span></span><span class="when">Sent</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SCENE 5 ── -->
+<section class="scene" id="scene-5">
+  <div class="scene-head">
+    <span class="scene-num">Scene 05 / 06</span>
+    <span class="scene-when">3-year anniversary · June 2, 2029</span>
+    <span class="scene-agent ember">Ember</span>
+    <span class="scene-class suggest">Suggest</span>
+    <span class="scene-class decide">Decide</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Three years in. Ember remembers on a Tuesday.</h2>
+      <p>
+        Maria's three-year anniversary is June 2, 2029. Forty-eight hours before, Ember drafts a personalized acknowledgement and quietly puts it on Aisha's Monday morning checklist: <em>"Wednesday is Maria's 3-year mark. Here's a draft of what you might say — it references the RFC she authored last year and the on-call rotation she designed. Edit or send."</em> Aisha can send it, edit it, or skip it. Ember doesn't post anything publicly without a human's hand on the keyboard.
+      </p>
+      <p>
+        The work-anniversary acknowledgement itself — the kind that just notes the milestone with no manager involvement — is Decide. Ember writes those and ships them. The promotion-adjacent ones, the role-change-adjacent ones, the ones where voice matters more than speed: Suggest. A human signs.
+      </p>
+    </div>
+    <div class="mockup" aria-label="Ember — anniversary draft">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Moments / Maria Chen · 3yr</span>
+        <span class="agent-badge">Ember</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Moment · 3-year mark · 2029-06-02</div>
+          <div class="mockup-row"><span class="k">Tenure</span><span class="v">3 years · 0 days</span></div>
+          <div class="mockup-row"><span class="k">Current role</span><span class="v">Senior SRE · Infrastructure · L6</span></div>
+          <div class="mockup-row"><span class="k">Manager</span><span class="v">Aisha Bhatt</span></div>
+          <div class="mockup-row"><span class="k">Note class</span><span class="v">Suggest <span class="tag info">Human signs</span></span></div>
+        </div>
+        <div class="form-preview">
+          <div class="form-eyebrow">Ember · anniversary note draft · for Aisha to review</div>
+          <p style="margin:.3rem 0 .6rem; font-family:var(--serif); font-size:13.5px; line-height:1.55">Maria —</p>
+          <p style="margin:0 0 .6rem; font-family:var(--serif); font-size:13.5px; line-height:1.55">Three years. The RFC you wrote last fall ("Resilience over Redundancy") is still how the team thinks about Infra design. The on-call rotation you redesigned cut our 3am pages by 60% and gave the team something it didn't realize it needed: weekends back.</p>
+          <p style="margin:0 0 .6rem; font-family:var(--serif); font-size:13.5px; line-height:1.55">Thank you. Here's to year four.</p>
+          <p style="margin:0; font-family:var(--serif); font-size:13.5px;">— Aisha</p>
+          <div class="sig">Edit · Send · Skip</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── SCENE 6 ── -->
+<section class="scene" id="scene-6">
+  <div class="scene-head">
+    <span class="scene-num">Scene 06 / 06</span>
+    <span class="scene-when">5 years in · departure</span>
+    <span class="scene-agent threshold">Threshold</span>
+    <span class="scene-class recommend">Recommend</span>
+    <span class="scene-class readonly">Read-only</span>
+  </div>
+  <div class="scene-grid">
+    <div>
+      <h2 class="scene-h">Five years in, Maria takes a Director role elsewhere.</h2>
+      <p>
+        Maria gives two weeks' notice. Threshold doesn't act. Threshold <em>prepares</em>. It composes the exit packet — final paycheck schedule, COBRA letter, equity-vest-schedule snapshot, last-day calendar removal — and surfaces the proposed timing to Aisha. Threshold checks the legal-status field: is HR aware? Yes (Maria told them yesterday). Is there a counter? No. Is there an active investigation? No. The gate clears.
+      </p>
+      <p>
+        Then Aisha approves the timing. <em>Then</em> Threshold acts: schedules the IdP revocation for 17:00 on Maria's last day, the device reclaim for the next morning, the Slack handle deactivation for two weeks after. Asset reclaim is reversible in theory; timing is not. The agent does not press send on a termination workflow until a human has named the date.
+      </p>
+      <div class="boundary">
+        <strong>Boundary</strong>
+        Departure timing is Recommend. The action is reversible, the timing is not — early reclaim before legal sign-off is a wrongful-termination amplifier. The agent prepares; a human approves the moment.
+      </div>
+    </div>
+    <div class="mockup" aria-label="Threshold — exit packet preparation">
+      <div class="mockup-bar">
+        <span class="dot-r" aria-hidden="true"></span><span class="dot-y" aria-hidden="true"></span><span class="dot-g" aria-hidden="true"></span>
+        <span class="crumb">Stratum / Tenure / Leavers / Maria Chen</span>
+        <span class="agent-badge">Threshold</span>
+      </div>
+      <div class="mockup-body">
+        <div class="mockup-section">
+          <div class="label">Event · voluntary departure · prepared, not executed</div>
+          <div class="mockup-row"><span class="k">Type</span><span class="v">Voluntary · Director role at peer company</span></div>
+          <div class="mockup-row"><span class="k">Notice given</span><span class="v">2031-04-14 · 14 days</span></div>
+          <div class="mockup-row"><span class="k">Last day</span><span class="v">2031-04-28 (proposed)</span></div>
+          <div class="mockup-row"><span class="k">Counter-offer</span><span class="v">Declined · noted by Aisha</span></div>
+          <div class="mockup-row"><span class="k">Investigation flag</span><span class="v">None · legal cleared</span></div>
+        </div>
+        <div class="mockup-section">
+          <div class="label">Exit packet · drafted</div>
+          <ul class="steps">
+            <li><span class="marker done">✓</span><span class="desc">Final paycheck schedule · Workday Pay<span class="who">Threshold · per CA Labor Code §201</span></span><span class="when">Drafted</span></li>
+            <li><span class="marker done">✓</span><span class="desc">COBRA letter · 60-day window<span class="who">Threshold · auto · standard packet</span></span><span class="when">Drafted</span></li>
+            <li><span class="marker done">✓</span><span class="desc">RSU vest snapshot · 21,500 vested · 18,250 unvested<span class="who">Threshold · Carta integration</span></span><span class="when">Drafted</span></li>
+            <li><span class="marker done">✓</span><span class="desc">Calendar removal scheduled · last day 17:00<span class="who">Threshold · queued, awaits Aisha</span></span><span class="when">Queued</span></li>
+            <li><span class="marker human">●</span><span class="desc">Aisha approves the departure timing<span class="who">DocuSign sent · human signs</span></span><span class="when">Pending</span></li>
+            <li><span class="marker blocked">⊘</span><span class="desc">IdP revocation · device reclaim · NOT yet armed<span class="who">Threshold · gated on Aisha approval</span></span><span class="when">Held</span></li>
+          </ul>
+        </div>
+        <div class="agent-log">
+          <p><span class="ts">2031-04-14 · 15:02</span> <span class="actor">Threshold</span> <span class="action">→ prepared exit packet · all artifacts staged · zero side effects yet</span></p>
+          <p><span class="ts">15:02</span> <span class="actor">Threshold</span> <span class="action">→ blocked downstream actions pending Recommend approval (Aisha Bhatt)</span></p>
+          <p><span class="ts">15:03</span> <span class="actor">Threshold</span> <span class="action">→ rationale: action reversible, timing irreversible · legal-status gate clear · no counter-offer · no investigation</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<aside class="tour-close">
+  <h2>When Tenure goes live with your data, this is the workflow that runs.</h2>
+  <p>Mercator, Halcyon, and Northwind are the launch design partners. Vector and Cadence are opening the conversations this week. The first customer demo with real data is twelve weeks out.</p>
+  <div class="cta-row">
+    <a class="cta" href="mailto:hello@stratum.ai?subject=Tenure%20design%20partner">Become a design partner</a>
+    <a class="cta ghost" href="{{ '/tenure/' | relative_url }}">Back to Tenure</a>
+    <a class="cta ghost" href="{{ '/briefings/016.html' | relative_url }}">Read the briefing</a>
+  </div>
+</aside>
+
+<footer class="colo-tag">
+  Stratum Tenure · The Tour · 2026-05-19 ·
+  <a href="{{ '/intel/eglin/opportunities/onboarding-employee-events.html' | relative_url }}">Eglin's market evidence</a>
+</footer>
+
+</main>
+<script src="{{ '/assets/echo.js' | relative_url }}" defer></script>
+</body>
+</html>
