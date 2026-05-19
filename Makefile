@@ -1,5 +1,11 @@
 # Stratum site — common dev commands.
 # Run `make` (no args) to see the list.
+#
+# `rbenv exec` honors .ruby-version (4.0.1) instead of falling through to
+# the system Ruby 2.6, which can't load the bundler version pinned in
+# Gemfile.lock.
+
+BUNDLE := rbenv exec bundle
 
 .PHONY: help serve build clean install audit consolidate inject-og
 
@@ -8,17 +14,17 @@ help:  ## Show this help
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
 serve:  ## Run the dev server with livereload (http://127.0.0.1:4000)
-	bundle exec jekyll serve --livereload
+	$(BUNDLE) exec jekyll serve --livereload
 
 build:  ## One-shot build into _site/
-	bundle exec jekyll build
+	$(BUNDLE) exec jekyll build
 
 clean:  ## Remove _site/ and Jekyll caches
 	rm -rf _site .jekyll-cache .jekyll-metadata
 
 install:  ## Install Ruby gems into vendor/bundle (first-time setup)
-	bundle config set --local path 'vendor/bundle'
-	bundle install
+	$(BUNDLE) config set --local path 'vendor/bundle'
+	$(BUNDLE) install
 
 audit:  ## Report duplicated inline CSS across all pages
 	node scripts/css-extract.js
