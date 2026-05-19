@@ -1,0 +1,183 @@
+---
+layout: legacy
+title: "Stratum — Onboarding, the Threshold view"
+description: "Onboarding is one moment in a longer story. This page is the Day-0 to Day-30 surface of Stratum Tenure — what Threshold, the irreversible-writes agent, does between the offer accept and the first 30 days. The full product is at /tenure/."
+permalink: /onboarding/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | jsonify }},"url":"{{ site.url }}{{ page.url }}","datePublished":"2026-05-19T00:00:00Z"}</script>
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ page.title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/styles.css?v=5">
+<style>
+:root {
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-3-aaa:#3d4456; --ink-mute-aa:#404755;
+  --ochre:#b8651f; --ochre-link:#7a3d0a;
+  --moss:#4a5d3a; --plum:#6b3a4a;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --col:min(1180px,92vw);
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:18px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+a { color:var(--ochre-link); text-decoration:none; border-bottom:1px solid var(--ochre-link); }
+a:hover { color:var(--ochre); border-bottom-color:var(--ochre); }
+em { font-style:italic; }
+strong { font-weight:600; color:var(--ink); }
+
+.ob-hero { width:var(--col); margin:0 auto; padding:4.5rem 0 2.5rem; }
+.ob-eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.26em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:1.4rem; display:flex; gap:.7rem; align-items:center; }
+.ob-eyebrow .pip { width:8px; height:8px; background:var(--ochre); border-radius:50%; display:inline-block; }
+.ob-eyebrow .sep { color:var(--paper-rule-2); }
+.ob-h1 { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 120,"SOFT" 0; font-size:clamp(2.6rem,6vw,4.6rem); line-height:1; letter-spacing:-.035em; margin:0 0 1.2rem; max-width:18ch; }
+.ob-h1 em { font-style:italic; color:var(--ochre); }
+.ob-h1 .dot { color:var(--ochre); }
+.ob-dek { font-family:var(--serif); font-style:italic; font-size:1.3rem; line-height:1.45; color:var(--ink-2); max-width:62ch; margin:0 0 2rem; font-variation-settings:"opsz" 24; }
+.ob-callout { display:flex; gap:1rem; padding:1.1rem 1.3rem; border-left:3px solid var(--ochre); background:var(--paper-warm); max-width:64ch; font-family:var(--mono); font-size:11.5px; letter-spacing:.04em; color:var(--ink-2); }
+.ob-callout strong { color:var(--ink); letter-spacing:.14em; text-transform:uppercase; font-size:10.5px; display:block; margin-bottom:.4rem; }
+
+.ob-body { width:var(--col); margin:3rem auto 0; padding:2.5rem 0; border-top:2px solid var(--ink); }
+.ob-grid { display:grid; grid-template-columns:1.3fr 1fr; gap:3rem; align-items:start; }
+.ob-body h2 { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 60; font-size:clamp(1.7rem,2.8vw,2.3rem); line-height:1.1; letter-spacing:-.018em; margin:0 0 1rem; }
+.ob-body p { line-height:1.65; color:var(--ink); margin:0 0 1.1rem; max-width:56ch; }
+.threshold-card { padding:1.6rem 1.65rem 1.7rem; background:var(--paper-warm); border:1px solid var(--paper-rule); border-top:4px solid var(--ink); }
+.threshold-card .agent-name { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 60; font-size:1.6rem; margin:0 0 .25rem; }
+.threshold-card .agent-tag { font-family:var(--mono); font-size:10.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:1.1rem; }
+.threshold-card ul { list-style:none; padding:0; margin:0; font-family:var(--mono); font-size:11px; color:var(--ink-3-aaa); }
+.threshold-card li { padding:.5rem 0; border-bottom:1px dotted var(--paper-rule); }
+.threshold-card li:last-child { border-bottom:0; }
+@media (max-width:860px) { .ob-grid { grid-template-columns:1fr; } }
+
+.ob-stages { width:var(--col); margin:3rem auto 0; padding:2.5rem 0; border-top:1px solid var(--paper-rule); }
+.ob-stages h2 { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 60; font-size:1.8rem; margin:0 0 .6rem; }
+.ob-stages > p { font-family:var(--serif); font-style:italic; color:var(--ink-2); max-width:60ch; margin:0 0 2rem; }
+.stages-row { display:grid; grid-template-columns:repeat(6,1fr); gap:0; border:1px solid var(--paper-rule); background:var(--paper); }
+.stage { padding:1.1rem .9rem 1.2rem; border-right:1px solid var(--paper-rule); }
+.stage:last-child { border-right:0; }
+.stage .day { font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ochre-link); margin-bottom:.5rem; }
+.stage .name { font-family:var(--display); font-weight:500; font-variation-settings:"opsz" 36; font-size:1.05rem; line-height:1.15; color:var(--ink); margin-bottom:.45rem; }
+.stage .what { font-family:var(--mono); font-size:10.5px; color:var(--ink-3-aaa); line-height:1.5; }
+@media (max-width:1000px) { .stages-row { grid-template-columns:1fr 1fr 1fr; } .stage:nth-child(3n) { border-right:0; } .stage:nth-child(-n+3) { border-bottom:1px solid var(--paper-rule); } }
+@media (max-width:600px) { .stages-row { grid-template-columns:1fr 1fr; } .stage:nth-child(2n) { border-right:0; } .stage:not(:nth-last-child(-n+2)) { border-bottom:1px solid var(--paper-rule); } }
+
+.colo-tag { text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-mute-aa); margin:5rem auto 2rem; padding:1.4rem 0 0; border-top:1px dashed var(--paper-rule); width:var(--col); }
+.colo-tag a { color:var(--ochre-link); }
+</style>
+</head>
+<body>
+{% include site-nav.html %}
+
+<main id="main" tabindex="-1">
+
+<section class="ob-hero">
+  <div class="ob-eyebrow">
+    <span class="pip" aria-hidden="true"></span>
+    Stratum / Onboarding
+    <span class="sep">·</span>
+    The Threshold view
+    <span class="sep">·</span>
+    Day 0 → Day 30
+  </div>
+  <h1 class="ob-h1">The first <em>thirty days</em>, handled<span class="dot">.</span></h1>
+  <p class="ob-dek">
+    Onboarding is one moment in a longer story. This page is the Day-0 view — the surface of Stratum Tenure where Threshold, the irreversible-writes agent, runs from offer accept through Day 30.
+  </p>
+  <div class="ob-callout">
+    <span>
+      <strong>Why this page exists</strong>
+      The HCM category calls this <em>onboarding</em>. We call the whole product <a href="/tenure/">Tenure</a> — onboarding, transfers, promotions, leaves, anniversaries, exits. This page covers the joiner slice. The agent, the boundary, and the failure budget below apply to all of it.
+    </span>
+  </div>
+</section>
+
+<section class="ob-body">
+  <div class="ob-grid">
+    <div>
+      <h2>What Threshold actually does.</h2>
+      <p>Threshold owns the irreversible writes between offer-accept and Day-30. It reads from your system of record (Workday, BambooHR, ADP, Rippling) and orchestrates the downstream surfaces — IdP, equipment, e-signature, background check, payroll, badge.</p>
+      <p>It is allowed to <strong>act</strong> when the worst-case outcome is reversible within 24 hours. It is allowed to <strong>recommend</strong> when a human can approve with one click. It is allowed to <strong>read</strong> from regulated forms (I-9, E-Verify, EEO-1 self-ID) and surface what it sees — but it cannot submit them. The boundary is written down. <a href="/agents/governance.html">Read the charter</a>.</p>
+      <p>If we had to make this product as one sentence: <em>the agent gets the laptop on the desk, the Slack on the laptop, the buddy in the calendar, and the manager unblocked — without making any decision the regulators care about.</em></p>
+    </div>
+    <aside class="threshold-card">
+      <div class="agent-name">Threshold</div>
+      <div class="agent-tag">The line you cross</div>
+      <ul>
+        <li>Equipment provisioning</li>
+        <li>IdP account creation</li>
+        <li>Badge issuance</li>
+        <li>Slack / Notion / Github seat-grant</li>
+        <li>Offer-letter PDF</li>
+        <li>I-9 Section 1 assist (read-only Section 2)</li>
+        <li>E-Verify case prep</li>
+        <li>Payroll record draft</li>
+        <li>First-week calendar choreography</li>
+        <li>Background-check coordination</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="ob-stages">
+  <h2>Day-0 to Day-30, in six gates.</h2>
+  <p>The customer-engineering playbook Cadence wrote. Each gate has a predicate; Threshold cannot advance until the previous one closes.</p>
+  <div class="stages-row">
+    <div class="stage">
+      <div class="day">T −14 → T −1</div>
+      <div class="name">Pre-board</div>
+      <div class="what">Offer accept · BGC ordered · I-9 §1 invite · device order · welcome packet.</div>
+    </div>
+    <div class="stage">
+      <div class="day">Day 0</div>
+      <div class="name">Crossing</div>
+      <div class="what">IdP active at 09:00 local · badge ready · buddy notified · manager calendar set.</div>
+    </div>
+    <div class="stage">
+      <div class="day">Day 1</div>
+      <div class="name">Arrival</div>
+      <div class="what">Welcome flow · payroll fields verified · benefits enrollment open · first 1:1 booked.</div>
+    </div>
+    <div class="stage">
+      <div class="day">Day 7</div>
+      <div class="name">Footing</div>
+      <div class="what">First-week pulse · paperwork audit · access creep check · buddy check-in.</div>
+    </div>
+    <div class="stage">
+      <div class="day">Day 14</div>
+      <div class="name">Cadence</div>
+      <div class="what">30/60/90 draft delivered · manager review · learning track confirmed.</div>
+    </div>
+    <div class="stage">
+      <div class="day">Day 30</div>
+      <div class="name">Handoff</div>
+      <div class="what">Threshold hands off to Lattice. Onboarding closes. Tenure begins.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="colo-tag">
+  Threshold is one of three agents in <a href="/tenure/">Stratum Tenure</a>. ·
+  Announced in <a href="/briefings/016.html">Chairman's Briefing No. 016</a>.
+</footer>
+
+</main>
+</body>
+</html>

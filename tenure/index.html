@@ -1,0 +1,573 @@
+---
+layout: legacy
+title: "Stratum Tenure — Every employee event, handled as a decision"
+description: "Stratum's third product. The agentic operating layer for joiners, movers, leavers, and the moments in between. Priced per employee, not per event. Powered by three new agents — Threshold, Lattice, Ember — and ratified by the Compact on 2026-05-19."
+permalink: /tenure/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | jsonify }},"url":"{{ site.url }}{{ page.url }}","datePublished":"2026-05-19T00:00:00Z"}</script>
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{{ page.title }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/styles.css?v=5">
+<style>
+/* ============================================================
+   Stratum · Tenure — product landing
+   The third product. Ratified 2026-05-19 by Helm/Forge/Compass + Cadence.
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-mute:     #6c7180;
+  --ink-3-aaa:    #3d4456;
+  --ink-mute-aa:  #404755;
+  --ochre:        #b8651f;
+  --ochre-link:   #7a3d0a;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --plum:         #6b3a4a;
+  --display:      "Fraunces","Newsreader",Georgia,serif;
+  --serif:        "Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:         "JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --col:          min(1180px, 92vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper); color: var(--ink);
+  font-family: var(--serif); font-size: 18px; line-height: 1.65;
+  font-feature-settings: "kern","liga","onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184,101,31,.05), transparent 40%),
+    radial-gradient(circle at 88% 84%, rgba(14,22,38,.04), transparent 45%);
+  mix-blend-mode: multiply;
+}
+body > * { position: relative; z-index: 1; }
+
+a { color: var(--ochre-link); text-decoration: none; border-bottom: 1px solid var(--ochre-link); transition: border-color .2s, color .2s; }
+a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+em { font-style: italic; }
+strong { font-weight: 600; color: var(--ink); }
+
+/* ── HERO ── */
+.t-hero { width: var(--col); margin: 0 auto; padding: 5rem 0 3rem; }
+.t-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ochre-link); margin-bottom: 1.4rem;
+  display: flex; align-items: center; gap: .8rem;
+}
+.t-eyebrow .pip { width: 8px; height: 8px; background: var(--ochre); border-radius: 50%; display: inline-block; }
+.t-eyebrow .sep { color: var(--paper-rule-2); }
+.t-headline {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 144,"SOFT" 0;
+  font-size: clamp(3rem, 7vw, 5.8rem);
+  line-height: .98; letter-spacing: -.038em;
+  margin: 0 0 1.4rem; color: var(--ink);
+  max-width: 18ch;
+}
+.t-headline .word-dot { color: var(--ochre); }
+.t-headline em { font-style: italic; font-variation-settings: "opsz" 96; }
+.t-dek {
+  font-family: var(--serif); font-style: italic;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.45; color: var(--ink-2);
+  max-width: 62ch; margin: 0 0 2.2rem;
+  font-variation-settings: "opsz" 28;
+}
+.t-cta-row { display: flex; flex-wrap: wrap; gap: .9rem; align-items: center; }
+.t-btn {
+  display: inline-flex; align-items: center; gap: .55rem;
+  font-family: var(--mono); font-size: 12px;
+  letter-spacing: .18em; text-transform: uppercase;
+  padding: .9rem 1.3rem;
+  background: var(--ink); color: var(--paper);
+  border: 1px solid var(--ink); border-bottom: 1px solid var(--ink);
+  transition: background .15s;
+}
+.t-btn:hover { background: var(--ochre-link); border-color: var(--ochre-link); color: var(--paper); }
+.t-btn.ghost { background: transparent; color: var(--ink); }
+.t-btn.ghost:hover { color: var(--ochre-link); border-color: var(--ochre-link); background: transparent; }
+.t-meta-row {
+  margin-top: 3rem; padding-top: 1.1rem;
+  border-top: 1px solid var(--paper-rule);
+  display: flex; flex-wrap: wrap; gap: 2rem 2.4rem;
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-3-aaa);
+}
+.t-meta-row strong { color: var(--ink); font-weight: 700; }
+
+/* ── WEDGE ── */
+.t-wedge {
+  width: var(--col); margin: 4rem auto 0;
+  padding: 3rem 0; border-top: 2px solid var(--ink);
+}
+.t-wedge h2 {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  line-height: 1.08; letter-spacing: -.022em;
+  margin: 0 0 1.4rem; max-width: 22ch;
+}
+.t-wedge h2 em { font-style: italic; color: var(--ochre); }
+.t-wedge-grid {
+  display: grid; grid-template-columns: 1.2fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.t-wedge-grid p {
+  font-size: 1.08rem; line-height: 1.65; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 56ch;
+}
+.t-pull {
+  padding: 1.4rem 1.6rem;
+  border-left: 3px solid var(--ochre);
+  background: var(--paper-warm);
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.32rem; line-height: 1.35;
+  letter-spacing: -.01em; font-style: italic;
+  color: var(--ink); max-width: 50ch;
+}
+.t-pull .attrib {
+  display: block; margin-top: .8rem;
+  font-family: var(--mono); font-style: normal;
+  font-size: 10.5px; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--ochre-link);
+}
+@media (max-width:860px) {
+  .t-wedge-grid { grid-template-columns: 1fr; }
+}
+
+/* ── AGENT ROSTER ── */
+.t-roster {
+  width: var(--col); margin: 4rem auto 0;
+  padding: 3rem 0;
+  border-top: 1px solid var(--paper-rule);
+}
+.t-section-eyebrow {
+  font-family: var(--mono); font-size: 11px;
+  letter-spacing: .24em; text-transform: uppercase;
+  color: var(--ochre-link); margin-bottom: .8rem;
+}
+.t-section-h {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: clamp(1.7rem, 2.8vw, 2.3rem);
+  line-height: 1.1; letter-spacing: -.018em;
+  margin: 0 0 .7rem;
+}
+.t-section-dek {
+  font-family: var(--serif); font-style: italic;
+  font-variation-settings: "opsz" 18;
+  font-size: 1.08rem; color: var(--ink-2);
+  max-width: 56ch; margin: 0 0 2.6rem;
+}
+.agent-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+.agent-card {
+  padding: 1.6rem 1.55rem 1.7rem;
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 4px solid var(--ink);
+  display: flex; flex-direction: column;
+}
+.agent-card.lattice  { border-top-color: var(--moss); }
+.agent-card.ember    { border-top-color: var(--ochre); }
+.agent-name {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem; line-height: 1;
+  letter-spacing: -.018em; color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.agent-tag {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre-link); margin-bottom: 1rem;
+}
+.agent-blurb {
+  font-family: var(--serif); font-size: .98rem;
+  line-height: 1.5; color: var(--ink);
+  margin: 0 0 1.2rem;
+}
+.agent-roles {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .04em; color: var(--ink-3-aaa);
+  list-style: none; padding: 0; margin: 0;
+  border-top: 1px dashed var(--paper-rule);
+  padding-top: 1rem;
+}
+.agent-roles li { padding: .35rem 0; border-bottom: 1px dotted var(--paper-rule); }
+.agent-roles li:last-child { border-bottom: 0; }
+.agent-class {
+  font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: .15rem .5rem; border: 1px solid currentColor;
+  border-radius: 999px; margin-left: .35rem;
+  vertical-align: middle;
+}
+.agent-class.decide      { color: var(--moss); border-color: var(--moss); }
+.agent-class.recommend   { color: var(--ochre-link); border-color: var(--ochre-link); }
+.agent-class.suggest     { color: var(--ink-3-aaa); border-color: var(--ink-3-aaa); }
+.agent-class.readonly    { color: var(--plum); border-color: var(--plum); }
+@media (max-width:900px) {
+  .agent-grid { grid-template-columns: 1fr; }
+}
+
+/* ── DECISION CLASS ── */
+.t-class {
+  width: var(--col); margin: 4rem auto 0;
+  padding: 3rem 0; border-top: 1px solid var(--paper-rule);
+}
+.class-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; border: 1px solid var(--paper-rule);
+}
+.class-cell {
+  padding: 1.4rem 1.4rem 1.6rem;
+  border-right: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.class-cell:last-child { border-right: 0; }
+.class-cell h4 {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .2em; text-transform: uppercase;
+  margin: 0 0 .6rem; color: var(--ochre-link);
+}
+.class-cell .verb {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.7rem; line-height: 1;
+  letter-spacing: -.018em; color: var(--ink);
+  margin-bottom: .8rem;
+}
+.class-cell p {
+  font-family: var(--serif); font-size: .96rem;
+  line-height: 1.5; color: var(--ink-2);
+  margin: 0;
+}
+@media (max-width:900px) {
+  .class-grid { grid-template-columns: 1fr 1fr; }
+  .class-cell:nth-child(2n) { border-right: 0; }
+  .class-cell:nth-child(-n+2) { border-bottom: 1px solid var(--paper-rule); }
+}
+
+/* ── CUSTOMER SIGNAL ── */
+.t-signal {
+  width: var(--col); margin: 4rem auto 0;
+  padding: 3rem 0; border-top: 1px solid var(--paper-rule);
+}
+.signal-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+}
+.signal-card {
+  padding: 1.4rem 1.5rem 1.5rem;
+  border: 1px solid var(--paper-rule);
+  border-top: 3px solid var(--ochre);
+  background: var(--paper);
+}
+.signal-card .customer {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .22em; text-transform: uppercase;
+  color: var(--ochre-link); margin-bottom: 1rem;
+}
+.signal-card blockquote {
+  font-family: var(--display); font-weight: 400;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.18rem; line-height: 1.35;
+  font-style: italic; color: var(--ink);
+  margin: 0 0 1.1rem; padding: 0;
+  border-left: 0;
+}
+.signal-card .attrib {
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .12em; color: var(--ink-3-aaa);
+  padding-top: .8rem; border-top: 1px dashed var(--paper-rule);
+}
+.signal-card .attrib em { font-style: italic; }
+@media (max-width:900px) { .signal-grid { grid-template-columns: 1fr; } }
+
+/* ── PRICING ── */
+.t-pricing {
+  width: var(--col); margin: 4rem auto 0;
+  padding: 3rem 0; border-top: 2px solid var(--ink);
+}
+.pricing-row {
+  display: grid; grid-template-columns: 1.4fr 1fr;
+  gap: 3rem; align-items: start;
+}
+.pricing-lead h3 {
+  font-family: var(--display); font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+  line-height: 1.08; letter-spacing: -.022em;
+  margin: 0 0 1rem; max-width: 16ch;
+}
+.pricing-lead h3 em { font-style: italic; color: var(--ochre); }
+.pricing-lead p {
+  font-size: 1.04rem; line-height: 1.6; color: var(--ink);
+  margin: 0 0 1.1rem; max-width: 50ch;
+}
+.pricing-table {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-top: 4px solid var(--ink);
+  padding: 1.5rem 1.6rem 1.7rem;
+}
+.pricing-line {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: 1rem;
+  padding: .85rem 0; border-bottom: 1px dotted var(--paper-rule);
+  font-family: var(--mono); font-size: 12px;
+}
+.pricing-line:last-child { border-bottom: 0; }
+.pricing-line .label {
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-3-aaa);
+}
+.pricing-line .value {
+  color: var(--ink); font-weight: 700;
+  font-feature-settings: "tnum","lnum";
+}
+.pricing-foot {
+  margin-top: 1.4rem; padding-top: 1rem;
+  border-top: 1px solid var(--paper-rule);
+  font-family: var(--serif); font-style: italic;
+  font-size: .94rem; color: var(--ink-3-aaa);
+}
+@media (max-width:860px) { .pricing-row { grid-template-columns: 1fr; } }
+
+/* ── FOOTER ── */
+.colo-tag {
+  text-align: center;
+  font-family: var(--mono); font-size: 10.5px;
+  letter-spacing: .26em; text-transform: uppercase;
+  color: var(--ink-mute-aa);
+  margin: 5rem auto 2rem;
+  padding: 1.4rem var(--gutter) 0;
+  border-top: 1px dashed var(--paper-rule);
+  width: var(--col);
+}
+.colo-tag a { color: var(--ochre-link); border-bottom: 1px solid var(--ochre-link); }
+</style>
+</head>
+<body>
+{% include site-nav.html %}
+
+<main id="main" tabindex="-1">
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<section class="t-hero">
+  <div class="t-eyebrow">
+    <span class="pip" aria-hidden="true"></span>
+    Stratum / Tenure
+    <span class="sep">·</span>
+    The third product
+    <span class="sep">·</span>
+    Ratified 2026-05-19
+  </div>
+  <h1 class="t-headline">Every employee event, handled as a <em>decision</em><span class="word-dot">.</span></h1>
+  <p class="t-dek">
+    Joiner. Mover. Leaver. Anniversary. Promotion. Parental leave. Return. Retirement. Each one is a moment in your people graph — and now each one has an agent, a boundary, and a defense.
+  </p>
+  <div class="t-cta-row">
+    <a class="t-btn" href="#agents">See the agents</a>
+    <a class="t-btn ghost" href="mailto:hello@stratum.ai?subject=Tenure%20design%20partner">Become a design partner</a>
+  </div>
+  <div class="t-meta-row">
+    <span><strong>Three agents</strong>&nbsp;·&nbsp;Threshold · Lattice · Ember</span>
+    <span><strong>Built on</strong>&nbsp;·&nbsp;the Stratum people graph (v4)</span>
+    <span><strong>Compliance</strong>&nbsp;·&nbsp;SOC 2 Type II · GDPR · EU AI Act Annex III</span>
+    <span><strong>Demo-ready</strong>&nbsp;·&nbsp;~12 weeks from contract</span>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── WEDGE ── -->
+<section class="t-wedge">
+  <div class="t-wedge-grid">
+    <div>
+      <h2>The category called this <em>onboarding</em>. It is bigger than that.</h2>
+      <p>The legacy HCM tools sell onboarding as a checklist. Workday Journeys, Rippling Onboarding, BambooHR — workflow engines, document tasks, manager nudges. None of them treat <strong>the day a person joins, the day they transfer, the day they take parental leave, the day they leave</strong> as the same shape of problem.</p>
+      <p>They are. Each one is an <strong>employee event</strong>: a moment when something changes about a person's relationship to your company. Each one has a paper trail. Each one has a decision that someone — or now, something — has to defend.</p>
+      <p>Stratum Tenure is the operating layer for those events. It runs on top of your system of record, draws on the same people graph that powers <a href="/console/">the Console</a>, and ships with three new agents who do the work — bounded by the same charter-and-defense posture <a href="/briefings/014.html">the Compact ratified in Briefing No. 014</a>.</p>
+    </div>
+    <aside class="t-pull">
+      Every promotion, transfer, anniversary, and exit at your company is already a decision. We just made the decision — and the defense — visible.
+      <span class="attrib">— Helm · Chairman's Briefing No. 016</span>
+    </aside>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── AGENT ROSTER ── -->
+<section class="t-roster" id="agents">
+  <div class="t-section-eyebrow">§ The roster</div>
+  <h2 class="t-section-h">Three agents, three surfaces, three failure budgets.</h2>
+  <p class="t-section-dek">Lifecycle moments do not share a failure surface. The day-1 mis-provision and the 10-year anniversary card require different agents with different decision classes. Kernel designed the boundary.</p>
+
+  <div class="agent-grid">
+    <article class="agent-card threshold">
+      <div class="agent-name">Threshold</div>
+      <div class="agent-tag">The line you cross</div>
+      <p class="agent-blurb">Owns the irreversible writes — pre-boarding through Day 30, plus termination day. Equipment, identity, paperwork, payroll, asset reclaim. The agent we trust with the regulated forms because we wrote the boundary down.</p>
+      <ul class="agent-roles">
+        <li>Equipment provisioning <span class="agent-class decide">Decide</span></li>
+        <li>IT account creation (standard role) <span class="agent-class decide">Decide</span></li>
+        <li>IT account (elevated privilege) <span class="agent-class recommend">Recommend</span></li>
+        <li>Offer-letter PDF generation <span class="agent-class suggest">Suggest</span></li>
+        <li>I-9 / E-Verify orchestration <span class="agent-class readonly">Read-only</span></li>
+        <li>Payroll record creation <span class="agent-class recommend">Recommend</span></li>
+        <li>Termination-day asset reclaim <span class="agent-class recommend">Recommend</span></li>
+      </ul>
+    </article>
+
+    <article class="agent-card lattice">
+      <div class="agent-name">Lattice</div>
+      <div class="agent-tag">The structure you join</div>
+      <p class="agent-blurb">Owns the relational moments. Buddy assignment, manager check-in nudges, mentorship pairing, the choreography of team introductions. Reversible, social-graph aware, low regulatory surface. The agent that makes onboarding feel like joining a place, not completing a form.</p>
+      <ul class="agent-roles">
+        <li>Buddy assignment <span class="agent-class decide">Decide</span></li>
+        <li>Manager check-in cadence <span class="agent-class decide">Decide</span></li>
+        <li>Mentor-pair recommendation <span class="agent-class recommend">Recommend</span></li>
+        <li>Team-intro choreography <span class="agent-class decide">Decide</span></li>
+        <li>First 30/60/90 plan draft <span class="agent-class suggest">Suggest</span></li>
+        <li>LOA-return re-onboarding sequence <span class="agent-class decide">Decide</span></li>
+      </ul>
+    </article>
+
+    <article class="agent-card ember">
+      <div class="agent-name">Ember</div>
+      <div class="agent-tag">The small warmth</div>
+      <p class="agent-blurb">Owns recognition. Anniversaries, milestones, promotion announcements, leave acknowledgements, the goodbye note when someone retires. Lowest stakes by failure budget, highest stakes by brand voice. The agent that remembers your tenth year on a Tuesday.</p>
+      <ul class="agent-roles">
+        <li>Work-anniversary acknowledgement <span class="agent-class decide">Decide</span></li>
+        <li>Promotion announcement (draft) <span class="agent-class suggest">Suggest</span></li>
+        <li>Parental-leave wraparound <span class="agent-class decide">Decide</span></li>
+        <li>Retirement send-off <span class="agent-class suggest">Suggest</span></li>
+        <li>Internal-move welcome <span class="agent-class decide">Decide</span></li>
+        <li>Bereavement / medical leave <span class="agent-class readonly">Human only</span></li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── DECISION CLASS ── -->
+<section class="t-class">
+  <div class="t-section-eyebrow">§ The decision class</div>
+  <h2 class="t-section-h">Four tiers. One rule.</h2>
+  <p class="t-section-dek">The agent acts autonomously when the worst case is <em>we apologize and reissue</em>. The human signs when the worst case is <em>we get sued, fined, or made the news</em>. Briefing 014 wrote this down. Tenure enforces it as a workflow predicate.</p>
+
+  <div class="class-grid">
+    <div class="class-cell">
+      <h4>Tier I</h4>
+      <div class="verb">Decide</div>
+      <p>The agent does the thing. Reversible within 24 hours. No regulated artifacts. Failure mode is "we apologize and try again."</p>
+    </div>
+    <div class="class-cell">
+      <h4>Tier II</h4>
+      <div class="verb">Recommend</div>
+      <p>The agent prepares, a human approves with one click. IdP groups, role-start dates, equipment over $1.5K, equity-grant scheduling (never amounts).</p>
+    </div>
+    <div class="class-cell">
+      <h4>Tier III</h4>
+      <div class="verb">Suggest</div>
+      <p>The agent drafts; the human signs. Offer-letter copy, promotion announcement language, 30/60/90 plans. Voice matters more than speed.</p>
+    </div>
+    <div class="class-cell">
+      <h4>Tier IV</h4>
+      <div class="verb">Read-only</div>
+      <p>The agent surfaces information. Cannot act. I-9 verification, E-Verify case submission, EEOC adverse-impact reports, bereavement.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CUSTOMER SIGNAL ── -->
+<section class="t-signal">
+  <div class="t-section-eyebrow">§ The customer signal</div>
+  <h2 class="t-section-h">Three customers, three moments, one product.</h2>
+  <p class="t-section-dek">The launch sample. Drafted with Compass and reviewed at the customer office hours this week. Full notes will publish at <a href="/customers/">/customers/</a> when each design-partner sign-off lands.</p>
+
+  <div class="signal-grid">
+    <article class="signal-card">
+      <div class="customer">Mercator · Internal mobility</div>
+      <blockquote>"Transfers stopped being a six-week paperwork exercise. The agent reads who's moving, finds the gap in the new team's coverage, and runs the transition. We watched a senior engineer change orgs in a single afternoon and the only human action was the manager signing one form."</blockquote>
+      <div class="attrib"><em>Drafted from Mercator pilot-readout · Vector · 2026-05-19</em></div>
+    </article>
+    <article class="signal-card">
+      <div class="customer">Halcyon · Defensible offboarding</div>
+      <blockquote>"When we let someone go, we can show the board why — and why now. The agent doesn't make the call. It surfaces the case file: who decided, on what data, against what criteria, with what review. That is the conversation we have been trying to have for a decade."</blockquote>
+      <div class="attrib"><em>Drafted from Halcyon trust-posture conversation · Compass · 2026-05-19</em></div>
+    </article>
+    <article class="signal-card">
+      <div class="customer">Northwind · Promotion cycle</div>
+      <blockquote>"The first promotion cycle I haven't dreaded. The agent prepared every package, surfaced the comp-band tension, and let me spend the time on the conversations that mattered. The paperwork happened around me, not at me."</blockquote>
+      <div class="attrib"><em>Drafted from Northwind reference call · Vector · 2026-05-19</em></div>
+    </article>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PRICING ── -->
+<section class="t-pricing">
+  <div class="pricing-row">
+    <div class="pricing-lead">
+      <h3>Priced per <em>employee</em>, not per event.</h3>
+      <p>Because people are not transactions. We refuse the per-event pricing model that punishes growth and rewards churn. Tenure is per-employee-included, with a decisions-supported overage if your agents make more decisions than your envelope.</p>
+      <p>The mental model: <strong>your CHRO already budgets per employee.</strong> We slot in. The bundle with <a href="/console/">Console</a> takes 15% off the platform line.</p>
+    </div>
+    <aside class="pricing-table">
+      <div class="pricing-line"><span class="label">Platform floor</span><span class="value">$60K / yr</span></div>
+      <div class="pricing-line"><span class="label">Per EE included</span><span class="value">$14–22 / yr</span></div>
+      <div class="pricing-line"><span class="label">Decisions overage</span><span class="value">$4 / decision</span></div>
+      <div class="pricing-line"><span class="label">Bundle w/ Console</span><span class="value">−15% platform</span></div>
+      <div class="pricing-line"><span class="label">Enterprise BYOC</span><span class="value">+3wk engineering</span></div>
+      <div class="pricing-foot">
+        Indicative. Contract economics open at the design-partner kickoff. The decisions-overage column is rare in practice — Console customers have only crossed their envelope twice in eighteen months.
+      </div>
+    </aside>
+  </div>
+</section>
+
+<footer class="colo-tag">
+  Stratum Tenure · Ratified by the Compact 2026-05-19 ·
+  <a href="/briefings/016.html">Briefing No. 016</a> ·
+  <a href="/onboarding/">Day-0 to Day-30 →</a>
+</footer>
+
+</main>
+
+</body>
+</html>
