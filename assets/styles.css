@@ -1765,3 +1765,110 @@ section h2 em{font-style:italic;color:var(--indigo)}
   .sn-hb-line { width: 20px; height: 2px; }
 }
 
+/* ── SITE FOOTER ─────────────────────────────────────────────────
+   For pages using the default layout (_includes/footer.html).
+   The older .colo-tag / .colo-mark pair was a homepage component
+   that the shared include accidentally inherited — collisions
+   produced a 2.4rem display wordmark next to small-cap link text
+   that wrapped awkwardly. The .site-footer namespace is clean.
+*/
+.site-footer {
+  width: min(1180px, 92vw);
+  margin: 5rem auto 3rem;
+  padding: 2.5rem 0 0;
+  border-top: 2px solid var(--ink);
+  font-family: var(--mono);
+  color: var(--ink-3-aaa);
+}
+.sf-inner {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 3fr;
+  gap: 3rem;
+  align-items: start;
+  padding-bottom: 2.4rem;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.sf-brand { padding-right: 1rem; }
+.sf-mark {
+  display: inline-block;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.6rem;
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -.02em;
+  text-decoration: none;
+  border-bottom: 0;
+}
+.sf-mark:hover { color: var(--ochre-link); border-bottom: 0; }
+.sf-dot { color: var(--ochre); }
+.sf-tag {
+  margin: .9rem 0 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: .98rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 28ch;
+}
+
+.sf-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem 2rem;
+}
+.sf-col { display: flex; flex-direction: column; gap: .55rem; }
+.sf-col-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre-link);
+  margin-bottom: .25rem;
+}
+.sf-col a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+  text-decoration: none;
+  border-bottom: 0;
+  padding: .15rem 0;
+  line-height: 1.3;
+  transition: color .15s;
+}
+.sf-col a:hover { color: var(--ochre-link); border-bottom: 0; }
+.sf-col a:focus-visible {
+  outline: 2px solid var(--ochre);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.sf-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1.4rem 0 0;
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-3-aaa);
+}
+.sf-foot a {
+  color: var(--ochre-link);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ochre-link);
+}
+.sf-foot a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+
+@media (max-width: 860px) {
+  .sf-inner { grid-template-columns: 1fr; gap: 2rem; }
+  .sf-nav { grid-template-columns: repeat(2, 1fr); gap: 1.6rem 1.4rem; }
+}
+@media (max-width: 480px) {
+  .sf-nav { grid-template-columns: 1fr; }
+  .sf-foot { flex-direction: column; align-items: flex-start; gap: .35rem; }
+}
+
+
