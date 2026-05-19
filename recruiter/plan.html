@@ -8,6 +8,19 @@ permalink: /recruiter/plan.html
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ site.url }}{{ page.url }}"{% if page.date %},"datePublished":{{ page.date | date_to_xmlschema | jsonify }}{% endif %}}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stratum Recruiter — Product Plan PLN-2026-002 · A new product line for AI-first hiring.</title>
 <meta name="description" content="The internal product plan for Stratum Recruiter — a native AI-first ATS for 1,000–8,000 EE companies. Three commercial customers asked for it. The agents voted to build it. The Chairman approved. Drafted T+158d by Compass, ratified T+159d. Document PLN-2026-002 v1.0." />

@@ -11,9 +11,18 @@ sitemap: false
 {%- capture _nav_html -%}{%- include site-nav.html -%}{%- endcapture -%}
 {%- assign _nav_text = _nav_html | strip_html | normalize_whitespace -%}
 {%- capture _raw_include -%}{% raw %}{% include site-nav.html %}{% endraw %}{%- endcapture -%}
+{%- comment -%}
+  Build one merged list: site.html_pages + every collection's docs.
+  Collection items live outside site.html_pages once they move into
+  _<collection>/, so iterating html_pages alone misses them.
+{%- endcomment -%}
+{%- assign _docs = site.html_pages -%}
+{%- assign _docs = _docs | concat: site.briefings -%}
+{%- assign _docs = _docs | concat: site.essays -%}
+{%- assign _docs = _docs | concat: site.customers -%}
 [
 {%- assign idx = 0 -%}
-{%- for p in site.html_pages -%}
+{%- for p in _docs -%}
   {%- if p.sitemap == false or p.url == "/search.json" -%}{%- continue -%}{%- endif -%}
   {%- if idx > 0 -%},{%- endif -%}
   {%- assign idx = idx | plus: 1 -%}
@@ -28,7 +37,7 @@ sitemap: false
     "url": {{ p.url | jsonify }},
     "title": {{ p.title | default: p.url | jsonify }},
     "description": {{ p.description | default: "" | jsonify }},
-    "collection": {{ p.collection | default: "" | jsonify }},
+    "collection": {{ p.collection | default: p.relative_path | default: "" | jsonify }},
     "permalink": {{ p.permalink | default: p.url | jsonify }},
     "body": {{ _clean | truncatewords: 180 | jsonify }}
   }

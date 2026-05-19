@@ -8,6 +8,19 @@ permalink: /intel/eglin/competitors/gusto.html
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ site.url }}{{ page.url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ site.url }}{{ page.url }}"{% if page.date %},"datePublished":{{ page.date | date_to_xmlschema | jsonify }}{% endif %}}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Stratum / Intel · Eglin · Competitor Battlecard — Gusto</title>
 <meta name="description" content="Eglin's battlecard for Gusto. SMB payroll leader expanding into HRIS. 75 new features announced April 2026. Gus AI assistant. Plus plan as functional HRIS for 10-100 EE. Upgrade-path partnership opportunity." />

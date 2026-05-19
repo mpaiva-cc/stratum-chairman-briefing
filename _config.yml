@@ -31,6 +31,30 @@ plugins:
   - jekyll-sitemap
   - jekyll-feed
 
+# Per-collection RSS (jekyll-feed). The default /feed.xml stays for posts
+# (we have none). Each collection gets its own feed at the path below.
+feed:
+  collections:
+    briefings:
+      path: /briefings/feed.xml
+    essays:
+      path: /essays/feed.xml
+    customers:
+      path: /customers/feed.xml
+
+# Collections — Phase 3. Items live in _<collection>/ directories. Output
+# permalinks preserve the pre-migration URLs (/briefings/014.html etc.).
+collections:
+  briefings:
+    output: true
+    permalink: /briefings/:path:output_ext
+  essays:
+    output: true
+    permalink: /essays/:path:output_ext
+  customers:
+    output: true
+    permalink: /customers/:path:output_ext
+
 # Migrated legacy pages bring their own complete <html>...</html>, so they
 # need the pass-through `legacy` layout (not `default`, which wraps content
 # in a new shell — that would nest two HTML documents).
@@ -38,15 +62,9 @@ plugins:
 defaults:
   - scope: { path: "" }
     values: { layout: legacy }
-  - scope: { path: "briefings" }
-    values: { layout: briefing, collection: briefings }
-  - scope: { path: "essays" }
-    values: { layout: essay, collection: essays }
-  - scope: { path: "intel" }
-    values: { layout: intel, collection: intel }
-  - scope: { path: "customers" }
-    values: { collection: customers }
-  - scope: { path: "office-hours" }
-    values: { collection: office_hours }
-  - scope: { path: "engineering" }
-    values: { collection: engineering }
+  - scope: { path: "", type: "briefings" }
+    values: { layout: briefing }
+  - scope: { path: "", type: "essays" }
+    values: { layout: essay }
+  - scope: { path: "", type: "customers" }
+    values: { layout: legacy }
