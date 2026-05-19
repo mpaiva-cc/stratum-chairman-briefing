@@ -1,76 +1,12 @@
 {%- comment -%}
   Canonical sitewide navigation. One source of truth.
   `current` is the first path segment of the page so links highlight correctly.
-  Styles inlined so legacy pages (which don't load /assets/styles.css)
-  still render the nav correctly. Fallback CSS variables let it look right
-  even on pages without the design-token :root block.
+  Styles live in /assets/styles.css — Phase 2 consolidation injects
+  the stylesheet link into every legacy page. This include emits
+  markup + script only.
 {%- endcomment -%}
 {%- assign segs = page.url | remove_first: "/" | split: "/" -%}
 {%- assign current = segs[0] -%}
-<style>
-:where(:root){--sn-paper:#fbf6ee;--sn-ink:#0e1626;--sn-ink-2:#5a6378;--sn-ink-3:#3e465a;--sn-ochre:#b8651f;--sn-rule:#e6dccb}
-.skip{position:absolute;left:-9999px;top:0;background:var(--ink,var(--sn-ink));color:var(--paper,var(--sn-paper));padding:.6rem 1rem;z-index:9999}
-.skip:focus{left:0}
-.site-nav{position:relative;background:var(--paper,var(--sn-paper));border-bottom:1px solid var(--paper-rule,var(--sn-rule));z-index:500;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
-.sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
-.sn-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--ink,var(--sn-ink));text-decoration:none;letter-spacing:-.01em;flex-shrink:0;line-height:1;padding:.3rem 0;border-bottom:0}
-.sn-mark:hover{color:var(--ochre,var(--sn-ochre));border-bottom:0}
-.sn-dot{color:var(--ochre,var(--sn-ochre))}
-.sn-cats{display:flex;align-items:center;gap:.15rem;flex:1;padding-left:1.4rem}
-.sn-cat{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2,var(--sn-ink-2));padding:.2rem .5rem;white-space:nowrap;user-select:none}
-@media (max-width:900px){.sn-cats{display:none}}
-.sn-search{display:inline-flex;align-items:center;gap:.4rem;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink,var(--sn-ink));text-decoration:none;padding:.4rem .65rem;border:1px solid var(--paper-rule,var(--sn-rule));min-height:36px;flex-shrink:0;border-bottom:1px solid var(--paper-rule,var(--sn-rule))}
-.sn-search:hover{border-color:var(--ochre,var(--sn-ochre));color:var(--ochre,var(--sn-ochre))}
-.sn-search:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-search[aria-current="page"]{color:var(--ochre,var(--sn-ochre));border-color:var(--ochre,var(--sn-ochre))}
-@media (max-width:700px){.sn-search-label{display:none}}
-.sn-index-btn{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink,var(--sn-ink));background:transparent;border:1px solid var(--paper-rule,var(--sn-rule));padding:.45rem .85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;min-height:36px;min-width:44px;flex-shrink:0;transition:border-color .15s,color .15s;border-bottom:1px solid var(--paper-rule,var(--sn-rule));font-family:inherit}
-.sn-index-btn:hover{border-color:var(--ochre,var(--sn-ochre));color:var(--ochre,var(--sn-ochre))}
-.sn-index-btn:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-arr{transition:transform .15s;display:inline-block}
-.sn-index-btn[aria-expanded="true"] .sn-arr{transform:rotate(180deg)}
-@media (prefers-reduced-motion:reduce){.sn-arr{transition:none}}
-.sn-hamburger{display:none;background:transparent;border:1px solid var(--paper-rule,var(--sn-rule));padding:.5rem .6rem;cursor:pointer;min-height:44px;min-width:44px;align-items:center;justify-content:center;flex-direction:column;gap:4px;flex-shrink:0}
-.sn-hamburger:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-hb-line{display:block;width:18px;height:1.5px;background:var(--ink,var(--sn-ink));border-radius:1px;transition:transform .18s,opacity .18s}
-@media (prefers-reduced-motion:reduce){.sn-hb-line{transition:none}}
-.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
-.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(2){opacity:0}
-.sn-hamburger[aria-expanded="true"] .sn-hb-line:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
-@media (max-width:900px){.sn-hamburger{display:flex}.sn-index-btn{display:none}}
-.sn-panel{position:absolute;top:100%;left:0;right:0;background:var(--paper,var(--sn-paper));border-bottom:2px solid var(--ink,var(--sn-ink));box-shadow:0 8px 32px rgba(14,22,38,.12);z-index:501}
-.sn-panel[hidden]{display:none}
-.sn-panel-inner{width:min(1180px,92vw);margin:0 auto;padding:1.6rem 0 2rem;display:grid;grid-template-columns:repeat(6,1fr);gap:0}
-@media (max-width:1100px){.sn-panel-inner{grid-template-columns:repeat(3,1fr)}}
-@media (max-width:700px){.sn-panel-inner{grid-template-columns:repeat(2,1fr)}}
-.sn-col{padding:.4rem 1.2rem .4rem .4rem;border-right:1px solid var(--paper-rule,var(--sn-rule))}
-.sn-col:last-child{border-right:none}
-.sn-col-head{font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre,var(--sn-ochre));margin-bottom:.7rem;padding:.2rem 0}
-.sn-col a{display:flex;align-items:center;font-size:11px;letter-spacing:.06em;color:var(--ink,var(--sn-ink));text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px}
-.sn-col a:hover{color:var(--ochre,var(--sn-ochre))}
-.sn-col a:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-col a[aria-current="page"]{color:var(--ochre,var(--sn-ochre));font-weight:700}
-.sn-mobile{position:fixed;inset:0;background:var(--paper,var(--sn-paper));z-index:600;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.sn-mobile[hidden]{display:none}
-.sn-mobile-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem calc((100vw - min(1180px,92vw))/2);border-bottom:1px solid var(--paper-rule,var(--sn-rule));height:48px}
-.sn-mobile-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;color:var(--ink,var(--sn-ink));letter-spacing:-.01em}
-.sn-mobile-close{font-size:13px;background:transparent;border:1px solid var(--paper-rule,var(--sn-rule));color:var(--ink,var(--sn-ink));padding:.35rem .7rem;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;font-family:inherit}
-.sn-mobile-close:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-mobile-body{padding:1.2rem calc((100vw - min(1180px,92vw))/2)}
-.sn-mob-search{padding:.6rem 0 .8rem;border-bottom:1px solid var(--paper-rule,var(--sn-rule));margin-bottom:.4rem}
-.sn-mob-search a{display:block;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink,var(--sn-ink));text-decoration:none;padding:.55rem 0;min-height:44px;display:flex;align-items:center}
-.sn-mob-section{border-bottom:1px solid var(--paper-rule,var(--sn-rule))}
-.sn-mob-section summary{font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:700;color:var(--ochre,var(--sn-ochre));padding:1rem 0;cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;min-height:44px}
-.sn-mob-section summary::-webkit-details-marker{display:none}
-.sn-mob-section summary::after{content:"↓";font-size:11px;color:var(--ink-3,var(--sn-ink-3));transition:transform .15s}
-.sn-mob-section[open] summary::after{transform:rotate(180deg)}
-@media (prefers-reduced-motion:reduce){.sn-mob-section summary::after{transition:none}}
-.sn-mob-section summary:focus-visible{outline:2px solid var(--ochre,var(--sn-ochre));outline-offset:2px}
-.sn-mob-links{padding:.2rem 0 1rem}
-.sn-mob-links a{display:flex;align-items:center;font-size:12px;letter-spacing:.06em;color:var(--ink,var(--sn-ink));text-decoration:none;padding:.55rem 0;border-bottom:0;min-height:44px}
-.sn-mob-links a:hover,.sn-mob-links a:focus-visible{color:var(--ochre,var(--sn-ochre))}
-.sn-mob-links a[aria-current="page"]{color:var(--ochre,var(--sn-ochre));font-weight:700}
-</style>
 <a href="#main" class="skip">Skip to main content</a>
 <nav class="site-nav" id="site-nav" role="navigation" aria-label="Site">
   <div class="sn-inner">
