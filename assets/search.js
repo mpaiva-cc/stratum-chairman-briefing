@@ -115,9 +115,14 @@
     for (const { d } of top) {
       const li = document.createElement('li');
       const tag = d.collection ? '<span class="tag">' + escape(d.collection) + '</span>' : '';
+      // search.json stores bare paths like /intel/eglin/foo.html. On
+      // production we must prefix the baseurl so the link goes to
+      // /stratum/intel/eglin/foo.html — same baseurl we detected for the
+      // fetch above. The displayed URL stays bare (no /stratum/ noise).
+      const href = (d.url && d.url.charAt(0) === '/') ? baseurl + d.url : d.url;
       li.innerHTML =
         tag +
-        '<a class="title" href="' + escape(d.url) + '">' + highlight(d.title || d.url, terms) + '</a>' +
+        '<a class="title" href="' + escape(href) + '">' + highlight(d.title || d.url, terms) + '</a>' +
         '<div class="url">' + escape(d.url) + '</div>' +
         '<p class="desc">' + highlight(snippet(d.description || d.body, terms), terms) + '</p>';
       frag.appendChild(li);
