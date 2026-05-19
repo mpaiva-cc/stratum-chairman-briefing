@@ -34,24 +34,26 @@ function walk(dir, out = []) {
   return out;
 }
 
-// Returns the on-disk path for a URL path under _site/.
-// Honors directory-as-index (/foo/ → /foo/index.html).
+// Returns { ok, target, reason } for an internal absolute URL path.
+// On GitHub Pages the site is served at BASEURL, so any absolute /-rooted
+// path that DOESN'T begin with BASEURL is broken in production even if a
+// same-named file happens to exist locally. The audit must enforce that.
 function resolveLocal(urlPath) {
-  // Strip query + hash.
   urlPath = urlPath.split('?')[0].split('#')[0];
-  // Strip the production baseurl prefix.
-  if (urlPath.startsWith(BASEURL + '/')) urlPath = urlPath.slice(BASEURL.length);
-  else if (urlPath === BASEURL) urlPath = '/';
-  if (!urlPath.startsWith('/')) return null; // not under SITE
-  let p = path.join(SITE, urlPath);
-  // If path ends with /, look for index.html.
-  if (urlPath.endsWith('/')) p = path.join(p, 'index.html');
-  // If no extension and target is a directory with index.html, accept.
+  if (!urlPath.startsWith('/')) return { ok: false, target: null, reason: 'not-internal' };
+  if (urlPath !== BASEURL && !urlPath.startsWith(BASEURL + '/')) {
+    // Bare /foo with no baseurl prefix → 404 on production.
+    return { ok: false, target: null, reason: 'missing-baseurl' };
+  }
+  // Strip baseurl, resolve against _site/.
+  const rel = urlPath === BASEURL ? '/' : urlPath.slice(BASEURL.length);
+  let p = path.join(SITE, rel);
+  if (rel.endsWith('/')) p = path.join(p, 'index.html');
   if (!fs.existsSync(p)) {
     const idxFallback = path.join(p, 'index.html');
     if (fs.existsSync(idxFallback)) p = idxFallback;
   }
-  return p;
+  return { ok: fs.existsSync(p), target: p, reason: fs.existsSync(p) ? null : 'not-found' };
 }
 
 function resolveRelative(fromFile, urlPath) {
@@ -81,8 +83,19 @@ const stats = {
   javascript: 0,
 };
 
-// Capture every href/src attribute value.
-const ATTR_RE = /\b(href|src|action)\s*=\s*"([^"]*)"/gi;
+// Capture every href/src attribute value. Skip cases inside an
+// HTML-encoded block (e.g. code samples that show `&lt;a href="/foo"&gt;`
+// as literal display text — those are not actual links).
+const ATTR_RE = /(?<!&[a-z]+; ?)(?<![\w;-])(href|src|action)\s*=\s*"([^"]*)"/gi;
+function isEncodedSample(html, idx) {
+  // If `&lt;` appears within 40 chars before the match (no closing `&gt;`
+  // between), this is inside displayed code.
+  const back = html.slice(Math.max(0, idx - 60), idx);
+  const lastLt = back.lastIndexOf('&lt;');
+  if (lastLt < 0) return false;
+  const lastGt = back.lastIndexOf('&gt;');
+  return lastLt > lastGt;
+}
 
 for (const f of files) {
   // Skip XML/feed files (not HTML).
@@ -92,6 +105,8 @@ for (const f of files) {
   while ((m = ATTR_RE.exec(html)) !== null) {
     const url = m[2].trim();
     if (!url) continue;
+    // Skip HTML-encoded code samples that show attribute syntax as text.
+    if (isEncodedSample(html, m.index)) continue;
 
     // External
     if (/^https?:\/\//i.test(url)) { stats.external++; continue; }
@@ -113,23 +128,34 @@ for (const f of files) {
       continue;
     }
 
-    let target, kind;
+    let target, kind, reason;
     if (url.startsWith('/')) {
       stats.internal_absolute++;
-      target = resolveLocal(url);
-      kind = 'absolute';
+      const r = resolveLocal(url);
+      target = r.target;
+      kind = r.reason === 'missing-baseurl' ? 'missing-baseurl' : 'absolute';
+      reason = r.reason;
+      if (!r.ok) {
+        broken.push({
+          file: path.relative(SITE, f),
+          ref: url,
+          target: target ? path.relative(SITE, target) : null,
+          kind,
+          reason,
+        });
+      }
     } else {
       stats.internal_relative++;
       target = resolveRelative(f, url);
       kind = 'relative';
-    }
-    if (!target || !fs.existsSync(target)) {
-      broken.push({
-        file: path.relative(SITE, f),
-        ref: url,
-        target: target ? path.relative(SITE, target) : null,
-        kind,
-      });
+      if (!target || !fs.existsSync(target)) {
+        broken.push({
+          file: path.relative(SITE, f),
+          ref: url,
+          target: target ? path.relative(SITE, target) : null,
+          kind,
+        });
+      }
     }
   }
 }

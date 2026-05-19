@@ -78,20 +78,25 @@ function processFile(abs) {
     () => { changes++; return `"url":"{{ page.url | absolute_url }}"`; }
   );
 
-  // _includes/site-nav.html & footer.html: every href="/something" that's a
-  // bare path (no http, not already a {{ ... }} expression).
-  if (isInclude) {
-    html = html.replace(
-      /href="(\/[a-zA-Z0-9._/-]+)"/g,
-      (m, p) => {
-        // Skip already-wrapped (won't match this regex anyway, but be safe).
+  // Sitewide: every bare-absolute href="/something" and src="/something"
+  // in HTML body content. Includes get the same treatment. Skip any value
+  // already wrapped in {{ ... }} — it's caught by the literal-bracket regex,
+  // so the substitution is naturally idempotent. Also skip the protocol-
+  // relative `//host/path` form.
+  html = html.replace(
+    /\b(href|src)="(\/[a-zA-Z0-9][a-zA-Z0-9._?=&%/#-]*)"/g,
+    (m, attr, p) => {
+      // Don't touch protocol-relative.
+      if (p.startsWith('//')) return m;
+      // Don't touch anchor-only.
+      if (p === '/') {
         changes++;
-        return `href="{{ '${p}' | relative_url }}"`;
+        return `${attr}="{{ '/' | relative_url }}"`;
       }
-    );
-    // Plain root link href="/"
-    html = html.replace(/href="\/"/g, () => { changes++; return `href="{{ '/' | relative_url }}"`; });
-  }
+      changes++;
+      return `${attr}="{{ '${p}' | relative_url }}"`;
+    }
+  );
 
   if (html === before) return { rel, changes: 0 };
   if (WRITE) fs.writeFileSync(abs, html);
