@@ -382,7 +382,14 @@ p { margin: 0 0 1.15em; }
 }
 
 .spec-section {
-  margin-top: 3.4em;
+  /* Opt out of the global `section { width: var(--col); padding: 4.5rem 0 1rem; }`
+     rule in /assets/styles.css. Spec sections are part of the .post reading
+     column (760px) and inherit its width; the global rule was forcing them
+     to 1240px and adding heavy vertical padding. Same leak pattern fixed
+     on /ops/ during Phase 2; the page-level override is correct here. */
+  width: auto;
+  margin: 3.4em 0 0;
+  padding: 0;
   scroll-margin-top: 90px;
 }
 .spec-section:first-of-type { margin-top: 2.4em; }
