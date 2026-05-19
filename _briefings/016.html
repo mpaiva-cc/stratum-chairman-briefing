@@ -117,6 +117,49 @@ strong { font-weight:600; color:var(--ink); }
 .b-colophon { width:var(--col); margin:5rem auto 0; padding:1.4rem 0; border-top:2px solid var(--ink); }
 .b-colophon-row { display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3-aaa); }
 .b-colo-tag { text-align:center; font-family:var(--mono); font-size:10.5px; letter-spacing:.26em; text-transform:uppercase; color:var(--ink-mute-aa); margin-top:1.4rem; padding-top:1rem; border-top:1px dashed var(--paper-rule); }
+
+/* ── MOBILE TUNING ────────────────────────────────────────────── */
+main#main { padding-bottom: 5rem; } /* clearance for the fixed Listen button */
+
+@media (max-width: 700px) {
+  /* Masthead row: each meta item on its own line so "Vol. I · No. 016"
+     stops cramming next to "Compiled at T+7d". */
+  .b-mast-row { flex-wrap: wrap; gap: .5rem; }
+  .b-mast-meta { flex-direction: column; gap: .25rem; }
+  .b-banner { flex-direction: column; gap: .35rem; align-items: flex-start; }
+  /* Drop-cap a bit smaller on phones so it doesn't dominate. */
+  .b-section p .dropcap { font-size: 3.6rem; }
+}
+
+@media (max-width: 640px) {
+  /* Transform the decisions table into stacked cards. At 390px the
+     three-column layout gives the "Why" cell only ~120px (3-word lines).
+     Cards are scannable and let each Why breathe at body-text width. */
+  .decisions { font-size: 13px; }
+  .decisions thead { display: none; }
+  .decisions tbody tr {
+    display: block;
+    padding: .9rem 0;
+    border-bottom: 1px solid var(--paper-rule);
+  }
+  .decisions tbody td {
+    display: block;
+    padding: .15rem 0;
+    border-bottom: 0;
+  }
+  .decisions tbody td.act {
+    font-family: var(--display);
+    font-size: 1.2rem; font-weight: 500; line-height: 1.15;
+    margin-bottom: .35rem;
+  }
+  .decisions tbody td:nth-child(2) {
+    margin-bottom: .35rem;
+  }
+  .decisions tbody td:nth-child(3) {
+    font-family: var(--serif); font-size: 14.5px;
+    line-height: 1.45; color: var(--ink-2);
+  }
+}
 </style>
 </head>
 <body>
