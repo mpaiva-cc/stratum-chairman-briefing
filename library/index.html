@@ -216,12 +216,26 @@ header.mast{
   background: var(--paper-warm);
   white-space: nowrap;
   flex-shrink: 0;
+  font: inherit;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s, transform .08s;
 }
+.chip:hover{ border-color: var(--ink); color: var(--ink); }
+.chip:active{ transform: translateY(1px); }
+.chip:focus-visible{ outline: 2px solid var(--ochre); outline-offset: 2px; }
+.chip[aria-selected="true"]{ font-weight: 600; }
 .chip-on{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.chip-on:hover{ background: var(--ink); color: var(--paper); }
 .chip-live{ color: var(--ochre); border-color: var(--ochre); background: rgba(184,101,31,.06); }
+.chip-live:hover{ background: rgba(184,101,31,.12); color: var(--ochre); border-color: var(--ochre); }
 .chip-public{ color: var(--moss); border-color: var(--moss); }
+.chip-public:hover{ background: rgba(74,93,58,.08); color: var(--moss); border-color: var(--moss); }
 .chip-internal{ color: var(--ochre); border-color: var(--ochre); }
+.chip-internal:hover{ background: rgba(184,101,31,.08); color: var(--ochre); border-color: var(--ochre); }
 .chip-confidential{ color: var(--plum); border-color: var(--plum); }
+.chip-confidential:hover{ background: rgba(107,58,74,.08); color: var(--plum); border-color: var(--plum); }
+.group[hidden]{ display: none; }
+.lib-empty{ font-family: var(--serif); font-style: italic; opacity: .7; padding: 2rem 0; text-align: center; }
 
 /* ─────────────────────────── GROUPS ───────────────────────── */
 main{ padding: 0 var(--pad) 2rem; }
@@ -484,19 +498,19 @@ footer{ animation-delay: .16s; }
   </div>
 </header>
 
-<div class="filters" aria-label="Artifact categories">
-  <span class="chip chip-on">All</span>
-  <span class="chip chip-live">Live</span>
-  <span class="chip chip-internal">Internal · Fortnightly</span>
-  <span class="chip chip-confidential">Confidential · Board</span>
-  <span class="chip chip-public">Public</span>
-  <span class="chip">Investors</span>
+<div class="filters" role="tablist" aria-label="Filter artifacts by category">
+  <button type="button" class="chip chip-on" data-filter="all" role="tab" aria-selected="true">All</button>
+  <button type="button" class="chip chip-live" data-filter="live" role="tab" aria-selected="false">Live</button>
+  <button type="button" class="chip chip-internal" data-filter="internal" role="tab" aria-selected="false">Internal · Fortnightly</button>
+  <button type="button" class="chip chip-confidential" data-filter="confidential" role="tab" aria-selected="false">Confidential · Board</button>
+  <button type="button" class="chip chip-public" data-filter="public" role="tab" aria-selected="false">Public</button>
+  <button type="button" class="chip" data-filter="investors" role="tab" aria-selected="false">Investors</button>
 </div>
 
 <main>
 
   <!-- ── THE PRODUCT ────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="live">
     <div class="group-head">
       <h2 class="group-h">The product</h2>
       <div class="group-meta">1 live · ask anything</div>
@@ -524,7 +538,7 @@ footer{ animation-delay: .16s; }
   </section>
 
   <!-- ── BRIEFINGS ────────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="internal">
     <div class="group-head">
       <h2 class="group-h">Chairman's Briefings</h2>
       <div class="group-meta">5 issues · fortnightly</div>
@@ -567,7 +581,7 @@ footer{ animation-delay: .16s; }
   </section>
 
   <!-- ── BOARD ────────────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="confidential">
     <div class="group-head">
       <h2 class="group-h">Board of Directors</h2>
       <div class="group-meta">2 documents</div>
@@ -589,7 +603,7 @@ footer{ animation-delay: .16s; }
   </section>
 
   <!-- ── OPERATING ────────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="live internal">
     <div class="group-head">
       <h2 class="group-h">Operating &amp; intelligence</h2>
       <div class="group-meta">3 documents</div>
@@ -618,7 +632,7 @@ footer{ animation-delay: .16s; }
   </section>
 
   <!-- ── PUBLIC ───────────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="public">
     <div class="group-head">
       <h2 class="group-h">Public-facing</h2>
       <div class="group-meta">9 documents · stratum.ai</div>
@@ -738,7 +752,7 @@ footer{ animation-delay: .16s; }
   </section>
 
   <!-- ── INVESTORS ────────────────────────────────────── -->
-  <section class="group">
+  <section class="group" data-cat="investors">
     <div class="group-head">
       <h2 class="group-h">For investors</h2>
       <div class="group-meta">1 document</div>
@@ -768,5 +782,53 @@ footer{ animation-delay: .16s; }
 </footer>
 
 <script src="../assets/echo.js" defer></script>
+<script>
+/* Library filter — show only groups whose data-cat tokens include the
+   selected chip's data-filter. "all" shows everything. */
+(function(){
+  var chips = document.querySelectorAll('.filters .chip');
+  var groups = document.querySelectorAll('.group[data-cat]');
+  var empty;
+  function ensureEmpty(){
+    if (empty) return empty;
+    empty = document.createElement('div');
+    empty.className = 'lib-empty';
+    empty.hidden = true;
+    empty.textContent = 'No artifacts in this category yet.';
+    var main = document.querySelector('main') || document.body;
+    main.appendChild(empty);
+    return empty;
+  }
+  function apply(filter){
+    var anyVisible = false;
+    groups.forEach(function(g){
+      var cats = (g.getAttribute('data-cat') || '').split(/\s+/);
+      var show = filter === 'all' || cats.indexOf(filter) >= 0;
+      g.hidden = !show;
+      if (show) anyVisible = true;
+    });
+    ensureEmpty().hidden = anyVisible;
+    chips.forEach(function(c){
+      var active = c.getAttribute('data-filter') === filter;
+      c.classList.toggle('chip-on', active);
+      c.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    /* Reflect the active filter in the URL (replaceState — no history spam). */
+    var url = new URL(location.href);
+    if (filter === 'all') url.searchParams.delete('cat'); else url.searchParams.set('cat', filter);
+    history.replaceState(null, '', url);
+  }
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){ apply(c.getAttribute('data-filter')); });
+    c.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); apply(c.getAttribute('data-filter')); }
+    });
+  });
+  /* Honor ?cat= on initial load. */
+  var initial = new URL(location.href).searchParams.get('cat');
+  var allowed = ['all','live','internal','confidential','public','investors'];
+  apply(allowed.indexOf(initial) >= 0 ? initial : 'all');
+})();
+</script>
 </body>
 </html>
