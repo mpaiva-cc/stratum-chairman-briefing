@@ -1705,3 +1705,26 @@ section h2 em{font-style:italic;color:var(--indigo)}
 .mob-bar{display:none}
 
 /* ── /PROMOTED-DUPS ── */
+
+/* ── post-promoted overrides ─────────────────────────────────────
+   The PROMOTED-DUPS block above redeclares .sn-hamburger { display:
+   none } at higher source order than the @media (max-width:900px)
+   rule at the top of this file. Equal specificity, last wins. The
+   net effect was that the hamburger never appeared at narrow widths
+   — mobile users had no menu access. Re-assert the media show here
+   so it lands AFTER the auto-promoted rule. */
+@media (max-width: 900px) {
+  .sn-hamburger { display: flex; }
+  .sn-index-btn { display: none; }
+}
+
+/* Search button — at <=700px the "Search" label is hidden and only
+   the ⌕ glyph remains. The glyph was rendering at 11px (the parent
+   font-size for the .sn-search caps style), well below comfortable
+   touch / read size. Enlarge the glyph and inflate the button to a
+   proper 44px touch target. */
+@media (max-width: 700px) {
+  .sn-search { min-width: 44px; min-height: 44px; padding: .5rem .75rem; gap: 0; justify-content: center; }
+  .sn-search > span[aria-hidden] { font-size: 20px; line-height: 1; font-weight: 400; }
+}
+
