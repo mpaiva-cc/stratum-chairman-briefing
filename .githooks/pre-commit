@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Git pre-commit hook: enforce outbox-entry-per-publish discipline.
+#
+# Delegates to the canonical script at .claude/hooks/pre-commit-outbox-check.sh
+# so the rule is implemented once and invoked from multiple entry points
+# (this git hook for terminal + IDE commits; Claude Code PreToolUse hook if
+# the operator wires one in .claude/settings.json).
+#
+# Setup (one-time per clone):
+#     git config core.hooksPath .githooks
+#
+# Bypass (use sparingly, for infra / cleanup commits):
+#     git commit -m "[no-outbox] <message>"  → still blocks; the bypass is
+#     enforced by the check script reading the commit message via
+#     prepare-commit-msg (not implemented yet); for now bypass with --no-verify
+#     and explain in the commit message.
+
+set -u
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+exec bash "${REPO_ROOT}/.claude/hooks/pre-commit-outbox-check.sh"
