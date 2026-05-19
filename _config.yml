@@ -1,0 +1,52 @@
+title: Stratum
+description: An AI-native human capital platform.
+url: https://stratum.ai
+
+# Keep public URLs identical to pre-Jekyll: every page already declares
+# its `permalink:` in front-matter, so this default only applies to any
+# file that forgets to set one (none expected).
+permalink: /:path:output_ext
+
+# Speed up GH Pages builds and keep agent artifacts out of _site/.
+exclude:
+  - agent-outbox/
+  - scripts/
+  - .claude/
+  - .githooks/
+  - README.md
+  - CLAUDE.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor/
+  # Markdown source for graph/mcp; the rendered .html is the canonical page.
+  - graph/mcp.md
+
+keep_files:
+  - assets
+
+# Render Markdown if any sneaks in; HTML pages are untouched.
+markdown: kramdown
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+
+# Migrated legacy pages bring their own complete <html>...</html>, so they
+# need the pass-through `legacy` layout (not `default`, which wraps content
+# in a new shell — that would nest two HTML documents).
+# New pages (search, future indexes) override to `layout: default`.
+defaults:
+  - scope: { path: "" }
+    values: { layout: legacy }
+  - scope: { path: "briefings" }
+    values: { layout: briefing, collection: briefings }
+  - scope: { path: "essays" }
+    values: { layout: essay, collection: essays }
+  - scope: { path: "intel" }
+    values: { layout: intel, collection: intel }
+  - scope: { path: "customers" }
+    values: { collection: customers }
+  - scope: { path: "office-hours" }
+    values: { collection: office_hours }
+  - scope: { path: "engineering" }
+    values: { collection: engineering }

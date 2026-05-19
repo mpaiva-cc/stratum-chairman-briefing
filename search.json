@@ -1,0 +1,36 @@
+---
+layout: null
+permalink: /search.json
+sitemap: false
+---
+{%- comment -%}
+  Capture the site-nav include's rendered text once so we can strip it
+  from every page's body — otherwise every page would match queries like
+  "product" or "essays" because the nav text appears in everyone.
+{%- endcomment -%}
+{%- capture _nav_html -%}{%- include site-nav.html -%}{%- endcapture -%}
+{%- assign _nav_text = _nav_html | strip_html | normalize_whitespace -%}
+{%- capture _raw_include -%}{% raw %}{% include site-nav.html %}{% endraw %}{%- endcapture -%}
+[
+{%- assign idx = 0 -%}
+{%- for p in site.html_pages -%}
+  {%- if p.sitemap == false or p.url == "/search.json" -%}{%- continue -%}{%- endif -%}
+  {%- if idx > 0 -%},{%- endif -%}
+  {%- assign idx = idx | plus: 1 -%}
+  {%- comment -%}
+    Most pages have their {% raw %}{% include %}{% endraw %} directives rendered by the time we read
+    p.content, but a few (whichever Jekyll renders after this file) still
+    have raw Liquid in their content. Strip both forms.
+  {%- endcomment -%}
+  {%- assign _raw = p.content | strip_html | normalize_whitespace -%}
+  {%- assign _clean = _raw | replace: _nav_text, " " | replace: _raw_include, " " -%}
+  {
+    "url": {{ p.url | jsonify }},
+    "title": {{ p.title | default: p.url | jsonify }},
+    "description": {{ p.description | default: "" | jsonify }},
+    "collection": {{ p.collection | default: "" | jsonify }},
+    "permalink": {{ p.permalink | default: p.url | jsonify }},
+    "body": {{ _clean | truncatewords: 180 | jsonify }}
+  }
+{%- endfor -%}
+]
