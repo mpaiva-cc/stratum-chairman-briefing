@@ -17,7 +17,15 @@
   const initial = new URLSearchParams(location.search).get('q') || '';
   if (initial) input.value = initial;
 
-  fetch('/search.json', { cache: 'no-cache' })
+  // search.json lives at the site root. On GitHub Pages this is under
+  // the /stratum/ baseurl; locally `make serve` uses --baseurl="" so
+  // the prefix is empty. Read baseurl from the <link rel="stylesheet">
+  // tag which already has the correctly-rewritten path.
+  const css = document.querySelector('link[rel=stylesheet][href*="assets/styles.css"]');
+  const m = css && css.getAttribute('href').match(/^(.*?)\/assets\/styles\.css/);
+  const baseurl = (m && m[1]) || '';
+  const searchJsonUrl = baseurl + '/search.json';
+  fetch(searchJsonUrl, { cache: 'no-cache' })
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(j => { docs = j; run(input.value); })
     .catch(e => { loadErr = e; meta.textContent = 'Index unavailable: ' + e.message; });
