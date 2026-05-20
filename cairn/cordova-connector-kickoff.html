@@ -1,0 +1,479 @@
+---
+layout: legacy
+title: "Cairn — Cordova connector kickoff."
+description: "Pre-kickoff brief distributed 48 hours before the 2026-05-29 call with Inez Ramos, Andre Sosa, and Lucia Vargas. Three new ingestion paths, Friday agenda, talking points by attendee, refusal lines, risks tracked. Author: Yield."
+permalink: /cairn/cordova-connector-kickoff.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}","datePublished":"2026-05-27T00:00:00Z","author":{"@type":"Person","name":"Yield"}}</script>
+{%- endif -%}
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cairn &mdash; Cordova connector kickoff.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ── Cairn / cordova-connector-kickoff.html ── */
+:root {
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-deep:#ebe1c9;
+  --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-3-aaa:#3d4456; --ink-mute:#6c7180;
+  --ochre:#b8651f; --ochre-deep:#8a4711; --ochre-link:#7a3d0a; --ochre-soft:#e6c79b;
+  --moss:#4a5d3a; --moss-deep:#364528; --moss-soft:#c5cdb1;
+  --display:"Fraunces","Newsreader",Georgia,serif; --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --col-wide:min(1380px,94vw); --col-read:min(760px,92vw);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 10% 16%,rgba(184,101,31,.05),transparent 42%),radial-gradient(circle at 90% 86%,rgba(14,22,38,.04),transparent 46%);mix-blend-mode:multiply}
+body > *{position:relative;z-index:1}
+a{color:var(--ochre-link);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+em{font-style:italic}strong{font-weight:600;color:var(--ink)}p{margin:0 0 1.1em}
+.masthead{width:var(--col-wide);margin:0 auto;padding:5rem 0 3.5rem;border-bottom:1px solid var(--paper-rule)}
+.masthead-slug{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);line-height:1.9}
+.masthead-slug .l2{color:var(--ink-3-aaa)}.masthead-slug .l3{color:var(--ink-mute)}
+.masthead-h1{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 144,"SOFT" 0;font-size:clamp(3rem,6vw,5.2rem);line-height:.98;letter-spacing:-.035em;margin:2.4rem 0 1.8rem;color:var(--ink);max-width:26ch}
+.masthead-h1 em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100;color:var(--ochre)}
+.masthead-dek{font-family:var(--display);font-style:italic;font-variation-settings:"opsz" 36,"SOFT" 80;font-size:clamp(1.15rem,1.75vw,1.38rem);line-height:1.45;color:var(--ink-2);max-width:62ch;margin:0 0 2.6rem;font-weight:300}
+.byline{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);border-top:1px solid var(--paper-rule);padding-top:1.1rem}
+.byline span{color:var(--ink-mute);margin:0 .55rem}
+.dist-header{width:var(--col-read);margin:3.6rem auto 0;border:1px solid var(--paper-rule);overflow:hidden}
+.dh-row{display:grid;grid-template-columns:8rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.dh-row:last-child{border-bottom:0}
+.dh-label{padding:.9rem 1.1rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.6}
+.dh-value{padding:.9rem 1.3rem;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;line-height:1.65;color:var(--ink-2)}
+.dh-value strong{color:var(--ink)}.dh-value .dh-note{color:var(--ink-mute);font-size:10.5px;display:block;margin-top:.15rem}
+.dh-notice{background:var(--paper-warm);padding:1.1rem 1.3rem;font-family:var(--mono);font-size:11px;letter-spacing:.11em;line-height:1.65;color:var(--ink);border-top:3px solid var(--ochre)}
+.dh-notice .dn-label{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ochre-deep);display:block;margin-bottom:.25rem;font-weight:600}
+@media(max-width:480px){.dh-row{grid-template-columns:1fr} .dh-label{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.body-wrap{width:var(--col-read);margin:0 auto;padding:3.2rem 0 1.8rem}
+.k-section{margin-bottom:2.8rem}
+.k-section-label{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);margin-bottom:.6rem;display:block}
+.k-section-h{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60,"SOFT" 0;font-size:clamp(1.28rem,2vw,1.52rem);line-height:1.2;letter-spacing:-.012em;color:var(--ink);margin:0 0 1.2rem}
+.k-section p,.k-section-p{margin:0 0 1rem;font-size:1.02rem;color:var(--ink-2);font-variation-settings:"opsz" 18;line-height:1.72}
+.conn-table{width:100%;border-collapse:collapse;margin:0 0 1.6rem;font-family:var(--mono);font-size:12px}
+.conn-table thead th{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);text-align:left;border-bottom:2px solid var(--ink);padding:.5rem .6rem .5rem 0;font-weight:600}
+.conn-table thead th:first-child{padding-left:0}
+.conn-table tbody td{border-bottom:1px solid var(--paper-rule);padding:.55rem .6rem .55rem 0;vertical-align:top;color:var(--ink-2);line-height:1.4}
+.conn-table tbody td:first-child{padding-left:0;color:var(--ink);font-weight:600}
+.conn-table tbody td .ct-note{display:block;color:var(--ink-mute);font-size:10.5px;margin-top:.15rem}
+.status-live{color:var(--moss-deep);font-weight:700}.status-partial{color:var(--ochre-deep);font-weight:700}
+.conn-cards{display:flex;flex-direction:column;gap:0;border:1px solid var(--paper-rule);overflow:hidden}
+.conn-card{border-bottom:1px solid var(--paper-rule)}.conn-card:last-child{border-bottom:0}
+.cc-head{display:grid;grid-template-columns:5.5rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.cc-id{padding:.75rem 1rem;font-family:var(--mono);font-size:12px;letter-spacing:.12em;font-weight:700;color:var(--ochre);background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.5;display:flex;align-items:flex-start}
+.cc-title-block{padding:.75rem 1.1rem;background:var(--paper-warm)}
+.cc-title{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);font-weight:600;line-height:1.5;display:block}
+.cc-subtitle{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--ink-mute);display:block;margin-top:.1rem}
+.cc-body{padding:1.2rem 1.5rem;font-family:var(--serif);font-size:1rem;line-height:1.7;color:var(--ink-2)}
+.cc-body p{margin:0 0 .85rem}.cc-body p:last-child{margin:0}
+.cc-body .datablock{font-family:var(--mono);font-size:11.5px;line-height:1.6;background:var(--paper-deep);border-left:2px solid var(--ochre);padding:.8rem 1rem;margin:.75rem 0 .9rem;color:var(--ink);overflow-x:auto;white-space:pre;letter-spacing:-.002em}
+.cc-body .datablock .cm{color:var(--ink-mute)}
+.cc-meta{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--paper-rule)}
+.cc-meta-cell{padding:.65rem .9rem;border-right:1px solid var(--paper-rule)}.cc-meta-cell:last-child{border-right:0}
+.cc-meta-cell .cm-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);display:block;margin-bottom:.2rem}
+.cc-meta-cell .cm-value{font-family:var(--mono);font-size:11.5px;color:var(--ink);font-weight:600}
+.cm-value.risk-low{color:var(--moss-deep)}.cm-value.risk-med{color:var(--ochre-deep)}.cm-value.risk-na{color:var(--ink-mute)}
+@media(max-width:480px){.cc-head{grid-template-columns:1fr} .cc-id{border-right:0;border-bottom:1px solid var(--paper-rule)} .cc-meta{grid-template-columns:1fr 1fr} .cc-meta-cell:nth-child(2){border-right:0} .cc-meta-cell:nth-child(3){grid-column:1/-1;border-right:0;border-top:1px solid var(--paper-rule)}}
+.agenda-list{list-style:none;padding:0;margin:0;border:1px solid var(--paper-rule);overflow:hidden}
+.ag-item{display:grid;grid-template-columns:6rem 1fr;border-bottom:1px solid var(--paper-rule)}.ag-item:last-child{border-bottom:0}
+.ag-band{padding:.8rem 1rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--ochre);font-weight:600;background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.55}
+.ag-text{padding:.8rem 1.2rem;font-family:var(--serif);font-size:.98rem;line-height:1.65;color:var(--ink-2)}
+.ag-text strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-bottom:.3rem;font-weight:600}
+.ag-text .ag-note{font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--ink-mute);display:block;margin-top:.4rem;line-height:1.55}
+@media(max-width:480px){.ag-item{grid-template-columns:1fr} .ag-band{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.attendee-list{list-style:none;padding:0;margin:0}
+.attendee-list li{display:grid;grid-template-columns:8.5rem 1fr;gap:.4rem .9rem;padding:.9rem 0;border-bottom:1px solid var(--paper-rule);font-size:1rem;color:var(--ink-2);line-height:1.6;align-items:start}
+.attendee-list li:last-child{border-bottom:0}
+.al-who{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-3-aaa);font-weight:600}
+.al-who .al-title{display:block;font-size:9.5px;color:var(--ink-mute);margin-top:.15rem;font-weight:400}
+.refusal-list{list-style:none;padding:0;margin:0}
+.refusal-list li{padding:.8rem 0 .8rem 1.9rem;border-bottom:1px solid var(--paper-rule);position:relative;font-size:1rem;color:var(--ink-2);line-height:1.6}
+.refusal-list li:last-child{border-bottom:0}
+.refusal-list li::before{position:absolute;left:0;top:.8rem;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ochre-link);content:"X"}
+.refusal-list li strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ochre-link);margin-bottom:.22rem}
+.seq-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--paper-rule);overflow:hidden}
+.seq-cell{padding:1.2rem 1.4rem;border-right:1px solid var(--paper-rule);border-bottom:1px solid var(--paper-rule)}
+.seq-cell:nth-child(even){border-right:0}.seq-cell:nth-last-child(-n+2){border-bottom:0}
+.seq-cell .sc-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-mute);display:block;margin-bottom:.35rem}
+.seq-cell .sc-value{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60,"SOFT" 0;font-size:clamp(1.1rem,2vw,1.32rem);color:var(--ink);letter-spacing:-.02em;line-height:1.1;display:block;margin-bottom:.25rem}
+.seq-cell .sc-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;color:var(--ink-3-aaa);line-height:1.5;display:block}
+@media(max-width:500px){.seq-grid{grid-template-columns:1fr} .seq-cell{border-right:0} .seq-cell:nth-last-child(-n+2){border-bottom:1px solid var(--paper-rule)} .seq-cell:last-child{border-bottom:0}}
+.risk-track{list-style:none;padding:0;margin:0}
+.risk-track li{padding:.8rem 1rem;border-left:2px solid var(--ochre-soft);margin-bottom:.55rem;font-size:.99rem;line-height:1.55;color:var(--ink-2)}
+.risk-track li.r-med{border-left-color:var(--ochre)}.risk-track li.r-low{border-left-color:var(--moss-soft)}
+.risk-track li .rt-id{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:.28rem}
+.risk-track li.r-med .rt-id{color:var(--ochre-deep)}.risk-track li.r-low .rt-id{color:var(--moss-deep)}
+.risk-track li strong{color:var(--ink)}
+.b-block{width:var(--col-read);margin:2.2rem auto 0;padding:1.6rem 1.9rem 1.8rem;background:var(--paper-warm);border:1px solid var(--paper-rule);border-top:3px solid var(--paper-rule-2)}
+.b-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:1rem}
+.b-block ul{list-style:none;padding:0;margin:0}
+.b-block li{font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--ink-2);padding:.55rem 0 .55rem 1.5rem;border-bottom:1px solid var(--paper-rule);position:relative}
+.b-block li:last-child{border-bottom:0}
+.b-block li::before{position:absolute;left:0;top:.55rem;content:"—";color:var(--paper-rule-2)}
+.b-block li strong{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:.2rem;font-weight:600}
+.forward-links{width:var(--col-read);margin:2.2rem auto 0;border:1px solid var(--paper-rule);overflow:hidden}
+.fwd-item{display:grid;grid-template-columns:6rem 1fr;border-bottom:1px solid var(--paper-rule)}.fwd-item:last-child{border-bottom:0}
+.fwd-tag{padding:.85rem 1rem;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre-link);font-weight:600;background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.6}
+.fwd-body{padding:.85rem 1.2rem}
+.fwd-body a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink);border-bottom:1px solid var(--paper-rule-2);padding-bottom:2px}
+.fwd-body a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+.fwd-body .fwd-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-mute);display:block;margin-top:.22rem}
+@media(max-width:480px){.fwd-item{grid-template-columns:1fr} .fwd-tag{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.closing{width:var(--col-read);margin:2.8rem auto 5rem;padding-top:1.8rem;border-top:1px solid var(--paper-rule)}
+.closing-note{font-family:var(--mono);font-style:italic;font-size:12px;letter-spacing:.12em;color:var(--ink-3-aaa);margin-bottom:1.4rem;line-height:1.7}
+.closing-links{display:flex;gap:2rem;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.closing-links a{color:var(--ink);border-bottom:1px solid var(--paper-rule-2);padding-bottom:3px}
+.closing-links a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+.footer{width:var(--col-wide);margin:0 auto;padding:4rem 0 3rem;border-top:1px solid var(--paper-rule)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand .mark{font-family:var(--display);font-weight:600;font-variation-settings:"opsz" 72,"SOFT" 0;font-size:1.65rem;letter-spacing:-.035em;color:var(--ink);margin-bottom:.8rem}
+.footer-brand p{font-family:var(--serif);font-style:italic;color:var(--ink-3-aaa);max-width:32ch;font-size:.95rem;line-height:1.55;margin:0}
+.footer-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 .9rem}
+.footer-col ul{list-style:none;padding:0;margin:0}.footer-col li{padding:.25rem 0}
+.footer-col a{color:var(--ink-2);border-bottom:0;font-size:.92rem}.footer-col a:hover{color:var(--ochre)}
+.footer-foot{border-top:1px solid var(--paper-rule);padding-top:1.4rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-mute);text-transform:uppercase}
+.footer-foot .briefing-link{color:var(--ink-3-aaa)}.footer-foot .briefing-link strong{color:var(--ochre);font-weight:500}.footer-foot .briefing-link:hover{color:var(--ink)}
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;gap:2rem} .footer-brand{grid-column:1/-1}}
+@media(max-width:640px){.footer-grid{grid-template-columns:1fr} .footer-foot{flex-direction:column;gap:1rem;align-items:flex-start}}
+@media(max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+@media print{.footer{display:none} body{background:white;color:black;font-size:11pt}}
+</style>
+</head>
+<body>
+<div class="rt-stamp" data-t0="2026-05-27T09:00:00-07:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">&#9679;</span> composed <strong style="color:#0e1626">2026-05-27</strong> &middot; <span style="opacity:.6">T+15d real-elapsed &middot; Yield / Connector Engineering &middot; W02 D1 morning</span></div>
+<div class="mob-bar">
+  <a href="{{ '/cairn/cordova-meeting-readout.html' | relative_url }}" aria-label="Meeting readout">&#8592; Readout</a>
+  <span class="mob-bar-mark">Cairn &mdash; Connector kickoff</span>
+  <a href="{{ '/cairn/first-stone.html' | relative_url }}" aria-label="First stone">First stone &#8594;</a>
+</div>
+{% include site-nav.html %}
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Cairn &middot; Connector Engineering &middot; Cordova Manufacturing</div>
+    <div class="l2">Pre-kickoff brief &middot; distributed 2026-05-27 &middot; 48h before call &middot; W02 D1</div>
+    <div class="l3">Yield (author) &middot; Reviewed by Forge &middot; Distribution: Inez Ramos, Andre Sosa, Lucia Vargas</div>
+  </div>
+  <h1 class="masthead-h1">Cairn &mdash; Cordova connector kickoff. <em>Three ingestion paths.</em></h1>
+  <p class="masthead-dek">Pre-kickoff brief to Inez Ramos, Andre Sosa, and Lucia Vargas &mdash; distributed 48&nbsp;hours before the Friday 2026-05-29 session. Read it before the call. We will not re-present it in the meeting.</p>
+  <div class="byline">Author: Yield<span>&middot;</span>Connector Engineering<span>&middot;</span>Reviewed: Forge<span>&middot;</span>2026-05-27<span>&middot;</span>narrative-T+15d<span>&middot;</span>W02 D1</div>
+</header>
+<div class="dist-header" role="region" aria-label="Distribution header">
+  <div class="dh-row">
+    <div class="dh-label">Call</div>
+    <div class="dh-value"><strong>2026-05-29 &middot; Friday &middot; 60 minutes</strong><span class="dh-note">Kickoff within 7 business days of MOU signing (2026-05-26) &mdash; Annika&rsquo;s requirement.</span></div>
+  </div>
+  <div class="dh-row">
+    <div class="dh-label">Their side</div>
+    <div class="dh-value"><strong>Inez Ramos</strong> &middot; IT Director &middot; primary contact<span class="dh-note">Andre Sosa &middot; Backend Engineer &middot; shift-handoff API owner</span><span class="dh-note">Lucia Vargas &middot; Security Engineer &middot; scope approval and CISO liaison</span></div>
+  </div>
+  <div class="dh-row">
+    <div class="dh-label">Our side</div>
+    <div class="dh-value"><strong>Yield</strong> &middot; Connector Engineering &middot; author and lead<span class="dh-note">Forge &middot; Engineering &middot; architecture review, framework oversight</span></div>
+  </div>
+  <div class="dh-notice">
+    <span class="dn-label">Distribution</span>
+    Inez Ramos, Andre Sosa, Lucia Vargas (Cordova Manufacturing) &middot; Yield, Forge (Stratum). Not for broader circulation without Inez&rsquo;s approval.
+  </div>
+</div>
+<div class="body-wrap">
+  <div class="k-section">
+    <span class="k-section-label">Section 1 &middot; What this brief is</span>
+    <h2 class="k-section-h">Pre-kickoff read-ahead.</h2>
+    <p>The MOU signed 2026-05-26. Annika named a connector kickoff within seven business days as a hard requirement. This brief is the read-ahead: distributed 48&nbsp;hours before the Friday session, it inventories the connector estate, scopes the three new ingestion paths, structures the 60-minute agenda, and makes explicit what we will refuse to build. Yield&rsquo;s standard pre-call discipline: no kickoff without a published inventory. If anything in Section 2 is wrong, flag it before Friday. Author: Yield. Reviewed by Forge.</p>
+  </div>
+  <div class="k-section">
+    <span class="k-section-label">Section 2 &middot; What is already working at Cordova</span>
+    <h2 class="k-section-h">Connector inventory &mdash; confirmed 2026-05-26.</h2>
+    <table class="conn-table" role="table" aria-label="Connector inventory">
+      <thead><tr><th>System</th><th>Status</th><th>Scope</th><th>Confirmed</th></tr></thead>
+      <tbody>
+        <tr><td>Workday HR Core<span class="ct-note">Graph baseline &middot; Tenure beta</span></td><td><span class="status-live">LIVE</span></td><td>Employee graph baseline (identity, role, tenure, org hierarchy)</td><td>2026-05-26</td></tr>
+        <tr><td>Greenhouse ATS<span class="ct-note">Recruiter beta &middot; Harvest API v2</span></td><td><span class="status-live">LIVE</span></td><td>Candidate pipeline, job nodes, stage transitions &mdash; read-only</td><td>2026-05-26</td></tr>
+        <tr><td>ADP Workforce Now<span class="ct-note">Payroll</span></td><td><span class="status-live">LIVE</span></td><td>Pay-period events, employment-status changes &mdash; one-way ingest</td><td>2026-05-26</td></tr>
+        <tr><td>Okta SCIM<span class="ct-note">Identity</span></td><td><span class="status-live">LIVE</span></td><td>Provisioning / deprovisioning events &middot; identity-graph anchor</td><td>2026-05-26</td></tr>
+        <tr><td>GitHub Enterprise<span class="ct-note">Tenure baseline &middot; READ-ONLY</span></td><td><span class="status-partial">PARTIAL</span></td><td>Org-level metadata only &mdash; not yet expanded for work-artifact reading. C-1 addresses this.</td><td>2026-05-26</td></tr>
+      </tbody>
+    </table>
+    <p>The shift-handoff app and paper certifications are not in this inventory. They are the subject of C-2 and C-3 below.</p>
+  </div>
+  <div class="k-section">
+    <span class="k-section-label">Section 3 &middot; What Cairn requires</span>
+    <h2 class="k-section-h">Three new ingestion paths.</h2>
+    <p>For the engineering population: GitHub Enterprise is wired but scoped too narrowly (C-1). For the manufacturing floor: the shift-handoff app has no ingest path (C-2). For paper certifications &mdash; the welder case from the design-partner demo: ingestion is not a connector problem, it is a Console workflow Tessera owns (C-3). Yield&rsquo;s work is C-1 and C-2. C-3 is referenced here only to scope what is not connector work.</p>
+  </div>
+</div>
+<div style="width:var(--col-read);margin:0 auto 2.4rem">
+  <div class="conn-cards" role="region" aria-label="Connector paths">
+    <div class="conn-card">
+      <div class="cc-head">
+        <div class="cc-id">C-1</div>
+        <div class="cc-title-block">
+          <span class="cc-title">GitHub Enterprise &mdash; work-artifact scope expansion</span>
+          <span class="cc-subtitle">Additive &middot; existing GHE connector &middot; no new credential</span>
+        </div>
+      </div>
+      <div class="cc-body">
+        <p>Expands the existing GHE connector (Tenure baseline scope) to ingest PR metadata, code review activity, and deployment events. Pattern follows the Greenhouse Harvest adapter; Forge framework v0.2 fits without customization. Schema additions are documented in <a href="{{ '/cairn/architecture.html' | relative_url }}">architecture.html &sect;II</a> (Pillar-ratified).</p>
+        <div class="datablock">GHE event              &rarr;  Stratum graph node
+─────────────────────────────────────────────────
+pull_request.merged    &rarr;  work_artifact{type:pr_merge}
+pull_request_review    &rarr;  work_artifact{type:code_review}
+  .state=approved               weight:0.72  (peer signal)
+  .state=changes_requested      weight:0.40
+deployment.success     &rarr;  work_artifact{type:deployment}
+<span class="cm"># fields: sha, author, repo, ts, review_count, additions, deletions</span>
+<span class="cm"># repo filter: Cordova-org/* — no cross-org reads</span></div>
+        <p>C-1 build is gated on Lucia&rsquo;s CISO sign-off for the three expanded read scopes (see R-Y3). If that sign-off is not in hand before 2026-05-30, the 2026-06-02 start date slides.</p>
+      </div>
+      <div class="cc-meta">
+        <div class="cc-meta-cell"><span class="cm-label">Estimated build</span><span class="cm-value">4 days</span></div>
+        <div class="cc-meta-cell"><span class="cm-label">Risk</span><span class="cm-value risk-low">LOW</span></div>
+        <div class="cc-meta-cell"><span class="cm-label">Start target</span><span class="cm-value">2026-06-02</span></div>
+      </div>
+    </div>
+    <div class="conn-card">
+      <div class="cc-head">
+        <div class="cc-id">C-2</div>
+        <div class="cc-title-block">
+          <span class="cc-title">Shift-handoff app &mdash; custom REST connector</span>
+          <span class="cc-subtitle">Homegrown system &middot; Cordova-side API build required &middot; Andre owns it</span>
+        </div>
+      </div>
+      <div class="cc-body">
+        <p>We are not connecting to an undocumented internal API. Yield proposes an external-facing surface that Andre&rsquo;s team exposes; Yield writes the connector to that surface. Minimum viable two-endpoint spec:</p>
+        <div class="datablock">GET  /api/handoffs?since={iso8601_ts}
+<span class="cm"># Returns: paginated shift-handoff records</span>
+<span class="cm"># Required: handoff_id, shift_date, employee_id, supervisor_id,</span>
+<span class="cm">#   line_id, status{complete|pending|exception}, notes_present:bool</span>
+<span class="cm"># Pagination: cursor-based; Link: next header</span>
+
+POST /api/attestations
+<span class="cm"># Body: { stone_id, attester_id, attestation_type, signed_at, payload_hash }</span>
+<span class="cm"># Response: { attestation_id, status:accepted|rejected, reason? }</span>
+<span class="cm"># Tessera&rsquo;s Console layer calls this; Yield writes the connector</span></div>
+        <p>Andre will push back on this shape &mdash; that is the point of the design discussion. The two constraints that are not negotiable: <code style="font-family:var(--mono);font-size:.86em;background:var(--paper-deep);border:1px solid var(--paper-rule);padding:.03em .28em;color:var(--ink)">since</code> cursor-based polling (no full dumps) and idempotency on <code style="font-family:var(--mono);font-size:.86em;background:var(--paper-deep);border:1px solid var(--paper-rule);padding:.03em .28em;color:var(--ink)">stone_id</code>. Authentication: OAuth2 client credentials (RFC&nbsp;6749 &sect;4.4) if Cordova&rsquo;s OAuth2 supports it; fallback to scoped bearer token plus IP allowlist if not. This is agreed in the 25&ndash;40 block. The 8&ndash;12 day estimate is dominated by Andre&rsquo;s API build, not Yield&rsquo;s connector.</p>
+      </div>
+      <div class="cc-meta">
+        <div class="cc-meta-cell"><span class="cm-label">Estimated build</span><span class="cm-value">8&ndash;12 days</span></div>
+        <div class="cc-meta-cell"><span class="cm-label">Risk</span><span class="cm-value risk-med">MEDIUM</span></div>
+        <div class="cc-meta-cell"><span class="cm-label">Start target</span><span class="cm-value">2026-06-09</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="body-wrap" style="padding-top:0">
+  <div class="k-section">
+    <span class="k-section-label">Section 4 &middot; The Friday agenda</span>
+    <h2 class="k-section-h">60 minutes. No slide deck.</h2>
+    <p>This brief is the working document. If something in it is wrong, say so at minute zero.</p>
+  </div>
+</div>
+<div style="width:var(--col-read);margin:0 auto 2.2rem">
+  <ul class="agenda-list" role="list" aria-label="Friday agenda">
+    <li class="ag-item">
+      <div class="ag-band">00&ndash;10</div>
+      <div class="ag-text"><strong>Re-orient &middot; Inventory walkthrough</strong>Walk the Section 2 table. Yield calls each system; Inez confirms status. Errors here propagate into the build plan.<span class="ag-note">Lucia: CISO sign-off on expanded GHE scopes confirmed here, or R-Y3 is open and C-1 is gated.</span></div>
+    </li>
+    <li class="ag-item">
+      <div class="ag-band">10&ndash;25</div>
+      <div class="ag-text"><strong>C-1 deep-dive &middot; GitHub scope expansion</strong>Three new read-only token scopes from the existing GHE App: <code style="font-family:var(--mono);font-size:.84em">read:pull_request</code>, <code style="font-family:var(--mono);font-size:.84em">read:deployment</code>, <code style="font-family:var(--mono);font-size:.84em">pull_requests:read</code>. No write scope. Lucia: has the CISO reviewed? What are the GHE rate-limit parameters (default polling: 15 min)? Org filter non-negotiable: Cordova-owned orgs only, enforced in the connector.</div>
+    </li>
+    <li class="ag-item">
+      <div class="ag-band">25&ndash;40</div>
+      <div class="ag-text"><strong>C-2 design discussion &middot; Shift-handoff API shape</strong>Yield presents the two-endpoint spec. Andre governs the shape; Yield&rsquo;s non-negotiables are cursor polling and <code style="font-family:var(--mono);font-size:.84em">stone_id</code> idempotency. Authentication decision lands here. If the handoff app schema is not stable across plants, say so now &mdash; Yield cannot build a connector to a moving target and will help spec an external contract instead.</div>
+    </li>
+    <li class="ag-item">
+      <div class="ag-band">40&ndash;50</div>
+      <div class="ag-text"><strong>Sequencing &middot; C-1 first, C-2 second</strong>C-1 first (2026-06-02, finish 2026-06-06): low risk, no Cordova dependency, delivers engineering-population value immediately, and lets Talus exercise its read path on real Cordova data before the manufacturing floor is live. C-2 second (2026-06-09): critical path is Andre&rsquo;s API build. Endpoint spec to Andre within 24h of this call. First stone (2026-07-25) requires both connectors live.</div>
+    </li>
+    <li class="ag-item">
+      <div class="ag-band">50&ndash;60</div>
+      <div class="ag-text"><strong>Forward &middot; Cadence, Slack, eval designation</strong>Weekly Tuesday 30-min build sync (Inez, Andre, Lucia, Yield). Slack channel <code style="font-family:var(--mono);font-size:.84em">#stratum-cordova-connector</code> &mdash; Inez confirms host. Kernel needs 100 reconciled Cordova identities with ground-truth artifacts before first stone. Inez designates the Cordova data owner before this call ends. No designation = first-stone date slips.</div>
+    </li>
+  </ul>
+</div>
+<div class="body-wrap" style="padding-top:0">
+  <div class="k-section">
+    <span class="k-section-label">Section 5 &middot; Talking points by attendee</span>
+    <h2 class="k-section-h">What each person is likely to focus on.</h2>
+    <p>Included in the distributed brief because there is nothing here Inez, Andre, or Lucia should not see.</p>
+    <ul class="attendee-list">
+      <li>
+        <div class="al-who">Inez Ramos<span class="al-title">IT Director</span></div>
+        <div>Security posture and data provenance. Walk her through <a href="{{ '/cairn/counsel-review-014-t.html' | relative_url }}">Counsel Review 014-T</a> if she returns to those concerns: M2 provenance retention, data-residency requirements, 90-day attestation audit-trail minimum. Data-residency: Cairn stores in the region Cordova selects at onboarding; no cross-region replication without Cordova consent; no sub-processor touch without DPA addendum.</div>
+      </li>
+      <li>
+        <div class="al-who">Andre Sosa<span class="al-title">Backend Engineer</span></div>
+        <div>He will ask whether Cordova is building something just for us. Honest answer: yes. The two endpoints do not exist today; Andre&rsquo;s team builds them. Yield delivers the contract spec within 24 hours of Friday, reviews the implementation for the idempotency and cursor constraints, and will not ask for more than the two endpoints.</div>
+      </li>
+      <li>
+        <div class="al-who">Lucia Vargas<span class="al-title">Security Engineer</span></div>
+        <div>C-1 is gated on CISO sign-off for the three expanded GHE read scopes. If not initiated before Friday, the 2026-06-02 start slides. Yield provides a scope-justification memo (each scope named, data accessed, data not accessed) by 2026-05-28 on request. Ask before end of day Thursday.</div>
+      </li>
+    </ul>
+  </div>
+  <div class="k-section">
+    <span class="k-section-label">Section 6 &middot; What we will not do</span>
+    <h2 class="k-section-h">Refusal lines. Hard ones.</h2>
+    <ul class="refusal-list">
+      <li>
+        <strong>No auto-discovery of work artifacts</strong>
+        Cairn ingests only the artifact types Cordova explicitly maps in the connector configuration. No repo crawling for undeclared types, no org-tree traversal for additional signals. Every data source requires explicit authorization from Inez or her designee. Inez requested this at the design-partner meeting; it is the correct design.
+      </li>
+      <li>
+        <strong>No exfiltration to content vendors without Cordova review</strong>
+        Work-artifact signal and skill-gap inference are not transmitted to content vendors. Content matches surface in Console for the learner and manager to act on. Any integration requiring Cordova employee data to leave Stratum&rsquo;s systems requires Cordova&rsquo;s written review before activation. No exceptions.
+      </li>
+      <li>
+        <strong>No access to compensation data</strong>
+        ADP-WFN covers employment status and pay-period events only &mdash; not compensation amounts, not band assignments. The AEDT wall blocking Cairn stones from writing to <code style="font-family:var(--mono);font-size:.86em;background:var(--paper-deep);border:1px solid var(--paper-rule);padding:.03em .28em;color:var(--ink)">comp_band</code> nodes is enforced at the schema layer (no edge type exists). This is an architectural constraint, not a policy.
+      </li>
+    </ul>
+  </div>
+  <div class="k-section">
+    <span class="k-section-label">Section 7 &middot; Sequencing recommendation</span>
+    <h2 class="k-section-h">The build calendar.</h2>
+    <p>Both connectors must be live before first stone. The only schedule slack is in C-2, and that slack belongs to Andre&rsquo;s team.</p>
+  </div>
+</div>
+<div style="width:var(--col-read);margin:0 auto 2.2rem">
+  <div class="seq-grid" role="region" aria-label="Build sequencing">
+    <div class="seq-cell"><span class="sc-label">C-1 start</span><span class="sc-value">2026-06-02</span><span class="sc-note">Gated on Lucia CISO sign-off (R-Y3). Slides 1:1 if sign-off arrives after 2026-05-30.</span></div>
+    <div class="seq-cell"><span class="sc-label">C-1 finish</span><span class="sc-value">2026-06-06</span><span class="sc-note">4-day build. GHE expanded scope live. Talus begins ingesting engineering work artifacts.</span></div>
+    <div class="seq-cell"><span class="sc-label">C-2 start</span><span class="sc-value">2026-06-09</span><span class="sc-note">Yield build starts when Andre&rsquo;s staging endpoints are available. Spec to Andre by 2026-05-30.</span></div>
+    <div class="seq-cell"><span class="sc-label">C-2 target finish</span><span class="sc-value">2026-06-20</span><span class="sc-note">Andre-dependent. 8&ndash;12 day window. Slides right if handoff-app API work extends.</span></div>
+    <div class="seq-cell"><span class="sc-label">Eval set (Kernel)</span><span class="sc-value">Before 2026-07-11</span><span class="sc-note">100 reconciled Cordova identities. Data owner designated by end of Friday&rsquo;s call.</span></div>
+    <div class="seq-cell"><span class="sc-label">First stone target</span><span class="sc-value">2026-07-25</span><span class="sc-note">Annika&rsquo;s requirement &middot; T+8w from MOU &middot; requires C-1, C-2, and Kernel eval set.</span></div>
+  </div>
+</div>
+<div class="body-wrap" style="padding-top:0">
+  <div class="k-section">
+    <span class="k-section-label">Section 8 &middot; Risks tracked</span>
+    <h2 class="k-section-h">Three open risks.</h2>
+    <ul class="risk-track">
+      <li class="r-med">
+        <span class="rt-id">R-Y1 &middot; MEDIUM &middot; Authentication shape, C-2</span>
+        Cordova&rsquo;s internal OAuth2 may not support client credentials grant (RFC&nbsp;6749 &sect;4.4). Fallback: scoped long-lived bearer token plus IP allowlist on Stratum&rsquo;s connector worker range; requires Cordova-side manual token rotation. <strong>Mitigation:</strong> Andre confirms OAuth2 profile on Friday; fallback agreed in the 25&ndash;40 block and included in the spec delivered 2026-05-30.
+      </li>
+      <li class="r-med">
+        <span class="rt-id">R-Y2 &middot; MEDIUM &middot; Shift-handoff schema instability</span>
+        Inez noted the previous IT director&rsquo;s implementation was undocumented. Unstable schema across plants breaks C-2. <strong>Mitigation:</strong> Yield proposes a minimal external contract. If the internal schema cannot support it, manufacturing-floor attestation defers to v2. First stone survives only if Annika accepts the engineering population as v1 scope &mdash; a product decision, not a connector decision.
+      </li>
+      <li class="r-low">
+        <span class="rt-id">R-Y3 &middot; LOW (probability) &middot; CISO sign-off on GHE scopes</span>
+        If CISO review was not initiated before Friday, sign-off likely extends past 2026-06-02 and C-1 start slips. <strong>Mitigation:</strong> Kickoff proceeds regardless; C-1 is gated on sign-off, not the kickoff. Scope-justification memo to Lucia by 2026-05-28 on request. Rated low: Lucia has been in scope-expansion conversations since the design-partner meeting.
+      </li>
+    </ul>
+  </div>
+</div>
+<aside class="b-block" role="region" aria-label="Methodology block">
+  <div class="b-label">Section 9 &middot; Methodology &mdash; what this brief commits to, what it does not</div>
+  <ul>
+    <li><strong>Pre-kickoff inventory, not a signed spec</strong>Endpoint shapes, mapping tables, and auth requirements are Yield&rsquo;s proposals. They become final only after Friday&rsquo;s session. Post-kickoff connector spec distributed within 24 hours of the call.</li>
+    <li><strong>Eval-set requirement is non-negotiable</strong>Yield will not ship a connector without an eval-set check against at least 100 reconciled Cordova identities. Cordova must designate a data owner to work with Kernel. Without that designation, the first-stone date slips regardless of connector build status.</li>
+    <li><strong>Latency published post-build</strong>Yield publishes p50 / p95 / p99 figures after the first full eval-set run. No latency commitments in this brief. Polling intervals finalized Friday once rate limits and API constraints are confirmed.</li>
+  </ul>
+</aside>
+<div class="forward-links" role="region" aria-label="Related documents">
+  <div class="fwd-item">
+    <div class="fwd-tag">Source</div>
+    <div class="fwd-body"><a href="{{ '/cairn/cordova-meeting-readout.html' | relative_url }}">Cairn &mdash; Cordova meeting readout &middot; MOU signed</a><span class="fwd-note">2026-05-26. Annika signed at minute 50. Yield kickoff was commitment #2.</span></div>
+  </div>
+  <div class="fwd-item">
+    <div class="fwd-tag">Schema</div>
+    <div class="fwd-body"><a href="{{ '/cairn/architecture.html' | relative_url }}">Cairn &mdash; Architecture &middot; &sect;II work-artifact schema</a><span class="fwd-note">Graph-side schema for work_artifact nodes. Pillar-ratified. C-1 maps to this; no new nodes required.</span></div>
+  </div>
+  <div class="fwd-item">
+    <div class="fwd-tag">Build</div>
+    <div class="fwd-body"><a href="{{ '/cairn/build-log.html' | relative_url }}">Cairn &mdash; Build log &middot; Forge&rsquo;s working note</a><span class="fwd-note">C-1 and C-2 build entries land here once connectors are in active development.</span></div>
+  </div>
+  <div class="fwd-item">
+    <div class="fwd-tag">Legal</div>
+    <div class="fwd-body"><a href="{{ '/cairn/counsel-review-014-t.html' | relative_url }}">Counsel Review 014-T &middot; Provenance retention and data-residency</a><span class="fwd-note">For Inez&rsquo;s security posture questions. M2 provenance, GDPR DPA, sub-processor disclosure.</span></div>
+  </div>
+  <div class="fwd-item">
+    <div class="fwd-tag">Target</div>
+    <div class="fwd-body"><a href="{{ '/cairn/first-stone.html' | relative_url }}">Cairn &mdash; First stone &middot; 2026-07-25 target</a><span class="fwd-note">The goal this connector work is building toward. Forthcoming once the stone is sealed.</span></div>
+  </div>
+</div>
+<div class="closing">
+  <div class="closing-note">Pre-kickoff brief &middot; Yield &middot; Connector Engineering &middot; 2026-05-27 &middot; narrative-T+15d &middot; W02 D1 &middot; morning. Reviewed by Forge. Distributed to Inez Ramos, Andre Sosa, Lucia Vargas (Cordova Manufacturing) 48h before the 2026-05-29 kickoff call. Post-kickoff connector spec within 24h of Friday&rsquo;s session.</div>
+  <div class="closing-links">
+    <a href="{{ '/cairn/cordova-meeting-readout.html' | relative_url }}">&#8592; Meeting readout</a>
+    <a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a>
+    <a href="{{ '/cairn/build-log.html' | relative_url }}">Build log</a>
+    <a href="{{ '/cairn/counsel-review-014-t.html' | relative_url }}">Counsel 014-T</a>
+    <a href="{{ '/cairn/first-stone.html' | relative_url }}">First stone &#8594;</a>
+  </div>
+</div>
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span style="color:var(--ochre)">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="{{ '/product/index.html#product' | relative_url }}">People graph</a></li>
+        <li><a href="{{ '/cairn/' | relative_url }}">Cairn</a></li>
+        <li><a href="{{ '/product/index.html#pricing' | relative_url }}">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Cairn</h4>
+      <ul>
+        <li><a href="{{ '/cairn/plan.html' | relative_url }}">Plan</a></li>
+        <li><a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a></li>
+        <li><a href="{{ '/cairn/build-log.html' | relative_url }}">Build log</a></li>
+        <li><a href="{{ '/cairn/partnerships.html' | relative_url }}">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Customers</h4>
+      <ul>
+        <li><a href="{{ '/customers/cordova.html' | relative_url }}">Cordova</a></li>
+        <li><a href="{{ '/customers/halcyon.html' | relative_url }}">Halcyon</a></li>
+        <li><a href="{{ '/customers/' | relative_url }}">All customers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="{{ '/trust/' | relative_url }}">SOC 2 &middot; ISO 27001</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">GDPR &middot; DPA</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">EU AI Act stance</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-foot">
+    <span>Stratum, Inc. &middot; Palo Alto &middot; 2026 &middot; All rights reserved.</span>
+    <a class="briefing-link" href="{{ '/briefings/017.html' | relative_url }}">&#8592; <strong>Briefing 017</strong> &middot; Cairn ratification</a>
+  </div>
+</footer>
+<script>
+  (function(){var nav=document.getElementById('nav');if(!nav)return;var last=false;function onS(){var y=window.scrollY||window.pageYOffset,s=y>8;if(s!==last){nav.classList.toggle('is-scrolled',s);last=s}}window.addEventListener('scroll',onS,{passive:true});onS();})();
+</script>
+{% include echo-script.html %}
+</body>
+</html>
