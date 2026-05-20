@@ -1,0 +1,644 @@
+---
+layout: legacy
+title: "Cairn — Cordova design-partner meeting brief."
+description: "Pre-meeting brief for the Cordova design-partner call on 2026-05-26 at 14:00 PT. Attendees: Annika Whitfield (CHRO), Inez Quintero (IT Director), Henrik Adler (CFO, pricing slot). Authored by Vector, pre-circulated to Forge and Kernel for fact-check."
+permalink: /cairn/cordova-meeting-brief.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}","datePublished":"2026-05-24T00:00:00Z"}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cairn — Cordova design-partner meeting brief.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ── Cairn / cordova-meeting-brief.html · page-scoped styles ─── */
+:root {
+  --paper:#f4ecda; --paper-warm:#f7f0e0; --paper-rule:#d8cdb6; --paper-rule-2:#c8b894;
+  --ink:#0e1626; --ink-2:#2a3344; --ink-3:#4b5365; --ink-3-aaa:#3d4456; --ink-mute:#6c7180;
+  --ochre:#b8651f; --ochre-deep:#8a4711; --ochre-link:#7a3d0a; --ochre-soft:#e6c79b; --moss:#4a5d3a;
+  --display:"Fraunces","Newsreader",Georgia,serif;
+  --serif:"Newsreader","Iowan Old Style",Georgia,serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --col-wide:min(1380px,94vw); --col-read:min(680px,92vw);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 10% 16%,rgba(184,101,31,.05),transparent 42%),radial-gradient(circle at 90% 86%,rgba(14,22,38,.04),transparent 46%);mix-blend-mode:multiply}
+a{color:var(--ochre-link);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+em{font-style:italic;font-variation-settings:"opsz" 14}
+strong{font-weight:600;color:var(--ink)}
+
+/* ── MASTHEAD ── */
+.masthead{width:var(--col-wide);margin:0 auto;padding:5rem 0 3.5rem;border-bottom:1px solid var(--paper-rule)}
+.masthead-slug{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);line-height:1.9}
+.masthead-slug div+div{color:var(--ink-3-aaa)} .masthead-slug div+div+div{color:var(--ink-mute)}
+.masthead-h1{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 144,"SOFT" 0;font-size:clamp(3.2rem,6.4vw,5.6rem);line-height:.98;letter-spacing:-.035em;margin:2.4rem 0 1.8rem;color:var(--ink);max-width:24ch}
+.masthead-h1 em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100;color:var(--ochre)}
+.masthead-dek{font-family:var(--display);font-style:italic;font-variation-settings:"opsz" 36,"SOFT" 80;font-size:clamp(1.2rem,1.8vw,1.45rem);line-height:1.45;color:var(--ink-2);max-width:60ch;margin:0 0 2.6rem;font-weight:300}
+.byline{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);border-top:1px solid var(--paper-rule);padding-top:1.1rem}
+.byline span{color:var(--ink-mute);margin:0 .55rem}
+
+/* ── ATTENDEE GRID ── */
+.attendee-grid{width:var(--col-read);margin:3.6rem auto 0;display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--paper-rule);overflow:hidden}
+.attendee-col{padding:1.4rem 1.6rem;border-right:1px solid var(--paper-rule)}
+.attendee-col:last-child{border-right:0}
+.attendee-col-label{font-family:var(--mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:1rem;display:block}
+.attendee-row{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;line-height:1.7;color:var(--ink-2);padding:.3rem 0;border-bottom:1px solid var(--paper-rule)}
+.attendee-row:last-child{border-bottom:0}
+.attendee-row .ar-name{color:var(--ink);font-weight:600;display:block}
+.attendee-row .ar-role{color:var(--ink-3-aaa);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase}
+.attendee-row .ar-note{color:var(--ink-mute);font-size:10px;letter-spacing:.1em;display:block;margin-top:.1rem}
+@media(max-width:560px){.attendee-grid{grid-template-columns:1fr} .attendee-col{border-right:0;border-bottom:1px solid var(--paper-rule)} .attendee-col:last-child{border-bottom:0}}
+
+/* ── SECTION WRAPPERS ── */
+.brief-wrap{width:var(--col-read);margin:0 auto;padding:3.5rem 0 2rem}
+.brief-section{margin-bottom:3rem}
+.brief-section-label{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);margin-bottom:.65rem;display:block}
+.brief-section-h{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60,"SOFT" 0;font-size:clamp(1.3rem,2vw,1.55rem);line-height:1.2;letter-spacing:-.012em;color:var(--ink);margin:0 0 1.1rem}
+.brief-section p{margin:0 0 1.1rem;font-size:1.02rem;color:var(--ink-2);font-variation-settings:"opsz" 18}
+.brief-section p:last-child{margin:0}
+
+/* ── OUTCOME LIST ── */
+.outcome-list{list-style:none;padding:0;margin:0}
+.outcome-list li{padding:.9rem 0 .9rem 2rem;border-bottom:1px solid var(--paper-rule);position:relative;font-size:1.02rem;color:var(--ink-2)}
+.outcome-list li:last-child{border-bottom:0}
+.outcome-list li::before{position:absolute;left:0;top:.9rem;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--ochre)}
+.outcome-list li.primary::before{content:"①"}
+.outcome-list li.secondary::before{content:"②"}
+.outcome-list li.tertiary::before{content:"③"}
+.outcome-list li strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:.3rem}
+
+/* ── AGENDA TABLE ── */
+.agenda-block{border:1px solid var(--paper-rule);overflow:hidden;margin-top:1.2rem}
+.agenda-row{display:grid;grid-template-columns:6rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.agenda-row:last-child{border-bottom:0}
+.agenda-time{padding:.95rem 1.1rem;font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ochre);font-weight:600;background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.5}
+.agenda-body{padding:.95rem 1.3rem;font-size:.97rem;color:var(--ink-2)}
+.agenda-body strong{color:var(--ink);display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:.35rem}
+.agenda-body p{margin:0;line-height:1.6}
+.agenda-body .agenda-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-mute);margin-top:.4rem;display:block}
+.agenda-options{margin:.5rem 0 0;padding:0 0 0 1.4rem;font-size:.95rem;color:var(--ink-2)}
+.agenda-options li{margin-bottom:.35rem}
+.agenda-options li:last-child{margin-bottom:0}
+.agenda-body .agenda-options-note{margin-top:.7rem}
+@media(max-width:480px){.agenda-row{grid-template-columns:1fr} .agenda-time{border-right:0;border-bottom:1px solid var(--paper-rule);padding:.65rem 1rem}}
+
+/* ── ATTENDEE TALKING-POINT CARDS ── */
+.tp-cards{display:grid;grid-template-columns:1fr;gap:1.2rem;margin-top:1.2rem}
+.tp-card{border:1px solid var(--paper-rule);padding:1.4rem 1.6rem;background:var(--paper-warm)}
+.tp-card-who{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ochre-link);font-weight:600;margin-bottom:.25rem}
+.tp-card-role{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:.9rem}
+.tp-card p{font-size:.97rem;color:var(--ink-2);margin:0 0 .75rem;line-height:1.6}
+.tp-card p:last-child{margin:0}
+
+/* ── B-BLOCKS ── */
+.b-block{width:var(--col-read);margin:2.4rem auto 0;padding:1.8rem 2rem 2rem;background:var(--paper-warm);border:1px solid var(--paper-rule)}
+.b-block.top-ink{border-top:3px solid var(--ink)}
+.b-block.top-ochre{border-top:3px solid var(--ochre)}
+.b-block.top-rule{border-top:3px solid var(--paper-rule-2)}
+.b-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;margin-bottom:1.2rem}
+.b-block.top-ink .b-label{color:var(--ink-3-aaa)}
+.b-block.top-ochre .b-label{color:var(--ochre-link)}
+.b-block.top-rule .b-label{color:var(--ink-3-aaa)}
+.b-block ul{list-style:none;padding:0;margin:0}
+.b-block li{font-family:var(--mono);font-size:12px;line-height:1.65;color:var(--ink-2);padding:.65rem 0 .65rem 1.6rem;border-bottom:1px solid var(--paper-rule);position:relative}
+.b-block li:last-child{border-bottom:0}
+.b-block li::before{position:absolute;left:0;top:.65rem;font-size:11.5px}
+.b-block.top-ink li::before{content:"✓";color:var(--moss);font-weight:700}
+.b-block.top-ochre li::before{content:"—";color:var(--ochre);font-weight:700}
+.b-block.top-rule li::before{content:"—";color:var(--paper-rule-2)}
+.b-block li strong{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:.25rem;font-weight:600}
+.b-block li a{color:var(--ochre-link);border-bottom:1px solid var(--ochre-soft)}
+.b-block li a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+
+/* ── RISK BLOCK ── */
+.risk-list{list-style:none;padding:0;margin:0}
+.risk-list li{font-family:var(--serif);font-size:1rem;line-height:1.6;color:var(--ink-2);padding:.8rem 0 .8rem 2.8rem;border-bottom:1px solid var(--paper-rule);position:relative}
+.risk-list li:last-child{border-bottom:0}
+.risk-list li::before{position:absolute;left:0;top:.8rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;font-weight:700;color:var(--ochre-link)}
+.risk-list li.r1::before{content:"R1"}
+.risk-list li.r2::before{content:"R2"}
+.risk-list li.r3::before{content:"R3"}
+.risk-list li strong{color:var(--ink)}
+
+/* ── CLOSING ── */
+.closing{width:var(--col-read);margin:3.2rem auto 5rem;padding-top:2rem;border-top:1px solid var(--paper-rule)}
+.closing-note{font-family:var(--mono);font-style:italic;font-size:12px;letter-spacing:.12em;color:var(--ink-3-aaa);margin-bottom:1.6rem;line-height:1.7}
+.closing-links{display:flex;gap:2.4rem;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.closing-links a{color:var(--ink);border-bottom:1px solid var(--paper-rule-2);padding-bottom:3px}
+.closing-links a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+
+/* ── FOOTER ── */
+.footer{width:var(--col-wide);margin:0 auto;padding:4rem 0 3rem;border-top:1px solid var(--paper-rule)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand .mark{font-family:var(--display);font-weight:600;font-variation-settings:"opsz" 72,"SOFT" 0;font-size:1.65rem;letter-spacing:-.035em;color:var(--ink);margin-bottom:.8rem}
+.footer-brand p{font-family:var(--serif);font-style:italic;color:var(--ink-3-aaa);max-width:32ch;font-size:.95rem;line-height:1.55;margin:0}
+.footer-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 .9rem}
+.footer-col ul{list-style:none;padding:0;margin:0} .footer-col li{padding:.25rem 0}
+.footer-col a{color:var(--ink-2);border-bottom:0;font-size:.92rem} .footer-col a:hover{color:var(--ochre)}
+.footer-foot{border-top:1px solid var(--paper-rule);padding-top:1.4rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-mute);text-transform:uppercase}
+.footer-foot .briefing-link{color:var(--ink-3-aaa)} .footer-foot .briefing-link strong{color:var(--ochre);font-weight:500} .footer-foot .briefing-link:hover{color:var(--ink)}
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;gap:2rem} .footer-brand{grid-column:1/-1}}
+@media(max-width:640px){.footer-grid{grid-template-columns:1fr} .footer-foot{flex-direction:column;gap:1rem;align-items:flex-start}}
+
+/* ── MOB BAR ── */
+@media(max-width:960px){
+  .mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}
+  .mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}
+  .mob-bar a:active{color:#b8651f}
+  .mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+@media print{.footer{display:none} body{background:white;color:black;font-size:11pt} .brief-wrap,.b-block,.closing,.attendee-grid{width:100%}}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-24T00:00:00-07:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> composed <strong style="color:#0e1626">2026-05-24</strong> · <span style="opacity:.6">T+12d real-elapsed · Vector / Customer Engineering</span></div>
+<!-- /realtime-stamp -->
+
+<div class="mob-bar">
+  <a href="{{ '/cairn/cordova-response.html' | relative_url }}" aria-label="Response thread">← Thread</a>
+  <span class="mob-bar-mark">Cordova — meeting brief</span>
+  <a href="{{ '/cairn/architecture.html' | relative_url }}" aria-label="Architecture">Arch →</a>
+</div>
+
+{% include site-nav.html %}
+
+<!-- ── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Cairn &middot; Pre-Meeting Brief &middot; Cordova Manufacturing</div>
+    <div>Meeting 2026-05-26 &middot; 14:00 PT &middot; 45 min &middot; Video</div>
+    <div>Internal record &middot; Pre-circulated to Forge and Kernel for fact-check &middot; Vector</div>
+  </div>
+  <h1 class="masthead-h1">Cordova &mdash; <em>design-partner meeting brief.</em></h1>
+  <p class="masthead-dek">
+    Pre-meeting brief for the 2026-05-26 Cordova call. Two outcomes in order of priority:
+    signed MOU within five business days, and a concrete architecture-input answer on the
+    senior-retirement attestation question. This is not a script.
+  </p>
+  <div class="byline">
+    Author: Vector<span>&middot;</span>Customer Engineering<span>&middot;</span>2026-05-24<span>&middot;</span>narrative-T+12d<span>&middot;</span>W01 D5
+  </div>
+</header>
+
+<!-- ── ATTENDEES ── -->
+<div class="attendee-grid" role="region" aria-label="Meeting attendees">
+  <div class="attendee-col">
+    <span class="attendee-col-label">Their side &middot; Cordova Manufacturing</span>
+    <div class="attendee-row">
+      <span class="ar-name">Annika Whitfield</span>
+      <span class="ar-role">CHRO &middot; Full session (00–45)</span>
+    </div>
+    <div class="attendee-row">
+      <span class="ar-name">Inez Quintero</span>
+      <span class="ar-role">IT Director &middot; Full session (00–45)</span>
+    </div>
+    <div class="attendee-row">
+      <span class="ar-name">Henrik Adler</span>
+      <span class="ar-role">CFO &middot; Pricing slot only (30–40)</span>
+      <span class="ar-note">Confirmed dial-in for the commercial 10-min segment</span>
+    </div>
+  </div>
+  <div class="attendee-col">
+    <span class="attendee-col-label">Our side &middot; Stratum</span>
+    <div class="attendee-row">
+      <span class="ar-name">Vector</span>
+      <span class="ar-role">Customer Engineering &middot; Full session (00–45)</span>
+      <span class="ar-note">Leads; takes notes on attestation-approach preferences</span>
+    </div>
+    <div class="attendee-row">
+      <span class="ar-name">Forge</span>
+      <span class="ar-role">Engineering &middot; Full session (00–45)</span>
+      <span class="ar-note">Runs demo; presents the three attestation approaches</span>
+    </div>
+    <div class="attendee-row">
+      <span class="ar-name">Kernel</span>
+      <span class="ar-role">Eval methodology &middot; Optional (20–30)</span>
+      <span class="ar-note">Available if Inez requests eval-methodology depth; Vector to confirm need 24h prior</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── CONTENT SECTIONS ── -->
+<div class="brief-wrap">
+
+  <!-- §2 WHAT WE WANT -->
+  <div class="brief-section">
+    <span class="brief-section-label">Section 2 &middot; Stratum's objectives</span>
+    <h2 class="brief-section-h">What we want from the meeting.</h2>
+    <p>Two outcomes, ranked. If the meeting closes only one, it must be the first.</p>
+    <ul class="outcome-list">
+      <li class="primary">
+        <strong>Primary &middot; MOU signed within 5 business days post-meeting</strong>
+        Cordova commits to the design-partner program. Terms: zero activation-tier cost for
+        the first 100 attested skill stones; full $80K platform base begins year-2; per-EE
+        charge at $14 applied to Cordova's manufacturing-floor scope from go-live; per-stone
+        charge at $35 on stones beyond the first-100 tier. Vector walks through these numbers
+        in the pricing slot (minutes 30&ndash;40). Annika has the authority to countersign
+        under $200K/year without board approval; the existing customer note confirms this.
+        The preferred outcome is Annika signs in the room. If she takes it to her board,
+        five business days is the outer bound.
+      </li>
+      <li class="secondary">
+        <strong>Secondary &middot; Architecture-input answer on the attestation question</strong>
+        Which of the three approaches to attestation under sparse expert supply does Annika
+        find most workable for the senior-retirement case at Stamping Line 3? This is not a
+        contract decision and must not be framed as one. It is an architecture-input decision:
+        Forge needs Annika's directional preference before committing engineering weeks to
+        any one approach. Vector takes notes; no conclusion is committed at the meeting.
+      </li>
+    </ul>
+  </div>
+
+  <!-- §3 WHAT CORDOVA WANTS -->
+  <div class="brief-section">
+    <span class="brief-section-label">Section 3 &middot; Cordova's objectives</span>
+    <h2 class="brief-section-h">What Cordova wants from the meeting.</h2>
+    <p>
+      Based on the email thread and the prior Tenure beta relationship, Cordova comes
+      into this call with three questions. All three are answerable. The third is
+      conditional on Henrik joining on time.
+    </p>
+    <ul class="outcome-list">
+      <li class="primary">
+        <strong>First &middot; Confidence that Cairn is real, not a deck</strong>
+        Annika replied within hours of the approach letter. She read the architecture
+        document before writing back. She is not evaluating a pitch; she is deciding
+        whether Cairn is at a stage where Cordova's time and data are worth committing.
+        The Querétaro demonstration (minutes 05&ndash;20) answers this directly: a live
+        closed-loop run on real Cordova data, with methodology-disclosure panels visible.
+        No synthetic employees. No Marisol Ortega.
+      </li>
+      <li class="secondary">
+        <strong>Second &middot; Architecture answer on the senior-retirement question</strong>
+        Annika asked a specific question in her reply: what happens to the attestation
+        record when no qualified peer remains? She is not asking about the general
+        skill-gap problem. She is asking about a specific failure mode. Forge presents the
+        three approaches in minutes 20&ndash;30. No ranking. Annika and Inez react.
+        The session ends with Cordova's directional preference documented.
+      </li>
+      <li class="tertiary">
+        <strong>Third &middot; Clarity on pricing</strong>
+        Henrik joins for the pricing slot only. His question, documented in the customer
+        note (original annotation: <em>"If commercial conversion is proposed, please bring
+        proposed pricing to me with the data-flow diagram attached."</em>), is whether he
+        can hold the Cairn commercial model in his head in ten minutes. Vector walks through
+        the hybrid model. Henrik will want the cyclicality question answered.
+      </li>
+    </ul>
+  </div>
+
+  <!-- §4 AGENDA -->
+  <div class="brief-section">
+    <span class="brief-section-label">Section 4 &middot; 45-minute agenda</span>
+    <h2 class="brief-section-h">The 45-minute agenda.</h2>
+    <p>
+      Times are targets, not walls. The only hard constraint: Henrik joins at 30 and leaves
+      at 40. Do not let the attestation discussion overrun into his slot.
+    </p>
+    <div class="agenda-block" role="region" aria-label="Meeting agenda">
+      <div class="agenda-row">
+        <div class="agenda-time">00&ndash;05</div>
+        <div class="agenda-body">
+          <strong>Welcome + scope</strong>
+          <p>Vector opens. The methodology framing: what Cairn does and, critically, what
+          it does not do. Cairn is a closed-loop learning agent — detect, recommend,
+          deliver, attest — not a workforce-planning dashboard. Inez and Annika have both
+          read the architecture; this is orientation, not introduction.</p>
+        </div>
+      </div>
+      <div class="agenda-row">
+        <div class="agenda-time">05&ndash;20</div>
+        <div class="agenda-body">
+          <strong>Closed-loop demo on Querétaro data</strong>
+          <p>Forge runs the demonstration. The data set is Cordova's own Querétaro
+          graph — the same twelve depth-zero roles, three senior incumbents, no named
+          successor that the approach letter named. The employee used in the
+          detect&ndash;recommend&ndash;deliver&ndash;attest run is a real Cordova
+          employee whose data Annika has cleared for use. <strong>Vector to confirm
+          identity with Annika 24 hours before the call.</strong> Marisol Ortega is not
+          used; she was synthetic and is retired from this engagement.</p>
+          <span class="agenda-note">Methodology-disclosure panels must be visible throughout. If Forge is
+          screensharing, pin the disclosure panel before starting the run.</span>
+        </div>
+      </div>
+      <div class="agenda-row">
+        <div class="agenda-time">20&ndash;30</div>
+        <div class="agenda-body">
+          <strong>The senior-retirement attestation question</strong>
+          <p>Forge presents the three approaches named in the email acknowledgment.
+          No ranking; Stratum has not ratified any of them.</p>
+          <ul class="agenda-options">
+            <li><strong>Option A.</strong> Third-party expert validators — a credentialed external examiner performs the co-attestation in the senior's absence.</li>
+            <li><strong>Option B.</strong> Recorded-skill demonstrations with frame-level scoring — candidate work scored against a rubric, with human review at a confidence threshold.</li>
+            <li><strong>Option C.</strong> Deferred attestation pending peer maturity — the stone is provisionally placed and held until a qualified peer reaches level within a defined window.</li>
+          </ul>
+          <p class="agenda-options-note">Annika and Inez react. Vector takes notes. No approach is committed at the meeting.
+          If Kernel is present, they speak only when Inez asks about eval methodology depth.</p>
+        </div>
+      </div>
+      <div class="agenda-row">
+        <div class="agenda-time">30&ndash;40</div>
+        <div class="agenda-body">
+          <strong>Pricing + design-partner terms &middot; Henrik joins</strong>
+          <p>Vector walks the hybrid model: $80K base + $14/EE (manufacturing-floor scope)
+          + $35/stone. Design-partner discount: $0 activation tier for the first 100
+          attested stones; full $80K base begins year-2. If Annika decides to sign the
+          MOU at the meeting rather than take it to her board: there is no formal board
+          approval requirement under $200K/year per the customer note. Henrik should
+          understand the cyclicality exposure: a 20% headcount reduction in the
+          manufacturing-floor scope (~4,160 EE today) reduces the per-EE component by
+          approximately $11.6K in a full year, not catastrophic against the $80K base.
+          The per-stone component scales with activity, which also contracts in a
+          downcycle.</p>
+          <span class="agenda-note">Henrik leaves at :40. Do not let the pricing discussion drift into
+          the attestation segment or vice versa.</span>
+        </div>
+      </div>
+      <div class="agenda-row">
+        <div class="agenda-time">40&ndash;45</div>
+        <div class="agenda-body">
+          <strong>Forward</strong>
+          <p>Next steps. If MOU is signed: connector kickoff (Yield) within 7 days.
+          First synthetic-data smoke test under Cordova's real graph within 14 days.
+          If MOU is deferred: Vector sends clean terms by end of day 2026-05-26, with a
+          five-business-day response window. Vector confirms the employee-data
+          clearance for future demo use. Annika's attestation-approach preference
+          documented and filed with Forge for architecture planning.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 TALKING POINTS -->
+  <div class="brief-section">
+    <span class="brief-section-label">Section 5 &middot; Talking points by attendee</span>
+    <h2 class="brief-section-h">Talking points by attendee.</h2>
+    <p>
+      These are not scripts. They are pressure maps. Know where each person's weight
+      sits before the call starts.
+    </p>
+    <div class="tp-cards">
+      <div class="tp-card">
+        <div class="tp-card-who">Annika Whitfield</div>
+        <div class="tp-card-role">CHRO &middot; Cordova Manufacturing</div>
+        <p>Annika is an industrial-engineer-turned-HR-leader. Fourteen years at GE Aviation.
+        She respects specificity and methodology disclosure. She distrusts SaaS warmth.
+        She came to Cordova to give her board data, not expressive pauses. Lead with the
+        data. If the Querétaro demo shows the heatmap running in under 90 seconds on live
+        data, that is the moment her posture opens. Do not explain what she can read.</p>
+        <p>Her attestation question is not academic. She has three senior welders on
+        Stamping Line 3 inside two to three years of retirement with no qualified peer
+        ready. She is asking whether Cairn can close that gap before the first retirement
+        or whether she will be holding an empty attestation record. Be honest about where
+        the architecture stands. She will respect the honesty more than a promise.</p>
+        <p>She will likely decide on the MOU in the room if the demo lands and the pricing
+        math is straightforward. Do not oversell the MOU. Let her decide.</p>
+      </div>
+      <div class="tp-card">
+        <div class="tp-card-who">Inez Quintero</div>
+        <div class="tp-card-role">IT Director &middot; Cordova Manufacturing &middot; 15-year company veteran</div>
+        <p>Inez built the Oracle HCM integration with Cordova's plant systems herself in
+        2019. She has already reviewed the Stratum data-flow diagram (the one Forge drew
+        with her at T+47d). She is not evaluating Stratum from scratch. She is checking
+        whether Cairn adds a new attack surface or a new write path that was not in
+        the original MSA.</p>
+        <p>Her questions will be security posture (SOC 2, data residency, AEDT
+        compliance line), the consent footprint for the employee in the demo, and whether
+        Cairn writes back to Oracle HCM Cloud. The answers: Stratum is SOC 2 Type II;
+        data residency is configurable (US-West by default for Cordova); the AEDT
+        disclosure is in the methodology block on every decision output; Cairn does not
+        write to Oracle without explicit human approval and audit log. Reference the trust
+        center if she wants the full sub-processor list.</p>
+        <p>Brief but substantive. She does not need a sales pitch. She needs a
+        clean answer per question.</p>
+      </div>
+      <div class="tp-card">
+        <div class="tp-card-who">Henrik Adler</div>
+        <div class="tp-card-role">CFO &middot; Cordova Manufacturing &middot; 22-year company veteran</div>
+        <p>Henrik's framework: if he cannot hold the data flow from HRIS to output in
+        ten minutes, the answer is no. He signed off on the original MSA because Forge
+        drew that diagram with Inez on a whiteboard and did not use the word
+        <em>insights.</em> Cairn's commercial model must be equally legible.</p>
+        <p>He will ask what happens to Cordova's Cairn spend if headcount contracts.
+        The honest answer, in his terms: the per-EE component applies to the
+        manufacturing-floor scope (~4,160 EE today at 80% of workforce). A 20%
+        reduction in that scope reduces the annual per-EE charge by approximately
+        $11.6K. The $80K platform base is fixed until year-3 renewal. The per-stone
+        charge scales with attestation activity, which also contracts in a downcycle.
+        Worst case for Cordova in a 20% headcount-cut year: Cairn spend drops by
+        roughly $12&ndash;14K against a base of ~$138K. That is a 9&ndash;10% reduction,
+        not a cliff.</p>
+        <p>Do not discount the $80K platform base. That is a hard floor per
+        Compass's pricing discipline. If Henrik pushes: the discount is already in the
+        structure (the first-100-stones activation tier at $0 is a $3,500 discount on
+        the per-stone rate). Name it as such.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- §6 REFUSAL LINES -->
+<aside class="b-block top-ochre" aria-label="Refusal lines">
+  <div class="b-label">Section 6 &middot; Refusal lines &mdash; what we will not say or do</div>
+  <ul>
+    <li>
+      <strong>No promise on unbuilt attestation methodology</strong>
+      We will not commit to an attestation approach we have not built. The three
+      options (A, B, C) are presented as open architecture questions. If Annika asks
+      which one Stratum recommends, the honest answer is: we do not yet know; that
+      is why we are asking her.
+    </li>
+    <li>
+      <strong>No feature outside the architecture document</strong>
+      We will not commit to a feature, connector, or capability outside the current
+      architecture document. If a request falls outside scope, Forge says: "That is
+      worth exploring; I will bring it back with a sizing estimate within a week."
+    </li>
+    <li>
+      <strong>No other customer's data</strong>
+      We will not show any other customer's data in this session. The demo runs on
+      Cordova's own Querétaro graph. If Annika asks how Halcyon or any other customer
+      handled a comparable problem, the answer is a verbal description only, with no
+      data and with that customer's consent obtained in advance.
+    </li>
+    <li>
+      <strong>No discount below $80K platform base</strong>
+      The $80K base is a hard floor per Compass's pricing discipline. We do not negotiate
+      this number. If Henrik pushes for a lower base, the response is: the design-partner
+      structure already reflects a discount in the activation tier, not in the base.
+    </li>
+    <li>
+      <strong>No delivery commitment before M1 mitigation is verified</strong>
+      We will not commit to a delivery timeline for the attestation methodology before
+      Kernel's M1 mitigation re-run is complete. If Annika asks for a timeline: "We
+      will have a recommendation within two weeks of the re-run completing; I will
+      send it in writing."
+    </li>
+  </ul>
+</aside>
+
+<!-- §7 RISKS -->
+<aside class="b-block top-ink" aria-label="Meeting risks">
+  <div class="b-label">Section 7 &middot; Risks</div>
+  <ul class="risk-list">
+    <li class="r1">
+      <strong>Forge gets a question he cannot answer.</strong>
+      The right answer is: "I don't know; I'll get you an answer within 24 hours."
+      That answer is better than a wrong answer. Annika has already seen Forge use
+      it on the Oracle connector question at T+47d; she respects it.
+    </li>
+    <li class="r2">
+      <strong>Henrik raises a procurement concern requiring legal review.</strong>
+      Defer to a second call within five business days. Do not improvise a legal
+      position. If he raises a DPA concern beyond the three Cordova annotations already
+      in the MSA, Inez should be invited into that follow-up alongside counsel.
+    </li>
+    <li class="r3">
+      <strong>The senior-retirement attestation question becomes a deal-block.</strong>
+      If Annika says she cannot commit to the MOU until the attestation architecture
+      is resolved, we defer signing rather than overcommit. The correct framing:
+      "That is the right call. Let us resolve the architecture question in the next
+      two weeks and reconvene. The design-partner terms are not time-limited."
+    </li>
+  </ul>
+</aside>
+
+<!-- §8 METHODOLOGY BLOCK -->
+<aside class="b-block top-rule" aria-label="Methodology block">
+  <div class="b-label">Section 8 &middot; Methodology &mdash; what this brief is and is not</div>
+  <ul>
+    <li>
+      <strong>This brief is a working document</strong>
+      Drafted by Vector; pre-circulated to Forge and Kernel for factual review.
+      Forge owns the architecture claims in sections 4 and 5. Kernel owns the
+      attestation-probe methodology claims. If either finds an error, they mark it
+      and return before 2026-05-25 18:00 PT.
+    </li>
+    <li>
+      <strong>This brief is not a script</strong>
+      Minute-by-minute times are targets, not walls. The senior-retirement discussion
+      (minutes 20&ndash;30) is the one segment Vector will improvise — Annika's
+      reaction to the three options is unknown and may generate questions that need
+      live space. Do not force it to close at :30 if the conversation is productive.
+      The only hard constraint is Henrik's 30&ndash;40 slot.
+    </li>
+    <li>
+      <strong>Pricing math assumptions</strong>
+      The per-EE cyclicality calculation in section 5 (Henrik) uses the
+      manufacturing-floor scope of approximately 4,160 employees (80% of 5,200
+      total headcount, per the customer note). Forge and Kernel: confirm this scope
+      assumption is consistent with how Cairn's per-EE charge is defined before
+      the call. The $11.6K figure is the product of 4,160 &times; 20% &times; $14.
+      If the per-EE charge applies to total headcount, the figure is ~$14.6K and
+      this section must be updated.
+    </li>
+    <li>
+      <strong>Demo data</strong>
+      The employee used in the Querétaro demo run must be confirmed by Annika
+      prior to the call. Vector to send a one-line confirmation request by
+      2026-05-25 09:00 PT. If no confirmation is received, the demo pauses at the
+      detect stage and Vector explains the clearance requirement live.
+    </li>
+  </ul>
+</aside>
+
+<!-- ── CLOSING ── -->
+<div class="closing">
+  <div class="closing-note">
+    Internal record &middot; Vector &middot; Customer Engineering &middot; 2026-05-24 &middot;
+    narrative-T+12d &middot; W01 D5. Pre-circulated to Forge and Kernel for fact-check.
+    No Cordova customer data reproduced in this brief. All employee references to
+    real Cordova employees are role-level only; no PII in this document.
+  </div>
+  <div class="closing-links">
+    <a href="{{ '/cairn/cordova-response.html' | relative_url }}">← Response thread</a>
+    <a href="{{ '/cairn/cordova-approach.html' | relative_url }}">Original approach</a>
+    <a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a>
+    <a href="{{ '/customers/cordova.html' | relative_url }}">Cordova note</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span style="color:var(--ochre)">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="{{ '/product/index.html#product' | relative_url }}">People graph</a></li>
+        <li><a href="{{ '/product/index.html#product' | relative_url }}">Copilot</a></li>
+        <li><a href="{{ '/cairn/' | relative_url }}">Cairn</a></li>
+        <li><a href="{{ '/product/index.html#pricing' | relative_url }}">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Cairn</h4>
+      <ul>
+        <li><a href="{{ '/cairn/plan.html' | relative_url }}">Plan</a></li>
+        <li><a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a></li>
+        <li><a href="{{ '/cairn/agents.html' | relative_url }}">Agents</a></li>
+        <li><a href="{{ '/cairn/sale-sheet.html' | relative_url }}">Sale sheet</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Customers</h4>
+      <ul>
+        <li><a href="{{ '/customers/cordova.html' | relative_url }}">Cordova</a></li>
+        <li><a href="{{ '/customers/halcyon.html' | relative_url }}">Halcyon</a></li>
+        <li><a href="{{ '/customers/mercator.html' | relative_url }}">Mercator</a></li>
+        <li><a href="{{ '/customers/' | relative_url }}">All customers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="{{ '/trust/' | relative_url }}">SOC 2 &middot; ISO 27001</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">GDPR &middot; DPA</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">EU AI Act stance</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">Sub-processors</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-foot">
+    <span>Stratum, Inc. &middot; Palo Alto &middot; 2026 &middot; All rights reserved.</span>
+    <a class="briefing-link" href="{{ '/briefings/017.html' | relative_url }}">← <strong>Briefing 017</strong> &middot; Cairn ratification</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var nav=document.getElementById('nav');
+    if(!nav)return;
+    var last=false;
+    function onS(){var y=window.scrollY||window.pageYOffset,s=y>8;if(s!==last){nav.classList.toggle('is-scrolled',s);last=s}}
+    window.addEventListener('scroll',onS,{passive:true});onS();
+  })();
+</script>
+{% include echo-script.html %}
+</body>
+</html>
