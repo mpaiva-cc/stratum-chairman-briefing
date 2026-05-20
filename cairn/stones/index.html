@@ -605,12 +605,12 @@ strong { font-weight: 600; color: var(--ink); }
       <div class="stat-label">Total stones placed</div>
     </div>
     <div class="stat-cell" role="group" aria-label="Verified stones">
-      <div class="stat-value moss" aria-hidden="true">1</div>
-      <div class="stat-label">Verified · S-CRD-0001</div>
+      <div class="stat-value moss" aria-hidden="true">2</div>
+      <div class="stat-label">Verified</div>
     </div>
-    <div class="stat-cell" role="group" aria-label="Provisional stones">
-      <div class="stat-value ochre" aria-hidden="true">1</div>
-      <div class="stat-label">Provisional · S-CRD-0002</div>
+    <div class="stat-cell" role="group" aria-label="First external validation date">
+      <div class="stat-value" style="font-size:1.15rem;padding-top:.4rem" aria-hidden="true">2026-08-12</div>
+      <div class="stat-label">First external validation</div>
     </div>
     <div class="stat-cell" role="group" aria-label="Customers">
       <div class="stat-value" aria-hidden="true">1</div>
@@ -628,16 +628,16 @@ strong { font-weight: 600; color: var(--ink); }
   <div class="stones-region-label" aria-hidden="true">Stones · reverse-chronological</div>
 
   <!-- ─────────────────────── STONE 002 (most recent) ─────────────────────── -->
-  <article class="stone-card provisional" aria-labelledby="s002-skill">
+  <article class="stone-card verified" aria-labelledby="s002-skill">
 
     <header class="stone-header">
       <div class="stone-id-cluster">
-        <span class="stone-id">S-CRD-0002-PROVISIONAL · 2026-07-25 · Cordova · Plant 3</span>
+        <span class="stone-id">S-CRD-0002 · 2026-07-25 · Cordova · Plant 3</span>
         <h2 class="stone-skill" id="s002-skill">AWS D1.1 pressure-vessel weld pattern</h2>
         <p class="stone-subject">Mateo Cantú · Senior Welder (Class A) · Cordova · Querétaro plant 3</p>
       </div>
       <div>
-        <span class="stone-badge provisional" role="status">PROVISIONAL — pending 2026-08-12</span>
+        <span class="stone-badge verified" role="status">Verified</span>
       </div>
     </header>
 
@@ -772,29 +772,39 @@ strong { font-weight: 600; color: var(--ink); }
       <!-- ATTESTATION (PROVISIONAL) -->
       <section class="stone-section" aria-labelledby="s002-attest-label">
         <div class="stone-section-label" id="s002-attest-label">
-          Attestation
-          <span class="agent" aria-label="Provisional, pending external validator">Console · PROVISIONAL · deferred attestation</span>
+          Attestation · verification history
+          <span class="agent" aria-label="Deferred attestation closed 2026-08-12">Console · deferred attestation closed</span>
         </div>
 
-        <div class="attestation-block provisional-attest" aria-label="Provisional attestation — not final">
+        <div class="attestation-block provisional-attest" aria-label="Provisional attestation — original placement record">
           <div class="attestation-sig provisional">Tomás Herrera — Line Supervisor (AWS D1.1 certified observer), Cordova plant 3</div>
           <div class="attestation-meta">
             Provisional attestation 2026-07-25. Tomás is a certified AWS D1.1 observer but
             <em>not</em> a senior welder. With Esteban Morales retired, no senior welder remains
             at Cordova plant 3. Per the architecture's deferred attestation approach (May 26
-            meeting), this stone is <strong>PROVISIONAL</strong> pending external validation.<br>
+            meeting), this stone was placed as <strong>PROVISIONAL</strong> pending external validation.<br>
             Tomás corrected one factual error prior to publication: the plate 3 redo was on
             2026-07-22 (not 2026-07-19 as originally drafted). Corrected before placement.<br>
             <span class="crypto">Cryptographic provenance: attestation node carries <code>provisional: true</code> · <code>pending_external_validator: carmen-solis@lincolnelectric.example</code> (placeholder; real validator field is non-public until consent confirmation)</span>
           </div>
 
-          <div class="pending-notice" role="status" aria-live="polite">
-            <span class="label">Pending external validation</span><br>
+          <div class="pending-notice" role="note" aria-live="off">
+            <span class="label">Validation completed</span><br>
             Carmen Solís · Lincoln Electric-certified welding inspector · San Antonio TX<br>
-            Scheduled site visit: <strong>2026-08-12</strong>. Carmen will examine the plates
-            and observe Mateo complete a fifth plate. This stone becomes fully attested upon
-            Carmen's sign-off. Until then it is live on the graph, counted in metrics, and
-            <strong>explicitly excluded from any compensation decision or promotion gate.</strong>
+            Site visit: <strong>2026-08-12</strong>. Carmen examined the plates and observed Mateo
+            complete a fifth plate. Stone is now fully attested. It is eligible for use in
+            compensation and promotion workflows from this date forward.
+          </div>
+        </div>
+
+        <div class="attestation-block" aria-label="External validator attestation — Carmen Solís, 2026-08-12">
+          <div class="attestation-sig">Carmen Solís — Lincoln Electric-certified welding inspector, San Antonio TX</div>
+          <div class="attestation-meta">
+            External validation completed 2026-08-12 at 14:15 PT. Carmen signed off on all five plates
+            and a fifth plate completed live during the site visit. AWS D1.1 criteria met.<br>
+            <span class="crypto">Cryptographic provenance: <code>ed25519:7e3a...c2f9</code></span><br>
+            Attestation node: <a href="/decisions/cairn/T-cordova-mateo-cantu-aws-d1.1-pressure-vessel/A-002/manifest.json">/decisions/cairn/T-cordova-mateo-cantu-aws-d1.1-pressure-vessel/A-002/manifest.json</a><br>
+            <a href="/cairn/carmen-findings.html">→ See findings report</a>
           </div>
         </div>
       </section>
@@ -842,12 +852,26 @@ strong { font-weight: 600; color: var(--ink); }
         </div>
       </section>
 
+      <!-- CLASSIFIER IMPROVEMENT FOOTNOTE -->
+      <section class="stone-section" aria-labelledby="s002-classifier-label">
+        <div class="stone-section-label" id="s002-classifier-label">
+          Classifier note · post-verification
+          <span class="agent" aria-label="Stone-002-related finding from Carmen's report">Hearth · v1.1 targeted W12</span>
+        </div>
+        <p>
+          Carmen's findings included one classifier-improvement recommendation (Stone-002-related).
+          v1.1 of the AWS-D1.1 visual classifier targeted W12: the difference between a weld that
+          passes D1.1 and a weld that passes D1.1 but trends toward failure under pressure-cycle
+          fatigue. <a href="/cairn/carmen-findings.html">→ See findings report</a> for details.
+        </p>
+      </section>
+
     </div><!-- /stone-body -->
 
     <footer class="stone-footer">
-      <span class="tier" aria-label="Decision classification: Tier 3, provisional, with deferred attestation">Tier 3 · provisional · deferred attestation · 014-T consent-renewal axis satisfied</span>
-      <span>Stone ID <span class="mono-ref" style="font-size:.75rem">S-CRD-0002-PROVISIONAL</span></span>
-      <span>External validation scheduled 2026-08-12</span>
+      <span class="tier" aria-label="Decision classification: Tier 3, submit with human attestation, external validation completed 2026-08-12">Tier 3 · submit · deferred attestation closed · 014-T consent-renewal axis satisfied</span>
+      <span>Stone ID <span class="mono-ref" style="font-size:.75rem">S-CRD-0002</span></span>
+      <span>External validation completed 2026-08-12 · Carmen Solís</span>
       <span>Mateo and Tomás reviewed this entry before publication</span>
     </footer>
 
@@ -1184,15 +1208,22 @@ strong { font-weight: 600; color: var(--ink); }
     identical in structure to the chain you just read.
   </p>
 
+  <p>
+    On 2026-08-12, Carmen Solís verified Stone 002. The architecture's deferred-attestation
+    flow closed. The classifier learned one thing it did not know — the difference between
+    a weld that passes D1.1 and a weld that passes D1.1 but trends bad. That is the loop
+    working. We did not call it a milestone.
+  </p>
+
 </aside>
 
 
 <!-- ═══════════════════════════ PAGE FOOTER ═══════════════════════════ -->
 <footer class="page-footer" role="contentinfo">
   <div class="footer-stats">
-    <div>Total stones: <strong>2</strong> <span class="sep">·</span> 1 verified <span class="sep">·</span> 1 provisional pending 2026-08-12</div>
+    <div>Total stones: <strong>2</strong> <span class="sep">·</span> 2 verified <span class="sep">·</span> 0 provisional</div>
     <div>Customers active: <strong>1</strong> <span class="sep">·</span> Cordova</div>
-    <div>Methodology revision: <strong>cairn-stones-ledger-v1</strong></div>
+    <div>Methodology revision: <strong>cairn-stones-ledger-v1.1</strong> <span class="sep">·</span> updated 2026-08-12</div>
     <div>Decision class reference: <a href="/ledger/" style="border-bottom:1px solid var(--ochre-link)">Decisions ledger</a></div>
   </div>
   <div class="footer-byline">
@@ -1202,6 +1233,7 @@ strong { font-weight: 600; color: var(--ink); }
     narrative-T+70d
     <span class="sep" aria-hidden="true">·</span>
     W08 D5
+    <br>Updated by Tessera <span class="sep" aria-hidden="true">·</span> 2026-08-12 <span class="sep" aria-hidden="true">·</span> narrative-T+88d <span class="sep" aria-hidden="true">·</span> evening
   </div>
 </footer>
 

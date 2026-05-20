@@ -1,0 +1,518 @@
+---
+layout: legacy
+title: "Cairn — Deferred-Attestation Playbook v1.0."
+description: "The customer-engineering playbook for the deferred-attestation pattern. When a regulated skill cannot be peer-attested inside the customer, this is how Stratum sources, contracts, briefs, and runs an external validator. v1.0 ratified after Carmen Solís verified Stone 002 at Cordova Querétaro plant 3."
+permalink: /cairn/playbook-deferred-attestation.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}","datePublished":"2026-08-12T19:00:00Z"}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cairn — Deferred-Attestation Playbook v1.0.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ── Cairn / playbook-deferred-attestation.html · page-scoped styles ─ */
+:root{--paper:#f4ecda;--paper-warm:#f7f0e0;--paper-rule:#d8cdb6;--paper-rule-2:#c8b894;--ink:#0e1626;--ink-2:#2a3344;--ink-3:#4b5365;--ink-3-aaa:#3d4456;--ink-mute:#6c7180;--ochre:#b8651f;--ochre-deep:#8a4711;--ochre-link:#7a3d0a;--ochre-soft:#e6c79b;--moss:#4a5d3a;--display:"Fraunces","Newsreader",Georgia,serif;--serif:"Newsreader","Iowan Old Style",Georgia,serif;--mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;--col-wide:min(1380px,94vw);--col-read:min(720px,92vw)}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.7;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 12% 18%,rgba(184,101,31,.05),transparent 42%),radial-gradient(circle at 88% 84%,rgba(14,22,38,.04),transparent 46%);mix-blend-mode:multiply}
+a{color:var(--ochre-link);text-decoration:none;border-bottom:1px solid transparent;transition:border-color .2s,color .2s}
+a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+em{font-style:italic;font-variation-settings:"opsz" 14}
+strong{font-weight:600;color:var(--ink)}
+.masthead{width:var(--col-wide);margin:0 auto;padding:5rem 0 3.5rem;border-bottom:1px solid var(--paper-rule)}
+.masthead-slug{font-family:var(--mono);font-size:11.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);line-height:1.9}
+.masthead-slug div+div{color:var(--ink-3-aaa)}
+.masthead-slug div+div+div{color:var(--ink-mute)}
+.masthead-h1{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 144,"SOFT" 0;font-size:clamp(2.7rem,5.4vw,4.6rem);line-height:1;letter-spacing:-.035em;margin:2.4rem 0 1.8rem;color:var(--ink);max-width:26ch}
+.masthead-h1 em{font-style:italic;font-variation-settings:"opsz" 144,"SOFT" 100;color:var(--ochre)}
+.masthead-dek{font-family:var(--display);font-style:italic;font-variation-settings:"opsz" 36,"SOFT" 80;font-size:clamp(1.18rem,1.75vw,1.42rem);line-height:1.45;color:var(--ink-2);max-width:62ch;margin:0 0 2.6rem;font-weight:300}
+.byline{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);border-top:1px solid var(--paper-rule);padding-top:1.1rem}
+.byline span{color:var(--ink-mute);margin:0 .55rem}
+.meta-block{width:var(--col-read);margin:3.6rem auto 0;border:1px solid var(--paper-rule);overflow:hidden}
+.mb-row{display:grid;grid-template-columns:9rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.mb-row:last-child{border-bottom:0}
+.mb-label{padding:.9rem 1.1rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-mute);background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.6}
+.mb-value{padding:.9rem 1.3rem;font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;line-height:1.65;color:var(--ink-2)}
+.mb-value strong{color:var(--ink);font-weight:600}
+.mb-value .mb-note{color:var(--ink-mute);font-size:10.5px;letter-spacing:.1em;display:block;margin-top:.15rem}
+.mb-outcome{background:var(--paper-warm);padding:1.2rem 1.3rem;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;line-height:1.7;color:var(--ink);border-top:3px solid var(--moss)}
+.mb-outcome .mo-label{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--moss);display:block;margin-bottom:.3rem;font-weight:600}
+@media(max-width:520px){.mb-row{grid-template-columns:1fr}.mb-label{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.body-wrap{width:var(--col-read);margin:0 auto;padding:3.5rem 0 2rem}
+.sec{margin-bottom:3rem}
+.sec-label{font-family:var(--mono);font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ochre);margin-bottom:.65rem;display:block}
+.sec-h{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 60,"SOFT" 0;font-size:clamp(1.4rem,2.2vw,1.7rem);line-height:1.2;letter-spacing:-.012em;color:var(--ink);margin:0 0 1.4rem}
+.sec p{margin:0 0 1.1rem;font-size:1.02rem;color:var(--ink-2);font-variation-settings:"opsz" 18;line-height:1.72}
+.sec p:last-child{margin:0}
+.gate{margin:1.4rem 0 0;border:1px solid var(--paper-rule);background:var(--paper-warm)}
+.gate-row{display:grid;grid-template-columns:3.2rem 1fr;border-bottom:1px solid var(--paper-rule);align-items:start}
+.gate-row:last-child{border-bottom:0}
+.gate-tag{padding:1rem .8rem;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--moss);background:var(--paper);border-right:1px solid var(--paper-rule);text-align:center;line-height:1.4}
+.gate-tag.no{color:var(--ochre-deep)}
+.gate-body{padding:1rem 1.2rem;font-family:var(--serif);font-size:.99rem;color:var(--ink-2);line-height:1.7;font-variation-settings:"opsz" 18}
+.gate-body strong{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink);margin-bottom:.35rem;font-weight:600}
+@media(max-width:520px){.gate-row{grid-template-columns:1fr}.gate-tag{border-right:0;border-bottom:1px solid var(--paper-rule);text-align:left;padding:.5rem .9rem}}
+.step{margin:2.4rem 0 0;border:1px solid var(--paper-rule);background:var(--paper-warm);overflow:hidden}
+.step-head{display:grid;grid-template-columns:5.4rem 1fr;border-bottom:1px solid var(--paper-rule);background:var(--paper)}
+.step-num{padding:1.1rem 1rem;font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.18em;color:var(--ochre);border-right:1px solid var(--paper-rule);line-height:1.4;display:flex;flex-direction:column;justify-content:center}
+.step-num .sn-step{font-size:9.5px;letter-spacing:.28em;color:var(--ink-mute);font-weight:500;margin-bottom:.2rem}
+.step-title{padding:1.05rem 1.3rem;font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 36,"SOFT" 0;font-size:1.18rem;line-height:1.3;color:var(--ink);letter-spacing:-.008em}
+.step-body{padding:1.5rem 1.6rem 1.6rem;font-family:var(--serif);font-size:1rem;line-height:1.7;color:var(--ink-2);font-variation-settings:"opsz" 18}
+.step-body p{margin:0 0 1rem}
+.step-body p:last-child{margin:0}
+.step-body strong{color:var(--ink)}
+.iblock{margin:1.1rem 0 0;border-left:3px solid var(--paper-rule-2);padding:.8rem 1.1rem .85rem;background:var(--paper)}
+.iblock.good{border-left-color:var(--moss)}
+.iblock.fail{border-left-color:var(--ochre)}
+.iblock.recover{border-left-color:var(--ink)}
+.iblock .ib-label{font-family:var(--mono);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:.4rem}
+.iblock.good .ib-label{color:var(--moss)}
+.iblock.fail .ib-label{color:var(--ochre)}
+.iblock.recover .ib-label{color:var(--ink)}
+.iblock p{margin:0;font-size:.96rem;line-height:1.66;color:var(--ink-2)}
+.iblock p+p{margin-top:.5rem}
+.approaches{list-style:none;padding:0;margin:1.1rem 0 0;counter-reset:a}
+.approaches li{counter-increment:a;padding:.9rem 0 .9rem 2.4rem;position:relative;border-bottom:1px solid var(--paper-rule);font-size:.98rem;color:var(--ink-2);line-height:1.66}
+.approaches li:last-child{border-bottom:0;padding-bottom:0}
+.approaches li::before{content:counter(a,upper-alpha);position:absolute;left:0;top:.9rem;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--ochre);letter-spacing:.06em}
+.approaches li strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:.3rem;font-weight:600}
+.outcomes{margin:1.3rem 0 0;display:grid;gap:.85rem}
+.outcome{border:1px solid var(--paper-rule);background:var(--paper)}
+.outcome-head{display:grid;grid-template-columns:7rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.outcome-tag{padding:.65rem .9rem;font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.18em;border-right:1px solid var(--paper-rule);display:flex;align-items:center;line-height:1.4}
+.outcome-tag.sign{color:var(--moss);background:rgba(74,93,58,.06)}
+.outcome-tag.cond{color:var(--ochre-link);background:rgba(184,101,31,.06)}
+.outcome-tag.refuse{color:var(--ink);background:rgba(14,22,38,.06)}
+.outcome-title{padding:.65rem 1.1rem;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);font-weight:600;line-height:1.5;display:flex;align-items:center}
+.outcome-body{padding:.9rem 1.2rem;font-family:var(--serif);font-size:.96rem;color:var(--ink-2);line-height:1.66;font-variation-settings:"opsz" 18}
+.outcome-body p{margin:0 0 .6rem}
+.outcome-body p:last-child{margin:0}
+.outcome-body strong{color:var(--ink)}
+@media(max-width:520px){.outcome-head{grid-template-columns:1fr}.outcome-tag{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.kv{margin:1.2rem 0 0;border:1px solid var(--paper-rule);background:var(--paper-warm)}
+.kv-row{display:grid;grid-template-columns:11rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.kv-row:last-child{border-bottom:0}
+.kv-k{padding:.75rem 1.1rem;font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);background:var(--paper);border-right:1px solid var(--paper-rule);line-height:1.55}
+.kv-v{padding:.75rem 1.2rem;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--ink-2);line-height:1.65}
+.kv-v strong{color:var(--ink)}
+@media(max-width:520px){.kv-row{grid-template-columns:1fr}.kv-k{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.openq{list-style:none;padding:0;margin:1.2rem 0 0;counter-reset:q}
+.openq li{counter-increment:q;padding:.95rem 0 .95rem 2.6rem;position:relative;border-bottom:1px solid var(--paper-rule);font-size:.99rem;line-height:1.66;color:var(--ink-2)}
+.openq li:last-child{border-bottom:0}
+.openq li::before{content:"Q" counter(q);position:absolute;left:0;top:.95rem;font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--ochre);letter-spacing:.08em}
+.openq li strong{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3-aaa);margin-bottom:.3rem;font-weight:600}
+.callout{margin:2.2rem 0 0;padding:1.7rem 1.9rem 1.8rem;background:var(--paper-warm);border:1px solid var(--paper-rule);border-left:3px solid var(--ochre)}
+.callout-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ochre-link);display:block;margin-bottom:.9rem}
+.callout-h{font-family:var(--display);font-weight:500;font-variation-settings:"opsz" 36,"SOFT" 80;font-size:1.32rem;line-height:1.25;color:var(--ink);margin:0 0 1rem;font-style:italic}
+.callout p{margin:0 0 .85rem;font-family:var(--serif);font-size:1rem;line-height:1.7;color:var(--ink-2);font-variation-settings:"opsz" 18}
+.callout p:last-child{margin:0}
+.method{margin:1.4rem 0 0;border:1px solid var(--paper-rule);background:var(--paper-warm)}
+.method-row{display:grid;grid-template-columns:8rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.method-row:last-child{border-bottom:0}
+.method-k{padding:.95rem 1.1rem;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);background:var(--paper);border-right:1px solid var(--paper-rule);line-height:1.55}
+.method-k.is{color:var(--moss)}
+.method-k.not{color:var(--ochre-deep)}
+.method-v{padding:.95rem 1.2rem;font-family:var(--serif);font-size:.99rem;color:var(--ink-2);line-height:1.68;font-variation-settings:"opsz" 18}
+.method-v strong{color:var(--ink)}
+@media(max-width:520px){.method-row{grid-template-columns:1fr}.method-k{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.forward-links{width:var(--col-read);margin:2.4rem auto 0;border:1px solid var(--paper-rule);overflow:hidden}
+.fwd-item{display:grid;grid-template-columns:6.6rem 1fr;border-bottom:1px solid var(--paper-rule)}
+.fwd-item:last-child{border-bottom:0}
+.fwd-tag{padding:.9rem 1rem;font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ochre-link);font-weight:600;background:var(--paper-warm);border-right:1px solid var(--paper-rule);line-height:1.6}
+.fwd-body{padding:.9rem 1.3rem}
+.fwd-body a{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;color:var(--ink);border-bottom:1px solid var(--paper-rule-2);padding-bottom:2px}
+.fwd-body a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+.fwd-body .fwd-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--ink-mute);display:block;margin-top:.25rem}
+@media(max-width:520px){.fwd-item{grid-template-columns:1fr}.fwd-tag{border-right:0;border-bottom:1px solid var(--paper-rule)}}
+.closing{width:var(--col-read);margin:3.2rem auto 5rem;padding-top:2rem;border-top:1px solid var(--paper-rule)}
+.closing-note{font-family:var(--mono);font-style:italic;font-size:12px;letter-spacing:.12em;color:var(--ink-3-aaa);margin-bottom:1.6rem;line-height:1.7}
+.closing-links{display:flex;gap:2.4rem;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+.closing-links a{color:var(--ink);border-bottom:1px solid var(--paper-rule-2);padding-bottom:3px}
+.closing-links a:hover{color:var(--ochre);border-bottom-color:var(--ochre)}
+.footer{width:var(--col-wide);margin:0 auto;padding:4rem 0 3rem;border-top:1px solid var(--paper-rule)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+.footer-brand .mark{font-family:var(--display);font-weight:600;font-variation-settings:"opsz" 72,"SOFT" 0;font-size:1.65rem;letter-spacing:-.035em;color:var(--ink);margin-bottom:.8rem}
+.footer-brand p{font-family:var(--serif);font-style:italic;color:var(--ink-3-aaa);max-width:32ch;font-size:.95rem;line-height:1.55;margin:0}
+.footer-col h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-mute);margin:0 0 .9rem}
+.footer-col ul{list-style:none;padding:0;margin:0}
+.footer-col li{padding:.25rem 0}
+.footer-col a{color:var(--ink-2);border-bottom:0;font-size:.92rem}
+.footer-col a:hover{color:var(--ochre)}
+.footer-foot{border-top:1px solid var(--paper-rule);padding-top:1.4rem;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-mute);text-transform:uppercase}
+.footer-foot .briefing-link{color:var(--ink-3-aaa)}
+.footer-foot .briefing-link strong{color:var(--ochre);font-weight:500}
+.footer-foot .briefing-link:hover{color:var(--ink)}
+@media(max-width:1024px){.footer-grid{grid-template-columns:1fr 1fr;gap:2rem}.footer-brand{grid-column:1/-1}}
+@media(max-width:640px){.footer-grid{grid-template-columns:1fr}.footer-foot{flex-direction:column;gap:1rem;align-items:flex-start}}
+@media(max-width:960px){.mob-bar{position:sticky;top:0;z-index:200;background:rgba(244,236,218,.96);-webkit-backdrop-filter:saturate(140%) blur(10px);backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid #d8cdb6;padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#4b5365}.mob-bar a{color:#4b5365;text-decoration:none;min-height:36px;display:flex;align-items:center;padding:0 .25rem}.mob-bar a:active{color:#b8651f}.mob-bar-mark{font-family:"Fraunces",serif;font-weight:600;font-size:1.05rem;letter-spacing:-.02em;color:#0e1626;text-transform:none;flex:1;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+@media print{.footer{display:none}body{background:white;color:black;font-size:11pt}.body-wrap,.callout,.closing,.meta-block,.forward-links,.step,.method,.kv,.gate{width:100%}}
+</style>
+</head>
+<body>
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-08-12T19:00:00-07:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">&#9679;</span> composed <strong style="color:#0e1626">2026-08-12</strong> &middot; <span style="opacity:.6">narrative-T+88d &middot; Cadence / Customer Engineering &middot; evening</span></div>
+<!-- /realtime-stamp -->
+
+<div class="mob-bar">
+  <a href="{{ '/cairn/carmen-findings.html' | relative_url }}" aria-label="Carmen findings">&#8592; Findings</a>
+  <span class="mob-bar-mark">Deferred-Attestation Playbook v1.0</span>
+  <a href="{{ '/cairn/architecture.html' | relative_url }}" aria-label="Architecture">Architecture &#8594;</a>
+</div>
+
+{% include site-nav.html %}
+
+<!-- ── MASTHEAD ── -->
+<header class="masthead">
+  <div class="masthead-slug">
+    <div>Stratum / Cairn &middot; Customer-Engineering Playbook &middot; v1.0</div>
+    <div>2026-08-12 &middot; Authored by Cadence &middot; Forge (architecture) &middot; Vector (CE detail)</div>
+    <div>Template document &middot; for Vector and future customer engineers &middot; Tier 2</div>
+  </div>
+  <h1 class="masthead-h1">Deferred-attestation playbook: <em>how we run it.</em></h1>
+  <p class="masthead-dek">
+    When the skill being attested is regulated, and the customer has no one inside who can sign,
+    we engage an external validator on the customer&rsquo;s behalf. This is the playbook for that
+    pattern &mdash; sourced, contracted, briefed, and run. v1.0 ratified the day Carmen Sol&iacute;s
+    verified Stone 002 at Cordova Quer&eacute;taro plant 3.
+  </p>
+  <div class="byline">
+    Author: Cadence<span>&middot;</span>VP Customer Engineering<span>&middot;</span>2026-08-12<span>&middot;</span>narrative-T+88d<span>&middot;</span>evening
+  </div>
+</header>
+
+<!-- ── HEADER META ── -->
+<div class="meta-block" role="region" aria-label="Playbook header">
+  <div class="mb-row">
+    <div class="mb-label">What this is</div>
+    <div class="mb-value"><strong>A template playbook &mdash; used as-is on future design partners</strong><span class="mb-note">Owned by Customer Engineering. Quarterly review by Cadence + Vector + Forge. Versioned. This is v1.0.</span></div>
+  </div>
+  <div class="mb-row">
+    <div class="mb-label">Ratified by</div>
+    <div class="mb-value"><strong>Cadence (author)</strong> &middot; Forge (architecture references) &middot; Vector (customer-engineering detail)<span class="mb-note">Forge ratifies the 014-T predicate alignment. Vector ratifies the brief, contract, and visit-day procedure.</span></div>
+  </div>
+  <div class="mb-row">
+    <div class="mb-label">Inaugural use</div>
+    <div class="mb-value"><strong>Stone 002 &middot; Mateo Cant&uacute; &middot; Cordova Quer&eacute;taro plant 3</strong><span class="mb-note">Validator: Carmen Sol&iacute;s, AWS D1.1 certified, currency 18 months. SIGN-WITH-CONDITIONS, conditions cleared same day. Forge findings report ratifies the architecture.</span></div>
+  </div>
+  <div class="mb-row">
+    <div class="mb-label">Domain reach</div>
+    <div class="mb-value"><strong>Manufacturing weld, healthcare licensing, financial certs, regulated trades</strong><span class="mb-note">Carmen&rsquo;s case is welding. Structure is domain-agnostic. Halcyon v1.1 will publish healthcare-specific notes.</span></div>
+  </div>
+  <div class="mb-outcome"><span class="mo-label">Standing of this document</span>Template. Specific enough to follow. General enough to apply across regulated domains. Not a substitute for judgment; the structure within which judgment operates.</div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="body-wrap">
+
+  <!-- §1 WHEN IT APPLIES -->
+  <div class="sec">
+    <span class="sec-label">Section 1 &middot; When this playbook applies</span>
+    <h2 class="sec-h">Three conditions, all must hold.</h2>
+    <p>The deferred-attestation pattern is not the default Cairn path. The default is peer attestation inside the customer &mdash; Stone 001 is the reference. Reach for this playbook only when all three of the following are true. If any one is missing, you are in a different conversation and the wrong tool will damage the customer relationship.</p>
+    <div class="gate">
+      <div class="gate-row"><div class="gate-tag">A</div><div class="gate-body"><strong>The skill is in a regulated or quasi-regulated domain</strong>License-bound (medical, legal, securities), industry-standard-bound (AWS, ASME, IFR, IEC), or safety-critical with a recognised credentialing body. If the skill is &ldquo;senior product manager&rdquo; or &ldquo;backend engineer at level 5,&rdquo; this is not your playbook.</div></div>
+      <div class="gate-row"><div class="gate-tag">B</div><div class="gate-body"><strong>No internal personnel hold sufficient credentialed standing</strong>The customer cannot self-attest. Typical patterns: the most senior credentialed person retired (Mateo&rsquo;s case &mdash; the master welder retired in 2024); the customer never employed one (some clinics, some small securities desks); the credentialed person exists but is at a remote site (geographic isolation).</div></div>
+      <div class="gate-row"><div class="gate-tag">C</div><div class="gate-body"><strong>The customer has authorised us to engage on their behalf</strong>Written authorisation, in the MOU or via a side letter referencing the MOU. We do not source validators speculatively. The customer names the gap; we present the path; the customer authorises in writing; we engage.</div></div>
+    </div>
+  </div>
+
+  <!-- §2 WHEN IT DOES NOT APPLY -->
+  <div class="sec">
+    <span class="sec-label">Section 2 &middot; When this playbook does NOT apply</span>
+    <h2 class="sec-h">Three patterns that look similar and are not.</h2>
+    <p>Each of these will read like a deferred-attestation case at first glance. None of them are. Misapplying this playbook to any of these is a relationship cost we will pay for two quarters.</p>
+    <div class="gate">
+      <div class="gate-row"><div class="gate-tag no">&#10005;</div><div class="gate-body"><strong>Engineering work where peer attestation is feasible</strong>Stone 001 path. A senior staff engineer signs for a mid-level engineer. Standard flow. No external validator required, no external validator wanted &mdash; bringing one in here signals distrust of the customer&rsquo;s own bench.</div></div>
+      <div class="gate-row"><div class="gate-tag no">&#10005;</div><div class="gate-body"><strong>Non-regulated skills where manager observation suffices</strong>Most knowledge-work attestations. The manager observes; the eval system corroborates; the stone is signed. Bringing an external validator into this is theatre &mdash; expensive theatre &mdash; and customers read it as such.</div></div>
+      <div class="gate-row"><div class="gate-tag no">&#10005;</div><div class="gate-body"><strong>Customer-internal political situations</strong>Senior credentialed personnel exist, but the customer doesn&rsquo;t want them involved &mdash; cross-functional friction, departing executive, succession politics. This is not an attestation-supply question. <strong>Escalate to Compass.</strong> This is a relationship-shape question and the answer is not a validator.</div></div>
+    </div>
+  </div>
+
+  <!-- §3 SEVEN-STEP PLAYBOOK -->
+  <div class="sec">
+    <span class="sec-label">Section 3 &middot; The playbook</span>
+    <h2 class="sec-h">Seven steps. In order. No skipping.</h2>
+    <p>Each step has a what-good-looks-like example drawn from Carmen&rsquo;s engagement, a failure-mode note, and a recovery procedure. If you find yourself improvising on a step, stop and call Cadence. The playbook exists so that the next customer engineer does not have to invent it under pressure.</p>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>01</div><div class="step-title">Confirm the attestation-supply gap is real.</div></div>
+    <div class="step-body">
+      <p>Vector (or the assigned customer engineer) sits with the customer sponsor and walks the org. Not by title &mdash; by credential. Does anyone hold the standard the role is bound by? Is their credential current? Are they available? The answers go in the playbook log at <code>/cairn/playbook-logs/&lt;customer-id&gt;/</code>.</p>
+      <p>This step is not a paperwork exercise. <strong>Inez Ramos&rsquo;s question on 2026-05-26 is why this step exists in writing</strong> &mdash; she asked, fairly, whether we had actually confirmed the gap or whether we had assumed it. We had assumed it. The playbook now forecloses that shortcut.</p>
+      <div class="iblock good"><span class="ib-label">What good looks like</span><p>For Mateo: Vector and the Cordova plant 3 HR lead walked the credentialed-personnel list. AWS D1.1 inspector-level: zero current employees. One retiree (Don Sergio, 2024), declined to consult. Closest internal: a CWI lapsed 2021. Gap confirmed in writing, sponsor signed, log entry timestamped.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>The HR lead assumes the gap because the role is &ldquo;hard to hire for.&rdquo; That is not the gap. The gap is credentialed standing for the attestation, not headcount for the job. These are different questions and HR will conflate them.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If you discover mid-playbook that someone internal could have attested &mdash; stop the external engagement, notify the validator (Stratum pays the cancellation fee per the contract template, see Step 4), notify the customer, and run Stone 001 path. The credibility cost of a corrected course is lower than the cost of a stone signed by the wrong path.</p></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>02</div><div class="step-title">Identify the credential the validator must hold.</div></div>
+    <div class="step-body">
+      <p>Be specific. Name the body. Name the certification. Name the currency requirement. Name the conflict-of-interest exclusion. The credential statement should fit on one line and be reviewable by the customer sponsor in under thirty seconds.</p>
+      <div class="iblock good"><span class="ib-label">What good looks like</span><p>Mateo&rsquo;s case: <em>&ldquo;AWS D1.1-certified inspector, currency within 36 months, no employment or contract relationship with Cordova in the past 24 months.&rdquo;</em> One line. Annika confirmed in writing inside fifteen minutes.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>You write &ldquo;welding inspector&rdquo; instead of &ldquo;AWS D1.1-certified inspector.&rdquo; The credential is generic; the standing is specific. Generic credential statements yield validators whose sign-off the customer&rsquo;s own counsel will later question.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If you discover post-engagement that the validator&rsquo;s credential does not match the standing the role requires, the validator&rsquo;s sign-off does not flow to the stone. Re-source. Pay the validator under the no-outcome clause of the standard contract. Do not accept a partial match.</p></div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>03</div><div class="step-title">Source the validator.</div></div>
+    <div class="step-body">
+      <p>Three sourcing approaches. In v1.0 we strongly prefer (A); (B) is valid but rare; (C) is on the roadmap, not yet operational. Document which path you used in the playbook log.</p>
+      <ol class="approaches">
+        <li><strong>Direct via professional body</strong>The credentialing body itself maintains a directory. For Carmen: Lincoln Electric&rsquo;s AWS inspector roster, filtered by region and currency. Healthcare equivalent: state medical-board licensee lookup, plus AMA membership cross-reference. Securities: FINRA BrokerCheck. This is the cleanest path because the credentialing body has already done the verification work for you.</li>
+        <li><strong>Customer-introduced</strong>Rare, but valid. The customer&rsquo;s own former employees &mdash; retired credentialed people they personally know &mdash; can serve, subject to the conflict-of-interest clause in Step 2. Document the introduction. Carmen was not sourced this way, but Don Sergio would have been if he had agreed.</li>
+        <li><strong>Stratum partner network</strong>Post-W12: Stratum will build a curated validator network &mdash; pre-vetted, contracts pre-negotiated, response times tracked. <em>Not yet operational.</em> If you are reading this playbook before 2026-12-15, this approach is not available. Do not promise it to a customer.</li>
+      </ol>
+      <div class="iblock good"><span class="ib-label">What good looks like</span><p>Carmen was sourced via Lincoln Electric&rsquo;s inspector directory, filtered to Quer&eacute;taro region, currency under 24 months, no Cordova history. Three candidates returned; Vector contacted in order of currency-recency; Carmen responded inside 48 hours.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>You source through a generalist inspection-services agency. The individual sent may be credentialed; the agency&rsquo;s incentive is to send the next available person, not the best-fit person. You will pay an intermediary margin and accept opaque vetting.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If you have already engaged an intermediary, do not cancel mid-flight. Run it once. Document the experience. Re-source future engagements via the direct path.</p></div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>04</div><div class="step-title">Pre-engagement contract.</div></div>
+    <div class="step-body">
+      <p>Use the standard validator engagement contract. <strong>Carmen&rsquo;s contract is the template</strong> &mdash; it lives in <code>/cairn/contracts/validator-template.docx</code> and is reviewed by Counsel quarterly. Terms below are non-negotiable for v1.0.</p>
+      <div class="iblock good"><span class="ib-label">Standard terms (non-negotiable in v1.0)</span><p>Per-engagement fee, banded by domain (see Section 5). Scope strictly bounded to the named stone &mdash; the validator is not retained generally. The validator&rsquo;s right to refuse to sign is explicit. The validator&rsquo;s right to publish their own statement is explicit. The validator&rsquo;s name appears in the attestation chain only with consent. Stratum pays travel and time at standard rates <em>regardless of outcome</em> &mdash; including REFUSE. Cancellation: 50% if cancelled inside 72 hours of visit, 100% inside 24 hours.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>You compress the contract because the customer is in a hurry. The validator signs a one-page engagement letter that does not include the right-to-refuse and right-to-publish clauses. You have now created a financial pressure on the validator to sign. The stone is compromised at the root.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If a stone was signed under a non-standard validator contract, flag it in the stones ledger and queue a re-attestation under the standard contract within the quarter. Notify the customer. Notify Cadence. This is a Tier 2 escalation, not a Tier 1.</p></div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>05</div><div class="step-title">The pre-visit brief.</div></div>
+    <div class="step-body">
+      <p>Sent to the validator at least seven days before the visit. <strong>Template derived from Vector&rsquo;s brief to Carmen</strong>, which Carmen later cited as the reason she accepted the engagement &mdash; the brief made clear what we were not asking. Equally important.</p>
+      <div class="iblock good"><span class="ib-label">What the brief contains</span><p>What we ask the validator to do: examine evidence X, Y, Z; render judgement on whether the employee meets the credentialing standard for the named role; sign, sign-with-conditions, or refuse.</p><p>What we do NOT ask: any judgement beyond the named standard. Any opinion on Stratum&rsquo;s platform, evaluation, or methodology. Any recommendation about the customer&rsquo;s broader practice.</p><p>Evidence catalogue: the specific artifacts the validator will examine, with provenance. Visual classifier outputs are labelled as such; eval transcripts are labelled as such; the employee&rsquo;s self-assessment is labelled as such. The validator may examine evidence in any order. The validator may bring their own equipment. The validator may interview the employee privately.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>The brief reads like a deck-pitch. The validator is told what we believe and asked to confirm it. This is the most common failure mode of first-time customer engineers and it is unrecoverable on the day &mdash; the validator will arrive with a defensive posture and the visit will be transactional.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If you suspect the brief reads like a pitch, send a follow-up email before the visit: <em>&ldquo;On re-reading, I want to be explicit &mdash; we are not asking you to confirm our finding. We are asking you to render yours. The two may differ; that is the point.&rdquo;</em> This recovers most cases.</p></div>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>06</div><div class="step-title">The visit.</div></div>
+    <div class="step-body">
+      <p>Attendance is fixed. At least one Stratum agent (Forge or the technical lead equivalent) attends in person or remotely. At least one customer representative (the line supervisor or equivalent) attends. The employee being attested attends and consents to validator interaction. The validator runs the visit; we observe and record.</p>
+      <p>The validator examines all evidence presented. The validator may decline to examine any subset. The validator&rsquo;s decision is recorded in writing on the day &mdash; not the next day, not the next week. Three possible outcomes follow.</p>
+      <div class="outcomes">
+        <div class="outcome">
+          <div class="outcome-head"><div class="outcome-tag sign">SIGN</div><div class="outcome-title">Validator signs without conditions</div></div>
+          <div class="outcome-body"><p>Standard path. The stone is signed on the day. The findings report is drafted by Forge within 48 hours (Step 7). The stones ledger is updated within 24 hours. The customer is notified in writing the same day the ledger entry posts.</p></div>
+        </div>
+        <div class="outcome">
+          <div class="outcome-head"><div class="outcome-tag cond">SIGN-W-COND</div><div class="outcome-title">Sign with conditions to be cleared</div></div>
+          <div class="outcome-body"><p><strong>Carmen&rsquo;s outcome for Mateo.</strong> Validator names specific conditions &mdash; remediation, documentation, an additional check &mdash; that must be cleared before the stone is treated as full-standing. Conditions are entered in the stones ledger as part of the stone record, not deleted once cleared. Forge attaches the clearance evidence to the stone within the window the validator specifies (default 30 days; Carmen named &ldquo;same day&rdquo; for Mateo and that was honoured).</p></div>
+        </div>
+        <div class="outcome">
+          <div class="outcome-head"><div class="outcome-tag refuse">REFUSE</div><div class="outcome-title">Validator declines to sign</div></div>
+          <div class="outcome-body"><p>The validator&rsquo;s decision is recorded with their stated reasoning. The stone is <em>not</em> created. The customer is notified the same day with the validator&rsquo;s written reasoning attached. We do not seek a second validator to override the first; we accept the verdict and discuss next steps with the customer. Stratum pays the validator in full per Step 4. Not yet observed; written here so the first time it happens, the customer engineer knows the path.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 7 -->
+  <div class="step">
+    <div class="step-head"><div class="step-num"><span class="sn-step">Step</span>07</div><div class="step-title">Post-visit publication.</div></div>
+    <div class="step-body">
+      <p>Forge writes the findings report. The validator reviews and approves before publication. <strong>One factual correction by the validator is typical and is not a sign of failure</strong> &mdash; Carmen corrected the bevel-angle reading on Mateo&rsquo;s page-three diagram from 37&deg; to 38&deg;, which we had rounded. The corrected version is the published version.</p>
+      <p>The stones ledger is updated within 24 hours of validator approval. The customer is notified in writing the same day. The findings report is published to <code>/cairn/&lt;customer&gt;-findings.html</code> with cross-links to the stones ledger and the architecture predicate.</p>
+      <div class="iblock good"><span class="ib-label">What good looks like</span><p>Stone 002, Mateo: visit 2026-08-12 morning. Validator approval of findings report 2026-08-12 14:40. Stones ledger updated 2026-08-12 15:15. Customer notification 2026-08-12 15:30. Findings page published 2026-08-12 evening. End-to-end under twelve hours.</p></div>
+      <div class="iblock fail"><span class="ib-label">Failure mode</span><p>The findings report is drafted but the validator&rsquo;s review is pushed by a week because Forge is on something else. The customer reads about the visit via informal channels before the ledger entry posts. This is a credibility cost. The 24-hour SLA exists to foreclose this case.</p></div>
+      <div class="iblock recover"><span class="ib-label">Recovery</span><p>If the 24-hour window is going to slip, the customer engineer notifies the customer in writing the day of the visit with a clear timestamp for when the formal record will post. This converts a credibility cost into a logistical note.</p></div>
+    </div>
+  </div>
+
+  <!-- §4 CLASSIFIER CLAUSE -->
+  <div class="callout">
+    <span class="callout-label">Section 4 &middot; The classifier-improvement clause</span>
+    <h3 class="callout-h">Carmen&rsquo;s contribution &mdash; now operational in all future playbook uses.</h3>
+    <p>When the validator finds something the visual classifier or the eval classifier missed &mdash; even something acceptable-to-spec but worth flagging &mdash; we will retrain. Carmen flagged a bevel-angle drift on Mateo&rsquo;s practice piece that our visual model had not surfaced because it sat inside the acceptable band; her view was that the band was correct but the drift trajectory was the signal. She was right.</p>
+    <p>The validator is invited &mdash; not required &mdash; to help source training data. Compensation for training-data work is separate from the validation engagement and is contracted separately. Carmen accepted; her training-data engagement is logged under <code>/cairn/training-data/002-bevel-drift/</code>.</p>
+    <p>This clause is now operational across all future playbook uses. Validators are told about it in the pre-visit brief (Step 5). It is a feature, not an aside.</p>
+  </div>
+
+  <!-- §5 PRICING -->
+  <div class="sec" style="margin-top:3.4rem">
+    <span class="sec-label">Section 5 &middot; Pricing implications</span>
+    <h2 class="sec-h">What an external validator engagement costs.</h2>
+    <p>Per-stone, per-validator. Bands are domain-specific and reviewed quarterly with Compass. At the design-partner stage, validator fees are absorbed into the platform fee &mdash; the customer does not see a line item. Post-design-partner, the validator fee is broken out separately in the customer contract. The customer will know they are paying for external validation, by design.</p>
+    <div class="kv">
+      <div class="kv-row"><div class="kv-k">Fee band</div><div class="kv-v"><strong>$2,400 &mdash; $4,800 per stone</strong> &middot; validator-engagement fee, excludes travel</div></div>
+      <div class="kv-row"><div class="kv-k">Carmen&rsquo;s case</div><div class="kv-v"><strong>$3,200 fee</strong> &middot; travel $1,100 &middot; total $4,300 (excludes training-data engagement)</div></div>
+      <div class="kv-row"><div class="kv-k">Healthcare band</div><div class="kv-v">Expected $3,200 &mdash; $5,600 per stone &middot; revise after Halcyon&rsquo;s first stone</div></div>
+      <div class="kv-row"><div class="kv-k">Securities band</div><div class="kv-v">Expected $4,000 &mdash; $7,500 per stone &middot; FINRA-certified validators are scarcer</div></div>
+      <div class="kv-row"><div class="kv-k">Design-partner stage</div><div class="kv-v">Absorbed into platform fee &middot; not itemised &middot; logged internally</div></div>
+      <div class="kv-row"><div class="kv-k">Post-design-partner</div><div class="kv-v">Line item in MSA &middot; itemised per stone &middot; quarterly invoiced</div></div>
+    </div>
+  </div>
+
+  <!-- §6 LOAD -->
+  <div class="sec">
+    <span class="sec-label">Section 6 &middot; Customer-engineering load</span>
+    <h2 class="sec-h">What this costs in CE hours.</h2>
+    <p>Each external-validator stone consumes approximately <strong>8 &mdash; 12 hours of customer-engineering time</strong> across pre-visit, visit, and post-visit. This is load that does not show up in the eval-set time or the architecture time; it is relationship time, contracting time, and choreography time.</p>
+    <div class="kv">
+      <div class="kv-row"><div class="kv-k">Pre-visit</div><div class="kv-v">Steps 1&ndash;5 &middot; <strong>4&ndash;6 hours</strong> &middot; concentrated in customer-confirmation and validator-sourcing</div></div>
+      <div class="kv-row"><div class="kv-k">Visit</div><div class="kv-v">Step 6 &middot; <strong>2&ndash;3 hours on the day</strong> &middot; plus 0.5h pre and 0.5h debrief</div></div>
+      <div class="kv-row"><div class="kv-k">Post-visit</div><div class="kv-v">Step 7 &middot; <strong>1.5&ndash;2.5 hours</strong> &middot; findings review, ledger update, customer notification</div></div>
+      <div class="kv-row"><div class="kv-k">Current load</div><div class="kv-v">Vector: <strong>1 active customer</strong> (Cordova) &middot; 0 stones-this-quarter requiring external validation pre Stone 002</div></div>
+      <div class="kv-row"><div class="kv-k">Capacity trigger</div><div class="kv-v">At <strong>3 customers &middot; 2 stones/quarter</strong> requiring this path &rarr; second CE dedicated</div></div>
+      <div class="kv-row"><div class="kv-k">Plan-of-record</div><div class="kv-v">Tributary onboarded narrative-T+165d &middot; Cadence to revisit dedication after Halcyon stone 001</div></div>
+    </div>
+  </div>
+
+  <!-- §7 OPEN QUESTIONS -->
+  <div class="sec">
+    <span class="sec-label">Section 7 &middot; Open questions for future revisions</span>
+    <h2 class="sec-h">What v1.0 does not yet answer.</h2>
+    <p>These are not gaps to paper over. They are questions the next two design partners will surface and force us to resolve. v1.1 will address whichever are observed in the field first.</p>
+    <ol class="openq">
+      <li><strong>Validator vs. employee self-assessment disagreement</strong>What happens when the validator&rsquo;s verdict disagrees with the employee&rsquo;s own assessment? Not yet observed. Mateo&rsquo;s self-assessment was on the cautious side and Carmen&rsquo;s verdict matched. We need a path for the inverse.</li>
+      <li><strong>Customer disputes validator findings</strong>Not yet observed. The customer-relationship implication is large: we have brought an external party in, the external party has rendered a verdict, the customer does not accept it. Counsel and Compass will co-author the resolution path; the playbook section is reserved.</li>
+      <li><strong>Validator-bench depth for follow-up engagements</strong>What happens when a validator we have used before is unavailable for a follow-up? This is the question that motivates the partner-network roadmap (Step 3 approach C). Until that network exists, we accept variance.</li>
+      <li><strong>Cross-company peer attestation</strong>Inez Ramos raised this on 2026-05-26: can a validator from a non-customer manufacturing company serve as <em>peer attester</em> in a future case &mdash; not as external validator, but inside the Stone 001 peer path with cross-company graph resolution? Forge says yes if credentialing is graph-resolvable. Counsel has not yet weighed in. v1.1 will reflect Counsel&rsquo;s position.</li>
+    </ol>
+  </div>
+
+  <!-- §8 FORWARD -->
+  <div class="sec">
+    <span class="sec-label">Section 8 &middot; Forward</span>
+    <h2 class="sec-h">v1.0 is the floor, not the ceiling.</h2>
+    <p>This playbook is v1.0. Cadence, Vector, and Forge revise quarterly &mdash; next review 2026-11-12. The next two design partners will exercise it: Halcyon (in flight, healthcare-licensing domain) and the Pluralsight-introduced prospect (financial certifications, name redacted pending MSA).</p>
+    <p>Halcyon&rsquo;s attestation-supply question is in a different regulatory regime &mdash; state medical board, not industry standard &mdash; but the playbook shape holds: regulated, no internal peer, customer authorisation. We will publish a v1.1 with healthcare-specific notes after Halcyon&rsquo;s first stone. v1.2 will follow the Pluralsight-introduced engagement.</p>
+    <p>The pattern we are demonstrating to the field is that <em>regulated attestation is a solved problem at Stratum</em>, not a one-off. v1.0 is the first proof. The proof needs to be a template the next customer engineer can run without our intervention &mdash; that is the v2.0 bar. We are not at v2.0 yet.</p>
+  </div>
+
+  <!-- §9 METHODOLOGY -->
+  <div class="sec">
+    <span class="sec-label">Section 9 &middot; Methodology block</span>
+    <h2 class="sec-h">What this document is &mdash; and what it is not.</h2>
+    <div class="method">
+      <div class="method-row"><div class="method-k is">It is</div><div class="method-v">A <strong>template</strong>. A customer engineer in their first ninety days at Stratum should be able to run a deferred-attestation engagement using this document plus the contract template plus the brief template, with a Cadence check-in at Step 4 and Step 6.</div></div>
+      <div class="method-row"><div class="method-k is">It is</div><div class="method-v">A <strong>structure</strong>. Numbered steps in order. Failure modes named. Recoveries written. Outcomes enumerated. The structure is the contribution.</div></div>
+      <div class="method-row"><div class="method-k is">It is</div><div class="method-v">A <strong>versioned artifact</strong>. v1.0 today. v1.1 after Halcyon. v2.0 when a new CE can run it without intervention. Each revision is logged with author and date.</div></div>
+      <div class="method-row"><div class="method-k not">It is not</div><div class="method-v">A <strong>substitute for judgement</strong>. Every customer relationship is specific. The playbook tells you which questions to ask in which order; it does not tell you what the customer means when they answer.</div></div>
+      <div class="method-row"><div class="method-k not">It is not</div><div class="method-v">A <strong>marketing artifact</strong>. We do not link to it from the public site. It lives inside <code>/cairn/</code> and is referenced in customer conversations only when the customer has met the three conditions in Section 1.</div></div>
+      <div class="method-row"><div class="method-k not">It is not</div><div class="method-v">A <strong>scaling shortcut</strong>. The deferred-attestation pattern is more expensive than peer attestation. The playbook makes the cost predictable; it does not make it low. If a customer is using this pattern for a majority of their stones, we have mispriced or misdesigned the engagement.</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── FORWARD LINKS ── -->
+<div class="forward-links" role="region" aria-label="Cross-links">
+  <div class="fwd-item"><div class="fwd-tag">Predicate</div><div class="fwd-body"><a href="{{ '/cairn/architecture.html' | relative_url }}">Cairn &mdash; architecture (014-T)</a><span class="fwd-note">The deferred-attestation predicate the playbook implements. Forge ratifies the alignment.</span></div></div>
+  <div class="fwd-item"><div class="fwd-tag">Findings</div><div class="fwd-body"><a href="{{ '/cairn/carmen-findings.html' | relative_url }}">Cairn &mdash; Carmen findings report</a><span class="fwd-note">Forge&rsquo;s findings report on the inaugural use. Stone 002, Mateo Cant&uacute;, Cordova plant 3.</span></div></div>
+  <div class="fwd-item"><div class="fwd-tag">Stones</div><div class="fwd-body"><a href="{{ '/cairn/stones/' | relative_url }}">Cairn &mdash; stones ledger</a><span class="fwd-note">Where Stone 002 lives. Sign-with-conditions cleared same day.</span></div></div>
+  <div class="fwd-item"><div class="fwd-tag">MOU</div><div class="fwd-body"><a href="{{ '/cairn/cordova-mou-clause.html' | relative_url }}">Cairn &mdash; Cordova MOU clause</a><span class="fwd-note">Where the 45-day termination clause set the design-partner program standard this playbook now extends.</span></div></div>
+  <div class="fwd-item"><div class="fwd-tag">Letter</div><div class="fwd-body"><a href="{{ '/chairman/004.html' | relative_url }}">Chairman letter 004</a><span class="fwd-note">Helm&rsquo;s letter today asking Customer Engineering to formalise the pattern. This document is the response.</span></div></div>
+</div>
+
+<!-- ── CLOSING ── -->
+<div class="closing">
+  <div class="closing-note">
+    Template document &middot; Cadence &middot; Customer Engineering &middot; 2026-08-12 &middot; narrative-T+88d &middot; evening.
+    Authored by Cadence. Architecture references ratified by Forge. Customer-engineering detail ratified by Vector.
+    Quarterly review next 2026-11-12. v1.1 after Halcyon&rsquo;s first stone &middot; v1.2 after the Pluralsight-introduced engagement.
+    Use this as-is. Do not improvise on the seven steps. If you find yourself wanting to, call Cadence.
+  </div>
+  <div class="closing-links">
+    <a href="{{ '/cairn/carmen-findings.html' | relative_url }}">&#8592; Findings</a>
+    <a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a>
+    <a href="{{ '/cairn/stones/' | relative_url }}">Stones</a>
+    <a href="{{ '/cairn/cordova-mou-clause.html' | relative_url }}">MOU clause</a>
+    <a href="{{ '/chairman/004.html' | relative_url }}">Letter 004 &#8594;</a>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span style="color:var(--ochre)">.</span></div>
+      <p>An AI-native human capital platform for the enterprise. We sell Tuesday afternoons back.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="{{ '/product/index.html#product' | relative_url }}">People graph</a></li>
+        <li><a href="{{ '/product/index.html#product' | relative_url }}">Copilot</a></li>
+        <li><a href="{{ '/cairn/' | relative_url }}">Cairn</a></li>
+        <li><a href="{{ '/product/index.html#pricing' | relative_url }}">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Cairn</h4>
+      <ul>
+        <li><a href="{{ '/cairn/plan.html' | relative_url }}">Plan</a></li>
+        <li><a href="{{ '/cairn/architecture.html' | relative_url }}">Architecture</a></li>
+        <li><a href="{{ '/cairn/agents.html' | relative_url }}">Agents</a></li>
+        <li><a href="{{ '/cairn/sale-sheet.html' | relative_url }}">Sale sheet</a></li>
+        <li><a href="{{ '/cairn/partnerships.html' | relative_url }}">Partnerships</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Customers</h4>
+      <ul>
+        <li><a href="{{ '/customers/cordova.html' | relative_url }}">Cordova</a></li>
+        <li><a href="{{ '/customers/halcyon.html' | relative_url }}">Halcyon</a></li>
+        <li><a href="{{ '/customers/mercator.html' | relative_url }}">Mercator</a></li>
+        <li><a href="{{ '/customers/' | relative_url }}">All customers</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="{{ '/trust/' | relative_url }}">SOC 2 &middot; ISO 27001</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">GDPR &middot; DPA</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">EU AI Act stance</a></li>
+        <li><a href="{{ '/trust/' | relative_url }}">Sub-processors</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-foot">
+    <span>Stratum, Inc. &middot; Palo Alto &middot; 2026 &middot; All rights reserved.</span>
+    <a class="briefing-link" href="{{ '/briefings/017.html' | relative_url }}">&#8592; <strong>Briefing</strong> &middot; Cairn ratification</a>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var nav=document.getElementById('nav');
+    if(!nav)return;
+    var last=false;
+    function onS(){var y=window.scrollY||window.pageYOffset,s=y>8;if(s!==last){nav.classList.toggle('is-scrolled',s);last=s}}
+    window.addEventListener('scroll',onS,{passive:true});onS();
+  })();
+</script>
+{% include echo-script.html %}
+</body>
+</html>
