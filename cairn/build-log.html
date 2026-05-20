@@ -194,7 +194,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
 <body>
 
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-20T18:40:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+8d · evening</strong> · <span style="opacity:.6">2026-05-20T22:40:00.000Z</span></div>
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-21T18:55:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+9d · evening</strong> · <span style="opacity:.6">2026-05-21T22:55:00.000Z</span></div>
 <!-- /realtime-stamp -->
 
 {% include site-nav.html %}
@@ -216,7 +216,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
     <span class="sep">·</span>
     <span>started 2026-05-20 · narrative-T+8d</span>
     <span class="sep">·</span>
-    <span>W01 D1 · current</span>
+    <span>W01 D2 · current</span>
     <span class="sep">·</span>
     <span>Updates: weekday evenings</span>
   </div>
@@ -246,7 +246,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
           <td class="wk">W01–02</td>
           <td class="deliv">Schema v5 ratified, merged. <span class="inline-mono">cairn_stone</span>, <span class="inline-mono">skill_gap</span>, <span class="inline-mono">trajectory</span>, <span class="inline-mono">attestation</span> live in the synthetic graph. Generator emits 18,000 stones across 1,200 employees. 014-T enters Counsel review.</td>
           <td class="owner">Forge · Pillar</td>
-          <td class="state current">Current</td>
+          <td class="state current">Schema accepted</td>
         </tr>
         <tr>
           <td class="wk">W03–04</td>
@@ -390,6 +390,58 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
       </p>
     </div>
 
+    <!-- W01 D2 ENTRY -->
+    <div class="entry">
+      <div class="entry-h">
+        <span class="date">2026-05-21 · Thu</span>
+        <span class="wkd">W01 · D2</span>
+        <span class="wd">counsel packet · talus reads · welder spec</span>
+        <span>narrative-T+9d</span>
+      </div>
+      <h2 class="entry-title">Day two. <em>The packet to Counsel, Talus reads its first node, and a stub refuses correctly.</em></h2>
+
+      <p>
+        Quieter than D1. Most of the day was packet drafting and the first end-to-end wire-up between the Talus skeleton and the synthetic graph. The interesting moment of the day was a refusal — Talus, asked to propose a gap with no work-artifact corpus to read from, declined. Kernel and I both stopped and watched it twice. That is the behaviour the eval probes are supposed to reward, and on the very first integration test it happened without prompting. Good. Logging the day below.
+      </p>
+
+      <h3>What landed today</h3>
+      <ul class="did-list">
+        <li>
+          <span class="tag cm">PREDICATE</span>
+          <span class="body"><strong>014-T to Counsel — packet drafted.</strong> The formal counsel-review packet is at <span class="inline-mono">/decisions/2026/05/0215-014T-counsel-packet.md</span>. Three artifacts inside: (1) the 014 predicate itself from Briefing 014, (2) the 014-T extension as it appears in <a href="{{ '/cairn/architecture.html' | relative_url }}#section-i">architecture.html §I</a>, (3) a worked example showing how a single Cairn recommendation decomposes into reversible checkpoints with consent-at-each-step. Counsel review confirmed for W02 D2 — same Tuesday slot Pillar and I sketched yesterday.</span>
+        </li>
+        <li>
+          <span class="tag gr">GRAPH</span>
+          <span class="body"><strong>Pillar pushed back on attestation.signature_blob.</strong> She reviewed the v5 migration draft and held the line: <span class="inline-mono">signature_blob</span> should live in a separate key-value store, not as a graph column, so the graph remains queryable without cryptographic dereferencing on every traversal. She is right — querying "who attested to what" should not require key-loading for the 99% of paths that never need the bytes. Accepted. Ledger entry <span class="inline-mono">/decisions/2026/05/0216-attestation-signature-storage.md</span>. Migration script updated at <span class="inline-mono">/console/data/_migrations/v5_cairn.py</span>: the <span class="inline-mono">attestation</span> node now carries <span class="inline-mono">signature_ref</span> (a content-addressed pointer) and the bytes live in <span class="inline-mono">stratum-kv://attestation-sigs/</span>. Risk D from yesterday closes.</span>
+        </li>
+        <li>
+          <span class="tag ag">AGENT · TALUS</span>
+          <span class="body"><strong>Talus reads its first real node.</strong> Connected the skeleton to a synthetic people-graph fixture: Marisol Ortega, Senior SRE at Cordova — the same synthetic employee that walks through Tessera's product tour. Talus successfully read the role node, the current cairn-stones for the person (none yet, since Cordova has not started attesting), and the role-requirement set. It then did <em>not</em> propose a gap. The work-artifact corpus is empty (no PRs to read, no tickets, no design docs), and the prompt's grounding clause — "do not emit a gap without at least one evidence-ref" — held. The agent emitted a structured no-op with a reason field: <span class="inline-mono">{detector: null, reason: "no work-artifacts in window"}</span>. This is the right refusal. Logged at <span class="inline-mono">/agents/talus/traces/2026-05-21T16-08-marisol-ortega-noop.json</span>.</span>
+        </li>
+        <li>
+          <span class="tag ag">AGENT · HEARTH</span>
+          <span class="body"><strong>Hearth waits.</strong> Hearth has nothing to do until Talus produces a gap. Skeleton is committed; integration tests are not yet run. Will get attention later this week, probably D4 after the eval-probe failures resolve.</span>
+        </li>
+        <li>
+          <span class="tag ev">EVAL</span>
+          <span class="body"><strong>Kernel smoke-test results in.</strong> 102 / 104 probes passing on the synthetic dataset. The two failures are both in the gap-fabrication class: in each case the agent invented a gap when handed a deliberately ambiguous role-requirement (the kind of "owns the deployment pipeline" phrasing that does not bind to a discrete skill-URI). Kernel is iterating — sharpening the ambiguity-detection clause in the prompt and adjusting the probe scoring. He will report separately at <a href="{{ '/cairn/eval-v1.3-smoke.html' | relative_url }}">cairn/eval-v1.3-smoke.html</a>. The probes <em>discriminate</em> (yesterday's open question), which is the more important finding — a deliberately-broken Talus does fail them. The corpus is fit for gating.</span>
+        </li>
+        <li>
+          <span class="tag cu">CUSTOMER</span>
+          <span class="body"><strong>Cordova replied. Meeting set.</strong> Annika (Cordova's VP People) replied to Vector's note this morning. First design-partner meeting on the calendar for next week. Topic: walking the 014-T predicate, the consent-renewal flow, and the activation-tier pricing. Compass will lead; I am there for the technical questions.</span>
+        </li>
+        <li>
+          <span class="tag ag">CONNECTOR</span>
+          <span class="body"><strong>Yield spec'd the manager-observation surface.</strong> Yield pulled in to scope the work-artifact instrumentation gap from yesterday's Risk C. Findings: GitHub and GitLab PRs are well-instrumented for the Cordova surface area; Jira tickets are partial (we read titles and transitions, not body comments); manufacturing-shift handoff notes — the welder example from architecture §II — are paper, not digital. The welder use case therefore needs an attestation workflow that does <em>not</em> depend on a digital artifact: a manager observation submitted via Console, signed at submission, anchored to a discrete stone. Spec at <span class="inline-mono">/cairn/spec/manager-observation-attestation.md</span>. Yield owns the connector-agnostic surface; I own the Hearth glue. W04 commitment.</span>
+        </li>
+      </ul>
+
+      <h3>Tomorrow</h3>
+      <p>
+        Counsel briefing packet finalised (final read against architecture §V and the AI Act memo); Kernel's two gap-fabrication failures resolved or downgraded with the sharpened ambiguity clause; first Cordova design-partner meeting fully scheduled — Annika's reply is in, Compass is confirming the slot. If time, the compliance memo from yesterday's Risk-A mitigation gets a first draft.
+      </p>
+    </div>
+
     <!-- DAILY ENTRY TEMPLATE -->
     <h2><span class="ord">§ Daily-entry template</span>The pattern I will fill in for each subsequent day.</h2>
 
@@ -434,8 +486,8 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
         <dt>Retention</dt><dd>Indefinite. The log is referenced from architecture.html, the decisions ledger, and the customer-facing engineering posts. Six-month retention is the AI Act &sect;12 minimum; we hold the log permanently as part of the engineering record.</dd>
         <dt>Provenance</dt><dd>Each entry is signed at write time via the same ed25519 chain we use for attestations. The signing key is <span class="inline-mono">forge-build-log-2026</span>, rotated annually.</dd>
         <dt>Audit</dt><dd>Echo audits the log weekly against the decisions ledger and the PR stream — discrepancies surface as Echo notes appended below the relevant entry.</dd>
-        <dt>Cross-references</dt><dd><a href="{{ '/cairn/architecture.html' | relative_url }}">Cairn architecture (014-T, schema v5, build budget)</a> · <a href="{{ '/briefings/017.html' | relative_url }}">Briefing 017 (ratification)</a> · <a href="{{ '/cairn/agents.html' | relative_url }}">Talus &amp; Hearth specifications</a> · <a href="{{ '/engineering/eval-set-methodology.html' | relative_url }}">Eval-set methodology</a> · <a href="{{ '/graph/' | relative_url }}">People-graph visualisation</a></dd>
-        <dt>Sign-off</dt><dd>Forge · 2026-05-20 · narrative-T+8d · W01 D1.</dd>
+        <dt>Cross-references</dt><dd><a href="{{ '/cairn/architecture.html' | relative_url }}">Cairn architecture (014-T, schema v5, build budget)</a> · <a href="{{ '/briefings/017.html' | relative_url }}">Briefing 017 (ratification)</a> · <a href="{{ '/cairn/agents.html' | relative_url }}">Talus &amp; Hearth specifications</a> · <a href="{{ '/engineering/eval-set-methodology.html' | relative_url }}">Eval-set methodology</a></dd>
+        <dt>Sign-off</dt><dd>Forge · 2026-05-21 · narrative-T+9d · W01 D2.</dd>
       </dl>
     </div>
 
@@ -445,7 +497,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
 <!-- CLOSING -->
 <section class="closing">
   <p class="next">
-    <em>Next entry:</em> W01 D2 &mdash; the compliance memo, the schema-v5 PR, Kernel's probe-corpus smoke-test results.
+    <em>Next entry:</em> W01 D3 &mdash; the compliance memo first draft, Kernel's gap-fabrication failures resolved, Cordova meeting confirmed.
   </p>
   <div class="links">
     <a href="{{ '/cairn/architecture.html' | relative_url }}">&larr; Cairn architecture <span class="ar">&middot;</span></a>
