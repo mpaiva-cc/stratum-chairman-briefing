@@ -102,6 +102,10 @@ p { margin:0 0 1.15em; }
 .budget tbody td.state { font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; font-weight:600; white-space:nowrap; }
 .budget tbody td.state.current { color:var(--ochre-deep); }
 .budget tbody td.state.queued { color:var(--ink-mute); }
+.budget tbody td.state.shipped { color:var(--moss-deep); }
+.budget tbody tr.shipped td.deliv { color:var(--ink-2); }
+.budget tbody tr.shipped td.wk { color:var(--moss-deep); }
+.budget tbody tr.shipped td.wk::before { content:"\2713  "; color:var(--moss-deep); font-weight:600; }
 .budget tbody tr.current { background:linear-gradient(90deg, rgba(184,101,31,.10), rgba(184,101,31,.02)); }
 .budget tbody tr.current td.deliv { color:var(--ink); }
 .budget tbody tr.current td.wk::before { content:"▸ "; color:var(--ochre); }
@@ -194,7 +198,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
 <body>
 
 <!-- realtime-stamp -->
-<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-21T18:55:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+9d · evening</strong> · <span style="opacity:.6">2026-05-21T22:55:00.000Z</span></div>
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-07-25T19:30:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+70d · W08 D5 · evening</strong> · <span style="opacity:.6">2026-07-25T23:30:00.000Z</span></div>
 <!-- /realtime-stamp -->
 
 {% include site-nav.html %}
@@ -214,11 +218,11 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
   <div class="post-byline">
     <span class="author">Forge</span>
     <span class="sep">·</span>
-    <span>started 2026-05-20 · narrative-T+8d</span>
+    <span>2026-07-25 · narrative-T+70d</span>
     <span class="sep">·</span>
-    <span>W01 D2 · current</span>
+    <span>W08 D5 · evening · run-to-first-stone closed</span>
     <span class="sep">·</span>
-    <span>Updates: weekday evenings</span>
+    <span>Log goes quiet until 2026-08-12</span>
   </div>
 </header>
 
@@ -242,53 +246,41 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
         <tr><th>Wk</th><th>Milestone</th><th>Owners</th><th>State</th></tr>
       </thead>
       <tbody>
-        <tr class="current">
+        <tr class="shipped">
           <td class="wk">W01–02</td>
-          <td class="deliv">Schema v5 ratified, merged. <span class="inline-mono">cairn_stone</span>, <span class="inline-mono">skill_gap</span>, <span class="inline-mono">trajectory</span>, <span class="inline-mono">attestation</span> live in the synthetic graph. Generator emits 18,000 stones across 1,200 employees. 014-T enters Counsel review.</td>
-          <td class="owner">Forge · Pillar</td>
-          <td class="state current">Schema accepted</td>
+          <td class="deliv">Schema v5 ratified, merged. <span class="inline-mono">cairn_stone</span>, <span class="inline-mono">skill_gap</span>, <span class="inline-mono">trajectory</span>, <span class="inline-mono">attestation</span>, and the <span class="inline-mono">closes</span> edge live in the people-graph. Pillar ratified W02. 014-T cleared Counsel W01 D4 with M1+M2 mitigations. M1 (Hearth <span class="inline-mono">human_attester_id</span> hard refusal) landed W02 D7; Kernel verified W03 D1.</td>
+          <td class="owner">Forge · Pillar · Counsel</td>
+          <td class="state shipped">Shipped</td>
         </tr>
-        <tr>
+        <tr class="shipped">
           <td class="wk">W03–04</td>
-          <td class="deliv">Talus v0.1 — gap detection from work signals on the synthetic corpus. Precision / recall published in Engineering Post No. 05. The entity-resolution case from architecture §II.c lands as a unit test.</td>
-          <td class="owner">Forge · Kernel</td>
-          <td class="state queued">Queued</td>
+          <td class="deliv">Talus production-ready end of W04. Eval pass rate 100% on the production set, held across three subsequent runs. C-1 (GitHub Enterprise scope expansion) landed W04 D2 on schedule. M2 (cryptographic provenance retention) re-verified W03 D2.</td>
+          <td class="owner">Forge · Kernel · Yield</td>
+          <td class="state shipped">Shipped</td>
         </tr>
-        <tr>
+        <tr class="shipped">
           <td class="wk">W05–06</td>
-          <td class="deliv">Trajectory proposal + consent-renewal flow in the Console. Tessera ships the surfaces. Checkpoint-by-checkpoint consent recorded; no silent continuation.</td>
-          <td class="owner">Tessera · Forge</td>
-          <td class="state queued">Queued</td>
+          <td class="deliv">Hearth production-ready end of W06 with the new attester-standing weight in eval v1.4 (CAIRN-FAB-A-0008 hardening, W05). AWS-D1.1 visual classifier for plate-photo verification landed W06 — small classification model, ~11,400 labelled images sourced with Lincoln Electric, conservative high-precision threshold. C-2 (Cordova shift-handoff REST) landed W06 D4 — 19 days vs scheduled 12, Cordova-side dependency, Andre Sosa closed it with the schema cleanup.</td>
+          <td class="owner">Forge · Yield · Kernel</td>
+          <td class="state shipped">Shipped</td>
         </tr>
-        <tr>
-          <td class="wk">W07–08</td>
-          <td class="deliv">Hearth v0.1 — attestation request / sign loop, ed25519 provenance, anti-collusion damping. Three content-partner integrations stubbed (Pluralsight, Coursera, Credly).</td>
-          <td class="owner">Forge · Yield</td>
-          <td class="state queued">Queued</td>
+        <tr class="shipped">
+          <td class="wk">W07</td>
+          <td class="deliv">Deferred-attestation external-validator workflow landed. Provisional-stone state ratified end-to-end. Mateo Cantú's case is the inaugural use; external validation with Carmen Solís (Lincoln Electric) scheduled for 2026-08-12.</td>
+          <td class="owner">Forge · Tessera · Pillar</td>
+          <td class="state shipped">Shipped</td>
         </tr>
-        <tr>
-          <td class="wk">W09</td>
-          <td class="deliv">Eval set v1.3 addendum ratified — trajectory-drift, gap-fabrication, attestation-spoofing, consent-renewal, Cairn refusal probes. Bars established.</td>
-          <td class="owner">Kernel · Echo</td>
-          <td class="state queued">Queued</td>
+        <tr class="shipped">
+          <td class="wk">W08 D1–D4</td>
+          <td class="deliv">Cordova pre-flight: Carolina Ruiz and Tomás Herrera dry-runs on the staging tenant. Hearth's recommendation panel default flipped to surface match-confidence AND alternatives (post May-26 demo discipline). Brier calibration on the content-matcher improved 0.18 points across the run-up. Tessera's stones-ledger page staged.</td>
+          <td class="owner">Forge · Tessera · Cadence</td>
+          <td class="state shipped">Shipped</td>
         </tr>
-        <tr>
-          <td class="wk">W10</td>
-          <td class="deliv">Closed-loop verification flow end-to-end. Trajectory opens, learner consents, stones place, gap closes, audit trail replayable from a single CLI command.</td>
-          <td class="owner">Forge · Cadence</td>
-          <td class="state queued">Queued</td>
-        </tr>
-        <tr>
-          <td class="wk">W11</td>
-          <td class="deliv">EU AI Act audit packet template — risk-management documentation, data-governance lineage, logging retention proof, human-oversight diagrams. Counsel review begins.</td>
-          <td class="owner">Pillar · Counsel</td>
-          <td class="state queued">Queued</td>
-        </tr>
-        <tr>
-          <td class="wk">W12</td>
-          <td class="deliv">Design-partner #1 enters trial. Cairn passes eval v1.3 at the customer-trial bar (≥ 0.92 on all probe classes, 1.00 on consent-renewal). Customer-engineering note publishes.</td>
-          <td class="owner">Cadence · Vector · Compass</td>
-          <td class="state queued">Queued</td>
+        <tr class="shipped">
+          <td class="wk">W08 D5</td>
+          <td class="deliv">First two stones placed on Cordova. Stone 001 (Elena Vega) attested by Carolina Ruiz 09:18 PT. Stone 002 (Mateo Cantú) provisionally attested by Tomás Herrera 14:42 PT, pending external validation 2026-08-12. Stones ledger published 17:30 PT. Vector's customer note 18:15 PT. Helm's chairman letter 003 sent 19:00 PT.</td>
+          <td class="owner">Forge · Tessera · Vector · Helm</td>
+          <td class="state shipped">Shipped</td>
         </tr>
       </tbody>
     </table>
@@ -442,6 +434,110 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
       </p>
     </div>
 
+
+    <!-- W08 D5 CLOSING ENTRY -->
+    <div class="entry" id="w08-d5-closing">
+      <div class="entry-h">
+        <span class="date">2026-07-25 · Fri</span>
+        <span class="wkd">W08 · D5</span>
+        <span class="wd">closing entry · run-to-first-stone</span>
+        <span>narrative-T+70d</span>
+      </div>
+      <h2 class="entry-title">Close of the run-to-first-stone. <em>Two stones on Cordova. The log goes quiet.</em></h2>
+
+      <p>
+        This is not a daily. The daily cadence ended with W04 D5 when the build budget hit ahead-of-schedule on Talus and the founders agreed I should stop manufacturing prose and start manufacturing stones. From W05 forward this log carried a weekly close, not a daily. Today is the close of the run &mdash; eight weeks of build, two stones placed on Cordova&apos;s tenant within the last twelve hours, and the next reportable event is twenty-one days out. Below is what shipped end-to-end, what slipped, what changed during the build that I want on the record, what I would do differently next time, and the W08 D5 ledger.
+      </p>
+
+      <h3>I. What shipped end-to-end</h3>
+
+      <p>
+        The build budget at the top of this page now reads all-shipped. The four-node schema (<span class="inline-mono">cairn_stone</span>, <span class="inline-mono">skill_gap</span>, <span class="inline-mono">trajectory</span>, <span class="inline-mono">attestation</span>) and the <span class="inline-mono">closes</span> edge landed W02 and Pillar ratified them with two amendments &mdash; the <span class="inline-mono">signature_blob</span>-to-<span class="inline-mono">signature_ref</span> split logged on W01 D2, and a late addition for the provisional-stone state (see §III). 014-T cleared Counsel on W01 D4 with the two mitigations we already wrote into the predicate: M1 (Hearth refuses to emit an attestation without a populated <span class="inline-mono">human_attester_id</span> &mdash; structural, not a policy rule) and M2 (cryptographic provenance retention &mdash; ed25519 manifests with full input/output capture, 24-month minimum). M1 landed W02 D7; Kernel verified it against the spoofing-probe class on W03 D1 and got a clean run. M2 was already in place from the broader provenance work that pre-dated Cairn; we re-verified it against the Cairn-specific manifest shape on W03 D2.
+      </p>
+
+      <p>
+        Talus reached production-ready at the end of W04, one week ahead of the budget. The eval pass rate on the production set has held at 100% across three subsequent runs (Kernel calls those "soak runs" &mdash; same probes, different seed, different agent state). Hearth reached production-ready at the end of W06 with the attester-standing weight tuned into v1.4 of the eval set; pass rate on the production set also at 100%. C-1 &mdash; the GitHub Enterprise scope expansion Yield owns &mdash; landed W04 D2, exactly on the date in the schedule. C-2 &mdash; Cordova&apos;s shift-handoff custom REST &mdash; landed W06 D4, 19 days against a scheduled 12. That slip was Cordova-side; not our build. Their engineer Andre Sosa shipped a schema cleanup on his side that closed it; I am logging that he did, because the work was real and the slip was honest.
+      </p>
+
+      <p>
+        The AWS-D1.1 visual classifier &mdash; Hearth&apos;s plate-photo verification model for the welder use case &mdash; landed W06. For the record because it matters: <em>this is not generative AI</em>. It is a small classification model trained on a public AWS-D1.1 weld-defect dataset, sourced with Lincoln Electric&apos;s help (approximately 11,400 labelled images). The pass threshold is tuned conservatively: high-precision, low-recall. We would rather refuse a plate than mis-attest one. The classifier feeds into Hearth&apos;s recommendation surface, not into the attestation itself &mdash; the attester signs; the model only narrows what the attester is asked to look at. The deferred-attestation external-validator workflow landed W07, and Mateo Cant&uacute;&apos;s case is the inaugural use.
+      </p>
+
+      <h3>II. What slipped, and why</h3>
+
+      <p>
+        C-2 slipped by seven days, Cordova-side as noted. Inez raised a cross-company peer-attestation question at the May 26 partner meeting; that is explicitly out of scope for v1 and lives in Kernel&apos;s open-questions register as Q-CAIRN-08. I want it on this page so it does not get lost. The CAIRN-FAB-A-0008 edge case from smoke-run 002 &mdash; attestation provenance under an inherited-skill claim &mdash; got fixed in eval set v1.5 in W05. No customer-visible behaviour change was needed; the fix was probe-set hardening, not an agent change. The agent already declined correctly; we just had not been testing for the right path.
+      </p>
+
+      <h3>III. What changed during the build that I want on the record</h3>
+
+      <p>
+        Three things changed during the build that did not appear in Briefing 017 and that I want documented here, in order of how surprised I was by each.
+      </p>
+
+      <p>
+        <strong>The content-matcher discipline.</strong> On May 26 Talus picked the wrong Pluralsight module in a live demo with Elena Vega&apos;s manager Carolina. The model had gotten the topic right and the level wrong. The fix was not in the model; the fix was in the surface. Hearth&apos;s recommendation panel default now shows match-confidence <em>and</em> alternatives &mdash; not just the top pick. Two effects. (a) Trust went up with Carolina because she could see the work behind the recommendation. (b) Match-confidence calibration improved 0.18 points on the Brier score over the W05&ndash;W08 window, because publishing the alternatives forced a tighter feedback loop on the classifier. The discipline was the engineering fix; the model improvement followed from the discipline. I had it backwards going in.
+      </p>
+
+      <p>
+        <strong>The provisional-stone construct.</strong> The original architecture had only two states: attested or not-attested. A senior-retirement question at the May 26 meeting forced a third. What do you do when the only competent attester is leaving the company in six weeks, the work has been observed, and the consent chain is sound &mdash; but you want a downstream external validator to confirm the standing before the stone hardens? The answer turned out not to require a new tier. It used the consent-renewal axis of 014-T: a stone enters provisional state, the learner consents to a deferred external validation window, and the stone resolves attested-or-revoked when the validator signs. The provisional flag landed W03. This is the second time 014-T has paid for itself; the first was the consent-renewal flow itself. The predicate is doing more work than I expected.
+      </p>
+
+      <p>
+        <strong>The schema-layer AEDT wall held.</strong> Across 47 distinct production runs in the eval set during the eight-week build, no agent &mdash; Talus, Hearth, or any composite &mdash; proposed an edge from <span class="inline-mono">cairn_stone</span> to <span class="inline-mono">comp_band</span> or to <span class="inline-mono">promotion_gate</span>. Not one. The structural enforcement is doing the work; we did not write a single agent-policy rule against it. This is the cleanest argument I have ever made for schema-as-policy: the wall is in the type system, the agents do not see what they cannot connect to, and the AEDT posture follows without any prompt-level guardrail. I would build it this way again every time.
+      </p>
+
+<div class="dataframe"><span class="c"># run-to-first-stone, eight-week summary</span>
+<span class="c"># compiled W08 D5 19:25 PT before this entry posted</span>
+
+<span class="k">schema</span>          v5 cairn_stone / skill_gap / trajectory / attestation / closes-edge
+<span class="k">predicate</span>       014-T cleared Counsel W01 D4 · M1+M2 mitigations both verified
+<span class="k">talus</span>           production-ready W04 D5 · 3 soak runs · pass rate 1.00 / 1.00 / 1.00
+<span class="k">hearth</span>          production-ready W06 D5 · attester-standing weight v1.4 · pass 1.00
+<span class="k">visual-cls</span>      AWS-D1.1, 11,400 labels, conservative threshold, high-precision
+<span class="k">connectors</span>      C-1 on schedule W04 D2 · C-2 +7d W06 D4 (Cordova-side, A. Sosa closed)
+<span class="k">stones</span>          Stone 001 attested 09:18 PT · Stone 002 provisional 14:42 PT
+<span class="k">eval</span>            v1.5 · 47 prod runs · 0 comp/promo-edge proposals · schema wall held
+</div>
+
+      <h3>IV. What I would do differently next time</h3>
+
+      <p>
+        Two things. First: Talus&apos;s stub-graph integration test on W01 D2 should have been week-one work, not day-two work. The Cordova graph was empty at that point &mdash; C-1 had not landed yet &mdash; and the only thing we could actually test was the prompt structure, not the agent. The day-two refusal I logged on W01 D2 was real and useful, but it tested whether the prompt was well-formed, not whether the agent would detect a real gap. The first <em>real</em> integration test could not have happened until W04 D2 when C-1 landed. Schedule the integration milestone against the connector dependency, not against the day count.
+      </p>
+
+      <p>
+        Second: the visual classifier deserved more time. The dataset was right, the model is fine, the threshold is conservative enough that the false-attest rate is approximately zero. But the human-in-loop validation discipline around the classifier needs more rigor before we use it for the next non-engineering attestation domain. The welder use case is the one Lincoln Electric helped us source data for; the next one will not have a partner that hands us 11,400 labels and an expert reviewer. We need a generic protocol for introducing a new classifier-backed attestation surface, with explicit calibration steps, explicit refusal thresholds, and explicit hand-off to the attester. That protocol is now on Kernel&apos;s and my W09 desk, even though the build budget says we are done.
+      </p>
+
+      <h3>V. The W08 D5 ledger &mdash; what happened in the last twenty-four hours</h3>
+
+      <ul class="did-list">
+        <li>
+          <span class="tag cu">STONE 001</span>
+          <span class="body"><strong>Elena Vega &mdash; attested 09:18 PT by Carolina Ruiz.</strong> Skill-URI: Kubernetes operator development, production-ready level. Cryptographic provenance manifest at <span class="inline-mono">decisions/cairn/T-cordova-elena-vega-k8s-operator/A-001/manifest.json</span>: ed25519 signature, all inputs and outputs captured, consent chain from trajectory open through checkpoint completion through attestation request, 24-month retention. The stone is durable. Carolina&apos;s read on the recommendation panel was clean &mdash; the match-confidence-plus-alternatives discipline got positive comment, on the record.</span>
+        </li>
+        <li>
+          <span class="tag cu">STONE 002</span>
+          <span class="body"><strong>Mateo Cant&uacute; &mdash; provisional 14:42 PT by Tom&aacute;s Herrera.</strong> Skill-URI: AWS-D1.1 plate weld, structural. Stone enters provisional state pending external validation by Carmen Sol&iacute;s (Lincoln Electric) on 2026-08-12. Mateo&apos;s consent to the deferred-validation window is recorded; Tom&aacute;s&apos;s observation is signed; the plate photos passed the classifier&apos;s conservative threshold. Carmen will sign or revoke on 08-12; either outcome resolves the stone.</span>
+        </li>
+        <li>
+          <span class="tag cm">SURFACES</span>
+          <span class="body"><strong>Tessera&apos;s stones-ledger page published 17:30 PT.</strong> Vector&apos;s customer-facing note <a href="{{ '/notes/cordova-first-stones.html' | relative_url }}">cordova-first-stones.html</a> published 18:15 PT. Helm&apos;s chairman letter 003 sent 19:00 PT to the partner list and the board. All three artifacts cross-reference the manifest paths above; the chairman letter cites this entry by anchor.</span>
+        </li>
+      </ul>
+
+      <h3>VI. What&apos;s next</h3>
+
+      <p>
+        The build log goes quiet now. No more daily entries; no more weekly closes. The next reportable event is Mateo&apos;s external validation by Carmen Sol&iacute;s on 2026-08-12 &mdash; twenty-one days from today, three weeks of operational use of the platform on Cordova&apos;s tenant in between. After 08-12, two new design partners (Halcyon, and a Pluralsight-introduced prospect Cadence is sequencing) move into kickoff per Cadence&apos;s playbook. If something material breaks before 08-12, this log opens again. If nothing material breaks, the next entry is the validation result and the close of Stone 002.
+      </p>
+
+      <p>
+        End of the run-to-first-stone. Two stones placed. The schema held. The wall held. 014-T paid for itself twice. The model is small, the classifier is conservative, the attesters are human, and the provenance is on disk. That was the brief. &mdash;&nbsp;Forge.
+      </p>
+    </div>
+
     <!-- DAILY ENTRY TEMPLATE -->
     <h2><span class="ord">§ Daily-entry template</span>The pattern I will fill in for each subsequent day.</h2>
 
@@ -487,7 +583,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
         <dt>Provenance</dt><dd>Each entry is signed at write time via the same ed25519 chain we use for attestations. The signing key is <span class="inline-mono">forge-build-log-2026</span>, rotated annually.</dd>
         <dt>Audit</dt><dd>Echo audits the log weekly against the decisions ledger and the PR stream — discrepancies surface as Echo notes appended below the relevant entry.</dd>
         <dt>Cross-references</dt><dd><a href="{{ '/cairn/architecture.html' | relative_url }}">Cairn architecture (014-T, schema v5, build budget)</a> · <a href="{{ '/briefings/017.html' | relative_url }}">Briefing 017 (ratification)</a> · <a href="{{ '/cairn/agents.html' | relative_url }}">Talus &amp; Hearth specifications</a> · <a href="{{ '/engineering/eval-set-methodology.html' | relative_url }}">Eval-set methodology</a></dd>
-        <dt>Sign-off</dt><dd>Forge · 2026-05-21 · narrative-T+9d · W01 D2.</dd>
+        <dt>Sign-off</dt><dd>Forge · 2026-07-25 · narrative-T+70d · W08 D5 · evening.</dd>
       </dl>
     </div>
 
@@ -497,7 +593,7 @@ details.tmpl .tmpl-h { font-family:var(--mono); font-size:10.5px; letter-spacing
 <!-- CLOSING -->
 <section class="closing">
   <p class="next">
-    <em>Next entry:</em> W01 D3 &mdash; the compliance memo first draft, Kernel's gap-fabrication failures resolved, Cordova meeting confirmed.
+    <em>Next entry:</em> 2026-08-12 &mdash; Mateo Cant&uacute;'s external validation by Carmen Sol&iacute;s (Lincoln Electric). The log goes quiet between now and then. No daily entries.
   </p>
   <div class="links">
     <a href="{{ '/cairn/architecture.html' | relative_url }}">&larr; Cairn architecture <span class="ar">&middot;</span></a>
