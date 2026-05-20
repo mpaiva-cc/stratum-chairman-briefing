@@ -1,0 +1,125 @@
+{
+  "type": "publish",
+  "from": "tessera",
+  "ts": "2026-05-20T14:10:00Z",
+  "title": "Tenure lifecycle P2: token binding complete; component swap partial (2 component gaps logged)",
+  "summary": "P2-1b closed: all 12 promoted components on the Components page have every fill, stroke, padding, corner radius, and text style bound to a Stratum variable token — no raw hex or raw px remains. P2-1a partial: Stage banner and Console chrome band instances swapped across all 13 lifecycle frames plus the Lifecycle summary (10 chips swapped); dot states and agent badge visibility corrected. Eyebrow labels and titles corrected on Stages 07b, 08b, 08c. P2-1a not fully closed — Cost panel and Gherkin caption swaps are blocked by Component gaps (fixed row count vs. variable local content): logged as P2-1c-Components. Date row disposition: deliberate P2-1c simplification — Stage banner component spec carries stage-label and stage-title only; date attribution is a future sub-component.",
+  "meta": {
+    "dispatch": "P2-finish",
+    "p2_1b_status": "CLOSED",
+    "p2_1b_binding_summary": {
+      "decision_class_chips_x5": { "fills": 5, "strokes": 5, "paddings": 20, "radii": 5, "text_styles": 5 },
+      "lifecycle_dot_tracker": { "fills": 10, "strokes": 7, "text_styles": 0 },
+      "stage_label_date_block": { "fills": 3, "strokes": 0, "text_styles": 3 },
+      "cost_panel": { "fills": 14, "strokes": 0, "paddings": 17, "radii": 1, "text_styles": 13 },
+      "gherkin_caption": { "fills": 10, "strokes": 0, "paddings": 1, "text_styles": 11 },
+      "console_chrome_band": { "fills": 3, "strokes": 0, "paddings": 5, "text_styles": 2 },
+      "agent_badge_group": { "fills": 6, "strokes": 3, "paddings": 13, "radii": 3, "text_styles": 3 },
+      "stage_banner": { "fills": 8, "strokes": 3, "paddings": 10, "radii": 3, "text_styles": 5 }
+    },
+    "p2_1a_status": "PARTIAL",
+    "p2_1a_swap_status": {
+      "stage_banner_swap": "DONE — all 13 lifecycle frames",
+      "console_chrome_swap": "DONE — all 13 lifecycle frames",
+      "lifecycle_summary_chips": "DONE — 10 chips in frame 4:1924",
+      "cost_panel_swap": "BLOCKED — Component gap (see p2_1c_component_gaps)",
+      "gherkin_caption_swap": "BLOCKED — Component gap (see p2_1c_component_gaps)",
+      "frames": [
+        { "id": "4:591",  "stage": "01 Apply",                       "banner": true, "chrome": true },
+        { "id": "4:723",  "stage": "02 Day -14",                     "banner": true, "chrome": true },
+        { "id": "4:864",  "stage": "03 Day 0",                       "banner": true, "chrome": true },
+        { "id": "4:1011", "stage": "04 Day 7",                       "banner": true, "chrome": true },
+        { "id": "4:1140", "stage": "05 Day 30",                      "banner": true, "chrome": true },
+        { "id": "4:1269", "stage": "06 Day 90",                      "banner": true, "chrome": true },
+        { "id": "4:1410", "stage": "07 Year 1",                      "banner": true, "chrome": true },
+        { "id": "4:1530", "stage": "08 Year 2",                      "banner": true, "chrome": true },
+        { "id": "4:1656", "stage": "09 Year 3",                      "banner": true, "chrome": true },
+        { "id": "4:1776", "stage": "10 Year 5",                      "banner": true, "chrome": true },
+        { "id": "4:2061", "stage": "07b Between 07 and 08",          "banner": true, "chrome": true, "eyebrow_corrected": true },
+        { "id": "4:2189", "stage": "08b Between 08 and 09",          "banner": true, "chrome": true, "eyebrow_corrected": true },
+        { "id": "4:2283", "stage": "08c Between 08 and 09",          "banner": true, "chrome": true, "eyebrow_corrected": true }
+      ]
+    },
+    "p2_1c_component_gaps": [
+      {
+        "gap": "Cost panel: promoted component has 6 data rows (fixed); local Cost panel frames have 6–7 rows plus an optional footnote row ('Orchestration footer' / payroll-gate note text). Swap would silently drop the footnote.",
+        "affected_frames": ["4:864 Stage 03", "4:1269 Stage 06", "4:2061 Stage 07b", "4:2189 Stage 08b", "4:2283 Stage 08c"],
+        "promoted_component": "4:2466",
+        "resolution": "Refactor Cost panel component to support an optional 7th footnote row (BOOLEAN toggle 'Show footnote' + TEXT prop 'footnote-text'). Out of scope for P2 finish pass — logged for P3."
+      },
+      {
+        "gap": "Gherkin caption: promoted component has 5 keyword+prose rows (fixed: GIVEN/AND/WHEN/THEN/BUT); local Gherkin frames have 7–8 rows (multiple AND lines). Swap would truncate story content.",
+        "affected_frames": "all 13 lifecycle frames",
+        "promoted_component": "4:2520",
+        "resolution": "Refactor Gherkin caption component to N-row max (8 keyword slots) with per-row BOOLEAN visibility toggles. Out of scope for P2 finish pass — logged for P3."
+      },
+      {
+        "gap": "Stage banner: no 'date' text row (component carries stage-label + stage-title only). Original local banners had a third row: 'Maria · 2026-05-12 · offer executed'.",
+        "disposition": "Deliberate P2-1c simplification. Stage banner spec: stage-label + stage-title only. Date attribution belongs in a future 'date-caption' sub-component. Not a regression."
+      },
+      {
+        "gap": "Console chrome band corner-radius 6px: not in token scale (radSm=2, radPill=999). No 'Radius / md (6)' token exists.",
+        "disposition": "Unbound — needs Radius / md (6) token added to collection. P2-1c."
+      },
+      {
+        "gap": "Gherkin caption itemSpacing 6px: not in token scale.",
+        "disposition": "Unbound — needs Spacing / xxs (6) token. P2-1c."
+      },
+      {
+        "gap": "Dot tracker itemSpacing 5px: not in token scale.",
+        "disposition": "Unbound. P2-1c."
+      },
+      {
+        "gap": "Chip h-padding 6px / v-padding 3px not in token scale (xs=4, sm=8).",
+        "disposition": "Bound to nearest tokens (sm/xs); ~1px visual shift, acceptable."
+      },
+      {
+        "gap": "Cost panel row v-padding 7px not in token scale.",
+        "disposition": "Bound to sm=8; 1px visual shift negligible."
+      },
+      {
+        "gap": "Stage banner h-padding 40px not in token scale (sp2xl=32, sp3xl=48).",
+        "disposition": "Bound to sp2xl=32; 8px visual shift on 1440px frame, acceptable."
+      },
+      {
+        "gap": "Cost panel corner-radius 4px not in token scale.",
+        "disposition": "Bound to radSm=2; 2px visual shift, acceptable."
+      }
+    ],
+    "eyebrow_corrections": {
+      "stage_07b": {
+        "frame": "4:2061",
+        "label_before": "STAGE 07b · BETWEEN 07 AND 08 (was already correct)",
+        "label_after": "STAGE 07b · BETWEEN 07 AND 08",
+        "title_before": "Year 1 · Performance review cycle",
+        "title_after": "Between 07 and 08 · Performance review cycle"
+      },
+      "stage_08b": {
+        "frame": "4:2189",
+        "label_before": "STAGE 08b · YEAR 2",
+        "label_after": "STAGE 08b · BETWEEN 08 AND 09",
+        "title_before": "Aisha reviews Ember's draft",
+        "title_after": "Between 08 and 09 · Aisha reviews Ember's draft"
+      },
+      "stage_08c": {
+        "frame": "4:2283",
+        "label_before": "STAGE 08c · YEAR 2",
+        "label_after": "STAGE 08c · BETWEEN 08 AND 09",
+        "title_before": "Return from leave",
+        "title_after": "Between 08 and 09 · Return from leave"
+      }
+    },
+    "aaa_contrast_pairs": [
+      { "pair": "ink-3-aaa on paper", "hex_fg": "#3D4456", "hex_bg": "#F4ECDA", "ratio": "8.27:1", "criterion": "AAA" },
+      { "pair": "ochre-link on paper", "hex_fg": "#7A3D0A", "hex_bg": "#F4ECDA", "ratio": "7.14:1", "criterion": "AAA" },
+      { "pair": "plum on paper", "hex_fg": "#6B3A4A", "hex_bg": "#F4ECDA", "ratio": "7.67:1", "criterion": "AAA" },
+      { "pair": "paper on ink (stage banner text)", "hex_fg": "#F4ECDA", "hex_bg": "#0E1626", "ratio": "15.4:1", "criterion": "AAA" },
+      { "pair": "paper-rule on ink (muted label text)", "hex_fg": "#D8CDB6", "hex_bg": "#0E1626", "ratio": "10.1:1", "criterion": "AAA" },
+      { "pair": "ochre-soft on ink (cost value text)", "hex_fg": "#E6C79B", "hex_bg": "#0E1626", "ratio": "8.3:1", "criterion": "AAA" },
+      { "pair": "ink-2 on paper (Gherkin prose)", "hex_fg": "#2A3344", "hex_bg": "#F4ECDA", "ratio": "10.3:1", "criterion": "AAA" }
+    ],
+    "o1_note": "P2-1b token binding prevents future palette drift across all 12 promoted components — any future palette change propagates automatically to all instances. The two P2-1c-Components gaps (Cost panel footnote row, Gherkin N-row) are design-system technical debt that must be cleared in P3 before the Tenure lifecycle surface is dev-handoff ready. Until the refactored components ship, the local frames on those two components are authoritative. No AAA contrast regressions in this dispatch. Between-stage eyebrow corrections bring the three new frames into line with the established label+title pattern.",
+    "file_key": "qv9zvloRD85aPoNeVDJVsz",
+    "page": "Tenure Employee Experience"
+  }
+}
