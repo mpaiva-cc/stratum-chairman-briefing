@@ -1,0 +1,1827 @@
+---
+layout: legacy
+title: "Stratum Cairn — The agentic learning tour. Five screens. One closed loop."
+description: "A five-screen walkthrough of Stratum Cairn — from skill-gap detection in real work artifacts through closed-loop verification and trajectory update. Marisol Ortega, Senior SRE, Cordova Manufacturing."
+permalink: /cairn/tour/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}"{% if page.date %},"datePublished":{{ page.date | date_to_xmlschema | jsonify }}{% endif %}}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Cairn — The agentic learning tour. Five screens. One closed loop.</title>
+<meta name="description" content="A five-screen walkthrough of Stratum Cairn — from skill-gap detection in real work artifacts through closed-loop verification and trajectory update. Marisol Ortega, Senior SRE, Cordova Manufacturing." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+{% include echo-script.html %}
+<style>
+/* ============================================================
+   Stratum Cairn · /cairn/tour/ — five-screen scrollable tour
+   Marisol Ortega · Senior SRE · Cordova Manufacturing
+   Same palette as cairn/index.html
+   Stone vocabulary: ochre rounded-square 8×8 rx=2 nodes
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-card:   #fbf6e7;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-3-aaa:    #3d4456;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-text:    #3f5132;  /* AAA 7.2:1 on --paper — use for normal-weight small text */
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-tight:    min(960px, 90vw);
+
+  --shadow-sm:  0 1px 2px rgba(14,22,38,.06), 0 2px 6px rgba(14,22,38,.04);
+  --shadow-md:  0 6px 24px rgba(14,22,38,.10), 0 1px 3px rgba(14,22,38,.05);
+  --shadow-lg:  0 24px 60px rgba(14,22,38,.18), 0 4px 12px rgba(14,22,38,.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 16%, rgba(74, 93, 58, 0.05), transparent 42%),
+    radial-gradient(circle at 86% 82%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+a {
+  color: var(--moss-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--moss-text); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+code { font-family: var(--mono); font-size: .9em; color: var(--moss-deep); background: rgba(74,93,58,.08); padding: .1em .35em; border-radius: 2px; }
+
+::selection { background: var(--moss); color: var(--paper); }
+
+/* ─────────────────────────────────── MOBILE BAR ── */
+.mobile-bar {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.mobile-bar-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem 0;
+}
+.mobile-bar a {
+  color: var(--paper);
+  border-bottom: 0;
+  opacity: .8;
+  transition: opacity .2s, color .2s;
+}
+.mobile-bar a:hover { opacity: 1; color: var(--moss-soft); }
+.mobile-bar .mb-center { color: var(--moss-soft); letter-spacing: .18em; }
+.mobile-bar .mb-center .sl { color: var(--paper); opacity: .6; }
+
+/* ─────────────────────────────────── TOP NAV ── */
+.nav {
+  position: sticky;
+  top: 30px;
+  z-index: 55;
+  background: rgba(244, 236, 218, 0.88);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .25s, background .25s;
+}
+.nav.is-scrolled {
+  border-bottom-color: var(--paper-rule);
+  background: rgba(244, 236, 218, 0.96);
+}
+.nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .95rem 0;
+}
+.nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 1.45rem;
+  letter-spacing: -.035em;
+  color: var(--ink);
+  line-height: 1;
+  border-bottom: 0;
+}
+.nav-mark .dot { color: var(--moss); }
+.nav-mark .sub {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .18em;
+  color: var(--moss-text);
+  text-transform: uppercase;
+  margin-left: .5rem;
+  font-weight: 500;
+  vertical-align: 4px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.nav-links a { color: var(--ink-3-aaa); border-bottom: 0; transition: color .15s; }
+.nav-links a:hover { color: var(--ink); }
+.screen-pill {
+  background: var(--moss);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  padding: .3rem .7rem;
+  border-radius: 999px;
+}
+@media (max-width: 900px) { .nav-links { display: none; } }
+
+/* ─────────────────────────────────── TOUR NAV STRIP ── */
+.tour-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--ink);
+  border-bottom: 1px solid rgba(244,236,218,.1);
+}
+.tour-nav-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .6rem 0;
+  gap: 1rem;
+}
+.tour-nav-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.1rem;
+  letter-spacing: -.015em;
+  color: var(--paper);
+  line-height: 1;
+}
+.tour-nav-mark .sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .18em;
+  color: var(--moss-soft);
+  text-transform: uppercase;
+  margin-left: .4rem;
+  font-weight: 400;
+}
+.tour-steps {
+  display: flex;
+  align-items: center;
+  gap: .2rem;
+}
+.tour-step-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.55);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: .35rem .65rem;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  min-height: 32px;
+  white-space: nowrap;
+}
+.tour-step-btn:hover { color: var(--paper); }
+.tour-step-btn.is-active {
+  color: var(--paper);
+  border-color: rgba(197,205,177,.3);
+  background: rgba(74,93,58,.2);
+}
+@media (max-width: 720px) {
+  .tour-steps { display: none; }
+}
+.tour-cta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  border: 1px solid rgba(197,205,177,.3);
+  padding: .35rem .75rem;
+  transition: color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.tour-cta:hover { color: var(--paper); border-color: rgba(197,205,177,.6); }
+
+/* ─────────────────────────────────── TOUR SCREENS ── */
+.tour-screen {
+  min-height: 100vh;
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 5rem 0 4rem;
+  position: relative;
+  scroll-margin-top: 60px;
+}
+.tour-screen:nth-child(even) {
+  background: var(--paper-deep);
+}
+
+.screen-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+}
+
+/* screen header */
+.screen-step {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.screen-step .bar {
+  height: 1px;
+  width: 32px;
+  background: var(--moss);
+  display: inline-block;
+}
+.screen-step .verb {
+  background: var(--moss);
+  color: var(--paper);
+  padding: .15rem .5rem;
+  font-weight: 700;
+}
+
+.screen-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+  line-height: 1.04;
+  letter-spacing: -.024em;
+  margin: 0 0 .6rem;
+  color: var(--ink);
+  max-width: 28ch;
+}
+.screen-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--moss);
+}
+
+.screen-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.1rem;
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 58ch;
+  margin: 0 0 2.5rem;
+}
+
+/* layout: split */
+.screen-split {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 3rem;
+  align-items: start;
+}
+.screen-split.rev { grid-template-columns: 1.1fr 1fr; }
+
+@media (max-width: 960px) {
+  .screen-split, .screen-split.rev { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* the UI frame / mock window */
+.ui-frame {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-card);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+.ui-frame.dark {
+  background: var(--ink);
+  border-color: rgba(244,236,218,.14);
+}
+.ui-titlebar {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .55rem .8rem;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+}
+.ui-titlebar.dark-bar {
+  background: rgba(244,236,218,.05);
+  border-bottom-color: rgba(244,236,218,.1);
+  color: rgba(244,236,218,.55);
+}
+.ui-dots { display: flex; gap: .32rem; }
+.ui-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--paper-rule-2);
+}
+
+/* annotation panel */
+.annotation {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--moss);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.2rem;
+}
+.annotation-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: .6rem;
+}
+.annotation-body {
+  font-family: var(--serif);
+  font-size: .97rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+.annotation-body strong { color: var(--ink); }
+
+/* methodology callout */
+.method-box {
+  background: rgba(74,93,58,.06);
+  border: 1px solid rgba(74,93,58,.2);
+  padding: 1rem 1.2rem;
+  margin-top: 1.2rem;
+}
+.method-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+  margin-bottom: .55rem;
+}
+.method-body {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .02em;
+  line-height: 1.65;
+  color: var(--ink-3-aaa);
+}
+.method-body strong { color: var(--moss-deep); }
+
+/* ─────────────────────────────────── SCREEN 1: PERSON PROFILE ── */
+
+.person-header {
+  padding: 1.4rem 1.6rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+.person-avatar {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--moss);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.3rem;
+  color: var(--paper);
+  flex-shrink: 0;
+}
+.person-name-block .person-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.25rem;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .2rem;
+}
+.person-name-block .person-role {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+}
+.person-name-block .person-org {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-top: .2rem;
+}
+
+.stones-section {
+  padding: 1.2rem 1.6rem 1.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.stones-section-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: 1rem;
+}
+.stones-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+.stone-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule);
+  padding: .35rem .7rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+}
+.stone-chip .stone-sq {
+  width: 8px; height: 8px;
+  background: var(--ochre);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.stone-chip.attesting {
+  border-color: var(--moss);
+  background: rgba(74,93,58,.08);
+  color: var(--moss-deep);
+}
+.stone-chip.attesting .stone-sq { background: var(--moss); }
+.stone-chip.gap {
+  border-style: dashed;
+  border-color: var(--paper-rule-2);
+  color: var(--ink-3-aaa);
+}
+.stone-chip.gap .stone-sq { background: transparent; border: 1px dashed var(--paper-rule-2); }
+
+.trajectory-section {
+  padding: 1.2rem 1.6rem 1.4rem;
+}
+.traj-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .8rem;
+}
+.traj-bar-wrap {
+  margin-bottom: .7rem;
+}
+.traj-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .35rem;
+}
+.traj-bar {
+  height: 8px;
+  background: var(--paper-rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.traj-bar-fill {
+  height: 100%;
+  background: var(--moss);
+  border-radius: 2px;
+  width: 64%;
+}
+.traj-meta {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-3-aaa);
+  margin-top: .4rem;
+}
+.traj-meta strong { color: var(--moss-deep); }
+
+/* ─────────────────────────────────── SCREEN 2: DETECTION PANEL ── */
+
+.detection-panel {
+  padding: 1.2rem 1.6rem;
+}
+.det-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+.det-agent-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: var(--ink);
+  color: var(--moss-soft);
+  padding: .25rem .6rem;
+}
+.det-confidence {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: var(--ink-3-aaa);
+}
+.det-confidence strong { color: var(--moss-deep); }
+
+.det-gap-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.35rem;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .3rem;
+}
+.det-gap-desc {
+  font-family: var(--serif);
+  font-size: .97rem;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+}
+
+.evidence-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.evidence-item {
+  padding: .7rem 0 .7rem 2.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  position: relative;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+}
+.evidence-item::before {
+  content: attr(data-n);
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  top: .75rem;
+}
+.evidence-item .pr-ref { color: var(--moss-deep); font-weight: 700; }
+.evidence-item .finding { color: var(--ink-3-aaa); display: block; margin-top: .25rem; font-size: 10.5px; }
+
+.det-role-req {
+  background: rgba(74,93,58,.08);
+  border-left: 2px solid var(--moss);
+  padding: .7rem .9rem;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .03em;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin-bottom: 1rem;
+}
+.det-role-req strong { color: var(--moss-deep); }
+
+.det-actions {
+  display: flex;
+  gap: .7rem;
+  margin-top: 1rem;
+}
+.btn-sm {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .55rem .9rem;
+  border: 1px solid var(--ink);
+  cursor: pointer;
+  background: transparent;
+  color: var(--ink);
+  transition: background .15s, color .15s;
+  min-height: 36px;
+}
+.btn-sm-primary {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.btn-sm-primary:hover { background: var(--moss); border-color: var(--moss); }
+.btn-sm-ghost:hover { background: var(--ink); color: var(--paper); }
+
+/* ─────────────────────────────────── SCREEN 3: RECOMMENDATION ── */
+
+.rec-panel {
+  padding: 1.2rem 1.6rem 1.4rem;
+}
+.rec-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+}
+.rec-agent-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  background: var(--moss);
+  color: var(--paper);
+  padding: .25rem .6rem;
+}
+
+.rec-item {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  margin-bottom: .8rem;
+  padding: 1rem 1.2rem 1rem 1rem;
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: .9rem;
+  align-items: start;
+}
+.rec-item-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--ochre);
+  font-weight: 700;
+  margin-top: .1rem;
+}
+.rec-item-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.05rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin: 0 0 .25rem;
+}
+.rec-item-meta {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .45rem;
+}
+.rec-item-meta .partner { color: var(--moss-deep); }
+.rec-item-desc {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+.provenance-chain {
+  background: var(--paper-deep);
+  border: 1px solid var(--paper-rule-2);
+  border-left: 2px solid var(--ochre);
+  padding: .8rem 1rem;
+  margin-top: 1rem;
+}
+.provenance-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ochre-deep);
+  margin-bottom: .55rem;
+}
+.provenance-chain-items {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.provenance-row {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+  color: var(--ink-3-aaa);
+}
+.provenance-row strong { color: var(--ink-2); }
+
+/* ─────────────────────────────────── SCREEN 4: VERIFICATION ── */
+
+.diff-wrap {
+  padding: 1.2rem 1.6rem;
+}
+.diff-header {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .03em;
+  line-height: 1.55;
+}
+.diff-table tr.removed td { background: rgba(107,58,74,.07); color: var(--plum); }
+.diff-table tr.added   td { background: rgba(74,93,58,.10); color: var(--moss-deep); }
+.diff-table tr.ctx     td { color: var(--ink-3-aaa); }
+.diff-table td { padding: .2rem .5rem; vertical-align: top; }
+.diff-table td:first-child { width: 24px; text-align: right; opacity: .6; padding-right: .8rem; font-size: 11px; }
+.diff-table tr.removed td:first-child { color: var(--plum); }
+.diff-table tr.added   td:first-child { color: var(--moss-soft); }
+
+.ver-verdict {
+  background: rgba(74,93,58,.12);
+  border: 1px solid rgba(74,93,58,.28);
+  padding: .8rem 1rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.ver-icon {
+  width: 28px; height: 28px;
+  background: var(--moss);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--paper);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.ver-verdict-text {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .06em;
+  color: var(--moss-deep);
+}
+.ver-verdict-text strong { color: var(--moss-text); }
+
+.attest-request {
+  background: var(--paper-warm);
+  border: 1px solid var(--paper-rule);
+  border-left: 3px solid var(--ochre);
+  padding: .9rem 1.1rem;
+  margin-top: .8rem;
+}
+.attest-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ochre);
+  margin-bottom: .5rem;
+}
+.attest-body {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-2);
+  margin: 0 0 .7rem;
+}
+.attest-action {
+  display: flex;
+  gap: .55rem;
+}
+
+/* ─────────────────────────────────── SCREEN 5: TRAJECTORY ── */
+
+.traj-overview {
+  padding: 1.4rem 1.6rem;
+}
+.traj-person-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--paper-rule);
+}
+.traj-person-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 48;
+  font-size: 1.15rem;
+  color: var(--ink);
+  margin: 0 0 .2rem;
+}
+.traj-person-role {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+}
+.traj-delta-pill {
+  background: rgba(74,93,58,.12);
+  border: 1px solid rgba(74,93,58,.3);
+  padding: .4rem .85rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+}
+
+.traj-timeline-svg-wrap { margin-bottom: 1.2rem; }
+.traj-timeline-svg-wrap svg { width: 100%; height: auto; display: block; }
+
+.traj-stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  margin-bottom: 1.1rem;
+}
+.traj-stat {
+  padding: .8rem 1rem;
+  border-right: 1px solid var(--paper-rule);
+  text-align: center;
+}
+.traj-stat:last-child { border-right: 0; }
+.traj-stat-val {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.6rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .3rem;
+}
+.traj-stat-val em { color: var(--moss); font-style: normal; }
+.traj-stat-val.was { text-decoration: line-through; color: var(--ink-3-aaa); font-size: 1rem; }
+.traj-stat-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+}
+
+.method-disclosure {
+  background: rgba(74,93,58,.05);
+  border: 1px solid rgba(74,93,58,.18);
+  padding: 1rem 1.2rem;
+  margin-top: .8rem;
+}
+.method-disclosure-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: .55rem;
+}
+.method-disclosure-body {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .03em;
+  line-height: 1.65;
+  color: var(--ink-3-aaa);
+}
+.method-disclosure-body strong { color: var(--ink-2); }
+
+/* ─────────────────────────────────── TOUR FOOTER ── */
+.tour-footer {
+  background: var(--ink);
+  padding: 3rem 0 2.5rem;
+}
+.tour-footer-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.tour-footer-line {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  color: rgba(244,236,218,.72);
+  max-width: 40ch;
+}
+.tour-footer-line em { color: var(--moss-soft); }
+.tour-footer-ctas {
+  display: flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+}
+.btn-tour {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .75rem 1.2rem;
+  border: 1px solid;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+  min-height: 44px;
+}
+.btn-tour-primary {
+  background: var(--moss);
+  color: var(--paper);
+  border-color: var(--moss);
+}
+.btn-tour-primary:hover { background: var(--moss-deep); border-color: var(--moss-deep); border-bottom-color: var(--moss-deep); color: var(--paper); }
+.btn-tour-ghost {
+  background: transparent;
+  color: rgba(244,236,218,.8);
+  border-color: rgba(244,236,218,.25);
+}
+.btn-tour-ghost:hover { background: rgba(244,236,218,.08); color: var(--paper); border-bottom-color: rgba(244,236,218,.25); }
+
+/* ─────────────────────────────────── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .screen-split, .screen-split.rev { grid-template-columns: 1fr; }
+  .traj-stats-row { grid-template-columns: 1fr 1fr; }
+  .traj-stat:nth-child(2) { border-right: 0; }
+  .traj-stat:nth-child(3) { grid-column: 1 / -1; border-right: 0; border-top: 1px solid var(--paper-rule); }
+}
+@media (max-width: 640px) {
+  .person-header { flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .stones-row { gap: .4rem; }
+}
+
+/* ─────────────────────────────────── MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none; animation: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ─────────────────────────────────── SITE-NAV scoped ── */
+.site-nav {
+  --paper:      #f4ecda;
+  --paper-rule: #d8cdb6;
+  --ink:        #0e1626;
+  --ink-2:      rgba(14,22,38,.65);
+  --ink-3:      rgba(14,22,38,.42);
+  --ink-3-aaa:  #3d4456;
+  --ochre:      #b8651f;
+}
+.site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}
+.sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
+.sn-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;font-variation-settings:"opsz" 24,"WONK" 0;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0;line-height:1;padding:.3rem 0;border-bottom:0}
+.sn-mark:hover{color:var(--ochre);border-bottom:0}
+.sn-dot{color:var(--ochre)}
+.sn-cats{display:flex;align-items:center;gap:.15rem;flex:1;padding-left:1.4rem}
+.sn-cat{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);padding:.2rem .5rem;white-space:nowrap;user-select:none}
+@media (max-width:900px){.sn-cats{display:none}}
+.sn-index-btn{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--paper-rule);padding:.45rem .85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;min-height:36px;min-width:44px;flex-shrink:0;transition:border-color .15s,color .15s;border-bottom:1px solid var(--paper-rule)}
+.sn-index-btn:hover{border-color:var(--ochre);color:var(--ochre)}
+.sn-index-btn:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-arr{transition:transform .15s;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.sn-arr{transition:transform .15s}}
+@media (prefers-reduced-motion:reduce){.sn-arr{transition:none}}
+.sn-hb-line{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform .18s,opacity .18s}
+@media (prefers-reduced-motion:reduce){.sn-hb-line{transition:none}}
+@media (max-width:900px){.sn-hamburger{display:flex}.sn-index-btn{display:none}}
+.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre);margin-bottom:.7rem;padding:.2rem 0}
+.sn-col a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px;display:flex;align-items:center}
+.sn-mobile-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem min(1180px,92vw) .7rem;padding-left:calc((100vw - min(1180px,92vw))/2);padding-right:calc((100vw - min(1180px,92vw))/2);border-bottom:1px solid var(--paper-rule);height:48px}
+.sn-mobile-close{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;background:transparent;border:1px solid var(--paper-rule);color:var(--ink);padding:.35rem .7rem;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--paper-rule)}
+.sn-mobile-body{padding:1.2rem calc((100vw - min(1180px,92vw))/2)}
+.sn-mob-section summary::after{content:"↓";font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3-aaa);transition:transform .15s}
+@media (prefers-reduced-motion:reduce){.sn-mob-section summary::after{transition:none}}
+.sn-mob-links a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.55rem 0;border-bottom:0;min-height:44px;display:flex;align-items:center}
+</style>
+</head>
+
+<body>
+{% include site-nav.html %}
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-19T21:00:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+166:34:14.000</strong> · <span style="opacity:.6">2026-05-20T01:00:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<a href="#main" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;z-index:9999;background:var(--paper,#f4ecda);color:var(--ink,#0e1626);padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';">Skip to main content</a>
+
+<!-- mobile top bar -->
+<div class="mobile-bar">
+  <div class="mobile-bar-inner">
+    <a href="../">← Cairn</a>
+    <span class="mb-center">Cairn <span class="sl">/</span> Tour</span>
+    <a href="../console/">Console →</a>
+  </div>
+</div>
+
+<!-- tour navigation -->
+<nav class="tour-nav" aria-label="Tour screens">
+  <div class="tour-nav-inner">
+    <div class="tour-nav-mark">
+      Stratum Cairn <span class="sub">/ Tour</span>
+    </div>
+    <div class="tour-steps" role="list">
+      <button class="tour-step-btn is-active" data-target="screen-1" role="listitem">01 · Profile</button>
+      <button class="tour-step-btn" data-target="screen-2" role="listitem">02 · Detect</button>
+      <button class="tour-step-btn" data-target="screen-3" role="listitem">03 · Recommend</button>
+      <button class="tour-step-btn" data-target="screen-4" role="listitem">04 · Attest</button>
+      <button class="tour-step-btn" data-target="screen-5" role="listitem">05 · Trajectory</button>
+    </div>
+    <a href="../" class="tour-cta">← Back to Cairn</a>
+  </div>
+</nav>
+
+<main id="main">
+
+<!-- ═══════════════════════════════════ SCREEN 1 · PERSON PROFILE ══ -->
+<section class="tour-screen" id="screen-1" aria-labelledby="s1-heading">
+  <div class="screen-inner">
+    <div class="screen-step">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="verb">Profile</span>
+      Screen 01 of 05
+    </div>
+    <h1 class="screen-h" id="s1-heading">
+      Marisol Ortega's <em>cairn.</em>
+    </h1>
+    <p class="screen-sub">
+      A person in the people graph. Her current stones, her target role,
+      and the trajectory Talus is tracking. Five stones placed; one gap
+      flagged as pending.
+    </p>
+
+    <div class="screen-split">
+      <div>
+        <!-- Person profile UI frame -->
+        <div class="ui-frame" role="region" aria-label="Marisol Ortega's profile in Stratum Cairn">
+          <div class="ui-titlebar">
+            <div class="ui-dots" aria-hidden="true">
+              <span class="ui-dot"></span>
+              <span class="ui-dot"></span>
+              <span class="ui-dot"></span>
+            </div>
+            Cairn · People graph · Person profile
+          </div>
+
+          <div class="person-header">
+            <div class="person-avatar" aria-hidden="true">MO</div>
+            <div class="person-name-block">
+              <div class="person-name">Marisol Ortega</div>
+              <div class="person-role">Senior SRE · L5</div>
+              <div class="person-org">Cordova Manufacturing · Platform Engineering</div>
+            </div>
+          </div>
+
+          <div class="stones-section">
+            <div class="stones-section-label">Cairn-stones · verified skills</div>
+            <div class="stones-row" role="list">
+              <span class="stone-chip" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                python-async
+              </span>
+              <span class="stone-chip" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                terraform-iac
+              </span>
+              <span class="stone-chip" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                k8s-statefulsets
+              </span>
+              <span class="stone-chip" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                incident-command
+              </span>
+              <span class="stone-chip" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                prom-alerting
+              </span>
+              <span class="stone-chip attesting" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                k8s-operators ← attesting
+              </span>
+              <span class="stone-chip gap" role="listitem">
+                <span class="stone-sq" aria-hidden="true"></span>
+                distributed-tracing (gap)
+              </span>
+            </div>
+          </div>
+
+          <div class="trajectory-section">
+            <div class="traj-label">Trajectory · Senior SRE → Staff SRE</div>
+            <div class="traj-bar-wrap">
+              <div class="traj-bar-labels">
+                <span>L5 · Senior SRE · now</span>
+                <span>L6 · Staff SRE · target</span>
+              </div>
+              <div class="traj-bar" role="progressbar" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" aria-label="Trajectory progress: 64% of required stones placed">
+                <div class="traj-bar-fill"></div>
+              </div>
+            </div>
+            <div class="traj-meta">
+              <strong>8 of 10</strong> required stones · <strong>2 gaps remaining</strong> · estimated T+11mo to Staff SRE
+            </div>
+          </div>
+        </div>
+
+        <!-- People-graph SVG: person node + stones -->
+        <div style="margin-top:1.4rem;">
+          <svg viewBox="0 0 460 180" aria-label="People-graph visualization showing Marisol's person node connected to her cairn-stone cluster and trajectory container" role="img" style="width:100%;height:auto;display:block;">
+            <title>Marisol Ortega in the people graph</title>
+            <!-- person circle -->
+            <circle cx="52" cy="90" r="28" fill="rgba(74,93,58,0.12)" stroke="#4a5d3a" stroke-width="1.4"/>
+            <text x="52" y="85" font-family="JetBrains Mono" font-size="8" fill="#0e1626" text-anchor="middle">Marisol</text>
+            <text x="52" y="96" font-family="JetBrains Mono" font-size="8" fill="#0e1626" text-anchor="middle">Ortega</text>
+            <text x="52" y="108" font-family="JetBrains Mono" font-size="7" fill="#3d4456" text-anchor="middle">Sr. SRE</text>
+
+            <!-- connector line -->
+            <line x1="80" y1="90" x2="112" y2="90" stroke="#c5cdb1" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <!-- trajectory rect -->
+            <rect x="112" y="42" width="320" height="96" rx="4" fill="rgba(74,93,58,0.07)" stroke="#4a5d3a" stroke-width="1"/>
+            <text x="124" y="58" font-family="JetBrains Mono" font-size="8" fill="#4a5d3a" letter-spacing="1.2">TRAJECTORY · Staff SRE</text>
+
+            <!-- timeline hairline -->
+            <line x1="128" y1="90" x2="412" y2="90" stroke="rgba(74,93,58,0.3)" stroke-width="1" stroke-dasharray="2 4"/>
+
+            <!-- stones: x positions 128,164,200,236,272,308 -->
+            <rect x="124" y="86" width="8" height="8" rx="2" fill="#b8651f"/>
+            <rect x="160" y="86" width="8" height="8" rx="2" fill="#b8651f"/>
+            <rect x="196" y="86" width="8" height="8" rx="2" fill="#b8651f"/>
+            <rect x="232" y="86" width="8" height="8" rx="2" fill="#b8651f"/>
+            <rect x="268" y="86" width="8" height="8" rx="2" fill="#b8651f"/>
+            <!-- attesting stone -->
+            <rect x="306" y="84" width="10" height="10" rx="2" fill="rgba(74,93,58,0.6)" stroke="#c5cdb1" stroke-width="1"/>
+            <!-- gap stone (empty) -->
+            <rect x="346" y="86" width="8" height="8" rx="2" fill="none" stroke="#c8b894" stroke-width="1" stroke-dasharray="2 2"/>
+
+            <text x="424" y="94" font-family="JetBrains Mono" font-size="8" fill="#4a5d3a">→ L6</text>
+
+            <text x="324" y="143" font-family="JetBrains Mono" font-size="7" fill="#3d4456" text-anchor="middle">k8s-operators</text>
+            <text x="324" y="152" font-family="JetBrains Mono" font-size="7" fill="#3d4456" text-anchor="middle">attesting</text>
+          </svg>
+        </div>
+      </div>
+
+      <div>
+        <div class="annotation">
+          <div class="annotation-label">What you're seeing</div>
+          <p class="annotation-body">
+            This is Marisol's Cairn profile inside the Stratum people graph.
+            Each <strong>cairn-stone</strong> (small ochre square) is a verified skill:
+            demonstrated in real work output and attested by a human reviewer.
+            Not course completions — <strong>observed, verified behavior.</strong>
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">The trajectory calculation</div>
+          <p class="annotation-body">
+            Staff SRE at Cordova (L6) requires 10 stones. Marisol has 5 placed,
+            1 currently attesting (<code>k8s-operators</code>), and 1 remaining gap
+            (<code>distributed-tracing</code>). The current velocity puts her at
+            <strong>T+11 months</strong> to the promotion — down from 14 months
+            before the k8s-operators gap was detected and the intervention triggered.
+          </p>
+        </div>
+
+        <div class="method-box">
+          <div class="method-label">Methodology disclosure</div>
+          <div class="method-body">
+            Trajectory timeline calculated from: <strong>gap count × average gap-close velocity</strong> for role-level peers on same path in the people graph. Velocity sourced from 6 Staff SRE promotions in Cordova's history (T−36mo to T−0). Employee has full read access to this calculation. Manager sees the same data.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ SCREEN 2 · DETECTION ══ -->
+<section class="tour-screen" id="screen-2" aria-labelledby="s2-heading">
+  <div class="screen-inner">
+    <div class="screen-step">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="verb">Detect</span>
+      Screen 02 of 05
+    </div>
+    <h2 class="screen-h" id="s2-heading">
+      Talus detects the <em>gap</em> from PR evidence.
+    </h2>
+    <p class="screen-sub">
+      Three pull requests. Each used StatefulSets where Kubernetes Operator
+      patterns would have been more idiomatic for Marisol's target role.
+      Talus's detection methodology — fully disclosed.
+    </p>
+
+    <div class="screen-split rev">
+      <div>
+        <div class="ui-frame" role="region" aria-label="Talus detection panel showing skill gap from PR evidence">
+          <div class="ui-titlebar">
+            <div class="ui-dots" aria-hidden="true">
+              <span class="ui-dot"></span><span class="ui-dot"></span><span class="ui-dot"></span>
+            </div>
+            Talus · Detection report · Marisol Ortega
+          </div>
+
+          <div class="detection-panel">
+            <div class="det-header">
+              <span class="det-agent-badge">Talus · detection agent</span>
+              <span class="det-confidence">Confidence: <strong>87%</strong></span>
+            </div>
+
+            <div class="det-gap-name">k8s-operator-authoring</div>
+            <p class="det-gap-desc">
+              Gap between demonstrated Kubernetes pattern fluency and Staff SRE role requirement.
+              Evidence: three consecutive PRs used StatefulSet pattern where Operator controller
+              would have been the idiomatic choice for the use case.
+            </p>
+
+            <ul class="evidence-list" aria-label="Pull request evidence">
+              <li class="evidence-item" data-n="PR1">
+                <span class="pr-ref">PR #4821</span> · platform/redis-cluster: StatefulSet with manual leader-election logic
+                <span class="finding">→ Operator controller (e.g. Redis Operator) would manage leader election declaratively. StatefulSet requires custom sidecar + scripts.</span>
+              </li>
+              <li class="evidence-item" data-n="PR2">
+                <span class="pr-ref">PR #4835</span> · platform/kafka-consumer-group: StatefulSet with init-container coordination
+                <span class="finding">→ Strimzi Kafka Operator exposes CRD that abstracts this. Choice indicates unfamiliarity with operator pattern.</span>
+              </li>
+              <li class="evidence-item" data-n="PR3">
+                <span class="pr-ref">PR #4858</span> · platform/postgres-ha: StatefulSet + shell health checks
+                <span class="finding">→ CloudNativePG Operator is in Cordova's approved stack. No evidence of consideration in PR or review comments.</span>
+              </li>
+            </ul>
+
+            <div class="det-role-req">
+              <strong>Staff SRE · L6 requirement:</strong> demonstrate proficiency in Kubernetes Operator pattern authoring and CRD design; evaluate build-vs-use-existing tradeoffs for stateful workload management. Required stone: <code>k8s-operator-authoring</code>.
+            </div>
+
+            <div class="det-actions" role="group" aria-label="Detection report actions">
+              <button class="btn-sm btn-sm-primary" type="button">Review detection →</button>
+              <button class="btn-sm btn-sm-ghost" type="button">Dismiss · not a gap</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="annotation">
+          <div class="annotation-label">How Talus sees work signals</div>
+          <p class="annotation-body">
+            Talus has read access to Marisol's pull requests in Cordova's GitHub org
+            (consent collected at onboarding, revocable at any time).
+            It does not read message threads, emails, or calendar. It reads <strong>shipped artifacts</strong>
+            — what made it to code review — and infers from the patterns present what
+            patterns are absent.
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">The confidence score</div>
+          <p class="annotation-body">
+            87% confidence means: three corroborating signals in the same direction,
+            no contradicting signals (no PRs showing Operator fluency in other contexts),
+            and the role requirement is unambiguous for L6.
+            Talus surfaces the evidence for the employee to review <strong>before any
+            recommendation is generated.</strong> She can dismiss if the assessment is wrong.
+          </p>
+        </div>
+
+        <div class="method-box">
+          <div class="method-label">Methodology disclosure · Talus</div>
+          <div class="method-body">
+            Detection algorithm: <strong>pattern-frequency delta</strong> between observed PR patterns and role-expectation profiles derived from Staff SRE hires in Cordova's people graph (T−24mo). Threshold: 3+ corroborating signals, 0 contradicting. False-positive rate: reviewed monthly; target &lt;12%. This report is permanently logged.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ SCREEN 3 · RECOMMENDATION ══ -->
+<section class="tour-screen" id="screen-3" aria-labelledby="s3-heading">
+  <div class="screen-inner">
+    <div class="screen-step">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="verb">Recommend</span>
+      Screen 03 of 05
+    </div>
+    <h2 class="screen-h" id="s3-heading">
+      Hearth proposes a <em>closed-loop</em> intervention.
+    </h2>
+    <p class="screen-sub">
+      A specific 4-hour module and a peer-pair session with a colleague who
+      recently demonstrated the Operator pattern. Each recommendation arrives
+      with its full provenance chain.
+    </p>
+
+    <div class="screen-split">
+      <div>
+        <div class="ui-frame" role="region" aria-label="Hearth recommendation panel for Marisol Ortega">
+          <div class="ui-titlebar">
+            <div class="ui-dots" aria-hidden="true">
+              <span class="ui-dot"></span><span class="ui-dot"></span><span class="ui-dot"></span>
+            </div>
+            Hearth · Recommendation · k8s-operator-authoring gap
+          </div>
+
+          <div class="rec-panel">
+            <div class="rec-header">
+              <span class="rec-agent-badge">Hearth · recommendation agent</span>
+            </div>
+
+            <article class="rec-item" aria-label="Recommendation 1: Pluralsight module">
+              <div class="rec-item-num">01</div>
+              <div>
+                <div class="rec-item-title">Kubernetes Operators Deep Dive</div>
+                <div class="rec-item-meta">
+                  <span class="partner">Pluralsight</span> · 4h 12min · skill IQ included · hands-on lab
+                </div>
+                <p class="rec-item-desc">
+                  Covers Operator SDK, CRD design patterns, reconciliation loops, and
+                  build-vs-use-existing evaluation framework. Aligned to CNCF Operator
+                  SIG competency model. Cordova has an enterprise Pluralsight license —
+                  no additional purchase required.
+                </p>
+              </div>
+            </article>
+
+            <article class="rec-item" aria-label="Recommendation 2: peer-pair session">
+              <div class="rec-item-num">02</div>
+              <div>
+                <div class="rec-item-title">Peer-pair: Dev Kapoor · Platform Eng</div>
+                <div class="rec-item-meta">
+                  Internal · 60min · <span class="partner">Cordova people graph match</span>
+                </div>
+                <p class="rec-item-desc">
+                  Dev shipped a custom Operator controller for Cordova's internal job
+                  scheduler in sprint S-47 (PR #4801). He is rated "Staff-track" by his
+                  manager and has self-indicated willingness to peer-pair on platform topics.
+                  Calendar availability: Tuesday 14:00–15:00 or Friday 10:00–11:00.
+                </p>
+              </div>
+            </article>
+
+            <div class="provenance-chain">
+              <div class="provenance-label">Provenance chain</div>
+              <div class="provenance-chain-items">
+                <div class="provenance-row"><strong>Gap source:</strong> Talus detection report D-04891 · 3 PRs · 87% confidence</div>
+                <div class="provenance-row"><strong>Role requirement:</strong> Staff SRE L6 · Cordova · k8s-operator-authoring stone</div>
+                <div class="provenance-row"><strong>Module match:</strong> Pluralsight skill-path mapping to CNCF Operator competency</div>
+                <div class="provenance-row"><strong>Peer match:</strong> people-graph query · staff-track · same-skill demonstrated T−8w · willing</div>
+                <div class="provenance-row"><strong>Deadline signal:</strong> Marisol's next architecture review: T+18d</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="annotation">
+          <div class="annotation-label">Why this module, not a search result</div>
+          <p class="annotation-body">
+            Hearth does not run a keyword search of Pluralsight's catalog.
+            It maps the specific CNCF competency for Operator authoring to the
+            module most frequently used by Staff SREs in Cordova's peer cohort —
+            a <strong>people-graph-grounded recommendation</strong>, not a
+            content-library popularity ranking.
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">Why Dev Kapoor, not a random colleague</div>
+          <p class="annotation-body">
+            The people graph knows Dev recently demonstrated the skill, is on the
+            Staff track, and has flagged availability for peer work. This is not
+            a manager nomination — it is a <strong>graph-traversal</strong> over
+            nodes that satisfy: skill demonstrated (T−60d), peer-pairing willing,
+            scheduling overlap with Marisol. Three candidates returned; Dev ranked
+            first by recency of demonstration.
+          </p>
+        </div>
+
+        <div class="method-box">
+          <div class="method-label">Methodology disclosure · Hearth</div>
+          <div class="method-body">
+            Module selection: <strong>skill-path graph traversal</strong> from gap node to content nodes via CNCF competency ontology + Cordova cohort-usage weighting. Peer match: <strong>people-graph query</strong> with filters: skill-node k8s-operator-authoring demonstrated T−90d, staff-track flag true, self-declared peer-pairing open. All recommendations reviewable and dismissable by employee.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ SCREEN 4 · ATTESTATION ══ -->
+<section class="tour-screen" id="screen-4" aria-labelledby="s4-heading">
+  <div class="screen-inner">
+    <div class="screen-step">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="verb">Attest</span>
+      Screen 04 of 05
+    </div>
+    <h2 class="screen-h" id="s4-heading">
+      Marisol ships PR #4891.<br><em>Hearth verifies.</em>
+    </h2>
+    <p class="screen-sub">
+      Four weeks after the intervention. PR #4891 implements a custom Operator
+      controller for Cordova's job scheduler. Hearth reads the diff, verifies
+      the Operator pattern, and proposes attestation. Manager sign-off required.
+    </p>
+
+    <div class="screen-split rev">
+      <div>
+        <div class="ui-frame" role="region" aria-label="PR diff comparison and attestation panel">
+          <div class="ui-titlebar dark-bar" style="background:#1a2436; border-bottom-color:rgba(244,236,218,.12); color:rgba(244,236,218,.55);">
+            <div class="ui-dots" aria-hidden="true">
+              <span class="ui-dot" style="background:rgba(244,236,218,.15);"></span>
+              <span class="ui-dot" style="background:rgba(244,236,218,.15);"></span>
+              <span class="ui-dot" style="background:rgba(244,236,218,.15);"></span>
+            </div>
+            PR #4891 · platform/job-scheduler · diff excerpt
+          </div>
+
+          <div class="diff-wrap" style="background:#111820; padding:1rem 1.2rem;">
+            <div class="diff-header" style="color:rgba(244,236,218,.4);">
+              <span>platform/scheduler/operator_controller.go</span>
+              <span style="color:#c5cdb1">+127 −14</span>
+            </div>
+            <table class="diff-table" style="color:rgba(244,236,218,.7);" aria-label="Code diff showing StatefulSet replaced by custom Operator controller implementation">
+              <tr class="ctx"><td>…</td><td>// job-scheduler: cluster state management</td></tr>
+              <tr class="removed" style="background:rgba(107,58,74,.18); color:#e0a0b0;"><td>−</td><td><code style="color:#e0a0b0;">type JobCluster struct {</code></td></tr>
+              <tr class="removed" style="background:rgba(107,58,74,.18); color:#e0a0b0;"><td>−</td><td><code style="color:#e0a0b0;">&nbsp;&nbsp;&nbsp;&nbsp;StatefulSet *appsv1.StatefulSet</code></td></tr>
+              <tr class="removed" style="background:rgba(107,58,74,.18); color:#e0a0b0;"><td>−</td><td><code style="color:#e0a0b0;">&nbsp;&nbsp;&nbsp;&nbsp;// manual leader election via sidecar</code></td></tr>
+              <tr class="removed" style="background:rgba(107,58,74,.18); color:#e0a0b0;"><td>−</td><td><code style="color:#e0a0b0;">}</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">// JobClusterReconciler implements controller-runtime.Reconciler</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">type JobClusterReconciler struct {</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">&nbsp;&nbsp;&nbsp;&nbsp;client.Client</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">&nbsp;&nbsp;&nbsp;&nbsp;Scheme *runtime.Scheme</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">}</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;"></code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">func (r *JobClusterReconciler) Reconcile(</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">&nbsp;&nbsp;&nbsp;&nbsp;ctx context.Context, req ctrl.Request)</code></td></tr>
+              <tr class="added" style="background:rgba(74,93,58,.22); color:#a8d8a8;"><td>+</td><td><code style="color:#a8d8a8;">&nbsp;&nbsp;&nbsp;&nbsp;(ctrl.Result, error) {</code></td></tr>
+              <tr class="ctx"><td>…</td><td style="color:rgba(244,236,218,.3);">// reconciliation loop: observe → diff → act</td></tr>
+            </table>
+          </div>
+
+          <div style="padding:.8rem 1.2rem; background:var(--paper-card);">
+            <div class="ver-verdict" role="status" aria-live="polite">
+              <div class="ver-icon" aria-hidden="true">✓</div>
+              <div class="ver-verdict-text">
+                <strong>Pattern verified.</strong> Operator controller implemented correctly. Reconciler loop present. CRD-based state management. No StatefulSet dependency.
+              </div>
+            </div>
+
+            <div class="attest-request">
+              <div class="attest-label">Attestation request · pending manager sign-off</div>
+              <p class="attest-body">
+                Hearth proposes adding stone <code>k8s-operators</code> to Marisol Ortega's
+                skill profile. Evidence: PR #4891, pattern verified. Trajectory updated:
+                T+11mo to Staff SRE (was: T+14mo).
+              </p>
+              <div class="attest-action" role="group" aria-label="Attestation decision">
+                <button class="btn-sm btn-sm-primary" type="button">Sign off — add stone ✓</button>
+                <button class="btn-sm btn-sm-ghost" type="button">Request more evidence</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="annotation">
+          <div class="annotation-label">What Hearth verified</div>
+          <p class="annotation-body">
+            Hearth reads the diff for four signals: (1) presence of a Reconciler interface
+            implementation, (2) CRD-based state management replacing imperative StatefulSet,
+            (3) absence of the manual leader-election sidecar pattern from prior PRs,
+            (4) reconciliation loop structure. All four present.
+            <strong>Gap is closed.</strong>
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">Why the manager still signs off</div>
+          <p class="annotation-body">
+            Hearth proposes; the manager decides. This is not a policy courtesy —
+            it is a hard system constraint. No stone is ever written to a skill profile
+            without a human sign-off. The EU AI Act high-risk classification for
+            learning-outcome systems requires human oversight at the attestation point.
+            <strong>This is the override Hearth cannot bypass.</strong>
+          </p>
+        </div>
+
+        <div class="method-box">
+          <div class="method-label">Methodology disclosure · verification</div>
+          <div class="method-body">
+            Verification signals: <strong>Reconciler interface implementation</strong> (controller-runtime pattern), <strong>CRD schema presence</strong> (GroupVersionKind registered), <strong>absence of StatefulSet dependency</strong> in the same file, <strong>reconciliation loop function signature</strong>. Four-of-four signals matched. Hearth does not evaluate code quality — only pattern presence. Manager reviews the PR directly before signing off.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════ SCREEN 5 · TRAJECTORY ══ -->
+<section class="tour-screen" id="screen-5" aria-labelledby="s5-heading">
+  <div class="screen-inner">
+    <div class="screen-step">
+      <span class="bar" aria-hidden="true"></span>
+      <span class="verb">Trajectory</span>
+      Screen 05 of 05
+    </div>
+    <h2 class="screen-h" id="s5-heading">
+      One fewer gap. <em>Three months closer</em> to Staff SRE.
+    </h2>
+    <p class="screen-sub">
+      With the k8s-operators stone placed, Marisol's trajectory updates.
+      Time-to-Staff drops from 14 months to 11. One gap remains.
+      Methodology fully disclosed.
+    </p>
+
+    <div class="screen-split">
+      <div>
+        <div class="ui-frame" role="region" aria-label="Updated trajectory view for Marisol Ortega after k8s-operators attestation">
+          <div class="ui-titlebar">
+            <div class="ui-dots" aria-hidden="true">
+              <span class="ui-dot"></span><span class="ui-dot"></span><span class="ui-dot"></span>
+            </div>
+            Trajectory · Marisol Ortega · updated T+7d
+          </div>
+
+          <div class="traj-overview">
+            <div class="traj-person-row">
+              <div>
+                <div class="traj-person-name">Marisol Ortega</div>
+                <div class="traj-person-role">Senior SRE → Staff SRE · Cordova</div>
+              </div>
+              <div class="traj-delta-pill" role="status" aria-live="polite">↑ 3mo gained</div>
+            </div>
+
+            <!-- Trajectory SVG timeline -->
+            <div class="traj-timeline-svg-wrap">
+              <svg viewBox="0 0 480 140" aria-label="Timeline showing Marisol's trajectory from Senior SRE to Staff SRE, with 6 stones placed and 1 gap remaining" role="img">
+                <title>Marisol's updated trajectory timeline</title>
+                <desc>A horizontal timeline from left (Senior SRE, now) to right (Staff SRE, T+11 months). Six ochre stone markers are placed along the path, each labeled with a skill. One gap marker remains (distributed-tracing).</desc>
+
+                <!-- timeline spine -->
+                <line x1="40" y1="70" x2="440" y2="70" stroke="#d8cdb6" stroke-width="2"/>
+
+                <!-- current position dot -->
+                <circle cx="40" cy="70" r="6" fill="#4a5d3a"/>
+                <text x="40" y="95" font-family="JetBrains Mono" font-size="8" fill="#3d4456" text-anchor="middle">now</text>
+                <text x="40" y="105" font-family="JetBrains Mono" font-size="7" fill="#3d4456" text-anchor="middle">L5</text>
+
+                <!-- stones (6 verified, 1 attesting now added) -->
+                <!-- stone 1: python-async -->
+                <rect x="86" y="66" width="8" height="8" rx="2" fill="#b8651f"/>
+                <text x="90" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#3d4456" text-anchor="middle">py-async</text>
+
+                <!-- stone 2: terraform -->
+                <rect x="140" y="66" width="8" height="8" rx="2" fill="#b8651f"/>
+                <text x="144" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#3d4456" text-anchor="middle">terraform</text>
+
+                <!-- stone 3: k8s-stateful -->
+                <rect x="194" y="66" width="8" height="8" rx="2" fill="#b8651f"/>
+                <text x="198" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#3d4456" text-anchor="middle">k8s-sf</text>
+
+                <!-- stone 4: incident -->
+                <rect x="248" y="66" width="8" height="8" rx="2" fill="#b8651f"/>
+                <text x="252" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#3d4456" text-anchor="middle">incident</text>
+
+                <!-- stone 5: prom-alerting -->
+                <rect x="302" y="66" width="8" height="8" rx="2" fill="#b8651f"/>
+                <text x="306" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#3d4456" text-anchor="middle">prom</text>
+
+                <!-- stone 6: k8s-operators (NEW — moss fill) -->
+                <rect x="354" y="63" width="12" height="12" rx="2" fill="#4a5d3a" stroke="#c5cdb1" stroke-width="1"/>
+                <text x="360" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#4a5d3a" text-anchor="middle" font-weight="700">operators</text>
+                <text x="360" y="97" font-family="JetBrains Mono" font-size="6" fill="#4a5d3a" text-anchor="middle">← new</text>
+
+                <!-- gap: distributed-tracing -->
+                <rect x="394" y="66" width="8" height="8" rx="2" fill="none" stroke="#c8b894" stroke-dasharray="2 2"/>
+                <text x="398" y="88" font-family="JetBrains Mono" font-size="6.5" fill="#6c7180" text-anchor="middle">d-trace</text>
+                <text x="398" y="97" font-family="JetBrains Mono" font-size="6" fill="#c8b894" text-anchor="middle">gap</text>
+
+                <!-- target dot -->
+                <circle cx="440" cy="70" r="6" fill="none" stroke="#4a5d3a" stroke-width="1.4" stroke-dasharray="2 2"/>
+                <text x="440" y="95" font-family="JetBrains Mono" font-size="8" fill="#4a5d3a" text-anchor="middle">T+11mo</text>
+                <text x="440" y="105" font-family="JetBrains Mono" font-size="7" fill="#4a5d3a" text-anchor="middle">L6</text>
+
+                <!-- "before" ghost line above -->
+                <line x1="40" y1="35" x2="440" y2="35" stroke="rgba(107,58,74,0.2)" stroke-width="1" stroke-dasharray="3 4"/>
+                <circle cx="440" cy="35" r="4" fill="none" stroke="rgba(107,58,74,0.3)" stroke-width="1"/>
+                <text x="440" y="24" font-family="JetBrains Mono" font-size="7" fill="rgba(107,58,74,0.5)" text-anchor="middle">T+14mo</text>
+                <text x="440" y="15" font-family="JetBrains Mono" font-size="6.5" fill="rgba(107,58,74,0.4)" text-anchor="middle">before</text>
+              </svg>
+            </div>
+
+            <div class="traj-stats-row">
+              <div class="traj-stat">
+                <div class="traj-stat-val was" aria-label="Was: 14 months">14mo</div>
+                <div class="traj-stat-val"><em>11</em>mo</div>
+                <div class="traj-stat-label">To Staff SRE</div>
+              </div>
+              <div class="traj-stat">
+                <div class="traj-stat-val"><em>6</em>/10</div>
+                <div class="traj-stat-label">Stones placed</div>
+              </div>
+              <div class="traj-stat">
+                <div class="traj-stat-val"><em>1</em></div>
+                <div class="traj-stat-label">Gap remaining</div>
+              </div>
+            </div>
+
+            <div class="method-disclosure">
+              <div class="method-disclosure-label">Methodology · fully disclosed</div>
+              <div class="method-disclosure-body">
+                Timeline update: <strong>gap-close velocity recalculated</strong> after each attested stone. Current velocity: 1 stone per 7 weeks (last 3 closures). Remaining gaps: 4 (2 placed, 1 just added, 1 remaining). <strong>Trajectory is an estimate, not a commitment.</strong> Both Marisol and her manager see this calculation in full. No data withheld from either party.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="annotation">
+          <div class="annotation-label">What changed</div>
+          <p class="annotation-body">
+            The k8s-operators stone was placed. Trajectory recalculated.
+            Time-to-Staff dropped by 3 months — not because a manager said
+            "Marisol is doing well," but because <strong>the work graph says
+            she demonstrated the skill.</strong> One gap remains:
+            <code>distributed-tracing</code>. Talus is watching for signals.
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">What Marisol sees that her manager sees</div>
+          <p class="annotation-body">
+            Both see the same trajectory calculation. Both see the same evidence
+            behind each stone. Both see the same gap list. There is no "manager
+            view" that hides the reasoning from the employee. The promotion
+            conversation is grounded in shared data — not a manager's assessment
+            <strong>versus</strong> an employee's perception.
+          </p>
+        </div>
+
+        <div class="annotation">
+          <div class="annotation-label">The ROI statement L&D leaders have been asking for</div>
+          <p class="annotation-body">
+            One closed gap. One attested stone. Three months of trajectory acceleration.
+            Quantifiable in the people graph, traceable to a specific intervention,
+            verifiable by anyone with access. This is what Cairn sells to L&D buyers:
+            <strong>not completion rates — closed gaps with trajectory delta.</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- tour footer -->
+<footer class="tour-footer" role="contentinfo">
+  <div class="tour-footer-inner">
+    <p class="tour-footer-line">
+      The stones are yours. The trajectory is yours. <em>The work graph says so.</em>
+    </p>
+    <div class="tour-footer-ctas">
+      <a href="mailto:vector@stratum.ai?subject=Cairn%20design%20partner" class="btn-tour btn-tour-primary">Talk to Vector →</a>
+      <a href="../" class="btn-tour btn-tour-ghost">← Back to Cairn</a>
+      <a href="../console/" class="btn-tour btn-tour-ghost">Manager console →</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Tour nav: sync active button with scroll position
+(function () {
+  'use strict';
+  var btns = Array.from(document.querySelectorAll('.tour-step-btn'));
+  var screens = btns.map(function (b) { return document.getElementById(b.dataset.target); });
+
+  function onScroll () {
+    var scrollMid = window.scrollY + window.innerHeight / 2;
+    var active = 0;
+    screens.forEach(function (s, i) {
+      if (s && s.offsetTop <= scrollMid) active = i;
+    });
+    btns.forEach(function (b, i) {
+      b.classList.toggle('is-active', i === active);
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var target = document.getElementById(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

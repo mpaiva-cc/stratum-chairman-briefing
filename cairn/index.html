@@ -1,0 +1,1853 @@
+---
+layout: legacy
+title: "Stratum Cairn — Agentic learning for HCM."
+description: "Cairn is Stratum's agentic learning product. It detects skill gaps from real work output, prescribes in-context interventions, and verifies closure by observing subsequent work — not quiz scores. The first closed-loop learning system built on the people graph."
+permalink: /cairn/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}"{% if page.date %},"datePublished":{{ page.date | date_to_xmlschema | jsonify }}{% endif %}}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Cairn — Agentic learning for HCM.</title>
+<meta name="description" content="Cairn is Stratum's agentic learning product. Detect skill gaps from real work output, prescribe in-context interventions, verify closure by observing subsequent work. Closed-loop. Methodology-disclosed. Built on the Stratum people graph." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+{% include echo-script.html %}
+<style>
+/* ============================================================
+   Stratum Cairn · stratum.ai/cairn — product landing page
+   Paper palette · Fraunces / Newsreader / JetBrains Mono
+   Stone metaphor: small ochre rounded-square nodes in
+   moss-tinted trajectory containers (distinct from graph circles)
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-3-aaa:    #3d4456;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-text:    #3f5132;  /* AAA 7.2:1 on --paper — use for normal-weight small text */
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col:          min(1240px, 92vw);
+  --col-wide:     min(1380px, 94vw);
+  --col-tight:    min(900px, 90vw);
+  --gutter:       clamp(1rem, 2.4vw, 2rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.55;
+  font-feature-settings: "kern", "liga", "onum";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 14% 20%, rgba(74, 93, 58, 0.06), transparent 42%),
+    radial-gradient(circle at 88% 80%, rgba(14, 22, 38, 0.04), transparent 45%),
+    repeating-radial-gradient(circle at 0 0, rgba(14, 22, 38, 0.012) 0, rgba(14, 22, 38, 0.012) 1px, transparent 1px, transparent 3px);
+  mix-blend-mode: multiply;
+}
+
+a {
+  color: var(--ochre);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, color .2s;
+}
+a:hover { border-bottom-color: var(--ochre); }
+
+em { font-style: italic; font-variation-settings: "opsz" 14; }
+strong { font-weight: 600; color: var(--ink); }
+
+::selection { background: var(--moss); color: var(--paper); }
+
+/* ─────────────────────────────────────────── BANNER ── */
+
+.new-banner {
+  background: var(--moss);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: .65rem 1rem;
+  border-bottom: 1px solid var(--moss-deep);
+}
+.new-banner a {
+  color: var(--paper);
+  border-bottom: 1px solid rgba(244, 236, 218, .45);
+  margin-left: .35rem;
+}
+.new-banner a:hover { border-bottom-color: var(--paper); }
+.new-banner .tag {
+  background: var(--ink);
+  color: var(--moss-soft);
+  padding: .12rem .5rem;
+  margin-right: .55rem;
+  letter-spacing: .18em;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────── HERO ── */
+
+.hero {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  position: relative;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.hero-eyebrow .bar {
+  height: 1px;
+  width: 44px;
+  background: var(--moss);
+  display: inline-block;
+}
+
+.hero-h1 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 144, "SOFT" 0;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: .94;
+  letter-spacing: -.036em;
+  margin: 0 0 1.8rem;
+  color: var(--ink);
+  max-width: 20ch;
+}
+.hero-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 100;
+  color: var(--moss);
+}
+
+.hero-sub {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: clamp(1.2rem, 1.7vw, 1.55rem);
+  line-height: 1.4;
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0 0 2.4rem;
+}
+.hero-sub strong { font-style: normal; color: var(--moss-deep); }
+
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-bottom: 3.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .9rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  border: 1px solid var(--ink);
+  transition: background .2s, color .2s, border-color .2s;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.btn-primary:hover {
+  background: var(--moss);
+  border-color: var(--moss);
+  border-bottom-color: var(--moss);
+}
+.btn-primary .arr { color: var(--moss-soft); transition: color .2s; }
+.btn-primary:hover .arr { color: var(--paper); }
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.btn-ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--ink);
+}
+
+.hero-meta {
+  border-top: 1px solid var(--paper-rule);
+  padding-top: 1.6rem;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2.4rem;
+  align-items: end;
+}
+.hero-meta-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: 1rem;
+}
+.beta-row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60, "SOFT" 30;
+  font-size: clamp(1.2rem, 2.1vw, 1.7rem);
+  letter-spacing: -.01em;
+  color: var(--ink-2);
+}
+.beta-row .sep { color: var(--paper-rule-2); }
+.beta-row .name { color: var(--ink); }
+.beta-row .ee   { font-family: var(--mono); font-size: 11px; color: var(--ink-3-aaa); letter-spacing: .15em; }
+
+.hero-stat {
+  border: 1px solid var(--ink);
+  background: var(--paper-warm);
+  padding: 1rem 1.2rem;
+}
+.hero-stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .55rem;
+}
+.hero-stat-value {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  color: var(--ink);
+  letter-spacing: -.02em;
+}
+.hero-stat-value em { color: var(--moss); }
+
+/* ─────────────────────────────────────────── SECTION SHARED ── */
+
+.section-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.section-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--moss);
+  display: inline-block;
+}
+
+.section-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0 0 1.4rem;
+  color: var(--ink);
+  max-width: 24ch;
+}
+.section-h em {
+  font-style: italic;
+  font-variation-settings: "opsz" 96, "SOFT" 100;
+  color: var(--moss);
+}
+
+.section-dek {
+  font-family: var(--serif);
+  font-size: 1.15rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 60ch;
+  margin: 0 0 3rem;
+}
+
+/* ─────────────────────────────────────────── WEDGE ── */
+
+.wedge {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.wedge-statement {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 60;
+  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  max-width: 36ch;
+  margin: 0 0 3.5rem;
+  padding-left: 1.4rem;
+  border-left: 3px solid var(--moss);
+}
+.wedge-statement em { color: var(--moss); font-variation-settings: "opsz" 72, "SOFT" 100; }
+
+.wedge-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.wedge-col {
+  padding: 2.4rem 1.8rem;
+  border-right: 1px solid var(--paper-rule);
+}
+.wedge-col:last-child { border-right: 0; }
+
+.wedge-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: 1.2rem;
+}
+
+.wedge-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.5rem;
+  line-height: 1.15;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 1rem;
+  max-width: 22ch;
+}
+.wedge-h em { font-style: italic; color: var(--moss); font-variation-settings: "opsz" 60, "SOFT" 100; }
+
+.wedge-body {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────── HOW IT WORKS ── */
+
+.how {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5.5rem 0 4rem;
+}
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+  margin-top: 1.5rem;
+}
+
+.how-step {
+  padding: 1.8rem 1.5rem 1.6rem;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  background: var(--paper-warm);
+  position: relative;
+}
+
+.how-step-num {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.how-step-num .pip {
+  width: 10px; height: 10px;
+  background: var(--moss);
+  display: inline-block;
+}
+
+.how-step-verb {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.55rem;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 .7rem;
+}
+
+.how-step-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 60;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--moss-deep);
+  margin: 0 0 1rem;
+}
+
+.how-step-body {
+  font-family: var(--serif);
+  font-size: .95rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: 0 0 1.2rem;
+}
+
+.how-step-example {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .03em;
+  line-height: 1.6;
+  color: var(--ink-3-aaa);
+  background: var(--paper-deep);
+  border-left: 2px solid var(--moss);
+  padding: .7rem .9rem;
+  margin-top: auto;
+}
+.how-step-example strong { color: var(--moss-deep); font-weight: 600; }
+
+/* ─────────────────────────────────────────── AGENTS ── */
+
+.agents {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5.5rem 0 5rem;
+  position: relative;
+}
+.agents::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(74, 93, 58, 0.08), transparent 45%),
+    radial-gradient(circle at 80% 75%, rgba(244, 236, 218, 0.03), transparent 50%);
+  pointer-events: none;
+}
+.agents-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  position: relative;
+}
+
+.agents-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.agents-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--moss-soft);
+  display: inline-block;
+}
+
+.agents-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0 0 1rem;
+  color: var(--paper);
+  max-width: 24ch;
+}
+.agents-h em { font-style: italic; color: var(--moss-soft); font-variation-settings: "opsz" 96, "SOFT" 100; }
+
+.agents-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: rgba(244, 236, 218, .75);
+  max-width: 58ch;
+  margin: 0 0 3.5rem;
+}
+
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.agent-card {
+  border: 1px solid rgba(244, 236, 218, .18);
+  background: rgba(244, 236, 218, .04);
+  padding: 2.2rem 2rem 2rem;
+  position: relative;
+}
+.agent-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--moss);
+}
+
+.agent-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72, "SOFT" 0;
+  font-size: 2rem;
+  letter-spacing: -.025em;
+  color: var(--paper);
+  margin: 0 0 .2rem;
+}
+
+.agent-type {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin-bottom: 1.3rem;
+}
+
+.agent-body {
+  font-family: var(--serif);
+  font-size: 1rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: rgba(244, 236, 218, .82);
+  margin: 0 0 1.4rem;
+}
+
+.agent-capabilities {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid rgba(244, 236, 218, .14);
+  padding-top: 1.1rem;
+}
+.agent-capabilities li {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: .03em;
+  color: rgba(244, 236, 218, .72);
+  padding: .35rem 0;
+  padding-left: 1.2rem;
+  position: relative;
+}
+.agent-capabilities li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--moss-soft);
+}
+
+/* ─────────────────────────────────────────── NOT ── */
+
+.not {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.not-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  margin-top: 1.5rem;
+}
+
+.not-item {
+  padding: 2.2rem 1.8rem;
+  border-right: 1px solid var(--paper-rule);
+}
+.not-item:last-child { border-right: 0; }
+
+.not-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--plum);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.not-label::before {
+  content: "✗";
+  font-size: 13px;
+  color: var(--plum);
+}
+
+.not-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.45rem;
+  line-height: 1.15;
+  letter-spacing: -.015em;
+  color: var(--ink);
+  margin: 0 0 .9rem;
+  max-width: 22ch;
+}
+
+.not-body {
+  font-family: var(--serif);
+  font-size: .98rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.55;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ─────────────────────────────────────────── GRAPH ── */
+
+.graph {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6rem 0 6rem;
+  margin-top: 0;
+  position: relative;
+}
+.graph::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 16% 20%, rgba(74, 93, 58, 0.09), transparent 45%),
+    radial-gradient(circle at 84% 80%, rgba(244, 236, 218, 0.04), transparent 50%);
+  pointer-events: none;
+}
+.graph-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  position: relative;
+}
+
+.graph-eyebrow {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+}
+.graph-eyebrow .bar {
+  height: 1px;
+  width: 38px;
+  background: var(--moss-soft);
+  display: inline-block;
+}
+
+.graph-h {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 96;
+  font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+  line-height: 1.02;
+  letter-spacing: -.026em;
+  margin: 0 0 1rem;
+  color: var(--paper);
+  max-width: 22ch;
+}
+.graph-h em { font-style: italic; color: var(--moss-soft); font-variation-settings: "opsz" 96, "SOFT" 100; }
+
+.graph-dek {
+  font-family: var(--display);
+  font-style: italic;
+  font-variation-settings: "opsz" 36, "SOFT" 80;
+  font-size: 1.15rem;
+  line-height: 1.4;
+  color: rgba(244, 236, 218, .75);
+  max-width: 56ch;
+  margin: 0 0 3.5rem;
+}
+
+.graph-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.graph-svg-wrap {
+  border: 1px solid rgba(244, 236, 218, .2);
+  background: rgba(244, 236, 218, .02);
+  padding: 1.6rem;
+}
+.graph-svg-wrap svg { width: 100%; height: auto; display: block; }
+
+.graph-paras p {
+  font-family: var(--serif);
+  font-size: 1.05rem;
+  font-variation-settings: "opsz" 18;
+  line-height: 1.6;
+  color: rgba(244, 236, 218, .85);
+  margin: 0 0 1.6rem;
+}
+.graph-paras p strong { color: var(--paper); }
+.graph-paras p:last-child { margin-bottom: 0; }
+.graph-paras h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin: 0 0 .6rem;
+}
+
+/* ─────────────────────────────────────────── COMPLIANCE ── */
+
+.compliance {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 3.5rem 0 3rem;
+  border-top: 1px solid var(--paper-rule);
+}
+.compliance-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  align-items: start;
+}
+.compliance-label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+}
+.compliance-body {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.compliance-body strong { color: var(--ink); }
+.compliance-body a { border-bottom: 1px solid var(--moss); color: var(--moss-deep); }
+.compliance-body a:hover { color: var(--moss); }
+
+/* ─────────────────────────────────────────── PRICING TEASER ── */
+
+.pricing-teaser {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 5rem 0 4rem;
+  border-top: 1px solid var(--ink);
+}
+
+.pricing-teaser-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2.5rem;
+}
+
+.pt-card {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 1.8rem 1.6rem 1.6rem;
+}
+
+.pt-name {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: .8rem;
+}
+
+.pt-price {
+  font-family: var(--display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144;
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  line-height: .95;
+  letter-spacing: -.04em;
+  color: var(--ink);
+  margin: 0 0 .3rem;
+  font-feature-settings: "tnum", "lnum";
+}
+.pt-price .unit { font-size: .38em; color: var(--moss); margin-left: .15em; }
+.pt-price .from {
+  display: block;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .35rem;
+  font-weight: 400;
+  font-variation-settings: normal;
+}
+
+.pt-desc {
+  font-family: var(--serif);
+  font-size: .97rem;
+  font-variation-settings: "opsz" 16;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin: .8rem 0 0;
+}
+
+.pricing-teaser-note {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--ink-3-aaa);
+  margin-top: 1.8rem;
+  padding: 1rem 1.2rem;
+  border-left: 2px solid var(--moss);
+  background: rgba(74, 93, 58, .05);
+}
+.pricing-teaser-note strong { color: var(--moss-deep); font-style: normal; }
+.pricing-teaser-note a { color: var(--moss-deep); border-bottom: 1px solid var(--moss-soft); }
+.pricing-teaser-note a:hover { color: var(--moss); }
+
+/* ─────────────────────────────────────────── PARTNERS ── */
+
+.partners {
+  background: var(--paper-deep);
+  border-top: 1px solid var(--paper-rule);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: 3rem 0;
+}
+.partners-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+.partners-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .24em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  flex-shrink: 0;
+}
+.partners-logos {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.partner-placeholder {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.15rem;
+  letter-spacing: -.01em;
+  color: var(--ink-3-aaa);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .2rem;
+}
+.partner-placeholder .coming {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--paper-rule-2);
+}
+
+/* ─────────────────────────────────────────── CLOSING ── */
+
+.closing {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding: 6.5rem 0 5rem;
+  text-align: center;
+  border-top: 1px solid var(--ink);
+}
+
+.closing-line {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 80;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1.3;
+  color: var(--ink-2);
+  max-width: 56ch;
+  margin: 0 auto 2.8rem;
+  letter-spacing: -.012em;
+}
+.closing-line em { color: var(--moss); font-variation-settings: "opsz" 72, "SOFT" 100; }
+
+.closing-h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-variation-settings: "opsz" 144, "SOFT" 80;
+  font-style: italic;
+  font-size: clamp(2.4rem, 5.5vw, 4.4rem);
+  line-height: 1.06;
+  letter-spacing: -.025em;
+  color: var(--ink);
+  margin: 0 auto 2.4rem;
+  max-width: 22ch;
+}
+.closing-h em { color: var(--moss); }
+
+.closing-ctas {
+  display: flex;
+  justify-content: center;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+/* ─────────────────────────────────────────── FOOTER ── */
+
+.footer {
+  background: var(--ink);
+  color: rgba(244, 236, 218, .85);
+  padding: 4.5rem 0 2.5rem;
+}
+.footer-grid {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  gap: 2.4rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid rgba(244, 236, 218, .15);
+}
+.footer-brand .mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 72;
+  font-size: 1.7rem;
+  letter-spacing: -.035em;
+  color: var(--paper);
+}
+.footer-brand .mark .pname {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: "opsz" 36, "SOFT" 100;
+  color: var(--moss-soft);
+  font-size: 1.15rem;
+  letter-spacing: -.01em;
+  margin-left: .25rem;
+}
+.footer-brand p {
+  font-family: var(--serif);
+  font-size: .98rem;
+  line-height: 1.5;
+  color: rgba(244, 236, 218, .68);
+  max-width: 36ch;
+  margin: 1rem 0 0;
+}
+.footer-col h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin: 0 0 1rem;
+}
+.footer-col ul { list-style: none; padding: 0; margin: 0; }
+.footer-col li { margin-bottom: .55rem; font-family: var(--serif); font-size: .97rem; }
+.footer-col a { color: rgba(244, 236, 218, .78); border-bottom: 0; }
+.footer-col a:hover { color: var(--moss-soft); }
+.footer-foot {
+  width: var(--col-wide);
+  margin: 0 auto;
+  padding-top: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(244, 236, 218, .55);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.footer-foot a { color: rgba(244, 236, 218, .8); border-bottom: 0; }
+.footer-foot a:hover { color: var(--moss-soft); }
+
+/* ─────────────────────────────────────────── RESPONSIVE ── */
+
+@media (max-width: 1100px) {
+  .hero-meta { grid-template-columns: 1fr; gap: 1.4rem; align-items: start; }
+  .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 960px) {
+  .wedge-grid { grid-template-columns: 1fr; }
+  .wedge-col { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .how-steps { grid-template-columns: 1fr 1fr; }
+  .agents-grid { grid-template-columns: 1fr; }
+  .not-grid { grid-template-columns: 1fr; }
+  .not-item { border-right: 0; border-bottom: 1px solid var(--paper-rule); }
+  .not-item:last-child { border-bottom: 0; }
+  .graph-layout { grid-template-columns: 1fr; gap: 2rem; }
+  .compliance-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .pricing-teaser-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+  .footer-foot { flex-direction: column; gap: .8rem; align-items: flex-start; }
+}
+@media (max-width: 640px) {
+  .how-steps { grid-template-columns: 1fr; }
+  .partners-inner { flex-direction: column; align-items: flex-start; gap: 1.4rem; }
+}
+
+/* ─────────────────────────────────────────── MOTION ── */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none; animation: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero, .wedge-grid, .how-steps, .agents-grid, .not-grid, .graph-inner, .closing {
+    animation: fade-up .7s ease-out both;
+  }
+}
+
+/* ─────────────────────────────────────────── MOBILE BAR ── */
+@media (max-width: 960px) {
+  .mob-bar {
+    position: sticky; top: 0; z-index: 200;
+    background: rgba(244,236,218,.96);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid #d8cdb6;
+    padding: .6rem 1.1rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .6rem;
+    font-family: "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase;
+    color: #4b5365;
+  }
+  .mob-bar a {
+    color: #4b5365; text-decoration: none; min-height: 36px;
+    display: flex; align-items: center; padding: 0 .25rem;
+  }
+  .mob-bar a:active { color: #4a5d3a; }
+  .mob-bar-mark {
+    font-family: "Fraunces", serif; font-weight: 600; font-size: 1.05rem;
+    letter-spacing: -.02em; color: #0e1626; text-transform: none;
+    flex: 1; text-align: center; line-height: 1;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+}
+@media (min-width: 961px) { .mob-bar { display: none; } }
+
+@media (max-width: 960px) {
+  html, body { overflow-x: clip; }
+}
+
+</style>
+<style>
+/* ── SITE-NAV scoped fallbacks ── */
+.site-nav {
+  --paper:      #f4ecda;
+  --paper-rule: #d8cdb6;
+  --ink:        #0e1626;
+  --ink-2:      rgba(14,22,38,.65);
+  --ink-3:      rgba(14,22,38,.42);
+  --ink-3-aaa:  #3d4456;
+  --ochre:      #b8651f;
+}
+.site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}
+.sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
+.sn-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;font-variation-settings:"opsz" 24,"WONK" 0;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0;line-height:1;padding:.3rem 0;border-bottom:0}
+.sn-mark:hover{color:var(--ochre);border-bottom:0}
+.sn-dot{color:var(--ochre)}
+.sn-cats{display:flex;align-items:center;gap:.15rem;flex:1;padding-left:1.4rem}
+.sn-cat{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);padding:.2rem .5rem;white-space:nowrap;user-select:none}
+@media (max-width:900px){.sn-cats{display:none}}
+.sn-index-btn{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--paper-rule);padding:.45rem .85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;min-height:36px;min-width:44px;flex-shrink:0;transition:border-color .15s,color .15s;border-bottom:1px solid var(--paper-rule)}
+.sn-index-btn:hover{border-color:var(--ochre);color:var(--ochre)}
+.sn-index-btn:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-arr{transition:transform .15s;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.sn-arr{transition:transform .15s}}
+@media (prefers-reduced-motion:reduce){.sn-arr{transition:none}}
+.sn-hb-line{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform .18s,opacity .18s}
+@media (prefers-reduced-motion:reduce){.sn-hb-line{transition:none}}
+@media (max-width:900px){.sn-hamburger{display:flex}.sn-index-btn{display:none}}
+@media (prefers-reduced-motion:no-preference){.sn-panel{animation:sn-fade-in .14s ease}}
+@media (max-width:1100px){.sn-panel-inner{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){.sn-panel-inner{grid-template-columns:repeat(2,1fr)}}
+.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre);margin-bottom:.7rem;padding:.2rem 0}
+.sn-col a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px;display:flex;align-items:center}
+.sn-mobile-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem min(1180px,92vw) .7rem;padding-left:calc((100vw - min(1180px,92vw))/2);padding-right:calc((100vw - min(1180px,92vw))/2);border-bottom:1px solid var(--paper-rule);height:48px}
+.sn-mobile-close{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;background:transparent;border:1px solid var(--paper-rule);color:var(--ink);padding:.35rem .7rem;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--paper-rule)}
+.sn-mobile-body{padding:1.2rem calc((100vw - min(1180px,92vw))/2)}
+.sn-mob-section summary::after{content:"↓";font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3-aaa);transition:transform .15s}
+@media (prefers-reduced-motion:reduce){.sn-mob-section summary::after{transition:none}}
+.sn-mob-links a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.55rem 0;border-bottom:0;min-height:44px;display:flex;align-items:center}
+</style>
+</head>
+
+<body>
+{% include site-nav.html %}
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-19T21:00:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+166:34:14.000</strong> · <span style="opacity:.6">2026-05-20T01:00:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<!-- skip link -->
+<a href="#main" class="skip-link" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;z-index:9999;background:var(--paper);color:var(--ink);padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none">Skip to main content</a>
+
+<!-- mobile bar -->
+<div class="mob-bar" role="navigation" aria-label="Mobile navigation">
+  <a href="../" aria-label="Stratum home">← Stratum</a>
+  <span class="mob-bar-mark">Cairn</span>
+  <a href="./tour/" aria-label="Product tour">Tour →</a>
+</div>
+
+<!-- announcement banner -->
+<div class="new-banner" role="banner">
+  <span class="tag">New</span> Stratum Cairn — the fourth product. Brainstorm open.
+  <a href="../briefings/learning-kickoff-DRAFT.html">Read the kickoff dispatch →</a>
+</div>
+
+<main id="main">
+
+<!-- ─────────────────────────────────────────── HERO ── -->
+<header class="hero">
+  <div class="hero-eyebrow">
+    <span class="bar" aria-hidden="true"></span>
+    Stratum Cairn · Agentic Learning · Brainstorm open · 2026
+  </div>
+
+  <h1 class="hero-h1">
+    Every gap closed.<br><em>Every stone placed.</em>
+  </h1>
+
+  <p class="hero-sub">
+    Cairn is Stratum's agentic learning system. It detects skill gaps from
+    <strong>real work output</strong>, prescribes in-context interventions,
+    and verifies closure by observing what your people build next —
+    not quiz scores.
+  </p>
+
+  <div class="hero-ctas">
+    <a href="mailto:cairn-early@stratum.ai?subject=Stratum%20Cairn%20%E2%80%94%20design%20partner" class="btn btn-primary">Become a design partner <span class="arr">→</span></a>
+    <a href="./tour/" class="btn btn-ghost">See the demo tour →</a>
+  </div>
+
+  <div class="hero-meta">
+    <div>
+      <div class="hero-meta-label">Brainstorm · T+7d · design partners wanted</div>
+      <div class="beta-row">
+        <span><span class="name">Cordova Manufacturing</span> <span class="ee">5,200 EE</span></span>
+        <span class="sep">·</span>
+        <span><span class="name">Atlas Logistics</span> <span class="ee">1,800 EE</span></span>
+        <span class="sep">·</span>
+        <span><span class="name">Vanta</span> <span class="ee">1,200 EE</span></span>
+      </div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-label">Ratification target</div>
+      <div class="hero-stat-value">T+<em>9d</em> · Briefing No. 017</div>
+    </div>
+  </div>
+</header>
+
+<!-- ─────────────────────────────────────────── WEDGE ── -->
+<section class="wedge" id="wedge" aria-labelledby="wedge-heading">
+  <div class="section-eyebrow">
+    <span class="bar" aria-hidden="true"></span>
+    <span>§ 01 · The wedge</span>
+  </div>
+  <h2 class="section-h" id="wedge-heading">
+    The incumbents sell <em>catalogs.</em><br>We sell closed gaps.
+  </h2>
+
+  <blockquote class="wedge-statement">
+    "Every recommendation our learning agent makes is traceable to a role requirement,
+    a work artifact, and a defensible deadline. <em>Not a course completion rate.</em>"
+  </blockquote>
+
+  <div class="wedge-grid">
+
+    <article class="wedge-col">
+      <div class="wedge-num">§ 01 · The signal others can't see</div>
+      <h3 class="wedge-h">Gap detection from <em>work output,</em> not surveys.</h3>
+      <p class="wedge-body">
+        Cornerstone, Degreed, Workday Learning — they all start from a self-assessment
+        or a manager's nomination. Cairn starts from what your people actually ship.
+        Code commits. Pull request patterns. Document edits. Support case resolutions.
+        The agent reads the work and infers the gap. No survey required.
+      </p>
+    </article>
+
+    <article class="wedge-col">
+      <div class="wedge-num">§ 02 · The loop others can't close</div>
+      <h3 class="wedge-h">Closed-loop verification by <em>observing subsequent work.</em></h3>
+      <p class="wedge-body">
+        After an intervention, Cairn watches what the learner builds next. If the behavior
+        changed, the stone is placed. If it didn't, the intervention was wrong — and the
+        agent says so. This is the ROI proof that L&D leaders have been asking for
+        since Josh Bersin wrote the first Definitive Guide.
+      </p>
+    </article>
+
+    <article class="wedge-col">
+      <div class="wedge-num">§ 03 · The graph others don't own</div>
+      <h3 class="wedge-h">Grounded in the same <em>people graph</em> as Recruiter and Tenure.</h3>
+      <p class="wedge-body">
+        Skill claims at hire (Recruiter) → demonstrated skills at 90 days (Tenure) →
+        ongoing skill maintenance (Cairn). One entity-resolved person across the full
+        lifecycle. Workday is bolting Sana onto a monolith; we shipped this graph
+        from the start.
+      </p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── HOW IT WORKS ── -->
+<section class="how" id="how" aria-labelledby="how-heading">
+  <div class="section-eyebrow">
+    <span class="bar" aria-hidden="true"></span>
+    <span>§ 02 · The closed loop</span>
+  </div>
+  <h2 class="section-h" id="how-heading">
+    Four steps. <em>One closed loop.</em>
+  </h2>
+  <p class="section-dek">
+    Every gap Cairn closes passes through the same four stages.
+    Nothing moves to the next stage automatically — each transition
+    is disclosed to the employee and the manager.
+  </p>
+
+  <div class="how-steps" role="list">
+
+    <article class="how-step" role="listitem">
+      <div class="how-step-num">
+        <span class="pip" aria-hidden="true"></span>
+        Step 01
+      </div>
+      <div class="how-step-verb">Detect</div>
+      <div class="how-step-h">Signal in, gap identified.</div>
+      <p class="how-step-body">
+        Talus reads work signals — commits, PRs, docs, tickets, peer review patterns —
+        and cross-references against the role expectation in the people graph.
+        Gap identified when observed behavior diverges from role requirement.
+      </p>
+      <div class="how-step-example">
+        <strong>Example:</strong> Marisol's last 3 PRs used StatefulSets where Kubernetes
+        Operator patterns would have been more idiomatic. Talus flags: gap in
+        <code>k8s-operator-authoring</code> vs Staff SRE requirement.
+      </div>
+    </article>
+
+    <article class="how-step" role="listitem">
+      <div class="how-step-num">
+        <span class="pip" aria-hidden="true"></span>
+        Step 02
+      </div>
+      <div class="how-step-verb">Recommend</div>
+      <div class="how-step-h">Intervention proposed with provenance.</div>
+      <p class="how-step-body">
+        Hearth proposes a specific, time-bounded intervention. Not a catalog link —
+        a matched module, a peer-pair, an in-context nudge. Every recommendation
+        arrives with its provenance chain: why this, why now, why this colleague.
+      </p>
+      <div class="how-step-example">
+        <strong>Example:</strong> Hearth proposes: (1) Pluralsight "Kubernetes Operators
+        Deep Dive" — 4h, (2) peer-pair with Dev Kapoor who shipped an Operator
+        controller in the last sprint. Deadline: before next architecture review.
+      </div>
+    </article>
+
+    <article class="how-step" role="listitem">
+      <div class="how-step-num">
+        <span class="pip" aria-hidden="true"></span>
+        Step 03
+      </div>
+      <div class="how-step-verb">Deliver</div>
+      <div class="how-step-h">In context, not in an inbox.</div>
+      <p class="how-step-body">
+        The intervention surfaces in the tool the person is already using —
+        a Slack DM, an IDE overlay comment, a doc thread — not as an email to
+        a calendar block. Ninety seconds, not ninety minutes.
+      </p>
+      <div class="how-step-example">
+        <strong>Example:</strong> Module link surfaced in Marisol's IDE when she opens
+        a file with StatefulSet imports. Peer-pair calendar invite sent through
+        existing scheduling integration. No separate LMS login required.
+      </div>
+    </article>
+
+    <article class="how-step" role="listitem">
+      <div class="how-step-num">
+        <span class="pip" aria-hidden="true"></span>
+        Step 04
+      </div>
+      <div class="how-step-verb">Attest</div>
+      <div class="how-step-h">Observed, verified, stone placed.</div>
+      <p class="how-step-body">
+        Hearth watches Marisol's next PR. If the Operator pattern appears — in
+        context, correctly — the stone is placed. Auto-attestation triggers.
+        Manager sign-off is requested for the skill addition to her profile.
+        The stone is hers to keep.
+      </p>
+      <div class="how-step-example">
+        <strong>Example:</strong> PR #4891 implements a custom Operator controller.
+        Hearth verifies the pattern, triggers attestation, requests manager
+        sign-off from Dev Kapoor. Gap closed; trajectory updated.
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── AGENTS ── -->
+<section class="agents" id="agents" aria-labelledby="agents-heading">
+  <div class="agents-inner">
+    <div class="agents-eyebrow">
+      <span class="bar" aria-hidden="true"></span>
+      <span>§ 03 · The agent roster</span>
+    </div>
+    <h2 class="agents-h" id="agents-heading">
+      Two agents. <em>One closed loop.</em>
+    </h2>
+    <p class="agents-dek">
+      Cairn adds two agents to the Stratum roster. Each has a single job,
+      a defined failure budget, and a hard stop at the edge of its autonomy predicate.
+    </p>
+
+    <div class="agents-grid">
+
+      <article class="agent-card">
+        <div class="agent-name">Talus</div>
+        <div class="agent-type">Detection agent · read-only by design</div>
+        <p class="agent-body">
+          Talus reads the accumulated work-artifact and attestation nodes for a person
+          against their role-requirement node. It infers which skills are present,
+          which are missing, and which are stale. When the delta clears its confidence
+          threshold, it proposes a gap and a matched remediation — then stops. It never
+          delivers an intervention itself; that boundary is structural, not a policy.
+          Every detection report is visible to the employee before Hearth acts on it.
+        </p>
+        <ul class="agent-capabilities">
+          <li>Reads work artifacts, attestations, and role requirements from the graph</li>
+          <li>Proposes gaps and matched remediations — never delivers them</li>
+          <li>Surfaces detection methodology and confidence score alongside every gap</li>
+          <li>No learner-facing writes — Hearth owns delivery and verification</li>
+          <li>Failure budget: grounding-failure rate, reviewed monthly</li>
+        </ul>
+      </article>
+
+      <article class="agent-card">
+        <div class="agent-name">Hearth</div>
+        <div class="agent-type">Recommendation + attestation agent · human-in-loop</div>
+        <p class="agent-body">
+          Hearth proposes interventions, coordinates delivery, and observes subsequent
+          work to verify gap closure. It matches the gap to the right content partner
+          (Pluralsight, Coursera, Credly), the right peer in the org, and the right
+          moment. After the intervention, it watches for behavioral change in work output.
+          Attestation is proposed; manager sign-off is always required to write to the
+          employee's skill profile.
+        </p>
+        <ul class="agent-capabilities">
+          <li>Proposes matched interventions with full provenance chain</li>
+          <li>Coordinates content delivery with partner integrations</li>
+          <li>Surfaces peer-match recommendations from people graph</li>
+          <li>Observes subsequent work for behavioral verification</li>
+          <li>Proposes attestation — never writes unilaterally to profile</li>
+        </ul>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── WHAT CAIRN IS NOT ── -->
+<section class="not" id="not" aria-labelledby="not-heading">
+  <div class="section-eyebrow">
+    <span class="bar" aria-hidden="true"></span>
+    <span>§ 04 · What Cairn is not</span>
+  </div>
+  <h2 class="section-h" id="not-heading">
+    Three things we <em>explicitly refuse</em> to be.
+  </h2>
+  <p class="section-dek">
+    The category is crowded with systems that promise transformation and deliver catalogs.
+    Cairn is designed against three specific failure modes.
+  </p>
+
+  <div class="not-grid">
+
+    <article class="not-item">
+      <div class="not-label">Not a content library</div>
+      <h3 class="not-h">We do not compete on catalog depth.</h3>
+      <p class="not-body">
+        Coursera has years of university content. Pluralsight has the best technical
+        skill library in the market. LinkedIn Learning is bundled into every enterprise
+        seat. We license from them. We do not try to out-catalog them.
+        Cairn's value is the closed loop, not the content.
+      </p>
+    </article>
+
+    <article class="not-item">
+      <div class="not-label">Not a chat tutor</div>
+      <h3 class="not-h">We do not put an LLM in a chat window and call it learning.</h3>
+      <p class="not-body">
+        "Agentic learning" in 2026 is mostly an AI that answers questions.
+        That is table stakes — Sana, Khanmigo, and Microsoft 365 Copilot
+        all ship it. Cairn does what a chat tutor cannot: it closes a specific gap
+        against a specific role on a specific deadline, with evidence.
+      </p>
+    </article>
+
+    <article class="not-item">
+      <div class="not-label">Not a compliance checkbox</div>
+      <h3 class="not-h">We do not confuse completion records with skill evidence.</h3>
+      <p class="not-body">
+        HIPAA completion is a compliance event, not a learning outcome. Cairn handles
+        regulated training as a special case — the agent surfaces, delivers, and logs it —
+        but completion data lives in a separate, auditable record class. We will not let
+        compliance theater crowd out the actual work of skill development.
+      </p>
+    </article>
+
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── GRAPH DIAGRAM ── -->
+<section class="graph" id="graph" aria-labelledby="graph-heading">
+  <div class="graph-inner">
+    <div class="graph-eyebrow">
+      <span class="bar" aria-hidden="true"></span>
+      <span>§ 05 · The architecture</span>
+    </div>
+    <h2 class="graph-h" id="graph-heading">
+      Cairn-stones aggregate into <em>Trajectories</em> in the people graph.
+    </h2>
+    <p class="graph-dek">
+      Each verified skill event is a stone. Stones cluster into Trajectories.
+      Trajectories are first-class nodes on the same graph as hire records, onboarding
+      events, and team memberships. The graph is how promotion decisions become
+      defensible — not because the manager says so, but because the work says so.
+    </p>
+
+    <div class="graph-layout">
+      <div class="graph-svg-wrap">
+        <!--
+          Cairn graph SVG — design vocabulary:
+          Circles = people-graph person nodes (inherited from Recruiter/Tenure visual language)
+          Small ochre rounded-squares (8×8 rx=2) = cairn-stones (skill verifications)
+          Moss-tinted rounded-rect containers = Trajectory groups
+          Hairline rules (stroke-dasharray) = trajectory path
+          Arrow markers = direction of time / progress
+        -->
+        <svg viewBox="0 0 480 440" aria-label="Diagram showing cairn-stones aggregating into a Trajectory for Marisol Ortega, leading toward Staff SRE. Each stone represents a verified skill in the people graph." role="img">
+          <title>Cairn-stones and Trajectory in the Stratum people graph</title>
+          <desc>A person node (Marisol Ortega) connects to five cairn-stones: Python async, Terraform IaC, k8s StatefulSets, Incident command, and the new Kubernetes Operators stone. The five stones are grouped in a moss-tinted Trajectory container labeled "Staff SRE · T+11mo." An arrow points from the current Senior SRE role toward the Staff SRE target role.</desc>
+
+          <defs>
+            <marker id="cg-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="#4a5d3a"/>
+            </marker>
+            <marker id="cg-arr-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M0,0 L10,5 L0,10 z" fill="rgba(197,205,177,0.5)"/>
+            </marker>
+          </defs>
+
+          <!-- trajectory container: moss tint, rounded rect -->
+          <rect x="130" y="100" width="310" height="200" rx="6" ry="6"
+                fill="rgba(74,93,58,0.14)" stroke="#4a5d3a" stroke-width="1"/>
+          <text x="142" y="121" font-family="JetBrains Mono" font-size="9" fill="#c5cdb1" letter-spacing="1.6">TRAJECTORY</text>
+          <text x="142" y="133" font-family="JetBrains Mono" font-size="9" fill="#c5cdb1" letter-spacing="1.2" opacity=".7">Staff SRE · T+11mo</text>
+
+          <!-- trajectory timeline hairline -->
+          <line x1="152" y1="200" x2="420" y2="200" stroke="rgba(197,205,177,0.35)" stroke-width="1" stroke-dasharray="3 4"/>
+
+          <!-- cairn-stones: ochre rounded squares, 8×8 rx=2 -->
+          <!-- stone 1: Python async patterns (verified) -->
+          <rect x="148" y="196" width="8" height="8" rx="2" fill="#b8651f" stroke="#f4ecda" stroke-width=".8"/>
+          <text x="152" y="222" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">python</text>
+          <text x="152" y="231" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">async</text>
+
+          <!-- stone 2: Terraform IaC (verified) -->
+          <rect x="202" y="196" width="8" height="8" rx="2" fill="#b8651f" stroke="#f4ecda" stroke-width=".8"/>
+          <text x="206" y="222" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">terraform</text>
+          <text x="206" y="231" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">iac</text>
+
+          <!-- stone 3: k8s StatefulSets (verified) -->
+          <rect x="256" y="196" width="8" height="8" rx="2" fill="#b8651f" stroke="#f4ecda" stroke-width=".8"/>
+          <text x="260" y="222" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">k8s</text>
+          <text x="260" y="231" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">stateful</text>
+
+          <!-- stone 4: Incident command (verified) -->
+          <rect x="310" y="196" width="8" height="8" rx="2" fill="#b8651f" stroke="#f4ecda" stroke-width=".8"/>
+          <text x="314" y="222" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">incident</text>
+          <text x="314" y="231" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">command</text>
+
+          <!-- stone 5: k8s Operators — NEW, being attested (moss glow) -->
+          <rect x="362" y="193" width="12" height="12" rx="2" fill="rgba(74,93,58,0.7)" stroke="#c5cdb1" stroke-width="1.2"/>
+          <text x="368" y="219" font-family="JetBrains Mono" font-size="8" fill="#e6c79b" text-anchor="middle" letter-spacing=".5">k8s</text>
+          <text x="368" y="228" font-family="JetBrains Mono" font-size="8" fill="#e6c79b" text-anchor="middle" letter-spacing=".5">operators</text>
+          <text x="368" y="238" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.65)" text-anchor="middle" letter-spacing=".3">← new</text>
+
+          <!-- person node: Marisol Ortega -->
+          <circle cx="60" cy="200" r="22" fill="rgba(244,236,218,0.08)" stroke="#c5cdb1" stroke-width="1.4"/>
+          <text x="60" y="194" font-family="JetBrains Mono" font-size="8" fill="#f4ecda" text-anchor="middle" letter-spacing=".5">Marisol</text>
+          <text x="60" y="205" font-family="JetBrains Mono" font-size="8" fill="#f4ecda" text-anchor="middle" letter-spacing=".5">Ortega</text>
+          <text x="60" y="216" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.7)" text-anchor="middle">Sr. SRE</text>
+
+          <!-- connector: person → trajectory -->
+          <line x1="82" y1="200" x2="128" y2="200" stroke="#c5cdb1" stroke-width="1.2" marker-end="url(#cg-arr-dim)"/>
+
+          <!-- role labels -->
+          <!-- current role node -->
+          <rect x="18" y="330" width="84" height="44" rx="3" fill="rgba(244,236,218,0.05)" stroke="rgba(197,205,177,0.3)" stroke-width="1"/>
+          <text x="60" y="348" font-family="JetBrains Mono" font-size="8" fill="rgba(197,205,177,0.7)" text-anchor="middle" letter-spacing=".5">Senior SRE</text>
+          <text x="60" y="359" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.45)" text-anchor="middle">Cordova · L5</text>
+          <text x="60" y="369" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.45)" text-anchor="middle">now</text>
+          <line x1="60" y1="220" x2="60" y2="330" stroke="rgba(197,205,177,0.25)" stroke-width="1" stroke-dasharray="2 3"/>
+
+          <!-- target role node -->
+          <rect x="385" y="330" width="80" height="44" rx="3" fill="rgba(74,93,58,0.18)" stroke="#4a5d3a" stroke-width="1"/>
+          <text x="425" y="348" font-family="JetBrains Mono" font-size="8" fill="#c5cdb1" text-anchor="middle" letter-spacing=".5">Staff SRE</text>
+          <text x="425" y="359" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.6)" text-anchor="middle">Cordova · L6</text>
+          <text x="425" y="369" font-family="JetBrains Mono" font-size="7" fill="rgba(197,205,177,0.6)" text-anchor="middle">T+11mo</text>
+          <line x1="374" y1="200" x2="424" y2="330" stroke="rgba(74,93,58,0.5)" stroke-width="1" stroke-dasharray="2 3" marker-end="url(#cg-arr)"/>
+
+          <!-- gap remaining label -->
+          <text x="240" y="62" font-family="JetBrains Mono" font-size="9" fill="rgba(197,205,177,0.55)" text-anchor="middle" letter-spacing="1">1 GAP REMAINING</text>
+          <text x="240" y="76" font-family="Newsreader" font-size="11" fill="#e6c79b" text-anchor="middle" letter-spacing=".5" font-style="italic">operators · attestation pending</text>
+
+          <!-- count annotation -->
+          <text x="240" y="396" font-family="JetBrains Mono" font-size="8" fill="rgba(197,205,177,0.4)" text-anchor="middle" letter-spacing="1">5 STONES · 1 ATTESTING · TRAJECTORY ACTIVE</text>
+        </svg>
+      </div>
+
+      <div class="graph-paras">
+        <h4>What a cairn-stone is.</h4>
+        <p>
+          A stone is a verified skill event. Not a course completion.
+          Not a manager endorsement. A verified demonstration of a skill
+          in real work output, attested by the agent and confirmed by a
+          human reviewer. <strong>Stones are durable</strong> — they move
+          with the person across roles, departments, and even companies
+          (with appropriate consent).
+        </p>
+
+        <h4>What a Trajectory is.</h4>
+        <p>
+          A Trajectory is the collection of stones between a person's current role
+          and their target role in the people graph. The agent calculates
+          what stones are missing, in what sequence they're most efficiently acquired,
+          and what the current velocity implies for the promotion timeline.
+          <strong>No Trajectory is ever invisible to the employee</strong> — they
+          see the same data the manager sees.
+        </p>
+
+        <h4>Why this matters for decisions.</h4>
+        <p>
+          When a manager proposes a promotion or a lateral move, the Trajectory
+          is evidence, not opinion. The CHRO can see why one person was ready
+          for Staff and another wasn't — not because someone said so, but because
+          the <strong>work graph says so.</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── COMPLIANCE ── -->
+<section class="compliance" id="compliance" aria-labelledby="compliance-heading">
+  <div class="compliance-grid">
+    <div>
+      <div class="compliance-label" id="compliance-heading">§ 06 · Compliance posture</div>
+    </div>
+    <div class="compliance-body">
+      <strong>EU AI Act · Aug 2 2026 effective date.</strong> AI systems that evaluate
+      learning outcomes are classified as high-risk under Annex III. Cairn's architecture
+      accounts for this from day one: documented risk-management system, bias detection
+      on assessment outputs, six-month minimum logging for any attested skill event,
+      and a disclosed human-oversight point at every write to a skill profile.
+      No attestation is written without manager sign-off — this is not a policy choice,
+      it is a hard system constraint.<br><br>
+      <strong>NYC AEDT / Local Law 144.</strong> Cairn outputs that feed into promotion
+      or compensation decisions trigger AEDT obligations. We have architected a clean
+      boundary between "learning evidence" (Cairn) and "talent decision" (Console).
+      The learning evidence informs; the human decides. Pillar owns the compliance tier
+      table; Kernel owns the autonomy predicate. Both reviewed before B017 ratification.<br><br>
+      <strong>Accessibility · WCAG 2.2 AAA.</strong> All dynamically-generated learning
+      content — including AI-authored nudges and module summaries — must pass WCAG 2.2 AA
+      on generation. The Cairn UI targets AAA. This is not aspirational; it is a
+      <a href="../accessibility/">standing O-1 objective</a> with a public gap log.
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PRICING TEASER ── -->
+<section class="pricing-teaser" id="pricing" aria-labelledby="pricing-heading">
+  <div class="section-eyebrow">
+    <span class="bar" aria-hidden="true"></span>
+    <span>§ 07 · Pricing signal</span>
+  </div>
+  <h2 class="section-h" id="pricing-heading">
+    Three skeletons. <em>One recommendation.</em>
+  </h2>
+  <p class="section-dek">
+    Compass is modeling three pricing structures. Full detail in the sales sheet.
+    These are the signal prices for design-partner conversations.
+  </p>
+
+  <div class="pricing-teaser-grid">
+    <article class="pt-card">
+      <div class="pt-name">Per employee · base</div>
+      <div class="pt-price">
+        <span class="from">starting from</span>
+        $8<span class="unit">/EE/mo</span>
+      </div>
+      <p class="pt-desc">
+        Flat per-employee. Talus detection and Hearth recommendations included.
+        Attestation writes billed separately per closed gap. Simple to budget;
+        doesn't align incentives with outcomes.
+      </p>
+    </article>
+
+    <article class="pt-card">
+      <div class="pt-name">Per gap closed · outcomes</div>
+      <div class="pt-price">
+        <span class="from">starting from</span>
+        $45<span class="unit">/gap</span>
+      </div>
+      <p class="pt-desc">
+        Pay only for verified, attested skill closures. Directly aligns Stratum's
+        revenue with customer outcomes. Risk for both sides: Stratum only earns
+        when the loop closes. Compass's recommendation for the design-partner phase.
+      </p>
+    </article>
+  </div>
+
+  <div class="pricing-teaser-note">
+    Full pricing detail, volume tiers, and annual-commitment discounts are in
+    <strong>the <a href="./sale-sheet.html">Cairn sales sheet →</a></strong>
+    Compass owns pricing ratification in Briefing No. 017.
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── PARTNERS ── -->
+<section class="partners" id="partners" aria-labelledby="partners-heading">
+  <div class="partners-inner">
+    <div class="partners-label" id="partners-heading">Content &amp; credential partners</div>
+    <div class="partners-logos">
+
+      <div class="partner-placeholder">
+        Pluralsight
+        <span class="coming">Coming soon</span>
+      </div>
+
+      <div class="partner-placeholder">
+        Coursera for Business
+        <span class="coming">Coming soon</span>
+      </div>
+
+      <div class="partner-placeholder">
+        Credly · Pearson
+        <span class="coming">Coming soon</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── CLOSING ── -->
+<section class="closing" id="closing" aria-labelledby="closing-heading">
+  <p class="closing-line">
+    The Chairman said seven words: <em>"agentic learning would be a good addition."</em>
+    That is the entire instruction. The Compact ships.
+  </p>
+  <h2 class="closing-h" id="closing-heading">
+    The next waymarker<br>is yours to place.
+  </h2>
+  <div class="closing-ctas">
+    <a href="mailto:vector@stratum.ai?subject=Cairn%20design%20partner" class="btn btn-primary">Talk to Vector <span class="arr">→</span></a>
+    <a href="./tour/" class="btn btn-ghost">See the product tour →</a>
+  </div>
+</section>
+
+<!-- ─────────────────────────────────────────── FOOTER ── -->
+<footer class="footer" role="contentinfo">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="mark">Stratum<span class="pname">/ Cairn</span></div>
+      <p>Agentic learning for HCM. Detect gaps from real work output.
+         Verify closure by observing what people build next.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Cairn</h4>
+      <ul>
+        <li><a href="./tour/">Product tour</a></li>
+        <li><a href="./console/">Manager console</a></li>
+        <li><a href="./sale-sheet.html">Sales sheet</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#agents">The agents</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Stratum</h4>
+      <ul>
+        <li><a href="../console/">Console</a></li>
+        <li><a href="../recruiter/">Recruiter</a></li>
+        <li><a href="../tenure/">Tenure</a></li>
+        <li><a href="../graph/">People graph</a></li>
+        <li><a href="../pricing/">Pricing</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Read</h4>
+      <ul>
+        <li><a href="../briefings/">Briefings</a></li>
+        <li><a href="../engineering/">Engineering</a></li>
+        <li><a href="../accessibility/">Accessibility</a></li>
+        <li><a href="../agents/">The agents</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Trust</h4>
+      <ul>
+        <li><a href="../trust/">Trust center</a></li>
+        <li><a href="../privacy/">Privacy</a></li>
+        <li><a href="../terms/">Terms</a></li>
+        <li><a href="../limitations/">Limitations</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-foot">
+    <span>© 2026 Stratum, Inc. · Palo Alto, CA</span>
+    <span>Cairn · fourth product · narrative T+7d</span>
+    <span><a href="../briefings/learning-kickoff-DRAFT.html">Briefing context →</a></span>
+  </div>
+</footer>
+
+</main>
+
+<script>
+// Nav scroll state
+(function () {
+  var nav = document.querySelector('.site-nav');
+  if (!nav) return;
+  window.addEventListener('scroll', function () {
+    nav.classList.toggle('is-scrolled', window.scrollY > 8);
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>

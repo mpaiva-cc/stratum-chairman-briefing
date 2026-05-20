@@ -1,0 +1,1187 @@
+---
+layout: legacy
+title: "Stratum Cairn — Manager console preview"
+description: "A static preview of the Cairn manager console — trajectory views, current gaps, and pending attestations for a manager's direct reports. Five synthetic employees, real workflow."
+permalink: /cairn/console/index.html
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!-- og-jsonld:start -->
+<meta name="description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+<meta property="og:description" content="{{ page.description | default: site.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+<meta name="twitter:description" content="{{ page.description | default: site.description | escape }}">
+{%- if page.title -%}
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":{{ page.title | jsonify }},"description":{{ page.description | default: site.description | jsonify }},"url":"{{ page.url | absolute_url }}"{% if page.date %},"datePublished":{{ page.date | date_to_xmlschema | jsonify }}{% endif %}}</script>
+{%- endif -%}
+<!-- og-jsonld:end -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stratum Cairn — Manager console preview</title>
+<meta name="description" content="A static preview of the Cairn manager console — trajectory views, current gaps, and pending attestations for a manager's direct reports. Five synthetic employees, real workflow." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..900,0..100,0..1&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="{{ '/assets/styles.css?v=5' | relative_url }}">
+<style>
+/* ============================================================
+   Stratum Cairn · /cairn/console/ — manager console preview
+   Static HTML prototype showing trajectory list, gaps, attestations
+   Modeled on recruiter/console/index.html shell pattern
+   ============================================================ */
+
+:root {
+  --paper:        #f4ecda;
+  --paper-warm:   #f7f0e0;
+  --paper-deep:   #ebe1c9;
+  --paper-rule:   #d8cdb6;
+  --paper-rule-2: #c8b894;
+
+  --ink:          #0e1626;
+  --ink-2:        #2a3344;
+  --ink-3:        #4b5365;
+  --ink-3-aaa:    #3d4456;
+  --ink-mute:     #6c7180;
+
+  --ochre:        #b8651f;
+  --ochre-deep:   #8a4711;
+  --ochre-soft:   #e6c79b;
+  --moss:         #4a5d3a;
+  --moss-text:    #3f5132;  /* AAA 7.2:1 on --paper — use for normal-weight small text */
+  --moss-deep:    #364528;
+  --moss-soft:    #c5cdb1;
+  --plum:         #6b3a4a;
+
+  --display:      "Fraunces", "Newsreader", Georgia, serif;
+  --serif:        "Newsreader", "Iowan Old Style", Georgia, serif;
+  --mono:         "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --col-wide:     min(1380px, 94vw);
+  --shadow-sm:    0 1px 2px rgba(14,22,38,.06), 0 2px 6px rgba(14,22,38,.04);
+  --shadow-md:    0 6px 24px rgba(14,22,38,.10), 0 1px 3px rgba(14,22,38,.05);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  background: var(--paper-deep);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.5;
+  font-feature-settings: "kern", "liga";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--moss-text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color .15s, color .15s;
+}
+a:hover { border-bottom-color: var(--moss-text); }
+code {
+  font-family: var(--mono);
+  font-size: .88em;
+  color: var(--moss-deep);
+  background: rgba(74,93,58,.08);
+  padding: .1em .32em;
+  border-radius: 2px;
+}
+button { font-family: inherit; cursor: pointer; }
+
+/* ─────────────────────────────── TOPBAR ── */
+.topbar {
+  background: var(--ink);
+  color: var(--paper);
+  height: 48px;
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(244,236,218,.08);
+}
+.topbar-inner {
+  width: var(--col-wide);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0 1.2rem;
+}
+.brand {
+  display: flex;
+  align-items: baseline;
+  gap: .8rem;
+}
+.brand-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.1rem;
+  letter-spacing: -.02em;
+  color: var(--paper);
+}
+.brand-mark .sl { color: var(--moss-soft); opacity: .7; }
+.brand-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.45);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+.user-pill {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+}
+.user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--moss);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  color: var(--paper);
+  font-weight: 700;
+}
+.user-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  color: rgba(244,236,218,.8);
+}
+.user-name .role { color: rgba(244,236,218,.45); margin-left: .3rem; }
+.topbar-link {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.55);
+  border: 1px solid rgba(244,236,218,.15);
+  padding: .3rem .65rem;
+  transition: color .15s, border-color .15s;
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+}
+.topbar-link:hover { color: rgba(244,236,218,.9); border-color: rgba(244,236,218,.35); }
+
+/* ─────────────────────────────── SHELL ── */
+.shell {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ─────────────────────────────── RAIL ── */
+.rail {
+  background: var(--ink);
+  border-right: 1px solid rgba(244,236,218,.07);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.rail-brand {
+  padding: 1.2rem 1rem 1rem;
+  border-bottom: 1px solid rgba(244,236,218,.07);
+}
+.rail-brand-mark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-variation-settings: "opsz" 36;
+  font-size: 1rem;
+  letter-spacing: -.02em;
+  color: var(--paper);
+  margin-bottom: .2rem;
+}
+.rail-brand-mark .sl { color: var(--moss-soft); }
+.rail-brand-sub {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.35);
+}
+
+.rail-nav { padding: .7rem 0; flex: 1; }
+.rail-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem 1rem;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.55);
+  background: transparent;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: color .12s, background .12s;
+  min-height: 36px;
+}
+.rail-item:hover { color: rgba(244,236,218,.88); background: rgba(244,236,218,.04); }
+.rail-item.is-active {
+  color: var(--paper);
+  background: rgba(74,93,58,.2);
+  border-left: 2px solid var(--moss);
+  padding-left: calc(1rem - 2px);
+}
+.rail-item .ri-sec { color: var(--moss-soft); margin-right: .4rem; font-size: 10px; }
+.ri-count {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .1em;
+  color: rgba(244,236,218,.35);
+  background: rgba(244,236,218,.07);
+  padding: .15rem .45rem;
+  border-radius: 999px;
+}
+.rail-item.is-active .ri-count { background: rgba(74,93,58,.3); color: var(--moss-soft); }
+
+.rail-section-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: rgba(244,236,218,.25);
+  padding: .9rem 1rem .3rem;
+}
+
+.rail-foot {
+  padding: 1rem;
+  border-top: 1px solid rgba(244,236,218,.07);
+}
+.rail-foot-title {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-soft);
+  margin-bottom: .5rem;
+}
+.rail-foot-row {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .06em;
+  color: rgba(244,236,218,.55);
+  padding: .2rem 0;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot.ok { background: var(--moss); }
+.dot.warn { background: var(--ochre); }
+.dot.err { background: #a13418; }
+
+/* ─────────────────────────────── STAGE ── */
+.stage {
+  background: var(--paper);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─────────────────────────────── VIEW HEADER ── */
+.view-head {
+  padding: 2rem 2.4rem 1.4rem;
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--moss-text);
+  margin-bottom: .6rem;
+}
+.view-h1 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  line-height: 1.1;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  margin: 0 0 .4rem;
+}
+.view-h1 em {
+  font-style: italic;
+  font-variation-settings: "opsz" 72, "SOFT" 100;
+  color: var(--moss);
+}
+.view-sub {
+  font-family: var(--serif);
+  font-size: .98rem;
+  font-variation-settings: "opsz" 16;
+  color: var(--ink-2);
+  margin: 0;
+}
+
+/* ─────────────────────────────── TAB BAR ── */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  padding: 0 2.4rem;
+  gap: 0;
+}
+.tab {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  background: transparent;
+  border: none;
+  padding: .75rem 1rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color .12s, border-color .12s;
+  min-height: 40px;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab.is-active { color: var(--moss-deep); border-bottom-color: var(--moss); }
+
+/* ─────────────────────────────── KPI ROW ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--paper-rule);
+}
+.kpi {
+  padding: 1.1rem 1.4rem;
+  border-right: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+}
+.kpi:last-child { border-right: 0; }
+.kpi-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .4rem;
+}
+.kpi-val {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  font-size: 1.7rem;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: .2rem;
+}
+.kpi-val em { color: var(--moss); font-style: normal; }
+.kpi-delta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--moss-deep);
+}
+.kpi-delta.neg { color: var(--plum); }
+
+/* ─────────────────────────────── CONTENT AREA ── */
+.content-area {
+  padding: 2rem 2.4rem;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 2rem;
+  align-items: start;
+}
+
+.section-label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.section-label span { color: var(--moss-text); }
+
+/* ─────────────────────────────── TRAJECTORY TABLE ── */
+.traj-table-wrap {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  box-shadow: var(--shadow-sm);
+}
+.traj-table-head {
+  padding: 1rem 1.2rem .7rem;
+  border-bottom: 1px solid var(--paper-rule);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.traj-table-title {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.05rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+}
+.traj-filter {
+  display: flex;
+  gap: .5rem;
+}
+.filter-chip {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid var(--paper-rule-2);
+  color: var(--ink-3-aaa);
+  padding: .25rem .65rem;
+  cursor: pointer;
+  transition: color .12s, border-color .12s;
+  min-height: 28px;
+}
+.filter-chip:hover { color: var(--ink); border-color: var(--ink-3-aaa); }
+.filter-chip.is-active { color: var(--moss-deep); border-color: var(--moss); background: rgba(74,93,58,.07); }
+
+/* person row in table */
+.person-row {
+  display: grid;
+  grid-template-columns: 40px 1fr 140px 110px 100px;
+  gap: .7rem;
+  align-items: center;
+  padding: .85rem 1.2rem;
+  border-bottom: 1px solid var(--paper-rule);
+  transition: background .12s;
+  cursor: pointer;
+}
+.person-row:last-child { border-bottom: 0; }
+.person-row:hover { background: rgba(74,93,58,.04); }
+
+.pr-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .06em;
+  font-weight: 700;
+  color: var(--paper);
+  flex-shrink: 0;
+}
+.pr-avatar.moss { background: var(--moss); }
+.pr-avatar.ochre { background: var(--ochre); }
+.pr-avatar.ink { background: var(--ink-2); }
+.pr-avatar.plum { background: var(--plum); }
+
+.pr-info { min-width: 0; }
+.pr-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: .95rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pr-role {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-top: .1rem;
+}
+
+/* trajectory progress bar in table */
+.traj-mini {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.traj-mini-bar {
+  height: 4px;
+  background: var(--paper-rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.traj-mini-fill {
+  height: 100%;
+  background: var(--moss);
+  border-radius: 2px;
+}
+.traj-mini-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+}
+
+.gap-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+  text-align: center;
+}
+.gap-count .num {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.1rem;
+  color: var(--ink);
+  display: block;
+  line-height: 1;
+}
+.gap-count.has-gaps .num { color: var(--plum); }
+.gap-count.no-gaps .num { color: var(--moss-text); }
+
+.attest-badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .25rem .55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.attest-badge.pending { background: rgba(184,101,31,.12); color: var(--ochre-deep); border: 1px solid rgba(184,101,31,.25); }
+.attest-badge.none { color: var(--ink-3-aaa); font-size: 9px; }
+.attest-badge.done { background: rgba(74,93,58,.1); color: var(--moss-deep); border: 1px solid rgba(74,93,58,.2); }
+
+/* ─────────────────────────────── ATTESTATION SIDEBAR ── */
+.attest-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.attest-panel-head {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 36;
+  font-size: 1.05rem;
+  letter-spacing: -.01em;
+  color: var(--ink);
+  margin-bottom: .3rem;
+}
+.attest-panel-count {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ochre);
+}
+
+.attest-card {
+  border: 1px solid var(--paper-rule);
+  background: var(--paper-warm);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.attest-card-head {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--paper-rule);
+  padding: .7rem .9rem .6rem;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.ac-avatar {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--paper);
+  flex-shrink: 0;
+}
+.ac-name {
+  font-family: var(--display);
+  font-weight: 500;
+  font-variation-settings: "opsz" 24;
+  font-size: .9rem;
+  letter-spacing: -.008em;
+  color: var(--ink);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ac-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  background: rgba(184,101,31,.1);
+  color: var(--ochre-deep);
+  border: 1px solid rgba(184,101,31,.22);
+  padding: .15rem .45rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.attest-card-body {
+  padding: .8rem .9rem;
+}
+.ac-gap {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+  margin-bottom: .6rem;
+}
+.ac-gap .skill { color: var(--moss-deep); font-weight: 700; }
+.ac-gap .arrow { color: var(--moss-text); margin: 0 .25rem; }
+
+.ac-evidence {
+  font-family: var(--serif);
+  font-size: .9rem;
+  font-variation-settings: "opsz" 14;
+  line-height: 1.45;
+  color: var(--ink-2);
+  margin: 0 0 .75rem;
+}
+.ac-evidence strong { color: var(--ink); }
+
+.ac-decision-class {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--ink-3-aaa);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.dc-pill {
+  background: rgba(14,22,38,.07);
+  border: 1px solid var(--paper-rule-2);
+  padding: .15rem .45rem;
+  font-size: 9px;
+  letter-spacing: .14em;
+}
+
+.ac-actions {
+  display: flex;
+  gap: .5rem;
+}
+.ac-btn {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .6rem .4rem;
+  border: 1px solid;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .3rem;
+}
+.ac-btn-approve {
+  background: var(--moss);
+  color: var(--paper);
+  border-color: var(--moss);
+}
+.ac-btn-approve:hover { background: var(--moss-deep); border-color: var(--moss-deep); }
+.ac-btn-more {
+  background: transparent;
+  color: var(--ink-3-aaa);
+  border-color: var(--paper-rule-2);
+}
+.ac-btn-more:hover { color: var(--ink); border-color: var(--ink-3-aaa); }
+
+/* ─────────────────────────────── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .shell { grid-template-columns: 180px 1fr; }
+  .content-area { grid-template-columns: 1fr 320px; }
+  .person-row { grid-template-columns: 36px 1fr 110px 90px 90px; }
+}
+@media (max-width: 900px) {
+  .shell { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .content-area { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .kpi:nth-child(2) { border-right: 0; }
+  .kpi:nth-child(3), .kpi:nth-child(4) { border-top: 1px solid var(--paper-rule); }
+  .person-row { grid-template-columns: 32px 1fr 90px; }
+  .person-row .traj-mini, .person-row .attest-badge { display: none; }
+}
+
+/* ─────────────────────────────── MOTION ── */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none; animation: none; }
+}
+
+/* ─────────────────────────────── SITE-NAV scoped ── */
+.site-nav {
+  --paper:      #f4ecda;
+  --paper-rule: #d8cdb6;
+  --ink:        #0e1626;
+  --ink-2:      rgba(14,22,38,.65);
+  --ink-3:      rgba(14,22,38,.42);
+  --ink-3-aaa:  #3d4456;
+  --ochre:      #b8651f;
+}
+.site-nav{position:relative;background:var(--paper);border-bottom:1px solid var(--paper-rule);z-index:500}
+.sn-inner{width:min(1180px,92vw);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;height:48px}
+.sn-mark{font-family:'Fraunces',Georgia,serif;font-size:1.05rem;font-weight:500;font-variation-settings:"opsz" 24,"WONK" 0;color:var(--ink);text-decoration:none;letter-spacing:-.01em;flex-shrink:0;line-height:1;padding:.3rem 0;border-bottom:0}
+.sn-mark:hover{color:var(--ochre);border-bottom:0}
+.sn-dot{color:var(--ochre)}
+.sn-cats{display:flex;align-items:center;gap:.15rem;flex:1;padding-left:1.4rem}
+.sn-cat{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2);padding:.2rem .5rem;white-space:nowrap;user-select:none}
+@media (max-width:900px){.sn-cats{display:none}}
+.sn-index-btn{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--paper-rule);padding:.45rem .85rem;cursor:pointer;display:flex;align-items:center;gap:.4rem;min-height:36px;min-width:44px;flex-shrink:0;transition:border-color .15s,color .15s;border-bottom:1px solid var(--paper-rule)}
+.sn-index-btn:hover{border-color:var(--ochre);color:var(--ochre)}
+.sn-index-btn:focus-visible{outline:2px solid var(--ochre);outline-offset:2px}
+.sn-arr{transition:transform .15s;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.sn-arr{transition:transform .15s}}
+@media (prefers-reduced-motion:reduce){.sn-arr{transition:none}}
+.sn-hb-line{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;transition:transform .18s,opacity .18s}
+@media (prefers-reduced-motion:reduce){.sn-hb-line{transition:none}}
+@media (max-width:900px){.sn-hamburger{display:flex}.sn-index-btn{display:none}}
+.sn-col-head{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--ochre);margin-bottom:.7rem;padding:.2rem 0}
+.sn-col a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.32rem 0;border-bottom:0;line-height:1.3;min-height:28px;display:flex;align-items:center}
+.sn-mobile-head{display:flex;align-items:center;justify-content:space-between;padding:.7rem min(1180px,92vw) .7rem;padding-left:calc((100vw - min(1180px,92vw))/2);padding-right:calc((100vw - min(1180px,92vw))/2);border-bottom:1px solid var(--paper-rule);height:48px}
+.sn-mobile-close{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:13px;background:transparent;border:1px solid var(--paper-rule);color:var(--ink);padding:.35rem .7rem;cursor:pointer;min-height:44px;min-width:44px;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--paper-rule)}
+.sn-mobile-body{padding:1.2rem calc((100vw - min(1180px,92vw))/2)}
+.sn-mob-section summary::after{content:"↓";font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:11px;color:var(--ink-3-aaa);transition:transform .15s}
+@media (prefers-reduced-motion:reduce){.sn-mob-section summary::after{transition:none}}
+.sn-mob-links a{display:block;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.06em;color:var(--ink);text-decoration:none;padding:.55rem 0;border-bottom:0;min-height:44px;display:flex;align-items:center}
+</style>
+</head>
+
+<body>
+{% include site-nav.html %}
+
+<!-- realtime-stamp -->
+<div class="rt-stamp" data-t0="2026-05-12T22:25:46-04:00" data-this="2026-05-19T21:00:00-04:00" style="position:fixed;bottom:8px;right:10px;z-index:9999;font-family:'JetBrains Mono',ui-monospace,Menlo,monospace;font-size:9.5px;letter-spacing:.08em;color:rgba(14,22,38,.55);background:rgba(244,236,218,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);padding:.25rem .55rem;border-radius:999px;border:1px solid rgba(184,101,31,.25);pointer-events:none" aria-hidden="true"><span style="color:#b8651f">●</span> compiled at <strong style="color:#0e1626">T+166:34:14.000</strong> · <span style="opacity:.6">2026-05-20T01:00:00.000Z</span></div>
+<!-- /realtime-stamp -->
+
+<a href="#main" style="position:absolute;left:-9999px;top:0;width:1px;height:1px;z-index:9999;background:var(--paper,#f4ecda);color:var(--ink,#0e1626);padding:.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:13px;text-decoration:none" onfocus="this.style.left='0';this.style.width='auto';this.style.height='auto';" onblur="this.style.left='-9999px';this.style.width='1px';this.style.height='1px';">Skip to main content</a>
+
+<!-- ── TOPBAR ── -->
+<header class="topbar" role="banner">
+  <div class="topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">Stratum<span class="sl">/</span>Cairn</span>
+      <span class="brand-meta" aria-label="Demo context">Manager console · Cordova Manufacturing · preview build</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill" aria-label="Current user: Dev Kapoor, Engineering Manager">
+        <span class="user-avatar">DK</span>
+        <span class="user-name">Dev Kapoor<span class="role">· Eng Manager</span></span>
+      </div>
+      <a href="../" class="topbar-link">← Cairn</a>
+      <a href="../../console/" class="topbar-link">HCM Console</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── SHELL ── -->
+<div class="shell">
+
+  <!-- ── LEFT RAIL ── -->
+  <aside class="rail" id="rail" aria-label="Cairn navigation">
+    <div class="rail-brand">
+      <div class="rail-brand-mark">Cairn<span class="sl">/</span>Manager</div>
+      <div class="rail-brand-sub">v0.1 prototype</div>
+    </div>
+
+    <nav class="rail-nav" role="navigation" aria-label="Manager console sections">
+      <div class="rail-section-label">My team</div>
+      <button class="rail-item is-active" aria-current="page">
+        <span><span class="ri-sec">§</span>Trajectories</span>
+        <span class="ri-count">5</span>
+      </button>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Gaps</span>
+        <span class="ri-count">8</span>
+      </button>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Attestations</span>
+        <span class="ri-count">3</span>
+      </button>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Stones placed</span>
+        <span class="ri-count">24</span>
+      </button>
+
+      <div class="rail-section-label">Org</div>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Team overview</span>
+      </button>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Role requirements</span>
+      </button>
+      <button class="rail-item">
+        <span><span class="ri-sec">§</span>Methodology</span>
+      </button>
+    </nav>
+
+    <div class="rail-foot">
+      <div class="rail-foot-title">§ Agent status</div>
+      <div class="rail-foot-row"><span class="dot ok" aria-hidden="true"></span>Talus · detection</div>
+      <div class="rail-foot-row"><span class="dot ok" aria-hidden="true"></span>Hearth · recommendations</div>
+      <div class="rail-foot-row"><span class="dot warn" aria-hidden="true"></span>Pluralsight API · latency</div>
+    </div>
+  </aside>
+
+  <!-- ── STAGE ── -->
+  <main class="stage" id="main">
+
+    <!-- View header -->
+    <div class="view-head">
+      <div class="eyebrow">§ Wednesday · 19 May 2026 · T+7d</div>
+      <h1 class="view-h1">Your team's <em>trajectories.</em></h1>
+      <p class="view-sub">
+        5 direct reports · 3 attestations awaiting your sign-off · 8 gaps being tracked by Talus.
+      </p>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar" role="tablist" aria-label="Console views">
+      <button class="tab is-active" role="tab" aria-selected="true">Trajectories</button>
+      <button class="tab" role="tab" aria-selected="false">Gaps</button>
+      <button class="tab" role="tab" aria-selected="false">Attestations <span style="background:rgba(184,101,31,.15);color:#8a4711;font-family:'JetBrains Mono',monospace;font-size:9px;padding:.1rem .4rem;border-radius:999px;margin-left:.3rem;">3</span></button>
+      <button class="tab" role="tab" aria-selected="false">Stones placed</button>
+    </div>
+
+    <!-- KPI row -->
+    <div class="kpi-row" role="region" aria-label="Team learning metrics">
+      <div class="kpi">
+        <div class="kpi-label">Avg months to promo</div>
+        <div class="kpi-val"><em>12.4</em>mo</div>
+        <div class="kpi-delta">↓ 1.6mo vs last quarter</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Gaps detected this week</div>
+        <div class="kpi-val"><em>3</em></div>
+        <div class="kpi-delta">↑ 2 new · 1 carry-over</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Stones placed (30d)</div>
+        <div class="kpi-val"><em>7</em></div>
+        <div class="kpi-delta">↑ 3 vs prior 30d</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Attestations pending</div>
+        <div class="kpi-val"><em style="color:var(--ochre);">3</em></div>
+        <div class="kpi-delta neg">Your sign-off required</div>
+      </div>
+    </div>
+
+    <!-- Content area: trajectory table + attestation sidebar -->
+    <div class="content-area">
+
+      <!-- Trajectory table -->
+      <section aria-labelledby="traj-table-heading">
+        <div class="section-label">
+          <span id="traj-table-heading">Team trajectories · 5 reports</span>
+          <div class="traj-filter">
+            <button class="filter-chip is-active" aria-pressed="true">All</button>
+            <button class="filter-chip" aria-pressed="false">Gaps</button>
+            <button class="filter-chip" aria-pressed="false">On track</button>
+          </div>
+        </div>
+
+        <div class="traj-table-wrap">
+          <div class="traj-table-head">
+            <div class="traj-table-title">Direct reports</div>
+          </div>
+
+          <!-- column headers (visually implied, screenreader explicit) -->
+          <div class="person-row" role="row" aria-hidden="true" style="background:var(--paper-deep); cursor:default; pointer-events:none;">
+            <div></div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);">Name / Role</div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);">Trajectory</div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);text-align:center;">Gaps</div>
+            <div style="font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3-aaa);">Attest</div>
+          </div>
+
+          <!-- Marisol Ortega -->
+          <div class="person-row" role="row" tabindex="0" aria-label="Marisol Ortega, Senior SRE, 64% to Staff SRE, 1 gap, 1 attestation pending">
+            <div class="pr-avatar moss" aria-hidden="true">MO</div>
+            <div class="pr-info">
+              <div class="pr-name">Marisol Ortega</div>
+              <div class="pr-role">Senior SRE · L5 → Staff SRE</div>
+            </div>
+            <div class="traj-mini" aria-hidden="true">
+              <div class="traj-mini-bar">
+                <div class="traj-mini-fill" style="width:64%"></div>
+              </div>
+              <div class="traj-mini-label">8/10 stones · T+11mo</div>
+            </div>
+            <div class="gap-count has-gaps" aria-hidden="true">
+              <span class="num">1</span>
+              gap
+            </div>
+            <div>
+              <span class="attest-badge pending">1 pending</span>
+            </div>
+          </div>
+
+          <!-- Tomás Reyes -->
+          <div class="person-row" role="row" tabindex="0" aria-label="Tomás Reyes, SRE, 48% to Senior SRE, 2 gaps, no attestations pending">
+            <div class="pr-avatar ochre" aria-hidden="true">TR</div>
+            <div class="pr-info">
+              <div class="pr-name">Tomás Reyes</div>
+              <div class="pr-role">SRE · L4 → Senior SRE</div>
+            </div>
+            <div class="traj-mini" aria-hidden="true">
+              <div class="traj-mini-bar">
+                <div class="traj-mini-fill" style="width:48%"></div>
+              </div>
+              <div class="traj-mini-label">6/12 stones · T+8mo</div>
+            </div>
+            <div class="gap-count has-gaps" aria-hidden="true">
+              <span class="num">2</span>
+              gaps
+            </div>
+            <div>
+              <span class="attest-badge none">—</span>
+            </div>
+          </div>
+
+          <!-- Priya Chandrasekaran -->
+          <div class="person-row" role="row" tabindex="0" aria-label="Priya Chandrasekaran, Staff SRE, 90% to Principal, 0 gaps, 1 attestation pending">
+            <div class="pr-avatar ink" aria-hidden="true">PC</div>
+            <div class="pr-info">
+              <div class="pr-name">Priya Chandrasekaran</div>
+              <div class="pr-role">Staff SRE · L6 → Principal</div>
+            </div>
+            <div class="traj-mini" aria-hidden="true">
+              <div class="traj-mini-bar">
+                <div class="traj-mini-fill" style="width:90%"></div>
+              </div>
+              <div class="traj-mini-label">9/10 stones · T+2mo</div>
+            </div>
+            <div class="gap-count no-gaps" aria-hidden="true">
+              <span class="num" style="color:var(--moss);">0</span>
+              gaps
+            </div>
+            <div>
+              <span class="attest-badge pending">1 pending</span>
+            </div>
+          </div>
+
+          <!-- Jamal Osei-Bonsu -->
+          <div class="person-row" role="row" tabindex="0" aria-label="Jamal Osei-Bonsu, Senior Platform Engineer, 55% to Staff, 3 gaps, no attestations pending">
+            <div class="pr-avatar plum" aria-hidden="true">JO</div>
+            <div class="pr-info">
+              <div class="pr-name">Jamal Osei-Bonsu</div>
+              <div class="pr-role">Sr. Platform Eng · L5 → Staff</div>
+            </div>
+            <div class="traj-mini" aria-hidden="true">
+              <div class="traj-mini-bar">
+                <div class="traj-mini-fill" style="width:55%"></div>
+              </div>
+              <div class="traj-mini-label">7/13 stones · T+14mo</div>
+            </div>
+            <div class="gap-count has-gaps" aria-hidden="true">
+              <span class="num">3</span>
+              gaps
+            </div>
+            <div>
+              <span class="attest-badge none">—</span>
+            </div>
+          </div>
+
+          <!-- Yuki Tanaka -->
+          <div class="person-row" role="row" tabindex="0" aria-label="Yuki Tanaka, SRE, 30% to Senior, 2 gaps, 1 attestation pending">
+            <div class="pr-avatar moss" style="background:#2a3344;" aria-hidden="true">YT</div>
+            <div class="pr-info">
+              <div class="pr-name">Yuki Tanaka</div>
+              <div class="pr-role">SRE · L3 → Senior SRE</div>
+            </div>
+            <div class="traj-mini" aria-hidden="true">
+              <div class="traj-mini-bar">
+                <div class="traj-mini-fill" style="width:30%"></div>
+              </div>
+              <div class="traj-mini-label">4/14 stones · T+22mo</div>
+            </div>
+            <div class="gap-count has-gaps" aria-hidden="true">
+              <span class="num">2</span>
+              gaps
+            </div>
+            <div>
+              <span class="attest-badge pending">1 pending</span>
+            </div>
+          </div>
+
+        </div><!-- /traj-table-wrap -->
+      </section>
+
+      <!-- Attestation sidebar -->
+      <aside aria-labelledby="attest-panel-heading">
+        <div class="section-label">
+          <span>Pending attestations</span>
+        </div>
+
+        <div class="attest-panel">
+          <div>
+            <div class="attest-panel-head" id="attest-panel-heading">Sign-off required</div>
+            <div class="attest-panel-count">3 attestations waiting · your sign-off adds the stone to the profile</div>
+          </div>
+
+          <!-- Attestation 1: Marisol · k8s-operators -->
+          <article class="attest-card" aria-labelledby="ac1-heading">
+            <div class="attest-card-head">
+              <div class="ac-avatar moss" aria-hidden="true">MO</div>
+              <div class="ac-name" id="ac1-heading">Marisol Ortega</div>
+              <div class="ac-tag">Decision req.</div>
+            </div>
+            <div class="attest-card-body">
+              <div class="ac-gap">
+                Gap closed: <span class="skill">k8s-operator-authoring</span>
+                <span class="arrow">→</span> stone proposed
+              </div>
+              <p class="ac-evidence">
+                PR #4891 implements a <strong>custom Operator controller</strong> for the
+                job-scheduler workload using controller-runtime. Reconciler loop present.
+                CRD-based state management. Hearth verified: 4 of 4 pattern signals matched.
+              </p>
+              <div class="ac-decision-class">
+                Decision class <span class="dc-pill">Tier 2 · reversible</span>
+              </div>
+              <div class="ac-actions" role="group" aria-label="Attestation decision for Marisol Ortega k8s-operators">
+                <button class="ac-btn ac-btn-approve" type="button">✓ Approve stone</button>
+                <button class="ac-btn ac-btn-more" type="button">View evidence</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Attestation 2: Priya · distributed-systems-theory -->
+          <article class="attest-card" aria-labelledby="ac2-heading">
+            <div class="attest-card-head">
+              <div class="ac-avatar ink" aria-hidden="true">PC</div>
+              <div class="ac-name" id="ac2-heading">Priya Chandrasekaran</div>
+              <div class="ac-tag">Decision req.</div>
+            </div>
+            <div class="attest-card-body">
+              <div class="ac-gap">
+                Gap closed: <span class="skill">distributed-systems-design</span>
+                <span class="arrow">→</span> stone proposed
+              </div>
+              <p class="ac-evidence">
+                RFC-0041 authored by Priya proposes consensus-protocol changes for
+                Cordova's job-scheduler cluster. <strong>Paxos → Raft migration rationale</strong>
+                demonstrates pattern fluency at Principal-level. Hearth: 3 of 3 signals matched.
+              </p>
+              <div class="ac-decision-class">
+                Decision class <span class="dc-pill">Tier 2 · reversible</span>
+              </div>
+              <div class="ac-actions" role="group" aria-label="Attestation decision for Priya Chandrasekaran distributed-systems-design">
+                <button class="ac-btn ac-btn-approve" type="button">✓ Approve stone</button>
+                <button class="ac-btn ac-btn-more" type="button">View evidence</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Attestation 3: Yuki · incident-command -->
+          <article class="attest-card" aria-labelledby="ac3-heading">
+            <div class="attest-card-head">
+              <div class="ac-avatar" style="background:#2a3344;" aria-hidden="true">YT</div>
+              <div class="ac-name" id="ac3-heading">Yuki Tanaka</div>
+              <div class="ac-tag">Decision req.</div>
+            </div>
+            <div class="attest-card-body">
+              <div class="ac-gap">
+                Gap closed: <span class="skill">incident-command-L1</span>
+                <span class="arrow">→</span> stone proposed
+              </div>
+              <p class="ac-evidence">
+                Yuki served as incident commander for P1-0448 (database failover event).
+                Post-incident review shows <strong>structured timeline, clear escalation,
+                blameless retro authored</strong>. Hearth: incident-command signal from
+                PagerDuty + retro doc + peer feedback.
+              </p>
+              <div class="ac-decision-class">
+                Decision class <span class="dc-pill">Tier 2 · reversible</span>
+              </div>
+              <div class="ac-actions" role="group" aria-label="Attestation decision for Yuki Tanaka incident-command-L1">
+                <button class="ac-btn ac-btn-approve" type="button">✓ Approve stone</button>
+                <button class="ac-btn ac-btn-more" type="button">View evidence</button>
+              </div>
+            </div>
+          </article>
+
+        </div><!-- /attest-panel -->
+
+        <!-- Methodology note -->
+        <div style="margin-top:1.2rem; padding:1rem; background:rgba(74,93,58,.06); border:1px solid rgba(74,93,58,.18);">
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--moss);margin-bottom:.45rem;">§ Your role in the loop</div>
+          <p style="font-family:var(--serif);font-size:.88rem;font-variation-settings:'opsz' 14;line-height:1.5;color:var(--ink-2);margin:0;">
+            Hearth proposes; you decide. No stone is ever written to a profile without your explicit sign-off.
+            Approving a stone is <strong>Tier 2 / reversible</strong> — you can retract within 30 days with a
+            written reason. Both you and the employee see the same evidence behind every attestation.
+          </p>
+        </div>
+
+      </aside>
+
+    </div><!-- /content-area -->
+
+  </main><!-- /stage -->
+
+</div><!-- /shell -->
+
+<!-- Footer note -->
+<footer style="background:var(--ink); padding:1.2rem 1.6rem; flex-shrink:0;" role="contentinfo">
+  <div style="width:var(--col-wide);margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+    <span style="font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,236,218,.4);">
+      Cairn · manager console · preview · Cordova Manufacturing · T+7d
+    </span>
+    <div style="display:flex;gap:1rem;">
+      <a href="../" style="font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,236,218,.5);border-bottom:0;">← Cairn product page</a>
+      <a href="../tour/" style="font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(244,236,218,.5);border-bottom:0;">Product tour →</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
